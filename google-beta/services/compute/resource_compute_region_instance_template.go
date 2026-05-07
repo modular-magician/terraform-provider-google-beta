@@ -17,7 +17,6 @@
 package compute
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -31,8 +30,6 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
-
-	compute "google.golang.org/api/compute/v0.beta"
 )
 
 func ResourceComputeRegionInstanceTemplate() *schema.Resource {
@@ -1328,45 +1325,72 @@ func resourceComputeRegionInstanceTemplateCreate(d *schema.ResourceData, meta in
 	if err != nil {
 		return err
 	}
+
 	networkPerformanceConfig, err := expandNetworkPerformanceConfig(d, config)
 	if err != nil {
-		return nil
+		return err
 	}
+
 	reservationAffinity, err := expandReservationAffinity(d)
 	if err != nil {
 		return err
 	}
-	resourcePolicies := expandInstanceTemplateResourcePolicies(d, "resource_policies")
 
-	instanceProperties := &compute.InstanceProperties{
-		CanIpForward:               d.Get("can_ip_forward").(bool),
-		Description:                d.Get("instance_description").(string),
-		GuestAccelerators:          expandInstanceTemplateGuestAccelerators(d, config),
-		MachineType:                d.Get("machine_type").(string),
-		MinCpuPlatform:             d.Get("min_cpu_platform").(string),
-		Disks:                      disks,
-		Metadata:                   metadata,
-		PartnerMetadata:            PartnerMetadata,
-		NetworkInterfaces:          networks,
-		NetworkPerformanceConfig:   networkPerformanceConfig,
-		Scheduling:                 scheduling,
-		ServiceAccounts:            expandServiceAccounts(d.Get("service_account").([]interface{})),
-		Tags:                       resourceInstanceTags(d),
-		ConfidentialInstanceConfig: expandConfidentialInstanceConfig(d),
-		ShieldedInstanceConfig:     expandShieldedVmConfigs(d),
-		AdvancedMachineFeatures:    expandAdvancedMachineFeatures(d),
-		DisplayDevice:              expandDisplayDevice(d),
-		ResourcePolicies:           resourcePolicies,
-		ReservationAffinity:        reservationAffinity,
-		KeyRevocationActionType:    d.Get("key_revocation_action_type").(string),
+	instanceProperties := map[string]interface{}{
+		"canIpForward":      d.Get("can_ip_forward").(bool),
+		"machineType":       d.Get("machine_type").(string),
+		"disks":             disks,
+		"metadata":          metadata,
+		"networkInterfaces": networks,
+		"scheduling":        scheduling,
 	}
-
+	if desc := d.Get("instance_description").(string); desc != "" {
+		instanceProperties["description"] = desc
+	}
+	if minCpu := d.Get("min_cpu_platform").(string); minCpu != "" {
+		instanceProperties["minCpuPlatform"] = minCpu
+	}
+	if guestAccelerators := expandInstanceTemplateGuestAccelerators(d, config); len(guestAccelerators) > 0 {
+		instanceProperties["guestAccelerators"] = guestAccelerators
+	}
+	if serviceAccounts := expandServiceAccounts(d.Get("service_account").([]interface{})); len(serviceAccounts) > 0 {
+		instanceProperties["serviceAccounts"] = serviceAccounts
+	}
+	if tagsMap := resourceInstanceTags(d); tagsMap != nil {
+		instanceProperties["tags"] = tagsMap
+	}
+	if m := expandConfidentialInstanceConfig(d); m != nil {
+		instanceProperties["confidentialInstanceConfig"] = m
+	}
+	if m := expandShieldedVmConfigs(d); m != nil {
+		instanceProperties["shieldedInstanceConfig"] = m
+	}
+	if m := expandAdvancedMachineFeatures(d); m != nil {
+		instanceProperties["advancedMachineFeatures"] = m
+	}
+	if networkPerformanceConfig != nil {
+		instanceProperties["networkPerformanceConfig"] = networkPerformanceConfig
+	}
+	if reservationAffinity != nil {
+		instanceProperties["reservationAffinity"] = reservationAffinity
+	}
+	if resourcePolicies := expandInstanceTemplateResourcePolicies(d, "resource_policies"); len(resourcePolicies) > 0 {
+		instanceProperties["resourcePolicies"] = resourcePolicies
+	}
+	if krat := d.Get("key_revocation_action_type").(string); krat != "" {
+		instanceProperties["keyRevocationActionType"] = krat
+	}
 	if _, ok := d.GetOk("effective_labels"); ok {
-		instanceProperties.Labels = tpgresource.ExpandEffectiveLabels(d)
+		instanceProperties["labels"] = tpgresource.ExpandEffectiveLabels(d)
 	}
-
 	if _, ok := d.GetOk("resource_manager_tags"); ok {
-		instanceProperties.ResourceManagerTags = tpgresource.ExpandStringMap(d, "resource_manager_tags")
+		instanceProperties["resourceManagerTags"] = tpgresource.ExpandStringMap(d, "resource_manager_tags")
+	}
+	if PartnerMetadata != nil {
+		instanceProperties["partnerMetadata"] = PartnerMetadata
+	}
+	if m := expandDisplayDevice(d); m != nil {
+		instanceProperties["displayDevice"] = m
 	}
 
 	var itName string
@@ -1383,10 +1407,11 @@ func resourceComputeRegionInstanceTemplateCreate(d *schema.ResourceData, meta in
 		itName = id.UniqueId()
 	}
 
-	instanceTemplate := make(map[string]interface{})
-	instanceTemplate["description"] = d.Get("description").(string)
-	instanceTemplate["properties"] = instanceProperties
-	instanceTemplate["name"] = itName
+	instanceTemplate := map[string]interface{}{
+		"description": d.Get("description").(string),
+		"properties":  instanceProperties,
+		"name":        itName,
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates")
 	if err != nil {
@@ -1458,30 +1483,25 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ComputeRegionInstanceTemplate %q", d.Id()))
 	}
 
-	instancePropertiesMap := instanceTemplate["properties"]
-
-	instancePropertiesObj, err := json.Marshal(instancePropertiesMap)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	instanceProperties := compute.InstanceProperties{}
-
-	if err := json.Unmarshal(instancePropertiesObj, &instanceProperties); err != nil {
-		fmt.Println(err)
-		return err
-	}
+	props, _ := instanceTemplate["properties"].(map[string]interface{})
 
 	// Set the metadata fingerprint if there is one.
-	if instanceProperties.Metadata != nil {
-		if err = d.Set("metadata_fingerprint", instanceProperties.Metadata.Fingerprint); err != nil {
+	if metadataRaw, ok := props["metadata"].(map[string]interface{}); ok && metadataRaw != nil {
+		fingerprint, _ := metadataRaw["fingerprint"].(string)
+		if err = d.Set("metadata_fingerprint", fingerprint); err != nil {
 			return fmt.Errorf("Error setting metadata_fingerprint: %s", err)
 		}
 
-		md := instanceProperties.Metadata
-
-		_md := flattenMetadataBeta(md)
+		_md := map[string]string{}
+		if items, ok := metadataRaw["items"].([]interface{}); ok {
+			for _, itemRaw := range items {
+				if kv, ok := itemRaw.(map[string]interface{}); ok {
+					k, _ := kv["key"].(string)
+					v, _ := kv["value"].(string)
+					_md[k] = v
+				}
+			}
+		}
 
 		if script, scriptExists := d.GetOk("metadata_startup_script"); scriptExists {
 			if err = d.Set("metadata_startup_script", script); err != nil {
@@ -1500,8 +1520,8 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error setting numeric_id: %s", err)
 	}
 
-	if instanceProperties.PartnerMetadata != nil {
-		partnerMetadata, err := flattenPartnerMetadata(convertPartnerMetadataFromCompute(instanceProperties.PartnerMetadata))
+	if pmRaw, ok := props["partnerMetadata"].(map[string]interface{}); ok && pmRaw != nil {
+		partnerMetadata, err := flattenPartnerMetadata(pmRaw)
 		if err != nil {
 			return fmt.Errorf("Error parsing partner metadata: %s", err)
 		}
@@ -1511,8 +1531,9 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 	}
 
 	// Set the tags fingerprint if there is one.
-	if instanceProperties.Tags != nil {
-		if err = d.Set("tags_fingerprint", instanceProperties.Tags.Fingerprint); err != nil {
+	if tagsRaw, ok := props["tags"].(map[string]interface{}); ok && tagsRaw != nil {
+		fingerprint, _ := tagsRaw["fingerprint"].(string)
+		if err = d.Set("tags_fingerprint", fingerprint); err != nil {
 			return fmt.Errorf("Error setting tags_fingerprint: %s", err)
 		}
 	} else {
@@ -1520,15 +1541,22 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 			return fmt.Errorf("Error setting tags_fingerprint: %s", err)
 		}
 	}
-	if instanceProperties.Labels != nil {
-		if err := tpgresource.SetLabels(instanceProperties.Labels, d, "labels"); err != nil {
+	var labels map[string]string
+	if labelsIface, ok := props["labels"].(map[string]interface{}); ok && labelsIface != nil {
+		labels = make(map[string]string)
+		for k, v := range labelsIface {
+			labels[k], _ = v.(string)
+		}
+	}
+	if labels != nil {
+		if err := tpgresource.SetLabels(labels, d, "labels"); err != nil {
 			return fmt.Errorf("Error setting labels: %s", err)
 		}
 	}
-	if err := tpgresource.SetLabels(instanceProperties.Labels, d, "terraform_labels"); err != nil {
+	if err := tpgresource.SetLabels(labels, d, "terraform_labels"); err != nil {
 		return fmt.Errorf("Error setting terraform_labels: %s", err)
 	}
-	if err := d.Set("effective_labels", instanceProperties.Labels); err != nil {
+	if err := d.Set("effective_labels", labels); err != nil {
 		return fmt.Errorf("Error setting effective_labels: %s", err)
 	}
 	if err = d.Set("self_link", instanceTemplate["selfLink"]); err != nil {
@@ -1540,8 +1568,8 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 	if err = d.Set("name", instanceTemplate["name"]); err != nil {
 		return fmt.Errorf("Error setting name: %s", err)
 	}
-	if instanceProperties.Disks != nil {
-		disks, err := flattenDisks(instanceProperties.Disks, d, project)
+	if disksRaw, ok := props["disks"].([]interface{}); ok {
+		disks, err := flattenDisks(disksRaw, d, project)
 		if err != nil {
 			return fmt.Errorf("error flattening disks: %s", err)
 		}
@@ -1552,31 +1580,38 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 	if err = d.Set("description", instanceTemplate["description"]); err != nil {
 		return fmt.Errorf("Error setting description: %s", err)
 	}
-	if err = d.Set("machine_type", instanceProperties.MachineType); err != nil {
+	machineType, _ := props["machineType"].(string)
+	if err = d.Set("machine_type", machineType); err != nil {
 		return fmt.Errorf("Error setting machine_type: %s", err)
 	}
-	if err = d.Set("min_cpu_platform", instanceProperties.MinCpuPlatform); err != nil {
+	minCpuPlatform, _ := props["minCpuPlatform"].(string)
+	if err = d.Set("min_cpu_platform", minCpuPlatform); err != nil {
 		return fmt.Errorf("Error setting min_cpu_platform: %s", err)
 	}
 
-	if err = d.Set("can_ip_forward", instanceProperties.CanIpForward); err != nil {
+	canIpForward, _ := props["canIpForward"].(bool)
+	if err = d.Set("can_ip_forward", canIpForward); err != nil {
 		return fmt.Errorf("Error setting can_ip_forward: %s", err)
 	}
 
-	if err = d.Set("instance_description", instanceProperties.Description); err != nil {
+	instanceDescription, _ := props["description"].(string)
+	if err = d.Set("instance_description", instanceDescription); err != nil {
 		return fmt.Errorf("Error setting instance_description: %s", err)
 	}
-	if err = d.Set("key_revocation_action_type", instanceProperties.KeyRevocationActionType); err != nil {
+	keyRevocationActionType, _ := props["keyRevocationActionType"].(string)
+	if err = d.Set("key_revocation_action_type", keyRevocationActionType); err != nil {
 		return fmt.Errorf("Error setting key_revocation_action_type: %s", err)
 	}
 	if err = d.Set("project", project); err != nil {
 		return fmt.Errorf("Error setting project: %s", err)
 	}
-	if err := d.Set("network_performance_config", flattenNetworkPerformanceConfig(instanceProperties.NetworkPerformanceConfig)); err != nil {
-		return err
+	if npcRaw, ok := props["networkPerformanceConfig"].(map[string]interface{}); ok && npcRaw != nil {
+		if err := d.Set("network_performance_config", flattenNetworkPerformanceConfig(npcRaw)); err != nil {
+			return err
+		}
 	}
-	if instanceProperties.NetworkInterfaces != nil {
-		networkInterfaces, region, _, _, err := flattenNetworkInterfaces(d, config, instanceProperties.NetworkInterfaces)
+	if niRaw, ok := props["networkInterfaces"].([]interface{}); ok && niRaw != nil {
+		networkInterfaces, region, _, _, err := flattenNetworkInterfaces(d, config, niRaw)
 		if err != nil {
 			return err
 		}
@@ -1590,8 +1625,8 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 			}
 		}
 	}
-	if instanceProperties.Scheduling != nil {
-		scheduling := flattenScheduling(instanceProperties.Scheduling)
+	if schedulingRaw, ok := props["scheduling"].(map[string]interface{}); ok && schedulingRaw != nil {
+		scheduling := flattenScheduling(schedulingRaw)
 
 		// Workaroud: API doesn't update the scheduling.graceful_shutdown.max_duration.nanos field.
 		// To avoid diff, we need to set the value from the state not from API response.
@@ -1607,8 +1642,8 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 			return fmt.Errorf("Error setting scheduling: %s", err)
 		}
 	}
-	if instanceProperties.Tags != nil {
-		if err = d.Set("tags", instanceProperties.Tags.Items); err != nil {
+	if tagsRaw, ok := props["tags"].(map[string]interface{}); ok && tagsRaw != nil {
+		if err = d.Set("tags", tagsRaw["items"]); err != nil {
 			return fmt.Errorf("Error setting tags: %s", err)
 		}
 	} else {
@@ -1616,46 +1651,46 @@ func resourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta inte
 			return fmt.Errorf("Error setting empty tags: %s", err)
 		}
 	}
-	if instanceProperties.ServiceAccounts != nil {
-		if err = d.Set("service_account", flattenServiceAccounts(instanceProperties.ServiceAccounts)); err != nil {
+	if saRaw, ok := props["serviceAccounts"].([]interface{}); ok && saRaw != nil {
+		if err = d.Set("service_account", flattenServiceAccounts(saRaw)); err != nil {
 			return fmt.Errorf("Error setting service_account: %s", err)
 		}
 	}
-	if instanceProperties.GuestAccelerators != nil {
-		if err = d.Set("guest_accelerator", flattenGuestAccelerators(instanceProperties.GuestAccelerators)); err != nil {
+	if gaRaw, ok := props["guestAccelerators"].([]interface{}); ok && gaRaw != nil {
+		if err = d.Set("guest_accelerator", flattenGuestAccelerators(gaRaw)); err != nil {
 			return fmt.Errorf("Error setting guest_accelerator: %s", err)
 		}
 	}
-	if instanceProperties.ShieldedInstanceConfig != nil {
-		if err = d.Set("shielded_instance_config", flattenShieldedVmConfig(instanceProperties.ShieldedInstanceConfig)); err != nil {
+	if sicRaw, ok := props["shieldedInstanceConfig"].(map[string]interface{}); ok && sicRaw != nil {
+		if err = d.Set("shielded_instance_config", flattenShieldedVmConfig(sicRaw)); err != nil {
 			return fmt.Errorf("Error setting shielded_instance_config: %s", err)
 		}
 	}
 
-	if instanceProperties.ConfidentialInstanceConfig != nil {
-		if err = d.Set("confidential_instance_config", flattenConfidentialInstanceConfig(instanceProperties.ConfidentialInstanceConfig)); err != nil {
+	if cicRaw, ok := props["confidentialInstanceConfig"].(map[string]interface{}); ok && cicRaw != nil {
+		if err = d.Set("confidential_instance_config", flattenConfidentialInstanceConfig(cicRaw)); err != nil {
 			return fmt.Errorf("Error setting confidential_instance_config: %s", err)
 		}
 	}
-	if instanceProperties.AdvancedMachineFeatures != nil {
-		if err = d.Set("advanced_machine_features", flattenAdvancedMachineFeatures(instanceProperties.AdvancedMachineFeatures)); err != nil {
+	if amfRaw, ok := props["advancedMachineFeatures"].(map[string]interface{}); ok && amfRaw != nil {
+		if err = d.Set("advanced_machine_features", flattenAdvancedMachineFeatures(amfRaw)); err != nil {
 			return fmt.Errorf("Error setting advanced_machine_features: %s", err)
 		}
 	}
-	if instanceProperties.DisplayDevice != nil {
-		if err = d.Set("enable_display", flattenEnableDisplay(instanceProperties.DisplayDevice)); err != nil {
+	if ddRaw, ok := props["displayDevice"].(map[string]interface{}); ok && ddRaw != nil {
+		if err = d.Set("enable_display", flattenEnableDisplay(ddRaw)); err != nil {
 			return fmt.Errorf("Error setting enable_display: %s", err)
 		}
 	}
 
-	if instanceProperties.ResourcePolicies != nil {
-		if err = d.Set("resource_policies", instanceProperties.ResourcePolicies); err != nil {
+	if rpRaw, ok := props["resourcePolicies"].([]interface{}); ok && rpRaw != nil {
+		if err = d.Set("resource_policies", rpRaw); err != nil {
 			return fmt.Errorf("Error setting resource_policies: %s", err)
 		}
 	}
 
-	if reservationAffinity := instanceProperties.ReservationAffinity; reservationAffinity != nil {
-		if err = d.Set("reservation_affinity", flattenReservationAffinity(reservationAffinity)); err != nil {
+	if raRaw, ok := props["reservationAffinity"].(map[string]interface{}); ok && raRaw != nil {
+		if err = d.Set("reservation_affinity", flattenReservationAffinity(raRaw)); err != nil {
 			return fmt.Errorf("Error setting reservation_affinity: %s", err)
 		}
 	}
