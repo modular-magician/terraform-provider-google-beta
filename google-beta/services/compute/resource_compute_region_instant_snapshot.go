@@ -338,7 +338,7 @@ func resourceComputeRegionInstantSnapshotCreate(d *schema.ResourceData, meta int
 		obj["region"] = regionProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/regions/{{region}}/instantSnapshots"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/regions/{{region}}/instantSnapshots")
 	if err != nil {
 		return err
 	}
@@ -422,7 +422,7 @@ func resourceComputeRegionInstantSnapshotRead(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/regions/{{region}}/instantSnapshots/{{name}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/regions/{{region}}/instantSnapshots/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -544,7 +544,7 @@ func resourceComputeRegionInstantSnapshotUpdate(d *schema.ResourceData, meta int
 			obj["labels"] = labelsProp
 		}
 
-		url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/regions/{{region}}/instantSnapshots/{{name}}/setLabels"))
+		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/regions/{{region}}/instantSnapshots/{{name}}/setLabels")
 		if err != nil {
 			return err
 		}
@@ -599,7 +599,7 @@ func resourceComputeRegionInstantSnapshotDelete(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error fetching project for RegionInstantSnapshot: %s", err)
 	}
 	billingProject = project
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/regions/{{region}}/instantSnapshots/{{name}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/regions/{{region}}/instantSnapshots/{{name}}")
 	if err != nil {
 		return err
 	}

@@ -239,7 +239,7 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 	transport_tpg.MutexStore.Lock(lockName)
 	defer transport_tpg.MutexStore.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules")
 	if err != nil {
 		return err
 	}
@@ -313,7 +313,7 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules/{{name}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -428,7 +428,7 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 	transport_tpg.MutexStore.Lock(lockName)
 	defer transport_tpg.MutexStore.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules/{{name}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -499,7 +499,7 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 	}
 	transport_tpg.MutexStore.Lock(lockName)
 	defer transport_tpg.MutexStore.Unlock(lockName)
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules/{{name}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"organizations/{{organization}}/locations/{{location}}/eventThreatDetectionCustomModules/{{name}}")
 	if err != nil {
 		return err
 	}

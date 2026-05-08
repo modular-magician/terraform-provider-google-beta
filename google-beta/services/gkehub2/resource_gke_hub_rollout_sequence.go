@@ -347,7 +347,7 @@ func resourceGKEHub2RolloutSequenceCreate(d *schema.ResourceData, meta interface
 		obj["labels"] = effectiveLabelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/global/rolloutSequences?rollout_sequence_id={{rollout_sequence_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/rolloutSequences?rollout_sequence_id={{rollout_sequence_id}}")
 	if err != nil {
 		return err
 	}
@@ -426,7 +426,7 @@ func resourceGKEHub2RolloutSequenceRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/global/rolloutSequences/{{rollout_sequence_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/rolloutSequences/{{rollout_sequence_id}}")
 	if err != nil {
 		return err
 	}
@@ -551,7 +551,7 @@ func resourceGKEHub2RolloutSequenceUpdate(d *schema.ResourceData, meta interface
 		obj["labels"] = effectiveLabelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/global/rolloutSequences/{{rollout_sequence_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/rolloutSequences/{{rollout_sequence_id}}")
 	if err != nil {
 		return err
 	}
@@ -636,7 +636,7 @@ func resourceGKEHub2RolloutSequenceDelete(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error fetching project for RolloutSequence: %s", err)
 	}
 	billingProject = project
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/global/rolloutSequences/{{rollout_sequence_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/rolloutSequences/{{rollout_sequence_id}}")
 	if err != nil {
 		return err
 	}

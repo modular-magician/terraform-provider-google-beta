@@ -232,7 +232,7 @@ func testAccCheckDialogflowConversationProfileDestroyProducer(t *testing.T) func
 			}
 
 			config := acctest.GoogleProviderConfig(t)
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(dialogflow.Product, config), "{{name}}"))
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, transport_tpg.BaseUrl(dialogflow.Product, config)+"{{name}}")
 			if err != nil {
 				return err
 			}

@@ -272,7 +272,7 @@ func resourceComputeOrganizationSecurityPolicyCreate(d *schema.ResourceData, met
 		obj["parent"] = parentProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "locations/global/securityPolicies?parentId={{parent}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"locations/global/securityPolicies?parentId={{parent}}")
 	if err != nil {
 		return err
 	}
@@ -352,7 +352,7 @@ func resourceComputeOrganizationSecurityPolicyRead(d *schema.ResourceData, meta 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "locations/global/securityPolicies/{{policy_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"locations/global/securityPolicies/{{policy_id}}")
 	if err != nil {
 		return err
 	}
@@ -416,7 +416,7 @@ func resourceComputeOrganizationSecurityPolicyUpdate(d *schema.ResourceData, met
 		obj["advancedOptionsConfig"] = advancedOptionsConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "locations/global/securityPolicies/{{policy_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"locations/global/securityPolicies/{{policy_id}}")
 	if err != nil {
 		return err
 	}
@@ -468,7 +468,7 @@ func resourceComputeOrganizationSecurityPolicyDelete(d *schema.ResourceData, met
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "locations/global/securityPolicies/{{policy_id}}"))
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"locations/global/securityPolicies/{{policy_id}}")
 	if err != nil {
 		return err
 	}
