@@ -64,6 +64,25 @@ func resourceHypercomputeclusterClusterResourceHash(v interface{}) int {
 	return schema.HashString(buf.String())
 }
 
+func hypercomputeclusterClusterCustomizeDiff(_ context.Context, d *schema.ResourceDiff, meta interface{}) error {
+	if d.Id() == "" {
+		v, ok := d.GetOk("network_resources")
+		if !ok {
+			return fmt.Errorf("network_resources: At least one network_resources entry must be specified for cluster creation")
+		}
+
+		networkSet, ok := v.(*schema.Set)
+		if !ok {
+			return fmt.Errorf("network_resources: internal error - unexpected type: %T, expected *schema.Set", v)
+		}
+
+		if networkSet.Len() == 0 {
+			return fmt.Errorf("network_resources: network_resources set is empty, at least one entry must be specified for cluster creation")
+		}
+	}
+	return nil
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -123,6 +142,7 @@ func ResourceHypercomputeclusterCluster() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			hypercomputeclusterClusterCustomizeDiff,
 			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
