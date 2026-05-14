@@ -112,6 +112,7 @@ func TestAccBigqueryReservationReservationAssignment_bigqueryReservationAssignme
 
 	context := map[string]interface{}{
 		"project":          envvar.GetTestProjectFromEnv(),
+		"service_account":  envvar.GetTestServiceAccountFromEnv(t),
 		"reservation_name": "tf-test-example-reservation" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
@@ -153,6 +154,7 @@ resource "google_bigquery_reservation" "basic" {
 resource "google_bigquery_reservation_assignment" "assignment" {
   assignee  = "projects/%{project}"
   job_type = "QUERY"
+  principal = "principal://iam.googleapis.com/projects/-/serviceAccounts/%{service_account}"
   location = "us-central1"
   reservation = google_bigquery_reservation.basic.id
 }
