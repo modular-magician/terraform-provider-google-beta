@@ -55,6 +55,7 @@ type TgcMetadataPayload struct {
 	ResourceMetadata map[string]ResourceMetadata `json:"resource_metadata"`
 	PrimaryResource  string                      `json:"primary_resource"`
 	CaiReadTime      time.Time                   `json:"cai_read_time"`
+	RawStateFile     string                      `json:"raw_state_file,omitempty"`
 }
 
 // PROJECT_NUMBER instead of PROJECT_ID is in the CAI asset names for the resources in those services
@@ -120,6 +121,16 @@ func CollectAllTgcMetadata(tgcPayload TgcMetadataPayload) resource.TestCheckFunc
 			if rState == nil || rState.Primary == nil {
 				log.Printf("[DEBUG]TGC Terraform error: resource state unavailable for %s, skipping", address)
 				continue
+			}
+
+			if metadata.ImportMetadata.Id != "" {
+				stateBytes, err := json.Marshal(s)
+				if err == nil {
+					tgcPayload.RawStateFile = string(stateBytes)
+					log.Printf("[DEBUG] test_step_number=%d TGC captured full state for primary resource %s", tgcPayload.StepNumber, address)
+				} else {
+					log.Printf("[DEBUG] test_step_number=%d TGC could not marshal full state: %v", tgcPayload.StepNumber, err)
+				}
 			}
 
 			// Technically this will always be populated before this point but keeping it here for now so
