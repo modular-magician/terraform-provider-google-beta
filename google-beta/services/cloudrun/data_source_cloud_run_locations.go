@@ -27,6 +27,8 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
+// dummy change
+
 func DataSourceGoogleCloudRunLocations() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceGoogleCloudRunLocationsRead,
