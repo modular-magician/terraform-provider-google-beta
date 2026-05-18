@@ -11,6 +11,7 @@ fields:
     - api_field: automatedAgentConfig.sessionTtl
     - api_field: displayName
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.disableHighLatencyFeaturesSyncDelivery
+    - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.enableAsyncToolCall
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.conversationModelConfig.baselineModelVersion
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.conversationModelConfig.model
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.conversationProcessConfig.recentSentencesCount
@@ -19,6 +20,7 @@ fields:
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.enableEventBasedSuggestion
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.enableQuerySuggestionOnly
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.enableQuerySuggestionWhenNoAnswer
+    - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.enableResponseDebugInfo
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.queryConfig.confidenceThreshold
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.queryConfig.contextFilterSettings.dropHandoffMessages
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.queryConfig.contextFilterSettings.dropIvrMessages
@@ -34,7 +36,10 @@ fields:
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.featureConfigs.suggestionTriggerSettings.onlyEndUser
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.generators
     - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.groupSuggestionResponses
+    - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.skipEmptyEventBasedSuggestion
+    - api_field: humanAgentAssistantConfig.endUserSuggestionConfig.useUnredactedConversationData
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.disableHighLatencyFeaturesSyncDelivery
+    - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.enableAsyncToolCall
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.conversationModelConfig.baselineModelVersion
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.conversationModelConfig.model
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.conversationProcessConfig.recentSentencesCount
@@ -43,6 +48,7 @@ fields:
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.enableEventBasedSuggestion
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.enableQuerySuggestionOnly
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.enableQuerySuggestionWhenNoAnswer
+    - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.enableResponseDebugInfo
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.queryConfig.confidenceThreshold
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.queryConfig.contextFilterSettings.dropHandoffMessages
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.queryConfig.contextFilterSettings.dropIvrMessages
@@ -56,6 +62,8 @@ fields:
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.featureConfigs.suggestionTriggerSettings.onlyEndUser
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.generators
     - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.groupSuggestionResponses
+    - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.skipEmptyEventBasedSuggestion
+    - api_field: humanAgentAssistantConfig.humanAgentSuggestionConfig.useUnredactedConversationData
     - api_field: humanAgentAssistantConfig.messageAnalysisConfig.enableEntityExtraction
     - api_field: humanAgentAssistantConfig.messageAnalysisConfig.enableSentimentAnalysis
     - api_field: humanAgentAssistantConfig.notificationConfig.messageFormat

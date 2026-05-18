@@ -265,6 +265,18 @@ The following arguments are supported:
   (Optional)
   When disableHighLatencyFeaturesSyncDelivery is true and using the AnalyzeContent API, we will not deliver the responses from high latency features in the API response. The humanAgentAssistantConfig.notification_config must be configured and enableEventBasedSuggestion must be set to true to receive the responses from high latency features in Pub/Sub. High latency feature(s): KNOWLEDGE_ASSIST
 
+* `skip_empty_event_based_suggestion` -
+  (Optional)
+  If true, skip suggestion delivery for empty agent utterances.
+
+* `use_unredacted_conversation_data` -
+  (Optional)
+  If true, use unredacted conversation data for suggestions.
+
+* `enable_async_tool_call` -
+  (Optional)
+  If true, enable asynchronous tool calls in suggestions.
+
 
 <a name="nested_human_agent_assistant_config_human_agent_suggestion_config_feature_configs"></a>The `feature_configs` block supports:
 
@@ -318,6 +330,10 @@ The following arguments are supported:
   (Optional)
   Config to process conversation.
   Structure is [documented below](#nested_human_agent_assistant_config_human_agent_suggestion_config_feature_configs_conversation_process_config).
+
+* `enable_response_debug_info` -
+  (Optional)
+  If true, include debug information in suggestion responses
 
 
 <a name="nested_human_agent_assistant_config_human_agent_suggestion_config_feature_configs_suggestion_feature"></a>The `suggestion_feature` block supports:
@@ -440,6 +456,18 @@ The following arguments are supported:
   (Optional)
   When disableHighLatencyFeaturesSyncDelivery is true and using the AnalyzeContent API, we will not deliver the responses from high latency features in the API response. The humanAgentAssistantConfig.notification_config must be configured and enableEventBasedSuggestion must be set to true to receive the responses from high latency features in Pub/Sub. High latency feature(s): KNOWLEDGE_ASSIST
 
+* `skip_empty_event_based_suggestion` -
+  (Optional)
+  If true, skip suggestion delivery for empty agent utterances.
+
+* `use_unredacted_conversation_data` -
+  (Optional)
+  If true, use unredacted conversation data for suggestions.
+
+* `enable_async_tool_call` -
+  (Optional)
+  If true, enable asynchronous tool calls in suggestions.
+
 
 <a name="nested_human_agent_assistant_config_end_user_suggestion_config_feature_configs"></a>The `feature_configs` block supports:
 
@@ -493,6 +521,10 @@ The following arguments are supported:
   (Optional)
   Config to process conversation.
   Structure is [documented below](#nested_human_agent_assistant_config_end_user_suggestion_config_feature_configs_conversation_process_config).
+
+* `enable_response_debug_info` -
+  (Optional)
+  If true, include debug information in suggestion responses
 
 
 <a name="nested_human_agent_assistant_config_end_user_suggestion_config_feature_configs_suggestion_feature"></a>The `suggestion_feature` block supports:

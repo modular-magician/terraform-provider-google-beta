@@ -184,6 +184,11 @@ Expects the format "projects/<Project ID>/locations/<Location ID>/agent/environm
 										Optional:    true,
 										Description: `When disableHighLatencyFeaturesSyncDelivery is true and using the AnalyzeContent API, we will not deliver the responses from high latency features in the API response. The humanAgentAssistantConfig.notification_config must be configured and enableEventBasedSuggestion must be set to true to receive the responses from high latency features in Pub/Sub. High latency feature(s): KNOWLEDGE_ASSIST`,
 									},
+									"enable_async_tool_call": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, enable asynchronous tool calls in suggestions.`,
+									},
 									"feature_configs": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -254,6 +259,11 @@ This feature is only supported for types: KNOWLEDGE_ASSIST`,
 													Optional: true,
 													Description: `Enable query suggestion even if we can't find its answer. By default, queries are suggested only if we find its answer.
 This feature is only supported for types: KNOWLEDGE_ASSIST.`,
+												},
+												"enable_response_debug_info": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: `If true, include debug information in suggestion responses`,
 												},
 												"query_config": {
 													Type:        schema.TypeList,
@@ -445,6 +455,16 @@ This feature is only supported for types: ARTICLE_SUGGESTION, FAQ.`,
 
 If groupSuggestionResponses set to true. All the suggestions to the same participant based on the same context will be grouped into a single Pub/Sub event or StreamingAnalyzeContentResponse.`,
 									},
+									"skip_empty_event_based_suggestion": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, skip suggestion delivery for empty agent utterances.`,
+									},
+									"use_unredacted_conversation_data": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, use unredacted conversation data for suggestions.`,
+									},
 								},
 							},
 						},
@@ -459,6 +479,11 @@ If groupSuggestionResponses set to true. All the suggestions to the same partici
 										Type:        schema.TypeBool,
 										Optional:    true,
 										Description: `When disableHighLatencyFeaturesSyncDelivery is true and using the AnalyzeContent API, we will not deliver the responses from high latency features in the API response. The humanAgentAssistantConfig.notification_config must be configured and enableEventBasedSuggestion must be set to true to receive the responses from high latency features in Pub/Sub. High latency feature(s): KNOWLEDGE_ASSIST`,
+									},
+									"enable_async_tool_call": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, enable asynchronous tool calls in suggestions.`,
 									},
 									"feature_configs": {
 										Type:        schema.TypeList,
@@ -530,6 +555,11 @@ This feature is only supported for types: KNOWLEDGE_ASSIST`,
 													Optional: true,
 													Description: `Enable query suggestion even if we can't find its answer. By default, queries are suggested only if we find its answer.
 This feature is only supported for types: KNOWLEDGE_ASSIST.`,
+												},
+												"enable_response_debug_info": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: `If true, include debug information in suggestion responses`,
 												},
 												"query_config": {
 													Type:        schema.TypeList,
@@ -682,6 +712,16 @@ This feature is only supported for types: ARTICLE_SUGGESTION, FAQ.`,
 										Description: `If groupSuggestionResponses is false, and there are multiple featureConfigs in event based suggestion or StreamingAnalyzeContent, we will try to deliver suggestions to customers as soon as we get new suggestion. Different type of suggestions based on the same context will be in separate Pub/Sub event or StreamingAnalyzeContentResponse.
 
 If groupSuggestionResponses set to true. All the suggestions to the same participant based on the same context will be grouped into a single Pub/Sub event or StreamingAnalyzeContentResponse.`,
+									},
+									"skip_empty_event_based_suggestion": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, skip suggestion delivery for empty agent utterances.`,
+									},
+									"use_unredacted_conversation_data": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, use unredacted conversation data for suggestions.`,
 									},
 								},
 							},
@@ -1702,6 +1742,12 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugg
 		flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigGenerators(original["generators"], d, config)
 	transformed["disable_high_latency_features_sync_delivery"] =
 		flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigDisableHighLatencyFeaturesSyncDelivery(original["disableHighLatencyFeaturesSyncDelivery"], d, config)
+	transformed["skip_empty_event_based_suggestion"] =
+		flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigSkipEmptyEventBasedSuggestion(original["skipEmptyEventBasedSuggestion"], d, config)
+	transformed["use_unredacted_conversation_data"] =
+		flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigUseUnredactedConversationData(original["useUnredactedConversationData"], d, config)
+	transformed["enable_async_tool_call"] =
+		flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigEnableAsyncToolCall(original["enableAsyncToolCall"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1727,6 +1773,7 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugg
 			"query_config":                           flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsQueryConfig(original["queryConfig"], d, config),
 			"conversation_model_config":              flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsConversationModelConfig(original["conversationModelConfig"], d, config),
 			"conversation_process_config":            flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsConversationProcessConfig(original["conversationProcessConfig"], d, config),
+			"enable_response_debug_info":             flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsEnableResponseDebugInfo(original["enableResponseDebugInfo"], d, config),
 		})
 	}
 	return transformed
@@ -1944,6 +1991,10 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugg
 	return v // let terraform core handle it otherwise
 }
 
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsEnableResponseDebugInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigGroupSuggestionResponses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1953,6 +2004,18 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugg
 }
 
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigDisableHighLatencyFeaturesSyncDelivery(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigSkipEmptyEventBasedSuggestion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigUseUnredactedConversationData(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigEnableAsyncToolCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1973,6 +2036,12 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggest
 		flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigGenerators(original["generators"], d, config)
 	transformed["disable_high_latency_features_sync_delivery"] =
 		flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigDisableHighLatencyFeaturesSyncDelivery(original["disableHighLatencyFeaturesSyncDelivery"], d, config)
+	transformed["skip_empty_event_based_suggestion"] =
+		flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigSkipEmptyEventBasedSuggestion(original["skipEmptyEventBasedSuggestion"], d, config)
+	transformed["use_unredacted_conversation_data"] =
+		flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigUseUnredactedConversationData(original["useUnredactedConversationData"], d, config)
+	transformed["enable_async_tool_call"] =
+		flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigEnableAsyncToolCall(original["enableAsyncToolCall"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1998,6 +2067,7 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggest
 			"query_config":                           flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsQueryConfig(original["queryConfig"], d, config),
 			"conversation_model_config":              flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsConversationModelConfig(original["conversationModelConfig"], d, config),
 			"conversation_process_config":            flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsConversationProcessConfig(original["conversationProcessConfig"], d, config),
+			"enable_response_debug_info":             flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsEnableResponseDebugInfo(original["enableResponseDebugInfo"], d, config),
 		})
 	}
 	return transformed
@@ -2253,6 +2323,10 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggest
 	return v // let terraform core handle it otherwise
 }
 
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsEnableResponseDebugInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigGroupSuggestionResponses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2262,6 +2336,18 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggest
 }
 
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigDisableHighLatencyFeaturesSyncDelivery(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigSkipEmptyEventBasedSuggestion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigUseUnredactedConversationData(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigEnableAsyncToolCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2690,6 +2776,27 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugge
 		transformed["disableHighLatencyFeaturesSyncDelivery"] = transformedDisableHighLatencyFeaturesSyncDelivery
 	}
 
+	transformedSkipEmptyEventBasedSuggestion, err := expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigSkipEmptyEventBasedSuggestion(original["skip_empty_event_based_suggestion"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSkipEmptyEventBasedSuggestion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["skipEmptyEventBasedSuggestion"] = transformedSkipEmptyEventBasedSuggestion
+	}
+
+	transformedUseUnredactedConversationData, err := expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigUseUnredactedConversationData(original["use_unredacted_conversation_data"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUseUnredactedConversationData); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["useUnredactedConversationData"] = transformedUseUnredactedConversationData
+	}
+
+	transformedEnableAsyncToolCall, err := expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigEnableAsyncToolCall(original["enable_async_tool_call"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableAsyncToolCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableAsyncToolCall"] = transformedEnableAsyncToolCall
+	}
+
 	return transformed, nil
 }
 
@@ -2774,6 +2881,13 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugge
 			return nil, err
 		} else if val := reflect.ValueOf(transformedConversationProcessConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 			transformed["conversationProcessConfig"] = transformedConversationProcessConfig
+		}
+
+		transformedEnableResponseDebugInfo, err := expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsEnableResponseDebugInfo(original["enable_response_debug_info"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEnableResponseDebugInfo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["enableResponseDebugInfo"] = transformedEnableResponseDebugInfo
 		}
 
 		req = append(req, transformed)
@@ -3118,6 +3232,10 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugge
 	return v, nil
 }
 
+func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsEnableResponseDebugInfo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigGroupSuggestionResponses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -3127,6 +3245,18 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugge
 }
 
 func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigDisableHighLatencyFeaturesSyncDelivery(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigSkipEmptyEventBasedSuggestion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigUseUnredactedConversationData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigEnableAsyncToolCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3168,6 +3298,27 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggesti
 		return nil, err
 	} else if val := reflect.ValueOf(transformedDisableHighLatencyFeaturesSyncDelivery); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["disableHighLatencyFeaturesSyncDelivery"] = transformedDisableHighLatencyFeaturesSyncDelivery
+	}
+
+	transformedSkipEmptyEventBasedSuggestion, err := expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigSkipEmptyEventBasedSuggestion(original["skip_empty_event_based_suggestion"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSkipEmptyEventBasedSuggestion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["skipEmptyEventBasedSuggestion"] = transformedSkipEmptyEventBasedSuggestion
+	}
+
+	transformedUseUnredactedConversationData, err := expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigUseUnredactedConversationData(original["use_unredacted_conversation_data"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUseUnredactedConversationData); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["useUnredactedConversationData"] = transformedUseUnredactedConversationData
+	}
+
+	transformedEnableAsyncToolCall, err := expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigEnableAsyncToolCall(original["enable_async_tool_call"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableAsyncToolCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableAsyncToolCall"] = transformedEnableAsyncToolCall
 	}
 
 	return transformed, nil
@@ -3254,6 +3405,13 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggesti
 			return nil, err
 		} else if val := reflect.ValueOf(transformedConversationProcessConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 			transformed["conversationProcessConfig"] = transformedConversationProcessConfig
+		}
+
+		transformedEnableResponseDebugInfo, err := expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsEnableResponseDebugInfo(original["enable_response_debug_info"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEnableResponseDebugInfo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["enableResponseDebugInfo"] = transformedEnableResponseDebugInfo
 		}
 
 		req = append(req, transformed)
@@ -3664,6 +3822,10 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggesti
 	return v, nil
 }
 
+func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsEnableResponseDebugInfo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigGroupSuggestionResponses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -3673,6 +3835,18 @@ func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggesti
 }
 
 func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigDisableHighLatencyFeaturesSyncDelivery(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigSkipEmptyEventBasedSuggestion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigUseUnredactedConversationData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigEnableAsyncToolCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
