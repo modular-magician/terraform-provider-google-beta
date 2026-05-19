@@ -91,7 +91,7 @@ func TestAccDataplexLakeIamMemberGenerated(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
-			tfversion.RequireAbove(tfversion.Version1_12_0), // resource identity min version
+			tfversion.SkipBelow(tfversion.Version1_12_0), // resource identity min version
 		},
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

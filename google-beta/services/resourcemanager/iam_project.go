@@ -27,6 +27,8 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/cloudresourcemanager/v1"
+
+	"github.com/hashicorp/terraform-plugin-framework/list"
 )
 
 var IamProjectSchema = map[string]*schema.Schema{
@@ -59,8 +61,9 @@ func ProjectIdParseFunc(d *schema.ResourceData, _ *transport_tpg.Config) error {
 	return nil
 }
 
-// ProjectIamParentParentResourceIdentityParser returns the parent project's id
-func ProjectIamParentResourceIdentityParser(d *schema.ResourceData, identity *schema.IdentityData, _ *transport_tpg.Config) (string, error) {
+// ProjectIamParentParentResourceIdentityParser returns the project id for google_project_iam_member import
+// via resource identity (same shape as ProjectIamUpdater.GetResourceId()).
+func ProjectIamParentParentResourceIdentityParser(d *schema.ResourceData, identity *schema.IdentityData, _ *transport_tpg.Config) (string, error) {
 	v, ok := identity.GetOk("project")
 	if !ok {
 		return "", fmt.Errorf("import identity is missing attribute %q", "project")
@@ -70,6 +73,25 @@ func ProjectIamParentResourceIdentityParser(d *schema.ResourceData, identity *sc
 		return "", fmt.Errorf("import identity attribute %q must be a non-empty string", "project")
 	}
 	return s, nil
+}
+
+// NewProjectIamMemberListResource returns the list implementation for google_project_iam_member.
+func NewProjectIamMemberListResource() list.ListResource {
+	return tpgiamresource.NewIamMemberListResource(
+		"google_project_iam_member",
+		tpgiamresource.ResourceIamMember(
+			IamProjectSchema,
+			NewProjectIamUpdater,
+			ProjectIdParseFunc,
+			tpgiamresource.IamWithBatching,
+			tpgiamresource.IamWithParentResourceIdentity(ProjectIamParentParentResourceIdentityParser),
+		),
+		NewProjectIamUpdater,
+		tpgiamresource.IamMemberListCallConfig{
+			EnableRoleFilter:   true,
+			EnableMemberFilter: true,
+		},
+	)
 }
 
 func (u *ProjectIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
@@ -147,7 +169,12 @@ func init() {
 		Name:        "google_project_iam_member",
 		ProductName: "resourcemanager",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamMember(IamProjectSchema, NewProjectIamUpdater, ProjectIdParseFunc, tpgiamresource.IamWithBatching, tpgiamresource.IamWithParentResourceIdentity(ProjectIamParentResourceIdentityParser)),
+		Schema: tpgiamresource.ResourceIamMember(IamProjectSchema,
+			NewProjectIamUpdater,
+			ProjectIdParseFunc,
+			tpgiamresource.IamWithBatching,
+			tpgiamresource.IamWithParentResourceIdentity(ProjectIamParentParentResourceIdentityParser),
+		),
 	}.Register()
 	registry.Schema{
 		Name:        "google_project_iam_binding",
