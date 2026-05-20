@@ -1,0 +1,38 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_vertex_ai_rag_corpus
+generation_type: mmv1
+source_file: products/vertexai/RagCorpus.yaml
+api_service_name: aiplatform.googleapis.com
+api_version: v1beta1
+api_resource_type_kind: RagCorpus
+fields:
+    - api_field: corpusStatus.errorStatus
+    - api_field: corpusStatus.state
+    - api_field: createTime
+    - api_field: description
+    - api_field: displayName
+    - api_field: encryptionSpec.kmsKeyName
+    - api_field: name
+    - api_field: ragFilesCount
+    - field: region
+      provider_only: true
+    - api_field: updateTime
+    - api_field: vectorDbConfig.apiAuth.apiKeyConfig.apiKeySecretVersion
+    - api_field: vectorDbConfig.apiAuth.apiKeyConfig.apiKeyString
+    - api_field: vectorDbConfig.pinecone.indexName
+    - api_field: vectorDbConfig.ragEmbeddingModelConfig.vertexPredictionEndpoint.endpoint
+    - api_field: vectorDbConfig.ragEmbeddingModelConfig.vertexPredictionEndpoint.model
+    - api_field: vectorDbConfig.ragEmbeddingModelConfig.vertexPredictionEndpoint.modelVersionId
+    - api_field: vectorDbConfig.ragManagedDb.ann.leafCount
+    - api_field: vectorDbConfig.ragManagedDb.ann.treeDepth
+    - api_field: vectorDbConfig.ragManagedDb.knn
+    - api_field: vectorDbConfig.ragManagedVertexVectorSearch.collectionName
+    - api_field: vectorDbConfig.vertexFeatureStore.featureViewResourceName
+    - api_field: vectorDbConfig.vertexVectorSearch.index
+    - api_field: vectorDbConfig.vertexVectorSearch.indexEndpoint
+    - api_field: vectorDbConfig.weaviate.collectionName
+    - api_field: vectorDbConfig.weaviate.httpEndpoint
+    - api_field: vertexAiSearchConfig.servingConfig
+    - field: deletion_policy
+      provider_only: true
