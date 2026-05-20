@@ -3835,6 +3835,9 @@ func expandAttachedDisk(diskConfig map[string]interface{}, d *schema.ResourceDat
 
 	if forceAttach, ok := diskConfig["force_attach"]; ok {
 		disk.ForceAttach = forceAttach.(bool)
+		if disk.ForceAttach && !strings.Contains(sourceLink, "regions/") {
+			return nil, fmt.Errorf("Force attaching zonal disks is not supported")
+		}
 	}
 
 	return disk, nil
@@ -4210,6 +4213,9 @@ func expandBootDisk(d *schema.ResourceData, config *transport_tpg.Config, projec
 
 	if v, ok := d.GetOk("boot_disk.0.force_attach"); ok {
 		disk.ForceAttach = v.(bool)
+		if disk.ForceAttach && !strings.Contains(disk.Source, "regions/") {
+			return nil, fmt.Errorf("Force attaching zonal disks is not supported")
+		}
 	}
 
 	return disk, nil
