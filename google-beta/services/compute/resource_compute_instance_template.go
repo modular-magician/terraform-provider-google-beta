@@ -18,6 +18,7 @@ package compute
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -1672,9 +1673,17 @@ func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	networks, err := expandNetworkInterfaces(d, config)
+	networksIface, err := expandNetworkInterfaces(d, config)
 	if err != nil {
 		return err
+	}
+	niJSON, err := json.Marshal(networksIface)
+	if err != nil {
+		return fmt.Errorf("Error marshaling network interfaces: %s", err)
+	}
+	var networks []*compute.NetworkInterface
+	if err := json.Unmarshal(niJSON, &networks); err != nil {
+		return fmt.Errorf("Error unmarshaling network interfaces: %s", err)
 	}
 
 	scheduling, err := expandResourceComputeInstanceTemplateScheduling(d, config)
@@ -2140,7 +2149,15 @@ func resourceComputeInstanceTemplateRead(d *schema.ResourceData, meta interface{
 		return err
 	}
 	if instanceTemplate.Properties.NetworkInterfaces != nil {
-		networkInterfaces, region, _, _, err := flattenNetworkInterfaces(d, config, instanceTemplate.Properties.NetworkInterfaces)
+		niJSON, err := json.Marshal(instanceTemplate.Properties.NetworkInterfaces)
+		if err != nil {
+			return fmt.Errorf("Error marshaling network interfaces: %s", err)
+		}
+		var niIface []interface{}
+		if err := json.Unmarshal(niJSON, &niIface); err != nil {
+			return fmt.Errorf("Error unmarshaling network interfaces: %s", err)
+		}
+		networkInterfaces, region, _, _, err := flattenNetworkInterfaces(d, config, niIface)
 		if err != nil {
 			return err
 		}
