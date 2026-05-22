@@ -103,11 +103,6 @@ resource "google_compute_interconnect_attachment" "attachment" {
     default_appliance_ip_address = "10.0.0.4"
     tunnel_endpoint_ip_address   = "172.16.0.1"
   }
-  lifecycle {
-    ignore_changes = [
-      vlan_tag8021q
-    ]
-  }
 }
 `, context)
 }
