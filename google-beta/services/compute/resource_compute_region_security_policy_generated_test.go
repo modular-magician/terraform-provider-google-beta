@@ -74,7 +74,7 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyBasicExample(t *test
 				ResourceName:            "google_compute_region_security_policy.region-sec-policy-basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region"},
+				ImportStateVerifyIgnore: []string{"labels", "region", "terraform_labels"},
 			},
 		},
 	})
@@ -112,7 +112,7 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithDdosProtectionCo
 				ResourceName:            "google_compute_region_security_policy.region-sec-policy-ddos-protection",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region"},
+				ImportStateVerifyIgnore: []string{"labels", "region", "terraform_labels"},
 			},
 		},
 	})
@@ -154,7 +154,7 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithUserDefinedField
 				ResourceName:            "google_compute_region_security_policy.region-sec-policy-user-defined-fields",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region"},
+				ImportStateVerifyIgnore: []string{"labels", "region", "terraform_labels"},
 			},
 		},
 	})
@@ -206,7 +206,7 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithRulesExample(t *
 				ResourceName:            "google_compute_region_security_policy.region-sec-policy-with-rules",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region"},
+				ImportStateVerifyIgnore: []string{"labels", "region", "terraform_labels"},
 			},
 		},
 	})

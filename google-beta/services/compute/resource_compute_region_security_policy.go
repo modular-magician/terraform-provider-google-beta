@@ -143,6 +143,7 @@ func ResourceComputeRegionSecurityPolicy() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
 		),
@@ -235,6 +236,17 @@ Values are case insensitive. Possible values: ["8KB", "16KB", "32KB", "48KB", "6
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `An optional description of this resource. Provide this property when you create the resource.`,
+			},
+			"labels": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Description: `Labels for this resource. These can only be added or modified by the setLabels method.
+Each label key/value pair must comply with RFC1035. Label values may be empty.
+
+
+**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"region": {
 				Type:             schema.TypeString,
@@ -762,11 +774,26 @@ The last byte of the field (in network byte order) corresponds to the least sign
 					},
 				},
 			},
+			"effective_labels": {
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"fingerprint": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `Fingerprint of this resource. This field is used internally during
 updates of this resource.`,
+			},
+			"label_fingerprint": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `A fingerprint for the labels being applied to this security policy, which is essentially
+a hash of the labels set used for optimistic locking. The fingerprint is initially generated
+by Compute Engine and changes after every request to modify or update labels.
+You must always provide an up-to-date fingerprint hash in order to update or change labels,
+otherwise the request will fail with error 412 conditionNotMet.`,
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -782,6 +809,13 @@ updates of this resource.`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Server-defined URL for this resource with the resource id.`,
+			},
+			"terraform_labels": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Description: `The combination of labels configured directly on the resource
+ and default labels configured on the provider.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -832,6 +866,12 @@ func resourceComputeRegionSecurityPolicyCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(fingerprintProp)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
 		obj["fingerprint"] = fingerprintProp
 	}
+	labelFingerprintProp, err := expandComputeRegionSecurityPolicyLabelFingerprint(d.Get("label_fingerprint"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("label_fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelFingerprintProp)) && (ok || !reflect.DeepEqual(v, labelFingerprintProp)) {
+		obj["labelFingerprint"] = labelFingerprintProp
+	}
 	typeProp, err := expandComputeRegionSecurityPolicyType(d.Get("type"), d, config)
 	if err != nil {
 		return err
@@ -861,6 +901,12 @@ func resourceComputeRegionSecurityPolicyCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(rulesProp)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
 		obj["rules"] = rulesProp
+	}
+	effectiveLabelsProp, err := expandComputeRegionSecurityPolicyEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 	regionProp, err := expandComputeRegionSecurityPolicyRegion(d.Get("region"), d, config)
 	if err != nil {
@@ -1127,6 +1173,61 @@ func resourceComputeRegionSecurityPolicyUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 	}
+	d.Partial(true)
+
+	if d.HasChange("label_fingerprint") || d.HasChange("effective_labels") {
+		obj := make(map[string]interface{})
+
+		labelFingerprintProp, err := expandComputeRegionSecurityPolicyLabelFingerprint(d.Get("label_fingerprint"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("label_fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelFingerprintProp)) {
+			obj["labelFingerprint"] = labelFingerprintProp
+		}
+		labelsProp, err := expandComputeRegionSecurityPolicyEffectiveLabels(d.Get("effective_labels"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+			obj["labels"] = labelsProp
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/regions/{{region}}/securityPolicies/{{name}}/setLabels")
+		if err != nil {
+			return err
+		}
+
+		headers := make(http.Header)
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating RegionSecurityPolicy %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating RegionSecurityPolicy %q: %#v", d.Id(), res)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, project, "Updating RegionSecurityPolicy", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
+
+	d.Partial(false)
 
 	return resourceComputeRegionSecurityPolicyRead(d, meta)
 }
@@ -1227,6 +1328,25 @@ func flattenComputeRegionSecurityPolicyDescription(v interface{}, d *schema.Reso
 }
 
 func flattenComputeRegionSecurityPolicyFingerprint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeRegionSecurityPolicyLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
+}
+
+func flattenComputeRegionSecurityPolicyLabelFingerprint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1915,6 +2035,25 @@ func flattenComputeRegionSecurityPolicyRulesNetworkMatchSrcAsns(v interface{}, d
 	return v
 }
 
+func flattenComputeRegionSecurityPolicyTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("terraform_labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
+}
+
+func flattenComputeRegionSecurityPolicyEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeRegionSecurityPolicyRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1931,6 +2070,10 @@ func expandComputeRegionSecurityPolicyDescription(v interface{}, d tpgresource.T
 }
 
 func expandComputeRegionSecurityPolicyFingerprint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRegionSecurityPolicyLabelFingerprint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2907,6 +3050,17 @@ func expandComputeRegionSecurityPolicyRulesNetworkMatchSrcAsns(v interface{}, d 
 	return v, nil
 }
 
+func expandComputeRegionSecurityPolicyEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
 func expandComputeRegionSecurityPolicyRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
 	if err != nil {
@@ -2930,6 +3084,12 @@ func ResourceComputeRegionSecurityPolicyFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("fingerprint", flattenComputeRegionSecurityPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
 	}
+	if err = d.Set("labels", flattenComputeRegionSecurityPolicyLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
+	}
+	if err = d.Set("label_fingerprint", flattenComputeRegionSecurityPolicyLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
+	}
 	if err = d.Set("type", flattenComputeRegionSecurityPolicyType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
 	}
@@ -2949,6 +3109,12 @@ func ResourceComputeRegionSecurityPolicyFlatten(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
 	}
 	if err = d.Set("rules", flattenComputeRegionSecurityPolicyRules(res["rules"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
+	}
+	if err = d.Set("terraform_labels", flattenComputeRegionSecurityPolicyTerraformLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
+	}
+	if err = d.Set("effective_labels", flattenComputeRegionSecurityPolicyEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicy: %s", err)
 	}
 	if err = d.Set("region", flattenComputeRegionSecurityPolicyRegion(res["region"], d, config)); err != nil {

@@ -14,7 +14,11 @@ fields:
     - api_field: advancedOptionsConfig.userIpRequestHeaders
     - api_field: ddosProtectionConfig.ddosProtection
     - api_field: description
+    - field: effective_labels
+      provider_only: true
     - api_field: fingerprint
+    - api_field: labelFingerprint
+    - api_field: labels
     - api_field: name
     - api_field: id
       field: policy_id
@@ -69,6 +73,8 @@ fields:
     - api_field: selfLink
     - api_field: selfLinkWithId
       field: self_link_with_policy_id
+    - field: terraform_labels
+      provider_only: true
     - api_field: type
     - api_field: userDefinedFields.base
     - api_field: userDefinedFields.mask
