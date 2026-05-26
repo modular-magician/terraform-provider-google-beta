@@ -64,6 +64,12 @@ The following arguments are supported:
   Format: `'projects/{{project}}/locations/{{location}}/keyRings/{{keyring}}/cryptoKeys/{{cryptoKey}}'`
 
 
+* `deletion_policy` -
+  (Optional)
+  The deletion policy for the CryptoKeyVersion.
+  - 'SCHEDULE_DESTROY' (Default): When the resource block is removed from configuration, the provider will call the destroy API endpoint to schedule the key for destruction, and then immediately drop the resource from the Terraform state. The API resource itself is not permanently removed (legacy behavior).
+  - 'DELETE': When the resource block is removed from configuration, the provider will verify the resource state is DESTROYED and call the permanent delete API endpoint. If the resource has not completed its scheduled destruction period, the Terraform destroy operation will fail and return an error.
+
 * `state` -
   (Optional)
   The current state of the CryptoKeyVersion. Note: you can only specify this field to manually `ENABLE` or `DISABLE` the CryptoKeyVersion,
@@ -75,12 +81,6 @@ The following arguments are supported:
   ExternalProtectionLevelOptions stores a group of additional fields for configuring a CryptoKeyVersion that are specific to the EXTERNAL protection level and EXTERNAL_VPC protection levels.
   Structure is [documented below](#nested_external_protection_level_options).
 
-* `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
-	When a 'terraform destroy' or 'terraform apply' would delete the resource,
-	the command will fail if this field is set to "PREVENT" in Terraform state.
-	When set to "ABANDON", the command will remove the resource from Terraform
-	management without updating or deleting the resource in the API.
-	When set to "DELETE", deleting the resource is allowed.
 
 
 <a name="nested_external_protection_level_options"></a>The `external_protection_level_options` block supports:

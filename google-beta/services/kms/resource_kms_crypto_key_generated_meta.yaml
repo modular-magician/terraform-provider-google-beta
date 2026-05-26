@@ -8,6 +8,8 @@ api_version: v1
 api_resource_type_kind: CryptoKey
 fields:
     - api_field: cryptoKeyBackend
+    - field: deletion_policy
+      provider_only: true
     - api_field: destroyScheduledDuration
     - field: effective_labels
       provider_only: true
@@ -28,5 +30,3 @@ fields:
       provider_only: true
     - api_field: versionTemplate.algorithm
     - api_field: versionTemplate.protectionLevel
-    - field: deletion_policy
-      provider_only: true

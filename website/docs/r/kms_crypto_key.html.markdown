@@ -24,11 +24,9 @@ description: |-
 A `CryptoKey` represents a logical key that can be used for cryptographic operations.
 
 
-~> **Note:** CryptoKeys cannot be deleted from Google Cloud Platform.
-Destroying a Terraform-managed CryptoKey will remove it from state
-and delete all CryptoKeyVersions, rendering the key unusable, but *will
-not delete the resource from the project.* When Terraform destroys these keys,
-any data previously encrypted with these keys will be irrecoverable.
+~> **Note:** By default, deleting a Terraform-managed CryptoKey will attempt to permanently delete it from Google Cloud Platform if all its child versions have been permanently deleted.
+If you want to preserve the key resource in GCP while rendering it unusable (legacy Terraform behavior), set `deletion_policy` to `DESTROY`.
+When Terraform destroys these keys or their versions, any data previously encrypted with them will be irrecoverable.
 For this reason, it is strongly recommended that you add
 [lifecycle](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle)
 hooks to the resource to prevent accidental destruction.
@@ -138,6 +136,12 @@ The following arguments are supported:
   The resource name of the backend environment associated with all CryptoKeyVersions within this CryptoKey.
   The resource name is in the format "projects/*/locations/*/ekmConnections/*" and only applies to "EXTERNAL_VPC" keys.
 
+* `deletion_policy` -
+  (Optional)
+  The deletion policy for the CryptoKey.
+  - 'SCHEDULE_DESTROY' (Default): Destroy all versions and abandon the key in state (legacy behavior).
+  - 'DELETE': Requires all versions to be permanently deleted first, then deletes the CryptoKey.
+
 * `key_access_justifications_policy` -
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   The policy used for Key Access Justifications Policy Enforcement. If this
@@ -157,12 +161,6 @@ The following arguments are supported:
   or `google_kms_key_ring_import_job` resource to import the CryptoKeyVersion.
   This field is only applicable during initial CryptoKey creation.
 
-* `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
-	When a 'terraform destroy' or 'terraform apply' would delete the resource,
-	the command will fail if this field is set to "PREVENT" in Terraform state.
-	When set to "ABANDON", the command will remove the resource from Terraform
-	management without updating or deleting the resource in the API.
-	When set to "DELETE", deleting the resource is allowed.
 
 
 <a name="nested_version_template"></a>The `version_template` block supports:

@@ -124,7 +124,6 @@ func ResourceKMSCryptoKey() *schema.Resource {
 		},
 		CustomizeDiff: customdiff.All(
 			tpgresource.SetLabelsDiff,
-			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
 		),
 
 		Identity: &schema.ResourceIdentity{
@@ -168,6 +167,14 @@ Format: ''projects/{{project}}/locations/{{location}}/keyRings/{{keyRing}}''.`,
 				ForceNew: true,
 				Description: `The resource name of the backend environment associated with all CryptoKeyVersions within this CryptoKey.
 The resource name is in the format "projects/*/locations/*/ekmConnections/*" and only applies to "EXTERNAL_VPC" keys.`,
+			},
+			"deletion_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The deletion policy for the CryptoKey.
+- 'SCHEDULE_DESTROY' (Default): Destroy all versions and abandon the key in state (legacy behavior).
+- 'DELETE': Requires all versions to be permanently deleted first, then deletes the CryptoKey.`,
+				Default: "SCHEDULE_DESTROY",
 			},
 			"destroy_scheduled_duration": {
 				Type:     schema.TypeString,
@@ -305,19 +312,6 @@ Keys with purpose ENCRYPT_DECRYPT may have a primary. For other keys, this field
 				Description: `The combination of labels configured directly on the resource
  and default labels configured on the provider.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
-			},
-
-			"deletion_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				Description: `Whether Terraform will be prevented from destroying the instance. Defaults to "DELETE".
-When a 'terraform destroy' or 'terraform apply' would delete the instance,
-the command will fail if this field is set to "PREVENT" in Terraform state.
-When set to "ABANDON", the command will remove the resource from Terraform
-management without updating or deleting the resource in the API.
-When set to "DELETE", deleting the resource is allowed.
-`,
 			},
 		},
 		UseJSONNumber: true,
@@ -496,20 +490,6 @@ func resourceKMSCryptoKeyRead(d *schema.ResourceData, meta interface{}) error {
 		return nil
 	}
 
-	// Explicitly set virtual fields to default values if unset
-	if _, ok := d.GetOkExists("deletion_policy"); !ok {
-		//prioritize config's value if present
-		if config.DeletionPolicy != "" {
-			if err := d.Set("deletion_policy", config.DeletionPolicy); err != nil {
-				return fmt.Errorf("Error setting deletion_policy: %s", err)
-			}
-		} else {
-			if err := d.Set("deletion_policy", "DELETE"); err != nil {
-				return fmt.Errorf("Error setting deletion_policy: %s", err)
-			}
-		}
-	}
-
 	err = ResourceKMSCryptoKeyFlatten(d, meta, res, config, userAgent, billingProject, url, headers)
 	if err != nil {
 		return err
@@ -537,18 +517,6 @@ func resourceKMSCryptoKeyRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceKMSCryptoKeyUpdate(d *schema.ResourceData, meta interface{}) error {
-	clientSideFields := map[string]bool{"deletion_policy": true}
-	clientSideOnly := true
-	for field := range ResourceKMSCryptoKey().Schema {
-		if d.HasChange(field) && !clientSideFields[field] {
-			clientSideOnly = false
-			break
-		}
-	}
-	if clientSideOnly {
-		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
-		return resourceKMSCryptoKeyRead(d, meta)
-	}
 
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
@@ -669,13 +637,6 @@ func resourceKMSCryptoKeyUpdate(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceKMSCryptoKeyDelete(d *schema.ResourceData, meta interface{}) error {
-	if d.Get("deletion_policy").(string) == "PREVENT" {
-		return fmt.Errorf("cannot destroy KMSCryptoKey without setting deletion_policy=\"DELETE\" and running `terraform apply`")
-	}
-	if d.Get("deletion_policy").(string) == "ABANDON" {
-		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing CryptoKey %q from Terraform state without deletion", d.Id())
-		return nil
-	}
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
@@ -687,26 +648,34 @@ func resourceKMSCryptoKeyDelete(d *schema.ResourceData, meta interface{}) error 
 		return err
 	}
 
-	log.Printf(`
-[WARNING] KMS CryptoKey resources cannot be deleted from GCP. The CryptoKey %s will be removed from Terraform state,
-and all its CryptoKeyVersions will be destroyed, but it will still be present in the project.`, cryptoKeyId.CryptoKeyId())
+	policy := d.Get("deletion_policy").(string)
 
-	// Delete all versions of the key
-	if err := clearCryptoKeyVersions(cryptoKeyId, userAgent, config); err != nil {
-		return err
-	}
-
-	// Make sure automatic key rotation is disabled if set
-	if d.Get("rotation_period") != "" {
-		if err := disableCryptoKeyRotation(cryptoKeyId, userAgent, config); err != nil {
-			return fmt.Errorf(
-				"While cryptoKeyVersions were cleared, Terraform was unable to disable automatic rotation of key due to an error: %s."+
-					"Please retry or manually disable automatic rotation to prevent creation of a new version of this key.", err)
+	if policy == "SCHEDULE_DESTROY" || policy == "" {
+		if err := clearCryptoKeyVersions(cryptoKeyId, userAgent, config); err != nil {
+			return err
 		}
-	}
+		if d.Get("rotation_period").(string) != "" {
+			if err := disableCryptoKeyRotation(cryptoKeyId, userAgent, config); err != nil {
+				return err
+			}
+		}
+		d.SetId("")
+		return nil
+	} else if policy == "DELETE" {
+		if err := checkCryptoKeyVersionsEmpty(cryptoKeyId, userAgent, config); err != nil {
+			return err
+		}
 
-	d.SetId("")
-	return nil
+		// Call the final DELETE method for the CryptoKey
+		if err := deleteCryptoKey(cryptoKeyId, d, userAgent, config); err != nil {
+			return err
+		}
+
+		d.SetId("")
+		return nil
+	} else {
+		return fmt.Errorf("Unsupported deletion_policy: %s", policy)
+	}
 }
 
 func resourceKMSCryptoKeyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
