@@ -121,7 +121,6 @@ func resourceSpannerEncryptionConfigCustomDiffFunc(diff tpgresource.TerraformRes
 		if len(newKeys) == 0 && len(oldKeys) == 1 && oldKeys[0] == kmsKeyName {
 			return diff.Clear("encryption_config.0.kms_key_names")
 		}
-		return diff.ForceNew("encryption_config.0.kms_key_names")
 	}
 	return nil
 }
@@ -275,7 +274,6 @@ whereas setting “enableDropProtection” to true protects the database from de
 			"encryption_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Encryption configuration for the database`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -283,7 +281,6 @@ whereas setting “enableDropProtection” to true protects the database from de
 						"kms_key_name": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ForceNew: true,
 							Description: `Fully qualified name of the KMS key to use to encrypt this database. This key must exist
 in the same location as the Spanner Database.`,
 							ExactlyOneOf: []string{"encryption_config.0.kms_key_name", "encryption_config.0.kms_key_names"},
@@ -292,7 +289,6 @@ in the same location as the Spanner Database.`,
 							Type:     schema.TypeList,
 							Computed: true,
 							Optional: true,
-							ForceNew: true,
 							Description: `Fully qualified name of the KMS keys to use to encrypt this database. The keys must exist
 in the same locations as the Spanner Database.`,
 							Elem: &schema.Schema{
@@ -387,7 +383,7 @@ func resourceSpannerDatabaseCreate(d *schema.ResourceData, meta interface{}) err
 	encryptionConfigProp, err := expandSpannerDatabaseEncryptionConfig(d.Get("encryption_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("encryption_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(encryptionConfigProp)) && (ok || !reflect.DeepEqual(v, encryptionConfigProp)) {
+	} else if v, ok := d.GetOkExists("encryption_config"); ok || !reflect.DeepEqual(v, encryptionConfigProp) {
 		obj["encryptionConfig"] = encryptionConfigProp
 	}
 	databaseDialectProp, err := expandSpannerDatabaseDatabaseDialect(d.Get("database_dialect"), d, config)
@@ -761,6 +757,12 @@ func resourceSpannerDatabaseUpdate(d *schema.ResourceData, meta interface{}) err
 	billingProject = project
 
 	obj := make(map[string]interface{})
+	encryptionConfigProp, err := expandSpannerDatabaseEncryptionConfig(d.Get("encryption_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("encryption_config"); ok || !reflect.DeepEqual(v, encryptionConfigProp) {
+		obj["encryptionConfig"] = encryptionConfigProp
+	}
 	enableDropProtectionProp, err := expandSpannerDatabaseEnableDropProtection(d.Get("enable_drop_protection"), d, config)
 	if err != nil {
 		return err
@@ -781,6 +783,10 @@ func resourceSpannerDatabaseUpdate(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Updating Database %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
 	updateMask := []string{}
+
+	if d.HasChange("encryption_config") {
+		updateMask = append(updateMask, "encryptionConfig")
+	}
 
 	if d.HasChange("enable_drop_protection") {
 		updateMask = append(updateMask, "enableDropProtection")
