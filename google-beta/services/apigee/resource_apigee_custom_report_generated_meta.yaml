@@ -1,0 +1,32 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_apigee_custom_report
+generation_type: mmv1
+source_file: products/apigee/CustomReport.yaml
+api_service_name: apigee.googleapis.com
+api_version: v1
+api_resource_type_kind: CustomReport
+fields:
+    - api_field: chartType
+    - api_field: createdAt
+    - api_field: dimensions
+    - api_field: displayName
+    - api_field: environment
+    - api_field: filter
+    - api_field: lastModifiedAt
+    - api_field: lastViewedAt
+    - api_field: metrics.function
+    - api_field: metrics.name
+    - api_field: name
+    - field: org_id
+      provider_only: true
+    - api_field: organization
+    - api_field: properties.property
+    - api_field: properties.value.name
+    - api_field: properties.value.value
+    - api_field: sortByCols
+    - api_field: sortOrder
+    - api_field: tags
+    - api_field: timeUnit
+    - field: deletion_policy
+      provider_only: true
