@@ -143,6 +143,18 @@ func ResourceAlloydbUser() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"keep_extra_roles": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If true and the user already exists and has additional database roles
+that aren't tracked in the 'database_roles' argument, keep those roles
+granted. Useful when other tools (e.g. PostgreSQL 'GRANT' statements
+run out-of-band) have granted roles to the user that Terraform doesn't
+manage. The field is input-only — the API does not return it on read —
+so it must be set on every apply that should preserve out-of-band
+grants. Defaults to false (Terraform reconciles 'database_roles'
+exactly with the configured set).`,
+			},
 			"password": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -206,6 +218,12 @@ func resourceAlloydbUserCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("database_roles"); !tpgresource.IsEmptyValue(reflect.ValueOf(databaseRolesProp)) && (ok || !reflect.DeepEqual(v, databaseRolesProp)) {
 		obj["databaseRoles"] = databaseRolesProp
+	}
+	keepExtraRolesProp, err := expandAlloydbUserKeepExtraRoles(d.Get("keep_extra_roles"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("keep_extra_roles"); !tpgresource.IsEmptyValue(reflect.ValueOf(keepExtraRolesProp)) && (ok || !reflect.DeepEqual(v, keepExtraRolesProp)) {
+		obj["keepExtraRoles"] = keepExtraRolesProp
 	}
 	passwordWoProp, err := expandAlloydbUserPasswordWo(tpgresource.GetRawConfigAttributeAsString(d, "password_wo"), d, config)
 	if err != nil {
@@ -351,6 +369,12 @@ func resourceAlloydbUserUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("database_roles"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, databaseRolesProp)) {
 		obj["databaseRoles"] = databaseRolesProp
 	}
+	keepExtraRolesProp, err := expandAlloydbUserKeepExtraRoles(d.Get("keep_extra_roles"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("keep_extra_roles"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, keepExtraRolesProp)) {
+		obj["keepExtraRoles"] = keepExtraRolesProp
+	}
 	passwordWoProp, err := expandAlloydbUserPasswordWo(tpgresource.GetRawConfigAttributeAsString(d, "password_wo"), d, config)
 	if err != nil {
 		return err
@@ -373,6 +397,10 @@ func resourceAlloydbUserUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("database_roles") {
 		updateMask = append(updateMask, "databaseRoles")
+	}
+
+	if d.HasChange("keep_extra_roles") {
+		updateMask = append(updateMask, "keepExtraRoles")
 	}
 
 	if d.HasChange("password_wo") {
@@ -521,6 +549,10 @@ func expandAlloydbUserPassword(v interface{}, d tpgresource.TerraformResourceDat
 }
 
 func expandAlloydbUserDatabaseRoles(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbUserKeepExtraRoles(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
