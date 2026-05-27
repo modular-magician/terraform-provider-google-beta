@@ -177,6 +177,7 @@ there can be up to 100 domains in this list.`,
 			},
 			"name": {
 				Type:     schema.TypeString,
+				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Description: `Name of the resource. Provided by the client when the resource is
@@ -219,6 +220,24 @@ which type this is. Default value: "MANAGED" Possible values: ["MANAGED"]`,
 				Description: `Domains associated with the certificate via Subject Alternative Name.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
+				},
+			},
+			"name_prefix": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"name"},
+				Description:   "Creates a unique name beginning with the specified prefix. Conflicts with name.",
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					// https://cloud.google.com/compute/docs/reference/latest/sslCertificates#resource
+					// uuid is 9 characters, limit the prefix to 54.
+					value := v.(string)
+					if len(value) > 54 {
+						errors = append(errors, fmt.Errorf(
+							"%q cannot be longer than 54 characters, name is limited to 63", k))
+					}
+					return
 				},
 			},
 			"project": {
@@ -586,7 +605,26 @@ func expandComputeManagedSslCertificateDescription(v interface{}, d tpgresource.
 }
 
 func expandComputeManagedSslCertificateName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	var certName string
+	if v, ok := d.GetOk("name"); ok {
+		certName = v.(string)
+	} else if v, ok := d.GetOk("name_prefix"); ok {
+		prefix := v.(string)
+		if len(prefix) > 37 {
+			certName = tpgresource.ReducedPrefixedUniqueId(prefix)
+		} else {
+			certName = id.PrefixedUniqueId(prefix)
+		}
+	} else {
+		certName = id.UniqueId()
+	}
+
+	// We need to get the {{name}} into schema to set the ID using tpgresource.ReplaceVars
+	if err := d.Set("name", certName); err != nil {
+		return nil, fmt.Errorf("Error setting name: %s", err)
+	}
+
+	return certName, nil
 }
 
 func expandComputeManagedSslCertificateManaged(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
