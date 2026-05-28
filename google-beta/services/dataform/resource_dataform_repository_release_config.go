@@ -227,6 +227,11 @@ Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
 				ForceNew:    true,
 				Description: `A reference to the region`,
 			},
+			"release_compilation_result": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The name of the currently released compilation result for this release config. This value is updated when a compilation result is automatically created from this release config (using cron_schedule), or when this resource is updated by API call (perhaps to roll back to an earlier release). The compilation result must have been created using this release config. Must be in the format 'projects/*/locations/*/repositories/*/compilationResults/*'.`,
+			},
 			"repository": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -342,6 +347,12 @@ func resourceDataformRepositoryReleaseConfigCreate(d *schema.ResourceData, meta 
 		return err
 	} else if v, ok := d.GetOkExists("disabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(disabledProp)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
+	}
+	releaseCompilationResultProp, err := expandDataformRepositoryReleaseConfigReleaseCompilationResult(d.Get("release_compilation_result"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("release_compilation_result"); !tpgresource.IsEmptyValue(reflect.ValueOf(releaseCompilationResultProp)) && (ok || !reflect.DeepEqual(v, releaseCompilationResultProp)) {
+		obj["releaseCompilationResult"] = releaseCompilationResultProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{region}}/repositories/{{repository}}/releaseConfigs?releaseConfigId={{name}}")
@@ -594,6 +605,12 @@ func resourceDataformRepositoryReleaseConfigUpdate(d *schema.ResourceData, meta 
 		return err
 	} else if v, ok := d.GetOkExists("disabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
+	}
+	releaseCompilationResultProp, err := expandDataformRepositoryReleaseConfigReleaseCompilationResult(d.Get("release_compilation_result"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("release_compilation_result"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, releaseCompilationResultProp)) {
+		obj["releaseCompilationResult"] = releaseCompilationResultProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{region}}/repositories/{{repository}}/releaseConfigs/{{name}}")
@@ -850,6 +867,10 @@ func flattenDataformRepositoryReleaseConfigDisabled(v interface{}, d *schema.Res
 	return v
 }
 
+func flattenDataformRepositoryReleaseConfigReleaseCompilationResult(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDataformRepositoryReleaseConfigName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -980,6 +1001,10 @@ func expandDataformRepositoryReleaseConfigDisabled(v interface{}, d tpgresource.
 	return v, nil
 }
 
+func expandDataformRepositoryReleaseConfigReleaseCompilationResult(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceDataformRepositoryReleaseConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -1002,6 +1027,9 @@ func ResourceDataformRepositoryReleaseConfigFlatten(d *schema.ResourceData, meta
 		return fmt.Errorf("Error reading RepositoryReleaseConfig: %s", err)
 	}
 	if err = d.Set("disabled", flattenDataformRepositoryReleaseConfigDisabled(res["disabled"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RepositoryReleaseConfig: %s", err)
+	}
+	if err = d.Set("release_compilation_result", flattenDataformRepositoryReleaseConfigReleaseCompilationResult(res["releaseCompilationResult"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryReleaseConfig: %s", err)
 	}
 
