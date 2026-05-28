@@ -84,6 +84,63 @@ data "google_compute_image" "my_image" {
   project = "debian-cloud"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=region_disk_resource_policy_attachment_options&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Region Disk Resource Policy Attachment Options
+
+
+```hcl
+resource "google_compute_region_disk_resource_policy_attachment" "attachment" {
+  name = google_compute_resource_policy.policy.name
+  disk = google_compute_region_disk.ssd.name
+  region = "us-central1"
+  options = "my-options"
+}
+
+resource "google_compute_disk" "disk" {
+  name  = "my-base-disk"
+  image = "debian-cloud/debian-11"
+  size  = 50
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+}
+
+resource "google_compute_snapshot" "snapdisk" {
+  name  = "my-snapshot"
+  source_disk = google_compute_disk.disk.name
+  zone        = "us-central1-a"
+}
+
+resource "google_compute_region_disk" "ssd" {
+  name  = "my-disk"
+  replica_zones = ["us-central1-a", "us-central1-f"]
+  snapshot = google_compute_snapshot.snapdisk.id
+  size  = 50
+  type  = "pd-ssd"
+  region  = "us-central1"
+}
+
+resource "google_compute_resource_policy" "policy" {
+  name = "my-resource-policy"
+  region = "us-central1"
+  snapshot_schedule_policy {
+    schedule {
+      daily_schedule {
+        days_in_cycle = 1
+        start_time = "04:00"
+      }
+    }
+  }
+}
+
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+```
 
 ## Argument Reference
 
@@ -99,6 +156,10 @@ The following arguments are supported:
   (Required)
   The name of the regional disk in which the resource policies are attached to.
 
+
+* `options` -
+  (Optional)
+  Internal use only.
 
 * `region` -
   (Optional)

@@ -159,6 +159,12 @@ func ResourceComputeRegionDiskResourcePolicyAttachment() *schema.Resource {
 				Description: `The resource policy to be attached to the disk for scheduling snapshot
 creation. Do not specify the self link.`,
 			},
+			"options": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Internal use only.`,
+			},
 			"region": {
 				Type:             schema.TypeString,
 				Computed:         true,
@@ -203,6 +209,12 @@ func resourceComputeRegionDiskResourcePolicyAttachmentCreate(d *schema.ResourceD
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
+	}
+	optionsProp, err := expandNestedComputeRegionDiskResourcePolicyAttachmentOptions(d.Get("options"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("options"); !tpgresource.IsEmptyValue(reflect.ValueOf(optionsProp)) && (ok || !reflect.DeepEqual(v, optionsProp)) {
+		obj["options"] = optionsProp
 	}
 
 	obj, err = resourceComputeRegionDiskResourcePolicyAttachmentEncoder(d, meta, obj)
@@ -519,7 +531,15 @@ func flattenNestedComputeRegionDiskResourcePolicyAttachmentName(v interface{}, d
 	return v
 }
 
+func flattenNestedComputeRegionDiskResourcePolicyAttachmentOptions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandNestedComputeRegionDiskResourcePolicyAttachmentName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedComputeRegionDiskResourcePolicyAttachmentOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -612,6 +632,9 @@ func ResourceComputeRegionDiskResourcePolicyAttachmentFlatten(d *schema.Resource
 	var err error
 
 	if err = d.Set("name", flattenNestedComputeRegionDiskResourcePolicyAttachmentName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionDiskResourcePolicyAttachment: %s", err)
+	}
+	if err = d.Set("options", flattenNestedComputeRegionDiskResourcePolicyAttachmentOptions(res["options"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDiskResourcePolicyAttachment: %s", err)
 	}
 
