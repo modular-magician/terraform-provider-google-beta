@@ -50,12 +50,14 @@ resource "google_dataplex_data_product" "example" {
     }
   }
 
+  provider = google-beta
 }
 
 resource "google_bigquery_dataset" "example" {
   project    = "my-project-name"
   dataset_id = "tf_test_dataset_%{random_suffix}"
   location   = "us-central1"
+  provider   = google-beta
 }
 
 resource "google_dataplex_data_product_data_asset" "example" {
@@ -65,6 +67,7 @@ resource "google_dataplex_data_product_data_asset" "example" {
   data_asset_id   = "data-product-data-asset"
   resource        = "//bigquery.googleapis.com/projects/${google_bigquery_dataset.example.project}/datasets/${google_bigquery_dataset.example.dataset_id}"
 
+  provider = google-beta
 }
 ```
 ## Example Usage - Dataplex Data Product Data Asset Full
@@ -96,12 +99,14 @@ resource "google_dataplex_data_product" "example" {
     }
   }
 
+  provider = google-beta
 }
 
 resource "google_bigquery_dataset" "example" {
   project    = "my-project-name"
   dataset_id = "tf_test_dataset_%{random_suffix}"
   location   = "us-central1"
+  provider   = google-beta
 }
 
 resource "google_dataplex_data_product_data_asset" "example" {
@@ -126,6 +131,7 @@ resource "google_dataplex_data_product_data_asset" "example" {
     iam_roles    = ["roles/bigquery.dataEditor"]
   }
 
+  provider = google-beta
 }
 ```
 

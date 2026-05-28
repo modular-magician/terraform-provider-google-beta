@@ -53,17 +53,13 @@ resource "google_dataplex_data_product" "example" {
     }
   }
 
+  provider = google-beta
 }
 ```
 ## Example Usage - Dataplex Data Product Full
 
 
 ```hcl
-resource "google_service_account" "test_sa" {
-  account_id   = "tf-test-sa-%{random_suffix}"
-  display_name = "Test Service Account"
-}
-
 resource "google_dataplex_data_product" "example" {
   project         = "my-project-name"
   location        = "us-central1"
@@ -94,10 +90,11 @@ resource "google_dataplex_data_product" "example" {
     group_id     = "scientist"
     display_name = "Data Scientist"
     principal {
-      service_account = google_service_account.test_sa.email
+      google_group = "tf-test-scientists-%{random_suffix}@example.com"
     }
   }
 
+  provider = google-beta
 }
 ```
 
