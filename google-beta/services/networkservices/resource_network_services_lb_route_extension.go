@@ -211,6 +211,17 @@ When set to FALSE: * If response headers have not been delivered to the downstre
 a generic 500 error is returned to the client. The error response can be tailored by
 configuring a custom error response in the load balancer.`,
 									},
+									"forward_attributes": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `List of request and connection attributes to forward to the extension. You can (only) specify this
+property for plugin and callout extensions.
+Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes. Possible values: ["request.host", "request.method", "request.path", "request.query", "request.scheme", "source.ip", "source.port"]`,
+										Elem: &schema.Schema{
+											Type:         schema.TypeString,
+											ValidateFunc: verify.ValidateEnum([]string{"request.host", "request.method", "request.path", "request.query", "request.scheme", "source.ip", "source.port"}),
+										},
+									},
 									"forward_headers": {
 										Type:     schema.TypeList,
 										Optional: true,
@@ -889,6 +900,7 @@ func flattenNetworkServicesLbRouteExtensionExtensionChainsExtensions(v interface
 			"service":                flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsService(original["service"], d, config),
 			"timeout":                flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsTimeout(original["timeout"], d, config),
 			"fail_open":              flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsFailOpen(original["failOpen"], d, config),
+			"forward_attributes":     flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsForwardAttributes(original["forwardAttributes"], d, config),
 			"forward_headers":        flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsForwardHeaders(original["forwardHeaders"], d, config),
 			"supported_events":       flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsSupportedEvents(original["supportedEvents"], d, config),
 			"metadata":               flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsMetadata(original["metadata"], d, config),
@@ -915,6 +927,10 @@ func flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsTimeout(v in
 }
 
 func flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsFailOpen(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetworkServicesLbRouteExtensionExtensionChainsExtensionsForwardAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1089,6 +1105,13 @@ func expandNetworkServicesLbRouteExtensionExtensionChainsExtensions(v interface{
 			transformed["failOpen"] = transformedFailOpen
 		}
 
+		transformedForwardAttributes, err := expandNetworkServicesLbRouteExtensionExtensionChainsExtensionsForwardAttributes(original["forward_attributes"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedForwardAttributes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["forwardAttributes"] = transformedForwardAttributes
+		}
+
 		transformedForwardHeaders, err := expandNetworkServicesLbRouteExtensionExtensionChainsExtensionsForwardHeaders(original["forward_headers"], d, config)
 		if err != nil {
 			return nil, err
@@ -1146,6 +1169,10 @@ func expandNetworkServicesLbRouteExtensionExtensionChainsExtensionsTimeout(v int
 }
 
 func expandNetworkServicesLbRouteExtensionExtensionChainsExtensionsFailOpen(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkServicesLbRouteExtensionExtensionChainsExtensionsForwardAttributes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

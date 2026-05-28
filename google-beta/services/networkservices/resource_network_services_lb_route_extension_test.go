@@ -276,7 +276,8 @@ resource "google_network_services_lb_route_extension" "default" {
       timeout   = "0.1s"
       fail_open = false
 
-      forward_headers  = ["custom-header"]
+      forward_attributes = ["request.host"]
+      forward_headers    = ["custom-header"]
     }
   }
 
@@ -638,6 +639,8 @@ resource "google_network_services_lb_route_extension" "default" {
       timeout   = "0.2s"
       fail_open = false
 
+      # Omitting "forward_attributes" to clear the value 
+      # forward_attributes = []
       forward_headers  = ["custom-header"]
     }
   }

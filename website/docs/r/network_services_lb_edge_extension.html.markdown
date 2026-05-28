@@ -244,6 +244,13 @@ The following arguments are supported:
   A set of events during request or response processing for which this extension is called.
   This field is required for the LbEdgeExtension resource and only supports the value `REQUEST_HEADERS`.
 
+* `forward_attributes` -
+  (Optional)
+  List of request and connection attributes to forward to the extension. You can (only) specify this
+  property for plugin and callout extensions.
+  Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes.
+  Each value may be one of: `connection.sha256_peer_certificate_digest`, `connection.sni`, `connection.tls_ja4_fingerprint`, `connection.tls_version`, `request.host`, `request.method`, `request.path`, `request.query`, `request.scheme`, `source.client_city`, `source.client_city_lat_long`, `source.client_region`, `source.client_region_subdivision`, `source.ip`, `source.port`.
+
 * `forward_headers` -
   (Optional)
   List of the HTTP headers to forward to the extension (from the client or backend).

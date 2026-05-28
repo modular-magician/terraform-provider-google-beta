@@ -53,6 +53,7 @@ resource "google_network_services_authz_extension" "default" {
   service               = google_compute_region_backend_service.default.self_link
   timeout               = "0.1s"
   fail_open             = false
+  forward_attributes    = ["connection.client_cert_chain"]
   forward_headers       = ["Authorization"]
 }
 ```
@@ -165,6 +166,13 @@ The following arguments are supported:
   (Optional)
   The metadata provided here is included as part of the metadata_context (of type google.protobuf.Struct) in the ProcessingRequest message sent to the extension server. The metadata is available under the namespace com.google.authz_extension.<resourceName>. The following variables are supported in the metadata Struct:
   {forwarding_rule_id} - substituted with the forwarding rule's fully qualified resource name.
+
+* `forward_attributes` -
+  (Optional)
+  List of request and connection attributes to forward to the extension. You can (only) specify this
+  property for plugin and callout extensions.
+  Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes.
+  Each value may be one of: `connection.client_cert_chain`, `connection.client_cert_chain_verified`, `connection.client_cert_dnsname_sans`, `connection.client_cert_error`, `connection.client_cert_issuer_dn`, `connection.client_cert_leaf`, `connection.client_cert_present`, `connection.client_cert_serial_number`, `connection.client_cert_spiffe_id`, `connection.client_cert_subject_dn`, `connection.client_cert_uri_sans`, `connection.client_cert_valid_not_after`, `connection.client_cert_valid_not_before`, `connection.sha256_peer_certificate_digest`, `connection.sni`, `request.backend_service_name`, `request.backend_service_project_number`, `request.host`, `request.mcp_method`, `request.mcp_param`, `request.method`, `request.path`, `request.query`, `request.scheme`.
 
 * `forward_headers` -
   (Optional)

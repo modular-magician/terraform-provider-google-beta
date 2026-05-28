@@ -189,6 +189,17 @@ When set to TRUE, request or response processing continues without error. Any su
 * If response headers have not been delivered to the downstream client, a generic 500 error is returned to the client. The error response can be tailored by configuring a custom error response in the load balancer.
 * If response headers have been delivered, then the HTTP stream to the downstream client is reset.`,
 			},
+			"forward_attributes": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `List of request and connection attributes to forward to the extension. You can (only) specify this
+property for plugin and callout extensions.
+Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes. Possible values: ["connection.client_cert_chain", "connection.client_cert_chain_verified", "connection.client_cert_dnsname_sans", "connection.client_cert_error", "connection.client_cert_issuer_dn", "connection.client_cert_leaf", "connection.client_cert_present", "connection.client_cert_serial_number", "connection.client_cert_spiffe_id", "connection.client_cert_subject_dn", "connection.client_cert_uri_sans", "connection.client_cert_valid_not_after", "connection.client_cert_valid_not_before", "connection.sha256_peer_certificate_digest", "connection.sni", "request.backend_service_name", "request.backend_service_project_number", "request.host", "request.mcp_method", "request.mcp_param", "request.method", "request.path", "request.query", "request.scheme"]`,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: verify.ValidateEnum([]string{"connection.client_cert_chain", "connection.client_cert_chain_verified", "connection.client_cert_dnsname_sans", "connection.client_cert_error", "connection.client_cert_issuer_dn", "connection.client_cert_leaf", "connection.client_cert_present", "connection.client_cert_serial_number", "connection.client_cert_spiffe_id", "connection.client_cert_subject_dn", "connection.client_cert_uri_sans", "connection.client_cert_valid_not_after", "connection.client_cert_valid_not_before", "connection.sha256_peer_certificate_digest", "connection.sni", "request.backend_service_name", "request.backend_service_project_number", "request.host", "request.mcp_method", "request.mcp_param", "request.method", "request.path", "request.query", "request.scheme"}),
+				},
+			},
 			"forward_headers": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -341,6 +352,12 @@ func resourceNetworkServicesAuthzExtensionCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("metadata"); !tpgresource.IsEmptyValue(reflect.ValueOf(metadataProp)) && (ok || !reflect.DeepEqual(v, metadataProp)) {
 		obj["metadata"] = metadataProp
+	}
+	forwardAttributesProp, err := expandNetworkServicesAuthzExtensionForwardAttributes(d.Get("forward_attributes"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("forward_attributes"); !tpgresource.IsEmptyValue(reflect.ValueOf(forwardAttributesProp)) && (ok || !reflect.DeepEqual(v, forwardAttributesProp)) {
+		obj["forwardAttributes"] = forwardAttributesProp
 	}
 	forwardHeadersProp, err := expandNetworkServicesAuthzExtensionForwardHeaders(d.Get("forward_headers"), d, config)
 	if err != nil {
@@ -624,6 +641,12 @@ func resourceNetworkServicesAuthzExtensionUpdate(d *schema.ResourceData, meta in
 	} else if v, ok := d.GetOkExists("metadata"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, metadataProp)) {
 		obj["metadata"] = metadataProp
 	}
+	forwardAttributesProp, err := expandNetworkServicesAuthzExtensionForwardAttributes(d.Get("forward_attributes"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("forward_attributes"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, forwardAttributesProp)) {
+		obj["forwardAttributes"] = forwardAttributesProp
+	}
 	forwardHeadersProp, err := expandNetworkServicesAuthzExtensionForwardHeaders(d.Get("forward_headers"), d, config)
 	if err != nil {
 		return err
@@ -684,6 +707,10 @@ func resourceNetworkServicesAuthzExtensionUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("metadata") {
 		updateMask = append(updateMask, "metadata")
+	}
+
+	if d.HasChange("forward_attributes") {
+		updateMask = append(updateMask, "forwardAttributes")
 	}
 
 	if d.HasChange("forward_headers") {
@@ -881,6 +908,10 @@ func flattenNetworkServicesAuthzExtensionMetadata(v interface{}, d *schema.Resou
 	return v
 }
 
+func flattenNetworkServicesAuthzExtensionForwardAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNetworkServicesAuthzExtensionForwardHeaders(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -950,6 +981,10 @@ func expandNetworkServicesAuthzExtensionMetadata(v interface{}, d tpgresource.Te
 	return m, nil
 }
 
+func expandNetworkServicesAuthzExtensionForwardAttributes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandNetworkServicesAuthzExtensionForwardHeaders(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1004,6 +1039,9 @@ func ResourceNetworkServicesAuthzExtensionFlatten(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error reading AuthzExtension: %s", err)
 	}
 	if err = d.Set("metadata", flattenNetworkServicesAuthzExtensionMetadata(res["metadata"], d, config)); err != nil {
+		return fmt.Errorf("Error reading AuthzExtension: %s", err)
+	}
+	if err = d.Set("forward_attributes", flattenNetworkServicesAuthzExtensionForwardAttributes(res["forwardAttributes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzExtension: %s", err)
 	}
 	if err = d.Set("forward_headers", flattenNetworkServicesAuthzExtensionForwardHeaders(res["forwardHeaders"], d, config)); err != nil {

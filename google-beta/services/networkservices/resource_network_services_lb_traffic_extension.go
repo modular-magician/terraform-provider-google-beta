@@ -194,6 +194,17 @@ When set to FALSE: * If response headers have not been delivered to the downstre
 a generic 500 error is returned to the client. The error response can be tailored by
 configuring a custom error response in the load balancer.`,
 									},
+									"forward_attributes": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `List of request and connection attributes to forward to the extension. You can (only) specify this
+property for plugin and callout extensions.
+Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes. Possible values: ["connection.client_cert_chain", "connection.client_cert_chain_verified", "connection.client_cert_dnsname_sans", "connection.client_cert_error", "connection.client_cert_issuer_dn", "connection.client_cert_leaf", "connection.client_cert_present", "connection.client_cert_serial_number", "connection.client_cert_spiffe_id", "connection.client_cert_subject_dn", "connection.client_cert_uri_sans", "connection.client_cert_valid_not_after", "connection.client_cert_valid_not_before", "connection.client_encrypted", "connection.protocol", "connection.sha256_peer_certificate_digest", "connection.sni", "connection.tls_cipher_suite", "connection.tls_ja3_fingerprint", "connection.tls_ja4_fingerprint", "connection.tls_version", "destination.ip", "destination.port", "request.backend_service_name", "request.backend_service_project_number", "request.host", "request.method", "request.origin", "request.path", "request.query", "request.scheme", "source.client_region", "source.ip", "source.port"]`,
+										Elem: &schema.Schema{
+											Type:         schema.TypeString,
+											ValidateFunc: verify.ValidateEnum([]string{"connection.client_cert_chain", "connection.client_cert_chain_verified", "connection.client_cert_dnsname_sans", "connection.client_cert_error", "connection.client_cert_issuer_dn", "connection.client_cert_leaf", "connection.client_cert_present", "connection.client_cert_serial_number", "connection.client_cert_spiffe_id", "connection.client_cert_subject_dn", "connection.client_cert_uri_sans", "connection.client_cert_valid_not_after", "connection.client_cert_valid_not_before", "connection.client_encrypted", "connection.protocol", "connection.sha256_peer_certificate_digest", "connection.sni", "connection.tls_cipher_suite", "connection.tls_ja3_fingerprint", "connection.tls_ja4_fingerprint", "connection.tls_version", "destination.ip", "destination.port", "request.backend_service_name", "request.backend_service_project_number", "request.host", "request.method", "request.origin", "request.path", "request.query", "request.scheme", "source.client_region", "source.ip", "source.port"}),
+										},
+									},
 									"forward_headers": {
 										Type:     schema.TypeList,
 										Optional: true,
@@ -845,14 +856,15 @@ func flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensions(v interfa
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"name":             flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsName(original["name"], d, config),
-			"authority":        flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsAuthority(original["authority"], d, config),
-			"service":          flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsService(original["service"], d, config),
-			"timeout":          flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsTimeout(original["timeout"], d, config),
-			"fail_open":        flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsFailOpen(original["failOpen"], d, config),
-			"forward_headers":  flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardHeaders(original["forwardHeaders"], d, config),
-			"supported_events": flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsSupportedEvents(original["supportedEvents"], d, config),
-			"metadata":         flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsMetadata(original["metadata"], d, config),
+			"name":               flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsName(original["name"], d, config),
+			"authority":          flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsAuthority(original["authority"], d, config),
+			"service":            flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsService(original["service"], d, config),
+			"timeout":            flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsTimeout(original["timeout"], d, config),
+			"fail_open":          flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsFailOpen(original["failOpen"], d, config),
+			"forward_attributes": flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardAttributes(original["forwardAttributes"], d, config),
+			"forward_headers":    flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardHeaders(original["forwardHeaders"], d, config),
+			"supported_events":   flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsSupportedEvents(original["supportedEvents"], d, config),
+			"metadata":           flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsMetadata(original["metadata"], d, config),
 		})
 	}
 	return transformed
@@ -874,6 +886,10 @@ func flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsTimeout(v 
 }
 
 func flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsFailOpen(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1037,6 +1053,13 @@ func expandNetworkServicesLbTrafficExtensionExtensionChainsExtensions(v interfac
 			transformed["failOpen"] = transformedFailOpen
 		}
 
+		transformedForwardAttributes, err := expandNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardAttributes(original["forward_attributes"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedForwardAttributes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["forwardAttributes"] = transformedForwardAttributes
+		}
+
 		transformedForwardHeaders, err := expandNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardHeaders(original["forward_headers"], d, config)
 		if err != nil {
 			return nil, err
@@ -1080,6 +1103,10 @@ func expandNetworkServicesLbTrafficExtensionExtensionChainsExtensionsTimeout(v i
 }
 
 func expandNetworkServicesLbTrafficExtensionExtensionChainsExtensionsFailOpen(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkServicesLbTrafficExtensionExtensionChainsExtensionsForwardAttributes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

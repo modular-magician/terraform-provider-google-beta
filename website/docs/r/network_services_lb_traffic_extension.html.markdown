@@ -241,9 +241,10 @@ resource "google_network_services_lb_traffic_extension" "default" {
           timeout   = "0.1s"
           fail_open = false
 
-          supported_events = ["REQUEST_HEADERS"]
-          forward_headers = ["custom-header"]
-          metadata = {
+          supported_events   = ["REQUEST_HEADERS"]
+          forward_attributes = ["source.ip", "source.port"]
+          forward_headers    = ["custom-header"]
+          metadata           = {
             "key1" = "value1"
             "key2" = "value2"
           }
@@ -496,6 +497,13 @@ The following arguments are supported:
   When set to FALSE: * If response headers have not been delivered to the downstream client,
   a generic 500 error is returned to the client. The error response can be tailored by
   configuring a custom error response in the load balancer.
+
+* `forward_attributes` -
+  (Optional)
+  List of request and connection attributes to forward to the extension. You can (only) specify this
+  property for plugin and callout extensions.
+  Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes.
+  Each value may be one of: `connection.client_cert_chain`, `connection.client_cert_chain_verified`, `connection.client_cert_dnsname_sans`, `connection.client_cert_error`, `connection.client_cert_issuer_dn`, `connection.client_cert_leaf`, `connection.client_cert_present`, `connection.client_cert_serial_number`, `connection.client_cert_spiffe_id`, `connection.client_cert_subject_dn`, `connection.client_cert_uri_sans`, `connection.client_cert_valid_not_after`, `connection.client_cert_valid_not_before`, `connection.client_encrypted`, `connection.protocol`, `connection.sha256_peer_certificate_digest`, `connection.sni`, `connection.tls_cipher_suite`, `connection.tls_ja3_fingerprint`, `connection.tls_ja4_fingerprint`, `connection.tls_version`, `destination.ip`, `destination.port`, `request.backend_service_name`, `request.backend_service_project_number`, `request.host`, `request.method`, `request.origin`, `request.path`, `request.query`, `request.scheme`, `source.client_region`, `source.ip`, `source.port`.
 
 * `forward_headers` -
   (Optional)

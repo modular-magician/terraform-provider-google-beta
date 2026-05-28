@@ -250,11 +250,12 @@ resource "google_network_services_lb_route_extension" "default" {
         timeout   = "0.1s"
         fail_open = false
 
-        forward_headers  = ["custom-header"]
+        forward_attributes = ["source.ip", "source.port"]
+        forward_headers    = ["custom-header"]
 
-        supported_events = ["REQUEST_HEADERS", "REQUEST_BODY", "REQUEST_TRAILERS"]
+        supported_events       = ["REQUEST_HEADERS", "REQUEST_BODY", "REQUEST_TRAILERS"]
         request_body_send_mode = "BODY_SEND_MODE_FULL_DUPLEX_STREAMED"
-        metadata = {
+        metadata               = {
             "key" = "value"
         }
     }
@@ -871,6 +872,13 @@ The following arguments are supported:
   When set to FALSE: * If response headers have not been delivered to the downstream client,
   a generic 500 error is returned to the client. The error response can be tailored by
   configuring a custom error response in the load balancer.
+
+* `forward_attributes` -
+  (Optional)
+  List of request and connection attributes to forward to the extension. You can (only) specify this
+  property for plugin and callout extensions.
+  Further information can be found at https://docs.cloud.google.com/service-extensions/docs/attributes.
+  Each value may be one of: `request.host`, `request.method`, `request.path`, `request.query`, `request.scheme`, `source.ip`, `source.port`.
 
 * `forward_headers` -
   (Optional)
