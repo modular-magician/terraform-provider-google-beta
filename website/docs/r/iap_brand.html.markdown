@@ -129,6 +129,8 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 ```tf
 import {
   identity = {
+    project_id = "<-required value->"
+    brand_id = "<-required value->"
     project = "<-required value->"
   }
   to = google_iap_brand.default

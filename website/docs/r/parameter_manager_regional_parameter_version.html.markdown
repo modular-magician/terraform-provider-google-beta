@@ -245,6 +245,7 @@ import {
   identity = {
     parameter_version_id = "<-required value->"
     location = "<-optional value->"
+    parameter_id = "<-required value->"
   }
   to = google_parameter_manager_regional_parameter_version.default
 }

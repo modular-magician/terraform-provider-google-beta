@@ -582,6 +582,7 @@ import {
   identity = {
     cluster = "<-required value->"
     instanceId = "<-required value->"
+    location = "<-required value->"
   }
   to = google_alloydb_instance.default
 }

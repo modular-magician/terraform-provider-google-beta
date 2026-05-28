@@ -307,6 +307,7 @@ import {
   identity = {
     version = "<-optional value->"
     project = "<-optional value->"
+    secret_id = "<-required value->"
   }
   to = google_secret_manager_secret_version.default
 }

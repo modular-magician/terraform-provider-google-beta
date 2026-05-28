@@ -231,6 +231,7 @@ import {
   identity = {
     version = "<-optional value->"
     location = "<-optional value->"
+    secret_id = "<-required value->"
   }
   to = google_secret_manager_regional_secret_version.default
 }

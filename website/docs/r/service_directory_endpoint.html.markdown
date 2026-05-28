@@ -181,6 +181,9 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     endpointId = "<-required value->"
+    location = "<-required value->"
+    namespace_id = "<-required value->"
+    service_id = "<-required value->"
   }
   to = google_service_directory_endpoint.default
 }

@@ -234,6 +234,7 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     parameter_version_id = "<-required value->"
+    parameter_id = "<-required value->"
   }
   to = google_parameter_manager_parameter_version.default
 }
