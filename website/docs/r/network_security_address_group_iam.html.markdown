@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_network_security_address_group_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.networkAdmin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -60,13 +65,18 @@ name = google_network_security_address_group.default.name
 ## google_network_security_address_group_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_network_security_address_group_iam_binding" "binding" {
 project = "%{project}"
 location = google_network_security_address_group.default.location
 name = google_network_security_address_group.default.name
   role = "roles/compute.networkAdmin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -74,12 +84,17 @@ name = google_network_security_address_group.default.name
 ## google_network_security_address_group_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_network_security_address_group_iam_member" "member" {
 project = "%{project}"
 location = google_network_security_address_group.default.location
 name = google_network_security_address_group.default.name
   role = "roles/compute.networkAdmin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

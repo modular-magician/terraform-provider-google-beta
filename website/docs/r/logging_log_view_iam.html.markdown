@@ -41,11 +41,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_logging_log_view_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/logging.admin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -62,11 +67,16 @@ resource "google_logging_log_view_iam_policy" "policy" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/logging.admin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
 
     condition {
@@ -88,6 +98,11 @@ resource "google_logging_log_view_iam_policy" "policy" {
 ## google_logging_log_view_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_logging_log_view_iam_binding" "binding" {
   parent = google_logging_log_view.logging_log_view.parent
   location = google_logging_log_view.logging_log_view.location
@@ -95,7 +110,7 @@ resource "google_logging_log_view_iam_binding" "binding" {
   name = google_logging_log_view.logging_log_view.name
   role = "roles/logging.admin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -103,6 +118,11 @@ resource "google_logging_log_view_iam_binding" "binding" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_logging_log_view_iam_binding" "binding" {
   parent = google_logging_log_view.logging_log_view.parent
   location = google_logging_log_view.logging_log_view.location
@@ -110,7 +130,7 @@ resource "google_logging_log_view_iam_binding" "binding" {
   name = google_logging_log_view.logging_log_view.name
   role = "roles/logging.admin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 
   condition {
@@ -123,26 +143,36 @@ resource "google_logging_log_view_iam_binding" "binding" {
 ## google_logging_log_view_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_logging_log_view_iam_member" "member" {
   parent = google_logging_log_view.logging_log_view.parent
   location = google_logging_log_view.logging_log_view.location
   bucket = google_logging_log_view.logging_log_view.bucket
   name = google_logging_log_view.logging_log_view.name
   role = "roles/logging.admin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_logging_log_view_iam_member" "member" {
   parent = google_logging_log_view.logging_log_view.parent
   location = google_logging_log_view.logging_log_view.location
   bucket = google_logging_log_view.logging_log_view.bucket
   name = google_logging_log_view.logging_log_view.name
   role = "roles/logging.admin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 
   condition {
     title       = "expires_after_2019_12_31"

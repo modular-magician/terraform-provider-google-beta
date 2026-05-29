@@ -42,12 +42,18 @@ See [Provider Versions](../guides/provider_versions.html.markdown) for more deta
 ## google_api_gateway_api_config_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   provider = google-beta
   binding {
     role = "roles/apigateway.viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -63,13 +69,19 @@ resource "google_api_gateway_api_config_iam_policy" "policy" {
 ## google_api_gateway_api_config_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_api_gateway_api_config_iam_binding" "binding" {
   provider = google-beta
   api = google_api_gateway_api_config.api_cfg.api
   api_config = google_api_gateway_api_config.api_cfg.api_config_id
   role = "roles/apigateway.viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -77,12 +89,18 @@ resource "google_api_gateway_api_config_iam_binding" "binding" {
 ## google_api_gateway_api_config_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_api_gateway_api_config_iam_member" "member" {
   provider = google-beta
   api = google_api_gateway_api_config.api_cfg.api
   api_config = google_api_gateway_api_config.api_cfg.api_config_id
   role = "roles/apigateway.viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

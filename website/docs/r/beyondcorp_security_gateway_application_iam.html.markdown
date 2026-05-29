@@ -41,11 +41,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_beyondcorp_security_gateway_application_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/beyondcorp.securityGatewayUser"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -61,11 +66,16 @@ resource "google_beyondcorp_security_gateway_application_iam_policy" "policy" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/beyondcorp.securityGatewayUser"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
 
     condition {
@@ -86,13 +96,18 @@ resource "google_beyondcorp_security_gateway_application_iam_policy" "policy" {
 ## google_beyondcorp_security_gateway_application_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_beyondcorp_security_gateway_application_iam_binding" "binding" {
   project = google_beyondcorp_security_gateway_application.example.project
   security_gateway_id = google_beyondcorp_security_gateway_application.example.security_gateway_id
   application_id = google_beyondcorp_security_gateway_application.example.application_id
   role = "roles/beyondcorp.securityGatewayUser"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -100,13 +115,18 @@ resource "google_beyondcorp_security_gateway_application_iam_binding" "binding" 
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_beyondcorp_security_gateway_application_iam_binding" "binding" {
   project = google_beyondcorp_security_gateway_application.example.project
   security_gateway_id = google_beyondcorp_security_gateway_application.example.security_gateway_id
   application_id = google_beyondcorp_security_gateway_application.example.application_id
   role = "roles/beyondcorp.securityGatewayUser"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 
   condition {
@@ -119,24 +139,34 @@ resource "google_beyondcorp_security_gateway_application_iam_binding" "binding" 
 ## google_beyondcorp_security_gateway_application_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_beyondcorp_security_gateway_application_iam_member" "member" {
   project = google_beyondcorp_security_gateway_application.example.project
   security_gateway_id = google_beyondcorp_security_gateway_application.example.security_gateway_id
   application_id = google_beyondcorp_security_gateway_application.example.application_id
   role = "roles/beyondcorp.securityGatewayUser"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_beyondcorp_security_gateway_application_iam_member" "member" {
   project = google_beyondcorp_security_gateway_application.example.project
   security_gateway_id = google_beyondcorp_security_gateway_application.example.security_gateway_id
   application_id = google_beyondcorp_security_gateway_application.example.application_id
   role = "roles/beyondcorp.securityGatewayUser"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 
   condition {
     title       = "expires_after_2019_12_31"

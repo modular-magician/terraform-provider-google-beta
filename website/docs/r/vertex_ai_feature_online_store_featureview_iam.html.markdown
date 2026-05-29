@@ -42,11 +42,16 @@ See [Provider Versions](../guides/provider_versions.html.markdown) for more deta
 ## google_vertex_ai_feature_online_store_featureview_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -62,13 +67,18 @@ resource "google_vertex_ai_feature_online_store_featureview_iam_policy" "policy"
 ## google_vertex_ai_feature_online_store_featureview_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_vertex_ai_feature_online_store_featureview_iam_binding" "binding" {
   region = google_vertex_ai_feature_online_store_featureview.featureview.region
   feature_online_store = google_vertex_ai_feature_online_store_featureview.featureview.feature_online_store
   feature_view = google_vertex_ai_feature_online_store_featureview.featureview.name
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -76,12 +86,17 @@ resource "google_vertex_ai_feature_online_store_featureview_iam_binding" "bindin
 ## google_vertex_ai_feature_online_store_featureview_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_vertex_ai_feature_online_store_featureview_iam_member" "member" {
   region = google_vertex_ai_feature_online_store_featureview.featureview.region
   feature_online_store = google_vertex_ai_feature_online_store_featureview.featureview.feature_online_store
   feature_view = google_vertex_ai_feature_online_store_featureview.featureview.name
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

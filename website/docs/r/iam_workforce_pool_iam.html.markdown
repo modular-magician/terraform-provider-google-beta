@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_iam_workforce_pool_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iam.workforcePoolAdmin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -59,12 +64,17 @@ resource "google_iam_workforce_pool_iam_policy" "policy" {
 ## google_iam_workforce_pool_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_iam_workforce_pool_iam_binding" "binding" {
   location = google_iam_workforce_pool.example.location
   workforce_pool_id = google_iam_workforce_pool.example.workforce_pool_id
   role = "roles/iam.workforcePoolAdmin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -72,11 +82,16 @@ resource "google_iam_workforce_pool_iam_binding" "binding" {
 ## google_iam_workforce_pool_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_iam_workforce_pool_iam_member" "member" {
   location = google_iam_workforce_pool.example.location
   workforce_pool_id = google_iam_workforce_pool.example.workforce_pool_id
   role = "roles/iam.workforcePoolAdmin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

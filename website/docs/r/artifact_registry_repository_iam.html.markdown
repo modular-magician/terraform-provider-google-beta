@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_artifact_registry_repository_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/artifactregistry.reader"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -60,13 +65,18 @@ resource "google_artifact_registry_repository_iam_policy" "policy" {
 ## google_artifact_registry_repository_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_artifact_registry_repository_iam_binding" "binding" {
   project = google_artifact_registry_repository.my-repo.project
   location = google_artifact_registry_repository.my-repo.location
   repository = google_artifact_registry_repository.my-repo.name
   role = "roles/artifactregistry.reader"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -74,12 +84,17 @@ resource "google_artifact_registry_repository_iam_binding" "binding" {
 ## google_artifact_registry_repository_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_artifact_registry_repository_iam_member" "member" {
   project = google_artifact_registry_repository.my-repo.project
   location = google_artifact_registry_repository.my-repo.location
   repository = google_artifact_registry_repository.my-repo.name
   role = "roles/artifactregistry.reader"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

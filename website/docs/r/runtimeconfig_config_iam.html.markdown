@@ -42,12 +42,18 @@ See [Provider Versions](../guides/provider_versions.html.markdown) for more deta
 ## google_runtimeconfig_config_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   provider = google-beta
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -63,13 +69,19 @@ resource "google_runtimeconfig_config_iam_policy" "policy" {
 ## google_runtimeconfig_config_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_runtimeconfig_config_iam_binding" "binding" {
   provider = google-beta
   project = google_runtimeconfig_config.config.project
   config = google_runtimeconfig_config.config.name
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -77,12 +89,18 @@ resource "google_runtimeconfig_config_iam_binding" "binding" {
 ## google_runtimeconfig_config_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_runtimeconfig_config_iam_member" "member" {
   provider = google-beta
   project = google_runtimeconfig_config.config.project
   config = google_runtimeconfig_config.config.name
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

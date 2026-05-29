@@ -41,11 +41,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_compute_instance_template_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.instanceAdmin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -60,11 +65,16 @@ resource "google_compute_instance_template_iam_policy" "policy" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.instanceAdmin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
 
     condition {
@@ -84,12 +94,17 @@ resource "google_compute_instance_template_iam_policy" "policy" {
 ## google_compute_instance_template_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_instance_template_iam_binding" "binding" {
   project = google_compute_instance_template.default.project
   name = google_compute_instance_template.default.name
   role = "roles/compute.instanceAdmin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -97,12 +112,17 @@ resource "google_compute_instance_template_iam_binding" "binding" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_instance_template_iam_binding" "binding" {
   project = google_compute_instance_template.default.project
   name = google_compute_instance_template.default.name
   role = "roles/compute.instanceAdmin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 
   condition {
@@ -115,22 +135,32 @@ resource "google_compute_instance_template_iam_binding" "binding" {
 ## google_compute_instance_template_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_instance_template_iam_member" "member" {
   project = google_compute_instance_template.default.project
   name = google_compute_instance_template.default.name
   role = "roles/compute.instanceAdmin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_instance_template_iam_member" "member" {
   project = google_compute_instance_template.default.project
   name = google_compute_instance_template.default.name
   role = "roles/compute.instanceAdmin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 
   condition {
     title       = "expires_after_2019_12_31"

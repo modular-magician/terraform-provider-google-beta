@@ -42,11 +42,16 @@ See [Provider Versions](../guides/provider_versions.html.markdown) for more deta
 ## google_compute_backend_bucket_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -61,12 +66,17 @@ resource "google_compute_backend_bucket_iam_policy" "policy" {
 ## google_compute_backend_bucket_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_backend_bucket_iam_binding" "binding" {
   project = google_compute_backend_bucket.image_backend.project
   name = google_compute_backend_bucket.image_backend.name
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -74,11 +84,16 @@ resource "google_compute_backend_bucket_iam_binding" "binding" {
 ## google_compute_backend_bucket_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_backend_bucket_iam_member" "member" {
   project = google_compute_backend_bucket.image_backend.project
   name = google_compute_backend_bucket.image_backend.name
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

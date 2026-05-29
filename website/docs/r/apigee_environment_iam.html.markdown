@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_apigee_environment_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -59,12 +64,17 @@ resource "google_apigee_environment_iam_policy" "policy" {
 ## google_apigee_environment_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_apigee_environment_iam_binding" "binding" {
   org_id = google_apigee_environment.apigee_environment.org_id
   env_id = google_apigee_environment.apigee_environment.name
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -72,11 +82,16 @@ resource "google_apigee_environment_iam_binding" "binding" {
 ## google_apigee_environment_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_apigee_environment_iam_member" "member" {
   org_id = google_apigee_environment.apigee_environment.org_id
   env_id = google_apigee_environment.apigee_environment.name
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_bigquery_datapolicy_data_policy_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -60,13 +65,18 @@ resource "google_bigquery_datapolicy_data_policy_iam_policy" "policy" {
 ## google_bigquery_datapolicy_data_policy_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_bigquery_datapolicy_data_policy_iam_binding" "binding" {
   project = google_bigquery_datapolicy_data_policy.data_policy.project
   location = google_bigquery_datapolicy_data_policy.data_policy.location
   data_policy_id = google_bigquery_datapolicy_data_policy.data_policy.data_policy_id
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -74,12 +84,17 @@ resource "google_bigquery_datapolicy_data_policy_iam_binding" "binding" {
 ## google_bigquery_datapolicy_data_policy_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_bigquery_datapolicy_data_policy_iam_member" "member" {
   project = google_bigquery_datapolicy_data_policy.data_policy.project
   location = google_bigquery_datapolicy_data_policy.data_policy.location
   data_policy_id = google_bigquery_datapolicy_data_policy.data_policy.data_policy_id
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

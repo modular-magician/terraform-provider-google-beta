@@ -41,11 +41,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_data_catalog_tag_template_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -59,11 +64,16 @@ resource "google_data_catalog_tag_template_iam_policy" "policy" {
 ## google_data_catalog_tag_template_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_data_catalog_tag_template_iam_binding" "binding" {
   tag_template = google_data_catalog_tag_template.basic_tag_template.name
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -71,10 +81,15 @@ resource "google_data_catalog_tag_template_iam_binding" "binding" {
 ## google_data_catalog_tag_template_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_data_catalog_tag_template_iam_member" "member" {
   tag_template = google_data_catalog_tag_template.basic_tag_template.name
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

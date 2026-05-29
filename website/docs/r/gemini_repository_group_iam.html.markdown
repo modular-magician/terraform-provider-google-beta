@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_gemini_repository_group_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/cloudaicompanion.repositoryGroupsUser"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -61,6 +66,11 @@ resource "google_gemini_repository_group_iam_policy" "policy" {
 ## google_gemini_repository_group_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_gemini_repository_group_iam_binding" "binding" {
   project = google_gemini_repository_group.example.project
   location = google_gemini_repository_group.example.location
@@ -68,7 +78,7 @@ resource "google_gemini_repository_group_iam_binding" "binding" {
   repository_group_id = google_gemini_repository_group.example.repository_group_id
   role = "roles/cloudaicompanion.repositoryGroupsUser"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -76,13 +86,18 @@ resource "google_gemini_repository_group_iam_binding" "binding" {
 ## google_gemini_repository_group_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_gemini_repository_group_iam_member" "member" {
   project = google_gemini_repository_group.example.project
   location = google_gemini_repository_group.example.location
   code_repository_index = google_gemini_repository_group.example.code_repository_index
   repository_group_id = google_gemini_repository_group.example.repository_group_id
   role = "roles/cloudaicompanion.repositoryGroupsUser"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

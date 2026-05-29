@@ -41,11 +41,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_iap_app_engine_version_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iap.httpsResourceAccessor"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -62,11 +67,16 @@ resource "google_iap_app_engine_version_iam_policy" "policy" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iap.httpsResourceAccessor"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
 
     condition {
@@ -88,6 +98,11 @@ resource "google_iap_app_engine_version_iam_policy" "policy" {
 ## google_iap_app_engine_version_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_iap_app_engine_version_iam_binding" "binding" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
@@ -95,7 +110,7 @@ resource "google_iap_app_engine_version_iam_binding" "binding" {
   version_id = "${google_app_engine_standard_app_version.version.version_id}"
   role = "roles/iap.httpsResourceAccessor"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -103,6 +118,11 @@ resource "google_iap_app_engine_version_iam_binding" "binding" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_iap_app_engine_version_iam_binding" "binding" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
@@ -110,7 +130,7 @@ resource "google_iap_app_engine_version_iam_binding" "binding" {
   version_id = "${google_app_engine_standard_app_version.version.version_id}"
   role = "roles/iap.httpsResourceAccessor"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 
   condition {
@@ -123,26 +143,36 @@ resource "google_iap_app_engine_version_iam_binding" "binding" {
 ## google_iap_app_engine_version_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_iap_app_engine_version_iam_member" "member" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
   service = "${google_app_engine_standard_app_version.version.service}"
   version_id = "${google_app_engine_standard_app_version.version.version_id}"
   role = "roles/iap.httpsResourceAccessor"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_iap_app_engine_version_iam_member" "member" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
   service = "${google_app_engine_standard_app_version.version.service}"
   version_id = "${google_app_engine_standard_app_version.version.version_id}"
   role = "roles/iap.httpsResourceAccessor"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 
   condition {
     title       = "expires_after_2019_12_31"

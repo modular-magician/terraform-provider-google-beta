@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_dataplex_entry_type_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -60,13 +65,18 @@ resource "google_dataplex_entry_type_iam_policy" "policy" {
 ## google_dataplex_entry_type_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_dataplex_entry_type_iam_binding" "binding" {
   project = google_dataplex_entry_type.test_entry_type_basic.project
   location = google_dataplex_entry_type.test_entry_type_basic.location
   entry_type_id = google_dataplex_entry_type.test_entry_type_basic.entry_type_id
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -74,12 +84,17 @@ resource "google_dataplex_entry_type_iam_binding" "binding" {
 ## google_dataplex_entry_type_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_dataplex_entry_type_iam_member" "member" {
   project = google_dataplex_entry_type.test_entry_type_basic.project
   location = google_dataplex_entry_type.test_entry_type_basic.location
   entry_type_id = google_dataplex_entry_type.test_entry_type_basic.entry_type_id
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

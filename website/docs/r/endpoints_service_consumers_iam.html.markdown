@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_endpoints_service_consumers_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/servicemanagement.serviceController"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -59,12 +64,17 @@ resource "google_endpoints_service_consumers_iam_policy" "policy" {
 ## google_endpoints_service_consumers_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_endpoints_service_consumers_iam_binding" "binding" {
   service_name = google_endpoints_service.endpoints_service.service_name
   consumer_project = "%{consumer_project}"
   role = "roles/servicemanagement.serviceController"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -72,11 +82,16 @@ resource "google_endpoints_service_consumers_iam_binding" "binding" {
 ## google_endpoints_service_consumers_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_endpoints_service_consumers_iam_member" "member" {
   service_name = google_endpoints_service.endpoints_service.service_name
   consumer_project = "%{consumer_project}"
   role = "roles/servicemanagement.serviceController"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

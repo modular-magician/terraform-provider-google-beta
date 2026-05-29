@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_access_context_manager_access_policy_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/accesscontextmanager.policyAdmin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -58,11 +63,16 @@ resource "google_access_context_manager_access_policy_iam_policy" "policy" {
 ## google_access_context_manager_access_policy_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_access_context_manager_access_policy_iam_binding" "binding" {
   name = google_access_context_manager_access_policy.access-policy.name
   role = "roles/accesscontextmanager.policyAdmin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -70,10 +80,15 @@ resource "google_access_context_manager_access_policy_iam_binding" "binding" {
 ## google_access_context_manager_access_policy_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_access_context_manager_access_policy_iam_member" "member" {
   name = google_access_context_manager_access_policy.access-policy.name
   role = "roles/accesscontextmanager.policyAdmin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 

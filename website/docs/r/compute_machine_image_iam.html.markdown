@@ -43,12 +43,18 @@ See [Provider Versions](../guides/provider_versions.html.markdown) for more deta
 ## google_compute_machine_image_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   provider = google-beta
   binding {
     role = "roles/compute.admin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -64,12 +70,18 @@ resource "google_compute_machine_image_iam_policy" "policy" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   provider = google-beta
   binding {
     role = "roles/compute.admin"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
 
     condition {
@@ -90,13 +102,19 @@ resource "google_compute_machine_image_iam_policy" "policy" {
 ## google_compute_machine_image_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_machine_image_iam_binding" "binding" {
   provider = google-beta
   project = google_compute_machine_image.image.project
   machine_image = google_compute_machine_image.image.name
   role = "roles/compute.admin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -104,13 +122,19 @@ resource "google_compute_machine_image_iam_binding" "binding" {
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_machine_image_iam_binding" "binding" {
   provider = google-beta
   project = google_compute_machine_image.image.project
   machine_image = google_compute_machine_image.image.name
   role = "roles/compute.admin"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 
   condition {
@@ -123,24 +147,36 @@ resource "google_compute_machine_image_iam_binding" "binding" {
 ## google_compute_machine_image_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_machine_image_iam_member" "member" {
   provider = google-beta
   project = google_compute_machine_image.image.project
   machine_image = google_compute_machine_image.image.name
   role = "roles/compute.admin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 
 With IAM Conditions:
 
 ```hcl
+resource "google_service_account" "sa" {
+  provider = google-beta
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_compute_machine_image_iam_member" "member" {
   provider = google-beta
   project = google_compute_machine_image.image.project
   machine_image = google_compute_machine_image.image.name
   role = "roles/compute.admin"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 
   condition {
     title       = "expires_after_2019_12_31"

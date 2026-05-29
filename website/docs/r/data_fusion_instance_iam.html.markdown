@@ -40,11 +40,16 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ## google_data_fusion_instance_iam_policy
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
     members = [
-      "user:jane@example.com",
+      "serviceAccount:${google_service_account.sa.email}",
     ]
   }
 }
@@ -60,13 +65,18 @@ resource "google_data_fusion_instance_iam_policy" "policy" {
 ## google_data_fusion_instance_iam_binding
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_data_fusion_instance_iam_binding" "binding" {
   project = google_data_fusion_instance.basic_instance.project
   region = google_data_fusion_instance.basic_instance.region
   name = google_data_fusion_instance.basic_instance.name
   role = "roles/viewer"
   members = [
-    "user:jane@example.com",
+    "serviceAccount:${google_service_account.sa.email}",
   ]
 }
 ```
@@ -74,12 +84,17 @@ resource "google_data_fusion_instance_iam_binding" "binding" {
 ## google_data_fusion_instance_iam_member
 
 ```hcl
+resource "google_service_account" "sa" {
+  account_id   = "my-custom-sa"
+  display_name = "My Custom Service Account"
+}
+
 resource "google_data_fusion_instance_iam_member" "member" {
   project = google_data_fusion_instance.basic_instance.project
   region = google_data_fusion_instance.basic_instance.region
   name = google_data_fusion_instance.basic_instance.name
   role = "roles/viewer"
-  member = "user:jane@example.com"
+  member = "serviceAccount:${google_service_account.sa.email}"
 }
 ```
 
