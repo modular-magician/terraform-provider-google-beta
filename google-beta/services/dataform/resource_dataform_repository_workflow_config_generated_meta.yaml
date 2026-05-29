@@ -13,6 +13,7 @@ fields:
     - api_field: invocationConfig.includedTargets.database
     - api_field: invocationConfig.includedTargets.name
     - api_field: invocationConfig.includedTargets.schema
+    - api_field: invocationConfig.queryPriority
     - api_field: invocationConfig.serviceAccount
     - api_field: invocationConfig.transitiveDependenciesIncluded
     - api_field: invocationConfig.transitiveDependentsIncluded

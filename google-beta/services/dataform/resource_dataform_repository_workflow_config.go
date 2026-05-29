@@ -206,6 +206,12 @@ func ResourceDataformRepositoryWorkflowConfig() *schema.Resource {
 								},
 							},
 						},
+						"query_priority": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"INTERACTIVE", "BATCH", ""}),
+							Description:  `Specifies the priority for query execution in BigQuery. More information can be found at https://cloud.google.com/bigquery/docs/running-queries#queries. Possible values: ["INTERACTIVE", "BATCH"]`,
+						},
 						"service_account": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -727,6 +733,8 @@ func flattenDataformRepositoryWorkflowConfigInvocationConfig(v interface{}, d *s
 		flattenDataformRepositoryWorkflowConfigInvocationConfigFullyRefreshIncrementalTablesEnabled(original["fullyRefreshIncrementalTablesEnabled"], d, config)
 	transformed["service_account"] =
 		flattenDataformRepositoryWorkflowConfigInvocationConfigServiceAccount(original["serviceAccount"], d, config)
+	transformed["query_priority"] =
+		flattenDataformRepositoryWorkflowConfigInvocationConfigQueryPriority(original["queryPriority"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDataformRepositoryWorkflowConfigInvocationConfigIncludedTargets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -778,6 +786,10 @@ func flattenDataformRepositoryWorkflowConfigInvocationConfigFullyRefreshIncremen
 }
 
 func flattenDataformRepositoryWorkflowConfigInvocationConfigServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDataformRepositoryWorkflowConfigInvocationConfigQueryPriority(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -915,6 +927,13 @@ func expandDataformRepositoryWorkflowConfigInvocationConfig(v interface{}, d tpg
 		transformed["serviceAccount"] = transformedServiceAccount
 	}
 
+	transformedQueryPriority, err := expandDataformRepositoryWorkflowConfigInvocationConfigQueryPriority(original["query_priority"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedQueryPriority); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["queryPriority"] = transformedQueryPriority
+	}
+
 	return transformed, nil
 }
 
@@ -986,6 +1005,10 @@ func expandDataformRepositoryWorkflowConfigInvocationConfigFullyRefreshIncrement
 }
 
 func expandDataformRepositoryWorkflowConfigInvocationConfigServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataformRepositoryWorkflowConfigInvocationConfigQueryPriority(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
