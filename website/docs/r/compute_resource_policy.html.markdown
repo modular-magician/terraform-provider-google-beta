@@ -308,6 +308,40 @@ resource "google_compute_resource_policy" "baz" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=resource_policy_snapshot_schedule_region&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Resource Policy Snapshot Schedule Region
+
+
+```hcl
+resource "google_compute_resource_policy" "policy" {
+  name   = "gce-policy"
+  region = "us-central1"
+  snapshot_schedule_policy {
+    schedule {
+      hourly_schedule {
+        hours_in_cycle = 20
+        start_time     = "23:00"
+      }
+    }
+    retention_policy {
+      max_retention_days    = 14
+      on_source_disk_delete = "KEEP_AUTO_SNAPSHOTS"
+    }
+    snapshot_properties {
+      labels = {
+        my_label = "value"
+      }
+      storage_locations = ["us"]
+      guest_flush       = true
+      region            = "us-central1"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -482,6 +516,10 @@ The following arguments are supported:
   Creates the new snapshot in the snapshot chain labeled with the
   specified name. The chain name must be 1-63 characters long and comply
   with RFC1035.
+
+* `region` -
+  (Optional)
+  Region where the snapshot is scoped to.
 
 <a name="nested_group_placement_policy"></a>The `group_placement_policy` block supports:
 

@@ -760,6 +760,69 @@ resource "google_compute_resource_policy" "baz" {
 `, context)
 }
 
+func TestAccComputeResourcePolicy_resourcePolicySnapshotScheduleRegionExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"name":          "tf-test-gce-policy" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeResourcePolicy_resourcePolicySnapshotScheduleRegionExample(context),
+			},
+			{
+				ResourceName:            "google_compute_resource_policy.policy",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+			{
+				ResourceName:       "google_compute_resource_policy.policy",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeResourcePolicy_resourcePolicySnapshotScheduleRegionExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_resource_policy" "policy" {
+  name   = "%{name}"
+  region = "us-central1"
+  snapshot_schedule_policy {
+    schedule {
+      hourly_schedule {
+        hours_in_cycle = 20
+        start_time     = "23:00"
+      }
+    }
+    retention_policy {
+      max_retention_days    = 14
+      on_source_disk_delete = "KEEP_AUTO_SNAPSHOTS"
+    }
+    snapshot_properties {
+      labels = {
+        my_label = "value"
+      }
+      storage_locations = ["us"]
+      guest_flush       = true
+      region            = "us-central1"
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeResourcePolicyDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

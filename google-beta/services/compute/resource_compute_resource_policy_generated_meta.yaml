@@ -33,6 +33,7 @@ fields:
     - api_field: snapshotSchedulePolicy.snapshotProperties.chainName
     - api_field: snapshotSchedulePolicy.snapshotProperties.guestFlush
     - api_field: snapshotSchedulePolicy.snapshotProperties.labels
+    - api_field: snapshotSchedulePolicy.snapshotProperties.region
     - api_field: snapshotSchedulePolicy.snapshotProperties.storageLocations
     - api_field: workloadPolicy.acceleratorTopology
     - api_field: workloadPolicy.acceleratorTopologyMode
