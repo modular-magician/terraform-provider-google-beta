@@ -417,11 +417,6 @@ The following arguments are supported:
   (Optional)
   Whether the app is pinned in the app list.
 
-* `data_store_settings` -
-  (Optional)
-  Data store related settings for the app.
-  Structure is [documented below](#nested_data_store_settings).
-
 * `default_channel_profile` -
   (Optional)
   A ChannelProfile configures the agent's behavior for a specific communication
@@ -590,29 +585,6 @@ The following arguments are supported:
   The speaking rate/speed in the range [0.25, 2.0]. 1.0 is the normal native
   speed supported by the specific voice. 2.0 is twice as fast, and 0.5 is
   half as fast. Values outside of the range [0.25, 2.0] will return an error.
-
-<a name="nested_data_store_settings"></a>The `data_store_settings` block supports:
-
-* `engines` -
-  (Output)
-  The engines for the app.
-  Structure is [documented below](#nested_data_store_settings_engines).
-
-
-<a name="nested_data_store_settings_engines"></a>The `engines` block contains:
-
-* `name` -
-  (Output)
-  The resource name of the engine.
-  Format:
-  `projects/{project}/locations/{location}/collections/{collection}/engines/{engine}`
-
-* `type` -
-  (Output)
-  The type of the engine.
-  Possible values:
-  ENGINE_TYPE_SEARCH
-  ENGINE_TYPE_CHAT
 
 <a name="nested_default_channel_profile"></a>The `default_channel_profile` block supports:
 
@@ -1013,6 +985,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `create_time` -
   Timestamp when the app was created.
 
+* `data_store_settings` -
+  Data store related settings for the app.
+  Structure is [documented below](#nested_data_store_settings).
+
 * `deployment_count` -
   Number of deployments in the app.
 
@@ -1028,6 +1004,29 @@ In addition to the arguments listed above, the following computed attributes are
 * `update_time` -
   Timestamp when the app was last updated.
 
+
+<a name="nested_data_store_settings"></a>The `data_store_settings` block contains:
+
+* `engines` -
+  (Output)
+  The engines for the app.
+  Structure is [documented below](#nested_data_store_settings_engines).
+
+
+<a name="nested_data_store_settings_engines"></a>The `engines` block contains:
+
+* `name` -
+  (Output)
+  The resource name of the engine.
+  Format:
+  `projects/{project}/locations/{location}/collections/{collection}/engines/{engine}`
+
+* `type` -
+  (Output)
+  The type of the engine.
+  Possible values:
+  ENGINE_TYPE_SEARCH
+  ENGINE_TYPE_CHAT
 
 ## Timeouts
 

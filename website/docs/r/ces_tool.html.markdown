@@ -241,6 +241,50 @@ resource "google_ces_tool" "ces_tool_data_store_tool_engine_source_basic" {
     }
 }
 ```
+## Example Usage - Ces Tool Data Store Tool Engine Source No Engine
+
+
+```hcl
+resource "google_discovery_engine_data_store" "basic" {
+  location                    = "global"
+  data_store_id               = "tool_data_store_id_no_engine"
+  display_name                = "tf-test-structured-datastore"
+  industry_vertical           = "GENERIC"
+  content_config              = "NO_CONTENT"
+  solution_types              = ["SOLUTION_TYPE_CHAT"]
+  create_advanced_site_search = false
+}
+
+resource "google_ces_app" "my-app" {
+    location     = "us"
+    display_name = "my-app"
+    app_id       = "app-id"
+    time_zone_settings {
+        time_zone = "America/Los_Angeles"
+    }
+}
+
+# Common use case for CES Agents: reference a data store directly without
+# managing a separate Discovery Engine resource. When engine is omitted,
+# CES automatically uses its internally managed engine for the app.
+resource "google_ces_tool" "ces_tool_data_store_tool_engine_source_no_engine" {
+    location       = "us"
+    app            = google_ces_app.my-app.name
+    tool_id        = "ces_tool_basic5"
+    execution_type = "SYNCHRONOUS"
+    data_store_tool {
+        name        = "example-tool"
+        description = "example-description"
+        engine_source {
+            data_store_sources {
+                data_store {
+                    name = google_discovery_engine_data_store.basic.name
+                }
+            }
+        }
+    }
+}
+```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=ces_tool_google_search_tool_basic&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
@@ -755,7 +799,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_data_store_tool_engine_source_data_store_sources).
 
 * `engine` -
-  (Required)
+  (Optional)
   Full resource name of the Engine.
   Format:
   `projects/{project}/locations/{location}/collections/{collection}/engines/{engine}`

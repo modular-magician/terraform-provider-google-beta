@@ -654,13 +654,6 @@ specific DataStores.`,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"engine": {
-										Type:     schema.TypeString,
-										Required: true,
-										Description: `Full resource name of the Engine.
-Format:
-'projects/{project}/locations/{location}/collections/{collection}/engines/{engine}'`,
-									},
 									"data_store_sources": {
 										Type:     schema.TypeList,
 										Optional: true,
@@ -750,6 +743,13 @@ https://cloud.google.com/generative-ai-app-builder/docs/filter-search-metadata`,
 												},
 											},
 										},
+									},
+									"engine": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `Full resource name of the Engine.
+Format:
+'projects/{project}/locations/{location}/collections/{collection}/engines/{engine}'`,
 									},
 									"filter": {
 										Type:     schema.TypeString,
