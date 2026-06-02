@@ -1,0 +1,32 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_vertex_ai_artifact
+generation_type: mmv1
+source_file: products/vertexai/Artifact.yaml
+api_service_name: aiplatform.googleapis.com
+api_version: v1beta1
+api_resource_type_kind: Artifact
+fields:
+    - field: artifact_id
+      provider_only: true
+    - api_field: createTime
+    - api_field: description
+    - api_field: displayName
+    - field: effective_labels
+      provider_only: true
+    - api_field: labels
+    - field: location
+      provider_only: true
+    - api_field: metadata
+    - field: metadatastore
+      provider_only: true
+    - api_field: name
+    - api_field: schemaTitle
+    - api_field: schemaVersion
+    - api_field: state
+    - field: terraform_labels
+      provider_only: true
+    - api_field: updateTime
+    - api_field: uri
+    - field: deletion_policy
+      provider_only: true
