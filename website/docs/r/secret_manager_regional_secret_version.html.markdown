@@ -40,6 +40,9 @@ For more details, refer to the [Terraform lifecycle documentation](https://devel
 values will be stored in the raw state as plain text: `secret_data`.
 [Read more about sensitive data in state](https://developer.hashicorp.com/terraform/language/manage-sensitive-data).
 
+~> **Note:**  All arguments marked as write-only values will not be stored in the state: `secret_data_wo`.
+[Read more about Write-only Arguments](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/write-only-arguments).
+
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=regional_secret_version_basic&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
@@ -60,6 +63,26 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=regional_secret_version_basic_write_only&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Regional Secret Version Basic Write Only
+
+
+```hcl
+resource "google_secret_manager_regional_secret" "secret-basic-write-only" {
+  secret_id = "secret-version-write-only"
+  location = "us-central1"
+}
+
+resource "google_secret_manager_regional_secret_version" "regional_secret_version_basic_write_only" {
+  secret = google_secret_manager_regional_secret.secret-basic-write-only.id
+  secret_data_wo_version = 1
+  secret_data_wo = "secret-data-write-only"
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=regional_secret_version_with_base64_data&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -77,6 +100,28 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
   secret = google_secret_manager_regional_secret.secret-basic.id
   secret_data = filebase64("secret-data.pfx")
   is_secret_data_base64 = true
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=regional_secret_version_with_base64_data_write_only&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Regional Secret Version With Base64 Data Write Only
+
+
+```hcl
+resource "google_secret_manager_regional_secret" "secret-basic" {
+  secret_id = "secret-version-base64-write-only"
+  location = "us-central1"
+}
+
+resource "google_secret_manager_regional_secret_version" "regional_secret_version_base64_write_only" {
+  secret = google_secret_manager_regional_secret.secret-basic.id
+
+  is_secret_data_base64 = true
+  secret_data_wo_version = 1
+  secret_data_wo = filebase64("secret-data-base64-write-only.pfx")
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -145,11 +190,6 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
 The following arguments are supported:
 
 
-* `secret_data` -
-  (Required)
-  The secret data. Must be no larger than 64KiB.
-  **Note**: This property is sensitive and will not be displayed in the plan.
-
 * `secret` -
   (Required)
   Secret Manager regional secret resource.
@@ -158,6 +198,22 @@ The following arguments are supported:
 * `enabled` -
   (Optional)
   The current state of the regional secret version.
+
+* `secret_data` -
+  (Optional)
+  The secret data. Must be no larger than 64KiB.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `secret_data_wo` -
+  (Optional, Write-Only)
+  The secret data. Must be no larger than 64KiB. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)
+  **Note**: This property is write-only and will not be read from the API.
+
+  ~> **Note:** One of `secret_data` or `secret_data_wo` can only be set.
+
+* `secret_data_wo_version` -
+  (Optional)
+  Triggers update of secret data write-only. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)
 
 * `deletion_policy` - (Optional) The deletion policy for the secret version. Setting `ABANDON` allows the resource
 to be abandoned rather than deleted. Setting `DISABLE` allows the resource to be

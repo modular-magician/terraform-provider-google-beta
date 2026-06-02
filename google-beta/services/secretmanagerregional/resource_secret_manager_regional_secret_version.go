@@ -149,11 +149,27 @@ func ResourceSecretManagerRegionalRegionalSecretVersion() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"secret_data": {
-				Type:        schema.TypeString,
-				Required:    true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				Description:   `The secret data. Must be no larger than 64KiB.`,
+				Sensitive:     true,
+				ConflictsWith: []string{},
+			},
+			"secret_data_wo": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Description:   `The secret data. Must be no larger than 64KiB. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
+				WriteOnly:     true,
+				ConflictsWith: []string{},
+				RequiredWith:  []string{},
+			},
+			"secret_data_wo_version": {
+				Type:        schema.TypeInt,
+				Optional:    true,
 				ForceNew:    true,
-				Description: `The secret data. Must be no larger than 64KiB.`,
-				Sensitive:   true,
+				Description: `Triggers update of secret data write-only. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
+				Default:     0,
 			},
 
 			"secret": {
@@ -588,6 +604,11 @@ func flattenSecretManagerRegionalRegionalSecretVersionEnabled(v interface{}, d *
 func flattenSecretManagerRegionalRegionalSecretVersionPayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	transformed := make(map[string]interface{})
 
+	// write-only: during read, resolve diff with empty object
+	if v, ok := d.GetOkExists("secret_data_wo_version"); ok && v.(int) > 0 {
+		return []interface{}{transformed}
+	}
+
 	// if this secret version is disabled, the api will return an error, as the value cannot be accessed, return what we have
 	if d.Get("enabled").(bool) == false {
 		transformed["secret_data"] = d.Get("secret_data")
@@ -642,7 +663,12 @@ func expandSecretManagerRegionalRegionalSecretVersionPayload(v interface{}, d tp
 	} else if val := reflect.ValueOf(transformedSecretData); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["data"] = transformedSecretData
 	}
-
+	transformedSecretDataWo, err := expandSecretManagerRegionalRegionalSecretVersionPayloadSecretDataWo(d.Get("secret_data_wo"), d.(*schema.ResourceData), config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecretDataWo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["data"] = transformedSecretDataWo
+	}
 	return transformed, nil
 }
 
@@ -655,6 +681,17 @@ func expandSecretManagerRegionalRegionalSecretVersionPayloadSecretData(v interfa
 		return v, nil
 	}
 	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
+}
+func expandSecretManagerRegionalRegionalSecretVersionPayloadSecretDataWo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (interface{}, error) {
+	path := cty.GetAttrPath("secret_data_wo")
+	woVal, _ := d.GetRawConfigAt(path)
+	if !woVal.Type().Equals(cty.String) || woVal.IsNull() {
+		return nil, nil
+	}
+	if d.Get("is_secret_data_base64").(bool) {
+		return woVal.AsString(), nil
+	}
+	return base64.StdEncoding.EncodeToString([]byte(woVal.AsString())), nil
 }
 
 func resourceSecretManagerRegionalRegionalSecretVersionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

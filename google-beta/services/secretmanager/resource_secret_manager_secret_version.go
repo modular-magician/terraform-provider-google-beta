@@ -577,7 +577,7 @@ func flattenSecretManagerSecretVersionPayload(v interface{}, d *schema.ResourceD
 	}
 
 	// write-only: during read, resolve diff with empty object
-	if _, ok := d.GetOkExists("secret_data_wo_version"); ok {
+	if v, ok := d.GetOkExists("secret_data_wo_version"); ok && v.(int) > 0 {
 		return safeTransformed(nil)
 	}
 
