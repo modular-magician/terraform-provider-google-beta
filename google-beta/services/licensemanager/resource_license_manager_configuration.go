@@ -823,6 +823,13 @@ func expandLicenseManagerConfigurationEffectiveLabels(v interface{}, d tpgresour
 
 func resourceLicenseManagerConfigurationEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	// Reference design doc: go/lima-terraform
+	// Check if we are trying to create an inactive configuration
+	if d.IsNewResource() {
+		if val, ok := d.GetOkExists("active"); ok && !val.(bool) {
+			return nil, fmt.Errorf("creating an inactive configuration is not supported; you must create it as active (active = true) first, and then deactivate it")
+		}
+	}
+
 	var product string
 	if val, ok := obj["product"]; ok && val != nil {
 		product = val.(string)
