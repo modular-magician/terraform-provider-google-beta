@@ -531,113 +531,154 @@ func resourceApigeeEnvironmentUpdate(d *schema.ResourceData, meta interface{}) e
 	if err != nil {
 		return err
 	}
-	identity, err := d.Identity()
-	if err == nil && identity != nil {
-		if nameValue, ok := d.GetOk("name"); ok && nameValue.(string) != "" {
-			if err = identity.Set("name", nameValue.(string)); err != nil {
-				return fmt.Errorf("Error setting name: %s", err)
-			}
-		}
-		if orgIdValue, ok := d.GetOk("org_id"); ok && orgIdValue.(string) != "" {
-			if err = identity.Set("org_id", orgIdValue.(string)); err != nil {
-				return fmt.Errorf("Error setting org_id: %s", err)
-			}
-		}
-	} else {
-		log.Printf("[DEBUG] (Update) identity not set: %s", err)
-	}
 
 	billingProject := ""
-
-	obj := make(map[string]interface{})
-	nameProp, err := expandApigeeEnvironmentName(d.Get("name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
-	}
-	displayNameProp, err := expandApigeeEnvironmentDisplayName(d.Get("display_name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
-		obj["displayName"] = displayNameProp
-	}
-	descriptionProp, err := expandApigeeEnvironmentDescription(d.Get("description"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
-		obj["description"] = descriptionProp
-	}
-	deploymentTypeProp, err := expandApigeeEnvironmentDeploymentType(d.Get("deployment_type"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("deployment_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, deploymentTypeProp)) {
-		obj["deploymentType"] = deploymentTypeProp
-	}
-	apiProxyTypeProp, err := expandApigeeEnvironmentApiProxyType(d.Get("api_proxy_type"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("api_proxy_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, apiProxyTypeProp)) {
-		obj["apiProxyType"] = apiProxyTypeProp
-	}
-	nodeConfigProp, err := expandApigeeEnvironmentNodeConfig(d.Get("node_config"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("node_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeConfigProp)) {
-		obj["nodeConfig"] = nodeConfigProp
-	}
-	typeProp, err := expandApigeeEnvironmentType(d.Get("type"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, typeProp)) {
-		obj["type"] = typeProp
-	}
-	forwardProxyUriProp, err := expandApigeeEnvironmentForwardProxyUri(d.Get("forward_proxy_uri"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("forward_proxy_uri"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, forwardProxyUriProp)) {
-		obj["forwardProxyUri"] = forwardProxyUriProp
-	}
-	propertiesProp, err := expandApigeeEnvironmentProperties(d.Get("properties"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("properties"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, propertiesProp)) {
-		obj["properties"] = propertiesProp
-	}
-	clientIpResolutionConfigProp, err := expandApigeeEnvironmentClientIpResolutionConfig(d.Get("client_ip_resolution_config"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("client_ip_resolution_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, clientIpResolutionConfigProp)) {
-		obj["clientIpResolutionConfig"] = clientIpResolutionConfigProp
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"{{org_id}}/environments/{{name}}")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Updating Environment %q: %#v", d.Id(), obj)
-	headers := make(http.Header)
-
-	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PUT",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-		Headers:   headers,
-	})
-
+	baseUrl, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}{{org_id}}/environments/{{name}}")
 	if err != nil {
-		return fmt.Errorf("Error updating Environment %q: %s", d.Id(), err)
-	} else {
+		return err
+	}
+
+	// `type` and `nodeConfig` cannot be changed through the standard
+	// updateEnvironment (PUT) call -- the API rejects it with
+	// "updating environment type is not supported today". These fields must be
+	// modified through modifyEnvironment, which is a PATCH with an updateMask and
+	// returns a long-running operation.
+	modifyMask := []string{}
+	modifyObj := make(map[string]interface{})
+	if d.HasChange("type") {
+		typeProp, err := expandApigeeEnvironmentType(d.Get("type"), d, config)
+		if err != nil {
+			return err
+		}
+		modifyObj["type"] = typeProp
+		modifyMask = append(modifyMask, "type")
+	}
+	if d.HasChange("node_config") {
+		nodeConfigProp, err := expandApigeeEnvironmentNodeConfig(d.Get("node_config"), d, config)
+		if err != nil {
+			return err
+		}
+		modifyObj["nodeConfig"] = nodeConfigProp
+		modifyMask = append(modifyMask, "nodeConfig")
+	}
+
+	if len(modifyMask) > 0 {
+		modifyUrl, err := transport_tpg.AddQueryParams(baseUrl, map[string]string{"updateMask": strings.Join(modifyMask, ",")})
+		if err != nil {
+			return err
+		}
+		log.Printf("[DEBUG] Modifying Environment %q via modifyEnvironment: %#v", d.Id(), modifyObj)
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    modifyUrl,
+			UserAgent: userAgent,
+			Body:      modifyObj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+		})
+		if err != nil {
+			return fmt.Errorf("Error modifying Environment %q: %s", d.Id(), err)
+		}
+		if err := ApigeeOperationWaitTime(config, res, "Modifying Environment", userAgent, d.Timeout(schema.TimeoutUpdate)); err != nil {
+			return fmt.Errorf("Error waiting to modify Environment %q: %s", d.Id(), err)
+		}
+	}
+
+	// Remaining mutable fields go through the standard updateEnvironment (PUT),
+	// which replaces the resource. Skip the PUT when only type/node_config changed.
+	otherChanged := false
+	for _, f := range []string{"display_name", "description", "deployment_type", "api_proxy_type", "forward_proxy_uri", "properties", "client_ip_resolution_config"} {
+		if d.HasChange(f) {
+			otherChanged = true
+			break
+		}
+	}
+
+	if otherChanged {
+		obj := make(map[string]interface{})
+		nameProp, err := expandApigeeEnvironmentName(d.Get("name"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) {
+			obj["name"] = nameProp
+		}
+		displayNameProp, err := expandApigeeEnvironmentDisplayName(d.Get("display_name"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) {
+			obj["displayName"] = displayNameProp
+		}
+		descriptionProp, err := expandApigeeEnvironmentDescription(d.Get("description"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) {
+			obj["description"] = descriptionProp
+		}
+		deploymentTypeProp, err := expandApigeeEnvironmentDeploymentType(d.Get("deployment_type"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(deploymentTypeProp)) {
+			obj["deploymentType"] = deploymentTypeProp
+		}
+		apiProxyTypeProp, err := expandApigeeEnvironmentApiProxyType(d.Get("api_proxy_type"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(apiProxyTypeProp)) {
+			obj["apiProxyType"] = apiProxyTypeProp
+		}
+		// Preserve type and node_config in the full-object PUT so they are not
+		// cleared by the replace semantics.
+		typeProp, err := expandApigeeEnvironmentType(d.Get("type"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(typeProp)) {
+			obj["type"] = typeProp
+		}
+		nodeConfigProp, err := expandApigeeEnvironmentNodeConfig(d.Get("node_config"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(nodeConfigProp)) {
+			obj["nodeConfig"] = nodeConfigProp
+		}
+		forwardProxyUriProp, err := expandApigeeEnvironmentForwardProxyUri(d.Get("forward_proxy_uri"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(forwardProxyUriProp)) {
+			obj["forwardProxyUri"] = forwardProxyUriProp
+		}
+		propertiesProp, err := expandApigeeEnvironmentProperties(d.Get("properties"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(propertiesProp)) {
+			obj["properties"] = propertiesProp
+		}
+		clientIpResolutionConfigProp, err := expandApigeeEnvironmentClientIpResolutionConfig(d.Get("client_ip_resolution_config"), d, config)
+		if err != nil {
+			return err
+		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(clientIpResolutionConfigProp)) {
+			obj["clientIpResolutionConfig"] = clientIpResolutionConfigProp
+		}
+
+		log.Printf("[DEBUG] Updating Environment %q: %#v", d.Id(), obj)
+		headers := make(http.Header)
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PUT",
+			Project:   billingProject,
+			RawURL:    baseUrl,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating Environment %q: %s", d.Id(), err)
+		}
 		log.Printf("[DEBUG] Finished updating Environment %q: %#v", d.Id(), res)
 	}
 
