@@ -623,7 +623,7 @@ func TestAccApigeeInstance_apigeeInstanceServiceAttachmentBasicTestExample(t *te
 				ResourceName:            "google_apigee_instance.apigee_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"ip_range", "org_id"},
+				ImportStateVerifyIgnore: []string{"consumer_accept_list", "ip_range", "org_id"},
 			},
 			{
 				ResourceName:       "google_apigee_instance.apigee_instance",
@@ -809,7 +809,7 @@ resource "google_apigee_instance" "apigee_instance" {
   name                 = "tf-test%{random_suffix}"
   location             = "us-central1"
   org_id               = google_apigee_organization.apigee_org.id
-  consumer_accept_list = [google_project.project.number]
+  consumer_accept_list = [google_project.project.project_id]
 }
 `, context)
 }
