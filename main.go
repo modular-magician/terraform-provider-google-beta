@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov5/tf5server"
 	"github.com/hashicorp/terraform-plugin-mux/tf5muxserver"
 
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/allservices"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwprovider"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/provider"
 )
