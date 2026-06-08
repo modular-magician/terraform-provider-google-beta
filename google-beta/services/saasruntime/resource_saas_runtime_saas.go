@@ -169,6 +169,35 @@ More info: https://kubernetes.io/docs/user-guide/annotations
 Please refer to the field 'effective_annotations' for all of the annotations present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"application_template": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `CompositeRef represents a reference to a composite resource.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"application_template": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Reference to the ApplicationTemplate resource.`,
+						},
+						"revision": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `Revision of the ApplicationTemplate to use.
+Changes to revision will trigger manual resynchronization.
+If empty, ApplicationTemplate will be ignored.`,
+						},
+						"sync_operation": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Reference to on-going AppTemplate import and replication operation (i.e.
+the operation_id for the long-running operation).
+This field is opaque for external usage.`,
+						},
+					},
+				},
+			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -194,6 +223,54 @@ list to generate a rollout plan.`,
 					},
 				},
 			},
+			"blueprint_repo": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Name of repository in Artifact Registry for system-generated Blueprints,
+eg. Blueprints of imported ApplicationTemplates.`,
+			},
+			"conditions": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Description: `A set of conditions which indicate the various conditions this resource can
+have.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"last_transition_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Last time the condition transited from one status to another.`,
+						},
+						"message": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Human readable message indicating details about the last transition.`,
+						},
+						"reason": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Brief reason for the condition's last transition.`,
+						},
+						"status": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Status of the condition.
+Possible values:
+STATUS_UNKNOWN
+STATUS_TRUE
+STATUS_FALSE`,
+						},
+						"type": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Type of the condition.
+Possible values:
+TYPE_READY
+TYPE_SYNCHRONIZED`,
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -211,6 +288,42 @@ list to generate a rollout plan.`,
 				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
+			"error": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Description: `The 'Status' type defines a logical error model that is suitable for
+different programming environments, including REST APIs and RPC APIs. It is
+used by [gRPC](https://github.com/grpc). Each 'Status' message contains
+three pieces of data: error code, error message, and error details.
+
+You can find out more about this error model and how to work with it in the
+[API Design Guide](https://cloud.google.com/apis/design/errors).`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"code": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: `The status code, which should be an enum value of google.rpc.Code.`,
+						},
+						"details": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Description: `A list of messages that carry the error details.  There is a common set of
+message types for APIs to use.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
+						},
+						"message": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `A developer-facing error message, which should be in English. Any
+user-facing error message should be localized and sent in the
+google.rpc.Status.details field, or localized by the client.`,
+						},
+					},
+				},
+			},
 			"etag": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -225,6 +338,16 @@ and server agree on the ordering of a resource being written.`,
 scheme:
 
 "projects/{project}/locations/{location}/saas/{saas}"`,
+			},
+			"state": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `State of the Saas.
+It is always in STATE_ACTIVE state if the application_template is empty.
+Possible values:
+STATE_ACTIVE
+STATE_RUNNING
+STATE_FAILED`,
 			},
 			"terraform_labels": {
 				Type:     schema.TypeMap,
@@ -280,6 +403,12 @@ func resourceSaasRuntimeSaasCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	obj := make(map[string]interface{})
+	applicationTemplateProp, err := expandSaasRuntimeSaasApplicationTemplate(d.Get("application_template"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("application_template"); !tpgresource.IsEmptyValue(reflect.ValueOf(applicationTemplateProp)) && (ok || !reflect.DeepEqual(v, applicationTemplateProp)) {
+		obj["applicationTemplate"] = applicationTemplateProp
+	}
 	locationsProp, err := expandSaasRuntimeSaasLocations(d.Get("locations"), d, config)
 	if err != nil {
 		return err
@@ -504,6 +633,12 @@ func resourceSaasRuntimeSaasUpdate(d *schema.ResourceData, meta interface{}) err
 	billingProject = project
 
 	obj := make(map[string]interface{})
+	applicationTemplateProp, err := expandSaasRuntimeSaasApplicationTemplate(d.Get("application_template"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("application_template"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, applicationTemplateProp)) {
+		obj["applicationTemplate"] = applicationTemplateProp
+	}
 	locationsProp, err := expandSaasRuntimeSaasLocations(d.Get("locations"), d, config)
 	if err != nil {
 		return err
@@ -531,6 +666,10 @@ func resourceSaasRuntimeSaasUpdate(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Updating Saas %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
 	updateMask := []string{}
+
+	if d.HasChange("application_template") {
+		updateMask = append(updateMask, "applicationTemplate")
+	}
 
 	if d.HasChange("locations") {
 		updateMask = append(updateMask, "locations")
@@ -600,12 +739,10 @@ func resourceSaasRuntimeSaasDelete(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error fetching project for Saas: %s", err)
 	}
 	billingProject = project
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/saas/{{saas_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/saas/{{saas_id}}"))
 	if err != nil {
 		return err
 	}
-
-	var obj map[string]interface{}
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
@@ -614,6 +751,39 @@ func resourceSaasRuntimeSaasDelete(d *schema.ResourceData, meta interface{}) err
 
 	headers := make(http.Header)
 
+	// 1. Wait for the resource to transition out of STATE_RUNNING before deleting
+	log.Printf("[DEBUG] Waiting for Saas %q to transition out of STATE_RUNNING", d.Id())
+	err = retry.RetryContext(context.Background(), d.Timeout(schema.TimeoutDelete), func() *retry.RetryError {
+		res, readErr := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Headers:   headers,
+		})
+		if readErr != nil {
+			if transport_tpg.IsGoogleApiErrorWithCode(readErr, 404) {
+				return nil // already gone
+			}
+			return retry.NonRetryableError(readErr)
+		}
+
+		state, ok := res["state"].(string)
+		if !ok {
+			return retry.RetryableError(fmt.Errorf("Saas %q state is not yet populated", d.Id()))
+		}
+		if state == "STATE_RUNNING" {
+			return retry.RetryableError(fmt.Errorf("Saas %q is still in STATE_RUNNING state", d.Id()))
+		}
+
+		return nil
+	})
+	if err != nil {
+		return fmt.Errorf("Error waiting for Saas %q to be ready for deletion: %s", d.Id(), err)
+	}
+
+	// 2. Trigger the DELETE request
 	log.Printf("[DEBUG] Deleting Saas %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
@@ -621,7 +791,6 @@ func resourceSaasRuntimeSaasDelete(d *schema.ResourceData, meta interface{}) err
 		Project:   billingProject,
 		RawURL:    url,
 		UserAgent: userAgent,
-		Body:      obj,
 		Timeout:   d.Timeout(schema.TimeoutDelete),
 		Headers:   headers,
 	})
@@ -629,7 +798,30 @@ func resourceSaasRuntimeSaasDelete(d *schema.ResourceData, meta interface{}) err
 		return transport_tpg.HandleNotFoundError(err, d, "Saas")
 	}
 
-	log.Printf("[DEBUG] Finished deleting Saas %q: %#v", d.Id(), res)
+	log.Printf("[DEBUG] Finished trigger for deleting Saas %q: %#v", d.Id(), res)
+
+	// 3. Wait for the Saas resource to be fully deleted from GCP (eventual consistency)
+	err = retry.RetryContext(context.Background(), d.Timeout(schema.TimeoutDelete), func() *retry.RetryError {
+		_, readErr := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Headers:   headers,
+		})
+		if readErr != nil {
+			if transport_tpg.IsGoogleApiErrorWithCode(readErr, 404) {
+				return nil
+			}
+			return retry.NonRetryableError(readErr)
+		}
+		return retry.RetryableError(fmt.Errorf("Saas %q still exists", d.Id()))
+	})
+	if err != nil {
+		return fmt.Errorf("Error waiting for Saas %q to be fully deleted: %s", d.Id(), err)
+	}
+
 	return nil
 }
 
@@ -668,7 +860,137 @@ func flattenSaasRuntimeSaasAnnotations(v interface{}, d *schema.ResourceData, co
 	return transformed
 }
 
+func flattenSaasRuntimeSaasApplicationTemplate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["application_template"] =
+		flattenSaasRuntimeSaasApplicationTemplateApplicationTemplate(original["applicationTemplate"], d, config)
+	transformed["revision"] =
+		flattenSaasRuntimeSaasApplicationTemplateRevision(original["revision"], d, config)
+	transformed["sync_operation"] =
+		flattenSaasRuntimeSaasApplicationTemplateSyncOperation(original["syncOperation"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSaasRuntimeSaasApplicationTemplateApplicationTemplate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasApplicationTemplateRevision(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasApplicationTemplateSyncOperation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasBlueprintRepo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasConditions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"last_transition_time": flattenSaasRuntimeSaasConditionsLastTransitionTime(original["lastTransitionTime"], d, config),
+			"message":              flattenSaasRuntimeSaasConditionsMessage(original["message"], d, config),
+			"reason":               flattenSaasRuntimeSaasConditionsReason(original["reason"], d, config),
+			"status":               flattenSaasRuntimeSaasConditionsStatus(original["status"], d, config),
+			"type":                 flattenSaasRuntimeSaasConditionsType(original["type"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenSaasRuntimeSaasConditionsLastTransitionTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasConditionsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasConditionsReason(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasConditionsStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasConditionsType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenSaasRuntimeSaasCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenSaasRuntimeSaasError(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["code"] =
+		flattenSaasRuntimeSaasErrorCode(original["code"], d, config)
+	transformed["details"] =
+		flattenSaasRuntimeSaasErrorDetails(original["details"], d, config)
+	transformed["message"] =
+		flattenSaasRuntimeSaasErrorMessage(original["message"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSaasRuntimeSaasErrorCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSaasRuntimeSaasErrorDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{})
+	}
+	return transformed
+}
+
+func flattenSaasRuntimeSaasErrorMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -717,6 +1039,10 @@ func flattenSaasRuntimeSaasName(v interface{}, d *schema.ResourceData, config *t
 	return v
 }
 
+func flattenSaasRuntimeSaasState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenSaasRuntimeSaasUid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -746,6 +1072,54 @@ func flattenSaasRuntimeSaasTerraformLabels(v interface{}, d *schema.ResourceData
 
 func flattenSaasRuntimeSaasEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func expandSaasRuntimeSaasApplicationTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedApplicationTemplate, err := expandSaasRuntimeSaasApplicationTemplateApplicationTemplate(original["application_template"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedApplicationTemplate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["applicationTemplate"] = transformedApplicationTemplate
+	}
+
+	transformedRevision, err := expandSaasRuntimeSaasApplicationTemplateRevision(original["revision"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRevision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["revision"] = transformedRevision
+	}
+
+	transformedSyncOperation, err := expandSaasRuntimeSaasApplicationTemplateSyncOperation(original["sync_operation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSyncOperation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["syncOperation"] = transformedSyncOperation
+	}
+
+	return transformed, nil
+}
+
+func expandSaasRuntimeSaasApplicationTemplateApplicationTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSaasRuntimeSaasApplicationTemplateRevision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSaasRuntimeSaasApplicationTemplateSyncOperation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandSaasRuntimeSaasLocations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -805,7 +1179,19 @@ func ResourceSaasRuntimeSaasFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("annotations", flattenSaasRuntimeSaasAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+	if err = d.Set("application_template", flattenSaasRuntimeSaasApplicationTemplate(res["applicationTemplate"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Saas: %s", err)
+	}
+	if err = d.Set("blueprint_repo", flattenSaasRuntimeSaasBlueprintRepo(res["blueprintRepo"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Saas: %s", err)
+	}
+	if err = d.Set("conditions", flattenSaasRuntimeSaasConditions(res["conditions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Saas: %s", err)
+	}
 	if err = d.Set("create_time", flattenSaasRuntimeSaasCreateTime(res["createTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Saas: %s", err)
+	}
+	if err = d.Set("error", flattenSaasRuntimeSaasError(res["error"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
 	if err = d.Set("etag", flattenSaasRuntimeSaasEtag(res["etag"], d, config)); err != nil {
@@ -818,6 +1204,9 @@ func ResourceSaasRuntimeSaasFlatten(d *schema.ResourceData, meta interface{}, re
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
 	if err = d.Set("name", flattenSaasRuntimeSaasName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Saas: %s", err)
+	}
+	if err = d.Set("state", flattenSaasRuntimeSaasState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
 	if err = d.Set("uid", flattenSaasRuntimeSaasUid(res["uid"], d, config)); err != nil {

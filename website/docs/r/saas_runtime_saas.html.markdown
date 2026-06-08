@@ -27,11 +27,6 @@ A Saas resource is the top-level representation of a SaaS service managed by a p
 See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 
-<div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=saas_runtime_saas_basic&open_in_editor=main.tf" target="_blank">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
-  </a>
-</div>
 ## Example Usage - Saas Runtime Saas Basic
 
 
@@ -46,6 +41,11 @@ resource "google_saas_runtime_saas" "example" {
   }
   locations {
     name = "europe-west1"
+  }
+
+  application_template {
+    application_template = "projects/my-project-name/locations/global/applicationTemplates/my-template"
+    revision             = "r1"
   }
 }
 ```
@@ -73,6 +73,11 @@ The following arguments are supported:
   **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
   Please refer to the field `effective_annotations` for all of the annotations present on the resource.
 
+* `application_template` -
+  (Optional)
+  CompositeRef represents a reference to a composite resource.
+  Structure is [documented below](#nested_application_template).
+
 * `labels` -
   (Optional)
   The labels on the resource, which can be used for categorization.
@@ -97,6 +102,24 @@ The following arguments are supported:
 	When set to "DELETE", deleting the resource is allowed.
 
 
+<a name="nested_application_template"></a>The `application_template` block supports:
+
+* `application_template` -
+  (Required)
+  Reference to the ApplicationTemplate resource.
+
+* `revision` -
+  (Optional)
+  Revision of the ApplicationTemplate to use.
+  Changes to revision will trigger manual resynchronization.
+  If empty, ApplicationTemplate will be ignored.
+
+* `sync_operation` -
+  (Output)
+  Reference to on-going AppTemplate import and replication operation (i.e.
+  the operation_id for the long-running operation).
+  This field is opaque for external usage.
+
 <a name="nested_locations"></a>The `locations` block supports:
 
 * `name` -
@@ -109,8 +132,26 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/saas/{{saas_id}}`
 
+* `blueprint_repo` -
+  Name of repository in Artifact Registry for system-generated Blueprints,
+  eg. Blueprints of imported ApplicationTemplates.
+
+* `conditions` -
+  A set of conditions which indicate the various conditions this resource can
+  have.
+  Structure is [documented below](#nested_conditions).
+
 * `create_time` -
   The timestamp when the resource was created.
+
+* `error` -
+  The `Status` type defines a logical error model that is suitable for
+  different programming environments, including REST APIs and RPC APIs. It is
+  used by [gRPC](https://github.com/grpc). Each `Status` message contains
+  three pieces of data: error code, error message, and error details.
+  You can find out more about this error model and how to work with it in the
+  [API Design Guide](https://cloud.google.com/apis/design/errors).
+  Structure is [documented below](#nested_error).
 
 * `etag` -
   An opaque value that uniquely identifies a version or
@@ -121,6 +162,14 @@ In addition to the arguments listed above, the following computed attributes are
   Identifier. The resource name (full URI of the resource) following the standard naming
   scheme:
   "projects/{project}/locations/{location}/saas/{saas}"
+
+* `state` -
+  State of the Saas.
+  It is always in STATE_ACTIVE state if the application_template is empty.
+  Possible values:
+  STATE_ACTIVE
+  STATE_RUNNING
+  STATE_FAILED
 
 * `uid` -
   The unique identifier of the resource. UID is unique in the time
@@ -144,6 +193,52 @@ In addition to the arguments listed above, the following computed attributes are
 * `effective_labels` -
   All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.
 
+
+<a name="nested_conditions"></a>The `conditions` block contains:
+
+* `last_transition_time` -
+  (Output)
+  Last time the condition transited from one status to another.
+
+* `message` -
+  (Output)
+  Human readable message indicating details about the last transition.
+
+* `reason` -
+  (Output)
+  Brief reason for the condition's last transition.
+
+* `status` -
+  (Output)
+  Status of the condition.
+  Possible values:
+  STATUS_UNKNOWN
+  STATUS_TRUE
+  STATUS_FALSE
+
+* `type` -
+  (Output)
+  Type of the condition.
+  Possible values:
+  TYPE_READY
+  TYPE_SYNCHRONIZED
+
+<a name="nested_error"></a>The `error` block contains:
+
+* `code` -
+  (Output)
+  The status code, which should be an enum value of google.rpc.Code.
+
+* `details` -
+  (Output)
+  A list of messages that carry the error details.  There is a common set of
+  message types for APIs to use.
+
+* `message` -
+  (Output)
+  A developer-facing error message, which should be in English. Any
+  user-facing error message should be localized and sent in the
+  google.rpc.Status.details field, or localized by the client.
 
 ## Timeouts
 

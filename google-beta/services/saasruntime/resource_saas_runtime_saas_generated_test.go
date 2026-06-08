@@ -65,6 +65,7 @@ func TestAccSaasRuntimeSaas_saasRuntimeSaasBasicExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
 		"saas_name":     "tf-test-test-saas" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -81,7 +82,7 @@ func TestAccSaasRuntimeSaas_saasRuntimeSaasBasicExample(t *testing.T) {
 				ResourceName:            "google_saas_runtime_saas.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "saas_id", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"annotations", "application_template.0.sync_operation", "blueprint_repo", "conditions", "etag", "labels", "location", "saas_id", "state", "terraform_labels", "update_time"},
 			},
 			{
 				ResourceName:       "google_saas_runtime_saas.example",
@@ -105,6 +106,11 @@ resource "google_saas_runtime_saas" "example" {
   }
   locations {
     name = "europe-west1"
+  }
+
+  application_template {
+    application_template = "projects/%{project}/locations/global/applicationTemplates/my-template"
+    revision             = "r1"
   }
 }
 `, context)

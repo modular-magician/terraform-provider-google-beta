@@ -23,6 +23,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/saasruntime"
 )
@@ -38,6 +39,7 @@ func TestAccSaasRuntimeSaas_update(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
+		"project":       envvar.GetTestProjectFromEnv(),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,7 +53,7 @@ func TestAccSaasRuntimeSaas_update(t *testing.T) {
 				ResourceName:            "google_saas_runtime_saas.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "saas_id", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "saas_id", "terraform_labels", "blueprint_repo", "conditions", "state", "update_time", "etag"},
 			},
 			{
 				Config: testAccSaasRuntimeSaas_update(context),
@@ -65,7 +67,7 @@ func TestAccSaasRuntimeSaas_update(t *testing.T) {
 				ResourceName:            "google_saas_runtime_saas.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "saas_id", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "saas_id", "terraform_labels", "blueprint_repo", "conditions", "state", "update_time", "etag"},
 			},
 		},
 	})
@@ -83,6 +85,10 @@ resource "google_saas_runtime_saas" "example" {
   }
   locations {
     name = "europe-west1"
+  }
+
+  application_template {
+    application_template = "projects/%{project}/locations/global/applicationTemplates/my-template"
   }
 }
 `, context)
@@ -108,6 +114,11 @@ resource "google_saas_runtime_saas" "example" {
   }
   annotations = {
     "annotation-one": "bar"
+  }
+
+  application_template {
+    application_template = "projects/%{project}/locations/global/applicationTemplates/my-template"
+    revision             = "r2"
   }
 }
 `, context)
