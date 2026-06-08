@@ -327,6 +327,11 @@ The possible values include: 'ACTIONS'.`,
 					Type: schema.TypeString,
 				},
 			},
+			"create_eua_saas": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Optional. Whether the END USER AUTHENTICATION connector is created in SaaS.`,
+			},
 			"data_source_version": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -372,6 +377,60 @@ used to configure where data is served.`,
 							DiffSuppressFunc: DataConnectorJsonStructFieldsDiffSuppress,
 							StateFunc:        func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
 							Description:      `Additional parameters for this destination config in structured json format.`,
+						},
+					},
+				},
+			},
+			"end_user_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Optional. Any params and credentials used specifically for EUA connectors.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"additional_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:  `Optional. Any additional parameters needed for EUA.`,
+						},
+						"auth_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:  `Optional. Any authentication parameters specific to EUA connectors.`,
+						},
+						"json_auth_params": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Any authentication parameters specific to EUA connectors in json string format.`,
+						},
+						"tenant": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. The tenant project the connector is connected to.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"display_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional display name for the tenant, e.g. "My Slack Team".`,
+									},
+									"id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The tenant's instance ID. Examples: Jira ("8594f221-9797-5f78-1fa4-485e198d7cd0"), Slack ("T123456").`,
+									},
+									"uri": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The URI of the tenant, if applicable. For example, the URI of a Jira instance is https://my-jira-instance.atlassian.net, and a Slack tenant does not have a URI.`,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -422,6 +481,35 @@ entity.
 Format: 'projects/*/locations/*/collections/*/dataStores/*'.
 When the connector is initialized by the DataConnectorService.SetUpDataConnector
 method, a DataStore is automatically created for each source entity.`,
+						},
+					},
+				},
+			},
+			"federated_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Optional. Any params and credentials used specifically for hybrid connectors supporting FEDERATED mode. This field should only be set if the connector is a hybrid connector and we want to enable FEDERATED mode.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"additional_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:  `Optional. Any additional parameters needed for FEDERATED.`,
+						},
+						"auth_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:  `Optional. Any authentication parameters specific to FEDERATED connectors.`,
+						},
+						"json_auth_params": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Any authentication parameters specific to FEDERATED connectors in json string format.`,
 						},
 					},
 				},
@@ -684,6 +772,24 @@ func resourceDiscoveryEngineDataConnectorCreate(d *schema.ResourceData, meta int
 		return err
 	} else if v, ok := d.GetOkExists("connector_modes"); !tpgresource.IsEmptyValue(reflect.ValueOf(connectorModesProp)) && (ok || !reflect.DeepEqual(v, connectorModesProp)) {
 		obj["connectorModes"] = connectorModesProp
+	}
+	endUserConfigProp, err := expandDiscoveryEngineDataConnectorEndUserConfig(d.Get("end_user_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("end_user_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(endUserConfigProp)) && (ok || !reflect.DeepEqual(v, endUserConfigProp)) {
+		obj["endUserConfig"] = endUserConfigProp
+	}
+	federatedConfigProp, err := expandDiscoveryEngineDataConnectorFederatedConfig(d.Get("federated_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("federated_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(federatedConfigProp)) && (ok || !reflect.DeepEqual(v, federatedConfigProp)) {
+		obj["federatedConfig"] = federatedConfigProp
+	}
+	createEuaSaasProp, err := expandDiscoveryEngineDataConnectorCreateEuaSaas(d.Get("create_eua_saas"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("create_eua_saas"); !tpgresource.IsEmptyValue(reflect.ValueOf(createEuaSaasProp)) && (ok || !reflect.DeepEqual(v, createEuaSaasProp)) {
+		obj["createEuaSaas"] = createEuaSaasProp
 	}
 	syncModeProp, err := expandDiscoveryEngineDataConnectorSyncMode(d.Get("sync_mode"), d, config)
 	if err != nil {
@@ -979,6 +1085,24 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("connector_modes"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, connectorModesProp)) {
 		obj["connectorModes"] = connectorModesProp
 	}
+	endUserConfigProp, err := expandDiscoveryEngineDataConnectorEndUserConfig(d.Get("end_user_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("end_user_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, endUserConfigProp)) {
+		obj["endUserConfig"] = endUserConfigProp
+	}
+	federatedConfigProp, err := expandDiscoveryEngineDataConnectorFederatedConfig(d.Get("federated_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("federated_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, federatedConfigProp)) {
+		obj["federatedConfig"] = federatedConfigProp
+	}
+	createEuaSaasProp, err := expandDiscoveryEngineDataConnectorCreateEuaSaas(d.Get("create_eua_saas"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("create_eua_saas"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, createEuaSaasProp)) {
+		obj["createEuaSaas"] = createEuaSaasProp
+	}
 	syncModeProp, err := expandDiscoveryEngineDataConnectorSyncMode(d.Get("sync_mode"), d, config)
 	if err != nil {
 		return err
@@ -1048,6 +1172,18 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 
 	if d.HasChange("connector_modes") {
 		updateMask = append(updateMask, "connectorModes")
+	}
+
+	if d.HasChange("end_user_config") {
+		updateMask = append(updateMask, "endUserConfig")
+	}
+
+	if d.HasChange("federated_config") {
+		updateMask = append(updateMask, "federatedConfig")
+	}
+
+	if d.HasChange("create_eua_saas") {
+		updateMask = append(updateMask, "createEuaSaas")
 	}
 
 	if d.HasChange("sync_mode") {
@@ -1481,6 +1617,131 @@ func flattenDiscoveryEngineDataConnectorConnectorModes(v interface{}, d *schema.
 	return v
 }
 
+func flattenDiscoveryEngineDataConnectorEndUserConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["auth_params"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigAuthParams(original["authParams"], d, config)
+	transformed["json_auth_params"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigJsonAuthParams(original["jsonAuthParams"], d, config)
+	transformed["additional_params"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigAdditionalParams(original["additionalParams"], d, config)
+	transformed["tenant"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigTenant(original["tenant"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataConnectorEndUserConfigAuthParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDiscoveryEngineDataConnectorEndUserConfigJsonAuthParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataConnectorEndUserConfigAdditionalParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDiscoveryEngineDataConnectorEndUserConfigTenant(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["id"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigTenantId(original["id"], d, config)
+	transformed["uri"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigTenantUri(original["uri"], d, config)
+	transformed["display_name"] =
+		flattenDiscoveryEngineDataConnectorEndUserConfigTenantDisplayName(original["displayName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataConnectorEndUserConfigTenantId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataConnectorEndUserConfigTenantUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataConnectorEndUserConfigTenantDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataConnectorFederatedConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["auth_params"] =
+		flattenDiscoveryEngineDataConnectorFederatedConfigAuthParams(original["authParams"], d, config)
+	transformed["json_auth_params"] =
+		flattenDiscoveryEngineDataConnectorFederatedConfigJsonAuthParams(original["jsonAuthParams"], d, config)
+	transformed["additional_params"] =
+		flattenDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(original["additionalParams"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataConnectorFederatedConfigAuthParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDiscoveryEngineDataConnectorFederatedConfigJsonAuthParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDiscoveryEngineDataConnectorCreateEuaSaas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDiscoveryEngineDataConnectorIncrementalRefreshInterval(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1788,6 +2049,193 @@ func expandDiscoveryEngineDataConnectorConnectorModes(v interface{}, d tpgresour
 	return v, nil
 }
 
+func expandDiscoveryEngineDataConnectorEndUserConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAuthParams, err := expandDiscoveryEngineDataConnectorEndUserConfigAuthParams(original["auth_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authParams"] = transformedAuthParams
+	}
+
+	transformedJsonAuthParams, err := expandDiscoveryEngineDataConnectorEndUserConfigJsonAuthParams(original["json_auth_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedJsonAuthParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["jsonAuthParams"] = transformedJsonAuthParams
+	}
+
+	transformedAdditionalParams, err := expandDiscoveryEngineDataConnectorEndUserConfigAdditionalParams(original["additional_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAdditionalParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["additionalParams"] = transformedAdditionalParams
+	}
+
+	transformedTenant, err := expandDiscoveryEngineDataConnectorEndUserConfigTenant(original["tenant"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTenant); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tenant"] = transformedTenant
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigAuthParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigJsonAuthParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigAdditionalParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigTenant(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedId, err := expandDiscoveryEngineDataConnectorEndUserConfigTenantId(original["id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["id"] = transformedId
+	}
+
+	transformedUri, err := expandDiscoveryEngineDataConnectorEndUserConfigTenantUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	transformedDisplayName, err := expandDiscoveryEngineDataConnectorEndUserConfigTenantDisplayName(original["display_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["displayName"] = transformedDisplayName
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigTenantId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigTenantUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataConnectorEndUserConfigTenantDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAuthParams, err := expandDiscoveryEngineDataConnectorFederatedConfigAuthParams(original["auth_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authParams"] = transformedAuthParams
+	}
+
+	transformedJsonAuthParams, err := expandDiscoveryEngineDataConnectorFederatedConfigJsonAuthParams(original["json_auth_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedJsonAuthParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["jsonAuthParams"] = transformedJsonAuthParams
+	}
+
+	transformedAdditionalParams, err := expandDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(original["additional_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAdditionalParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["additionalParams"] = transformedAdditionalParams
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfigAuthParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfigJsonAuthParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineDataConnectorCreateEuaSaas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDiscoveryEngineDataConnectorSyncMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1893,6 +2341,81 @@ sync will be disabled.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+			},
+			"end_user_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"auth_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+						},
+						"json_auth_params": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"additional_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+						},
+						"tenant": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"uri": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"display_name": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"federated_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"auth_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+						},
+						"json_auth_params": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"additional_params": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+						},
+					},
+				},
+			},
+			"create_eua_saas": {
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"entities": {
 				Type:        schema.TypeList,
@@ -2243,6 +2766,15 @@ func ResourceDiscoveryEngineDataConnectorFlatten(d *schema.ResourceData, meta in
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
 	if err = d.Set("connector_modes", flattenDiscoveryEngineDataConnectorConnectorModes(res["connectorModes"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataConnector: %s", err)
+	}
+	if err = d.Set("end_user_config", flattenDiscoveryEngineDataConnectorEndUserConfig(res["endUserConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataConnector: %s", err)
+	}
+	if err = d.Set("federated_config", flattenDiscoveryEngineDataConnectorFederatedConfig(res["federatedConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataConnector: %s", err)
+	}
+	if err = d.Set("create_eua_saas", flattenDiscoveryEngineDataConnectorCreateEuaSaas(res["createEuaSaas"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
 	if err = d.Set("incremental_refresh_interval", flattenDiscoveryEngineDataConnectorIncrementalRefreshInterval(res["incrementalRefreshInterval"], d, config)); err != nil {

@@ -244,6 +244,107 @@ resource "google_discovery_engine_data_connector" "jira-with-actions" {
 `, context)
 }
 
+func TestAccDiscoveryEngineDataConnector_discoveryengineDataconnectorJiraEuaExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"collection_id": "tf-test-collection-id" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDiscoveryEngineDataConnectorDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDiscoveryEngineDataConnector_discoveryengineDataconnectorJiraEuaExample(context),
+			},
+			{
+				ResourceName:            "google_discovery_engine_data_connector.jira-eua",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"action_config.0.action_params", "action_config.0.create_bap_connection", "auto_run_disabled", "collection_display_name", "collection_id", "incremental_sync_disabled", "json_params", "location", "params", "sync_mode"},
+			},
+			{
+				ResourceName:       "google_discovery_engine_data_connector.jira-eua",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDiscoveryEngineDataConnector_discoveryengineDataconnectorJiraEuaExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_discovery_engine_data_connector" "jira-eua" {
+  location                = "global"
+  collection_id           = "%{collection_id}"
+  collection_display_name = "Jira EUA"
+  data_source             = "jira"
+  data_source_version     = 3
+  params = {
+    instance_uri  = "https://example.atlassian.net"
+    instance_id   = "SECRET_MANAGER_RESOURCE_NAME"
+    client_id     = "SECRET_MANAGER_RESOURCE_NAME"
+    client_secret = "SECRET_MANAGER_RESOURCE_NAME"
+    auth_type     = "OAUTH"
+  }
+  refresh_interval = "86400s"
+  entities {
+    entity_name = "project"
+  }
+  entities {
+    entity_name = "issue"
+  }
+  static_ip_enabled = false
+  destination_configs {
+    key = "url"
+    destinations {
+      host = "https://example.atlassian.net"
+    }
+  }
+  connector_modes = ["FEDERATED_AND_EUA"]
+  sync_mode       = "PERIODIC"
+
+  end_user_config {
+    auth_params = jsonencode({
+      authorization_uri = "https://auth.atlassian.com/authorize"
+      client_id         = "SECRET_MANAGER_RESOURCE_NAME"
+      client_secret     = "SECRET_MANAGER_RESOURCE_NAME"
+      token_uri         = "https://auth.atlassian.com/oauth/token"
+    })
+    additional_params = jsonencode({
+      scopes = [
+        "read:jira-work",
+        "write:jira-work",
+      ]
+    })
+    tenant {
+      id           = "8594f221-9797-5f78-1fa4-485e198d7cd0"
+      uri          = "https://example.atlassian.net"
+      display_name = "Example Jira"
+    }
+  }
+
+  federated_config {
+    auth_params = jsonencode({
+      client_id     = "SECRET_MANAGER_RESOURCE_NAME"
+      client_secret = "SECRET_MANAGER_RESOURCE_NAME"
+    })
+    additional_params = jsonencode({
+      instance_uri = "https://example.atlassian.net"
+    })
+  }
+
+  create_eua_saas = true
+}
+`, context)
+}
+
 func testAccCheckDiscoveryEngineDataConnectorDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

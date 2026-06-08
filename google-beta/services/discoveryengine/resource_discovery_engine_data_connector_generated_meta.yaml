@@ -23,6 +23,7 @@ fields:
       provider_only: true
     - api_field: connectorModes
     - api_field: connectorType
+    - api_field: createEuaSaas
     - api_field: createTime
     - api_field: dataSource
     - api_field: dataSourceVersion
@@ -31,6 +32,14 @@ fields:
     - api_field: destinationConfigs.key
     - api_field: destinationConfigs.params
       json: true
+    - api_field: endUserConfig.additionalParams
+      json: true
+    - api_field: endUserConfig.authParams
+      json: true
+    - api_field: endUserConfig.jsonAuthParams
+    - api_field: endUserConfig.tenant.displayName
+    - api_field: endUserConfig.tenant.id
+    - api_field: endUserConfig.tenant.uri
     - api_field: entities.dataStore
     - api_field: entities.entityName
     - api_field: entities.keyPropertyMappings
@@ -38,6 +47,11 @@ fields:
       json: true
     - api_field: errors.code
     - api_field: errors.message
+    - api_field: federatedConfig.additionalParams
+      json: true
+    - api_field: federatedConfig.authParams
+      json: true
+    - api_field: federatedConfig.jsonAuthParams
     - api_field: incrementalRefreshInterval
     - api_field: incrementalSyncDisabled
     - api_field: jsonParams

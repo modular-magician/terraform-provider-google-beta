@@ -168,6 +168,78 @@ resource "google_discovery_engine_data_connector" "jira-with-actions" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=discoveryengine_dataconnector_jira_eua&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Discoveryengine Dataconnector Jira Eua
+
+
+```hcl
+resource "google_discovery_engine_data_connector" "jira-eua" {
+  location                = "global"
+  collection_id           = "collection-id"
+  collection_display_name = "Jira EUA"
+  data_source             = "jira"
+  data_source_version     = 3
+  params = {
+    instance_uri  = "https://example.atlassian.net"
+    instance_id   = "SECRET_MANAGER_RESOURCE_NAME"
+    client_id     = "SECRET_MANAGER_RESOURCE_NAME"
+    client_secret = "SECRET_MANAGER_RESOURCE_NAME"
+    auth_type     = "OAUTH"
+  }
+  refresh_interval = "86400s"
+  entities {
+    entity_name = "project"
+  }
+  entities {
+    entity_name = "issue"
+  }
+  static_ip_enabled = false
+  destination_configs {
+    key = "url"
+    destinations {
+      host = "https://example.atlassian.net"
+    }
+  }
+  connector_modes = ["FEDERATED_AND_EUA"]
+  sync_mode       = "PERIODIC"
+
+  end_user_config {
+    auth_params = jsonencode({
+      authorization_uri = "https://auth.atlassian.com/authorize"
+      client_id         = "SECRET_MANAGER_RESOURCE_NAME"
+      client_secret     = "SECRET_MANAGER_RESOURCE_NAME"
+      token_uri         = "https://auth.atlassian.com/oauth/token"
+    })
+    additional_params = jsonencode({
+      scopes = [
+        "read:jira-work",
+        "write:jira-work",
+      ]
+    })
+    tenant {
+      id           = "8594f221-9797-5f78-1fa4-485e198d7cd0"
+      uri          = "https://example.atlassian.net"
+      display_name = "Example Jira"
+    }
+  }
+
+  federated_config {
+    auth_params = jsonencode({
+      client_id     = "SECRET_MANAGER_RESOURCE_NAME"
+      client_secret = "SECRET_MANAGER_RESOURCE_NAME"
+    })
+    additional_params = jsonencode({
+      instance_uri = "https://example.atlassian.net"
+    })
+  }
+
+  create_eua_saas = true
+}
+```
 
 ## Argument Reference
 
@@ -308,6 +380,20 @@ The following arguments are supported:
   'DATA_INGESTION', 'ACTIONS', 'FEDERATED'
   'EUA', 'FEDERATED_AND_EUA'.
 
+* `end_user_config` -
+  (Optional)
+  Optional. Any params and credentials used specifically for EUA connectors.
+  Structure is [documented below](#nested_end_user_config).
+
+* `federated_config` -
+  (Optional)
+  Optional. Any params and credentials used specifically for hybrid connectors supporting FEDERATED mode. This field should only be set if the connector is a hybrid connector and we want to enable FEDERATED mode.
+  Structure is [documented below](#nested_federated_config).
+
+* `create_eua_saas` -
+  (Optional)
+  Optional. Whether the END USER AUTHENTICATION connector is created in SaaS.
+
 * `sync_mode` -
   (Optional)
   The data synchronization mode supported by the data connector. The possible value can be:
@@ -431,6 +517,54 @@ The following arguments are supported:
 * `port` -
   (Optional)
   Target port number accepted by the destination.
+
+<a name="nested_end_user_config"></a>The `end_user_config` block supports:
+
+* `auth_params` -
+  (Optional)
+  Optional. Any authentication parameters specific to EUA connectors.
+
+* `json_auth_params` -
+  (Optional)
+  Optional. Any authentication parameters specific to EUA connectors in json string format.
+
+* `additional_params` -
+  (Optional)
+  Optional. Any additional parameters needed for EUA.
+
+* `tenant` -
+  (Optional)
+  Optional. The tenant project the connector is connected to.
+  Structure is [documented below](#nested_end_user_config_tenant).
+
+
+<a name="nested_end_user_config_tenant"></a>The `tenant` block supports:
+
+* `id` -
+  (Optional)
+  The tenant's instance ID. Examples: Jira ("8594f221-9797-5f78-1fa4-485e198d7cd0"), Slack ("T123456").
+
+* `uri` -
+  (Optional)
+  The URI of the tenant, if applicable. For example, the URI of a Jira instance is https://my-jira-instance.atlassian.net, and a Slack tenant does not have a URI.
+
+* `display_name` -
+  (Optional)
+  Optional display name for the tenant, e.g. "My Slack Team".
+
+<a name="nested_federated_config"></a>The `federated_config` block supports:
+
+* `auth_params` -
+  (Optional)
+  Optional. Any authentication parameters specific to FEDERATED connectors.
+
+* `json_auth_params` -
+  (Optional)
+  Optional. Any authentication parameters specific to FEDERATED connectors in json string format.
+
+* `additional_params` -
+  (Optional)
+  Optional. Any additional parameters needed for FEDERATED.
 
 ## Attributes Reference
 
