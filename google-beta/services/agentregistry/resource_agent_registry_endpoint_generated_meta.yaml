@@ -1,0 +1,26 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_agent_registry_endpoint
+generation_type: mmv1
+source_file: products/agentregistry/Endpoint.yaml
+api_service_name: agentregistry.googleapis.com
+api_version: v1alpha
+api_resource_type_kind: Endpoint
+fields:
+    - api_field: createTime
+    - api_field: description
+    - api_field: displayName
+    - field: endpoint_id
+      provider_only: true
+    - api_field: endpointSpec.content
+      json: true
+    - api_field: endpointSpec.type
+    - api_field: interfaces.protocolBinding
+    - api_field: interfaces.url
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: registryResource
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true

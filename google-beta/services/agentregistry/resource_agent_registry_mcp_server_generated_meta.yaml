@@ -1,0 +1,26 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_agent_registry_mcp_server
+generation_type: mmv1
+source_file: products/agentregistry/McpServer.yaml
+api_service_name: agentregistry.googleapis.com
+api_version: v1alpha
+api_resource_type_kind: McpServer
+fields:
+    - api_field: createTime
+    - api_field: description
+    - api_field: displayName
+    - api_field: interfaces.protocolBinding
+    - api_field: interfaces.url
+    - field: location
+      provider_only: true
+    - field: mcp_server_id
+      provider_only: true
+    - api_field: mcpServerSpec.content
+      json: true
+    - api_field: mcpServerSpec.type
+    - api_field: name
+    - api_field: registryResource
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
