@@ -152,15 +152,6 @@ func ResourceNetworkServicesAgentGateway() *schema.Resource {
 				Required:    true,
 				Description: `Name of the AgentGateway resource.`,
 			},
-			"protocols": {
-				Type:        schema.TypeList,
-				Required:    true,
-				Description: `List of protocols supported by an Agent Gateway. Possible values: ["MCP"]`,
-				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: verify.ValidateEnum([]string{"MCP"}),
-				},
-			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -214,6 +205,7 @@ private VPCs network.`,
 									"network_attachment": {
 										Type:             schema.TypeString,
 										Required:         true,
+										ForceNew:         true,
 										DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
 										Description:      `The URI of the Network Attachment resource.`,
 									},
@@ -221,6 +213,16 @@ private VPCs network.`,
 							},
 						},
 					},
+				},
+			},
+			"protocols": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Deprecated:  "`protocols` is deprecated and will be removed in a future release.",
+				Description: `Deprecated. List of protocols supported by an Agent Gateway. Possible values: ["MCP"]`,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: verify.ValidateEnum([]string{"MCP"}),
 				},
 			},
 			"registries": {

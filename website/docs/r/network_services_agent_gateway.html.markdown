@@ -23,12 +23,10 @@ description: |-
 
 AgentGateway represents the agent gateway resource.
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 To get more information about AgentGateway, see:
 
-* [API documentation](https://cloud.google.com/network-services/docs/reference/network-services/rest/v1beta1/projects.locations.agentGateways)
+* [API documentation](https://cloud.google.com/network-services/docs/reference/network-services/rest/v1/projects.locations.agentGateways)
 
 ## Example Usage - Network Services Agent Gateway Full
 
@@ -54,9 +52,28 @@ resource "google_network_services_agent_gateway" "default" {
 
   network_config {
     egress {
-      network_attachment = "projects/my-project-name/regions/us-central1/networkAttachments/my-network-attachment"
+      network_attachment = google_compute_network_attachment.default.id
     }
   }
+}
+
+resource "google_compute_network" "default" {
+  name                    = "net-my-full-agent-gateway"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "default" {
+  name          = "subnet-my-full-agent-gateway"
+  region        = "us-central1"
+  network       = google_compute_network.default.id
+  ip_cidr_range = "10.0.0.0/16"
+}
+
+resource "google_compute_network_attachment" "default" {
+  name                  = "na-my-full-agent-gateway"
+  region                = "us-central1"
+  connection_preference = "ACCEPT_AUTOMATIC"
+  subnetworks           = [google_compute_subnetwork.default.self_link]
 }
 ```
 ## Example Usage - Network Services Agent Gateway Client To Agent
@@ -103,11 +120,6 @@ resource "google_network_services_agent_gateway" "default" {
 The following arguments are supported:
 
 
-* `protocols` -
-  (Required)
-  List of protocols supported by an Agent Gateway.
-  Each value may be one of: `MCP`.
-
 * `name` -
   (Required)
   Name of the AgentGateway resource.
@@ -127,6 +139,13 @@ The following arguments are supported:
 * `description` -
   (Optional)
   A free-text description of the resource. Max length 1024 characters.
+
+* `protocols` -
+  (Optional, Deprecated)
+  Deprecated. List of protocols supported by an Agent Gateway.
+  Each value may be one of: `MCP`.
+
+  ~> **Warning:** `protocols` is deprecated and will be removed in a future release.
 
 * `google_managed` -
   (Optional)
