@@ -1,0 +1,17 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_compute_region_network_policy_association
+generation_type: mmv1
+source_file: products/compute/RegionNetworkPolicyAssociation.yaml
+api_service_name: compute.googleapis.com
+api_version: beta
+api_resource_type_kind: NetworkPolicy
+fields:
+    - api_field: associations.attachmentTarget
+      field: attachment_target
+    - api_field: associations.name
+      field: name
+    - api_field: associations.networkPolicy
+      field: network_policy
+    - field: deletion_policy
+      provider_only: true
