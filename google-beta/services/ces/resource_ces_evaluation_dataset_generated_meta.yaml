@@ -1,0 +1,47 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_ces_evaluation_dataset
+generation_type: mmv1
+source_file: products/ces/EvaluationDataset.yaml
+api_service_name: ces.googleapis.com
+api_version: v1beta
+api_resource_type_kind: EvaluationDataset
+autogen_status: true
+autogen_version: 2
+fields:
+    - api_field: aggregatedMetrics.metricsByAppVersion.appVersionId
+    - api_field: aggregatedMetrics.metricsByAppVersion.failCount
+    - api_field: aggregatedMetrics.metricsByAppVersion.hallucinationMetrics.score
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.hallucinationMetrics.score
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.semanticSimilarityMetrics.score
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.toolCallLatencyMetrics.averageLatency
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.toolCallLatencyMetrics.tool
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.toolMetrics.failCount
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.toolMetrics.passCount
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.toolMetrics.tool
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.turnIndex
+    - api_field: aggregatedMetrics.metricsByAppVersion.metricsByTurn.turnLatencyMetrics.averageLatency
+    - api_field: aggregatedMetrics.metricsByAppVersion.passCount
+    - api_field: aggregatedMetrics.metricsByAppVersion.semanticSimilarityMetrics.score
+    - api_field: aggregatedMetrics.metricsByAppVersion.toolCallLatencyMetrics.averageLatency
+    - api_field: aggregatedMetrics.metricsByAppVersion.toolCallLatencyMetrics.tool
+    - api_field: aggregatedMetrics.metricsByAppVersion.toolMetrics.failCount
+    - api_field: aggregatedMetrics.metricsByAppVersion.toolMetrics.passCount
+    - api_field: aggregatedMetrics.metricsByAppVersion.toolMetrics.tool
+    - api_field: aggregatedMetrics.metricsByAppVersion.turnLatencyMetrics.averageLatency
+    - field: app
+      provider_only: true
+    - api_field: createTime
+    - api_field: createdBy
+    - api_field: displayName
+    - api_field: etag
+    - field: evaluation_dataset_id
+      provider_only: true
+    - api_field: evaluations
+    - api_field: lastUpdatedBy
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
