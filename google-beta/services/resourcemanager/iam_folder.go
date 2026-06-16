@@ -29,6 +29,8 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/cloudresourcemanager/v1"
 	cloudresourcemanagerv3 "google.golang.org/api/cloudresourcemanager/v3"
+
+	"github.com/hashicorp/terraform-plugin-framework/list"
 )
 
 var IamFolderSchema = map[string]*schema.Schema{
@@ -165,6 +167,26 @@ func GetFolderIamPolicyByFolderName(folderName, userAgent string, config *transp
 	}
 
 	return v1Policy, nil
+}
+
+// NewFolderIamMemberListResource returns the list implementation for google_folder_iam_member
+func NewFolderIamMemberListResource() list.ListResource {
+	return tpgiamresource.NewIamMemberListResource(
+		"google_folder_iam_member",
+		tpgiamresource.ResourceIamMember(
+			IamFolderSchema,
+			NewFolderIamUpdater,
+			FolderIdParseFunc,
+			tpgiamresource.IamWithBatching,
+			tpgiamresource.IamWithParentResourceIdentity(FolderIamParentResourceIdentityParser),
+		),
+		NewFolderIamUpdater,
+		tpgiamresource.IamMemberListCallConfig{
+			ParentResourceField: "folder",
+			EnableRoleFilter:    true,
+			EnableMemberFilter:  true,
+		},
+	)
 }
 
 func init() {
