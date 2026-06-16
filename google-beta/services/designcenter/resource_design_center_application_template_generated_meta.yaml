@@ -1,0 +1,123 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_design_center_application_template
+generation_type: mmv1
+source_file: products/designcenter/ApplicationTemplate.yaml
+api_service_name: designcenter.googleapis.com
+api_version: v1
+api_resource_type_kind: ApplicationTemplate
+autogen_status: true
+autogen_version: 2
+fields:
+    - api_field: applicationParameters.key
+    - api_field: applicationParameters.value
+    - api_field: applicationParameters.valueExpr
+    - field: application_template_id
+      provider_only: true
+    - api_field: artifactLocation.developerConnectExportConfig.branch
+    - api_field: artifactLocation.developerConnectExportConfig.commitSha
+    - api_field: artifactLocation.developerConnectExportConfig.developerConnectRepoUri
+    - api_field: artifactLocation.developerConnectExportConfig.dir
+    - api_field: artifactLocation.gcsUri
+    - api_field: compositionType
+    - api_field: createTime
+    - api_field: description
+    - api_field: displayName
+    - api_field: iacFormat
+    - api_field: latestRevision
+    - api_field: latestSystemRevisionUri
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: rootInputVariables.componentUri
+    - api_field: rootInputVariables.variable
+    - api_field: rootOutputVariables.componentUri
+    - api_field: rootOutputVariables.variable
+    - api_field: saasRuntimeContext.saasNames
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.applicationId
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.businessOwners.channel.uri
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.businessOwners.displayName
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.businessOwners.email
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.criticality.level
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.criticality.missionCritical
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.criticality.type
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.developerOwners.channel.uri
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.developerOwners.displayName
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.developerOwners.email
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.environment.environment
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.environment.type
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.operatorOwners.channel.uri
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.operatorOwners.displayName
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.attributes.operatorOwners.email
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.hostProjectId
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.location
+    - api_field: serializedApplicationTemplate.apphubApplicationParameters.scope.type
+    - api_field: serializedApplicationTemplate.applicationParameters.key
+    - api_field: serializedApplicationTemplate.applicationParameters.value
+    - api_field: serializedApplicationTemplate.applicationParameters.valueExpr
+    - api_field: serializedApplicationTemplate.components.apis
+    - api_field: serializedApplicationTemplate.components.applicationInfo.apphubApplicationId
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.businessOwners.channel.uri
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.businessOwners.displayName
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.businessOwners.email
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.criticality.level
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.criticality.missionCritical
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.criticality.type
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.developerOwners.channel.uri
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.developerOwners.displayName
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.developerOwners.email
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.environment.environment
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.environment.type
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.operatorOwners.channel.uri
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.operatorOwners.displayName
+    - api_field: serializedApplicationTemplate.components.applicationInfo.attributes.operatorOwners.email
+    - api_field: serializedApplicationTemplate.components.applicationInfo.deploymentRegion
+    - api_field: serializedApplicationTemplate.components.applicationInfo.displayName
+    - api_field: serializedApplicationTemplate.components.applicationInfo.scope.type
+    - api_field: serializedApplicationTemplate.components.componentParameterSchema.defaultValue
+    - api_field: serializedApplicationTemplate.components.componentParameterSchema.isRequired
+    - api_field: serializedApplicationTemplate.components.componentParameterSchema.key
+    - api_field: serializedApplicationTemplate.components.componentParameterSchema.type
+    - api_field: serializedApplicationTemplate.components.connections.destinationComponentParameters.key
+    - api_field: serializedApplicationTemplate.components.connections.destinationComponentParameters.value
+    - api_field: serializedApplicationTemplate.components.connections.destinationComponentParameters.valueExpr
+    - api_field: serializedApplicationTemplate.components.connections.destinationComponentUri
+    - api_field: serializedApplicationTemplate.components.connections.sourceComponentParameters.key
+    - api_field: serializedApplicationTemplate.components.connections.sourceComponentParameters.value
+    - api_field: serializedApplicationTemplate.components.connections.sourceComponentParameters.valueExpr
+    - api_field: serializedApplicationTemplate.components.connections.uri
+    - api_field: serializedApplicationTemplate.components.connectionsParameters.connection
+    - api_field: serializedApplicationTemplate.components.connectionsParameters.parameters.key
+    - api_field: serializedApplicationTemplate.components.connectionsParameters.parameters.value
+    - api_field: serializedApplicationTemplate.components.connectionsParameters.parameters.valueExpr
+    - api_field: serializedApplicationTemplate.components.displayName
+    - api_field: serializedApplicationTemplate.components.parameters.key
+    - api_field: serializedApplicationTemplate.components.parameters.value
+    - api_field: serializedApplicationTemplate.components.parameters.valueExpr
+    - api_field: serializedApplicationTemplate.components.roles
+    - api_field: serializedApplicationTemplate.components.sharedTemplateRevisionUri
+    - api_field: serializedApplicationTemplate.components.uri
+    - api_field: serializedApplicationTemplate.compositionType
+    - api_field: serializedApplicationTemplate.description
+    - api_field: serializedApplicationTemplate.displayName
+    - api_field: serializedApplicationTemplate.hasGlobalResource
+    - api_field: serializedApplicationTemplate.iacFormat
+    - api_field: serializedApplicationTemplate.rootInputVariables.componentUri
+    - api_field: serializedApplicationTemplate.rootInputVariables.variable
+    - api_field: serializedApplicationTemplate.rootOutputVariables.componentUri
+    - api_field: serializedApplicationTemplate.rootOutputVariables.variable
+    - api_field: serializedApplicationTemplate.saasRuntimeContext.saasNames
+    - api_field: serializedApplicationTemplate.serializedPolicies.applyConditions.conditionKey
+    - api_field: serializedApplicationTemplate.serializedPolicies.applyConditions.conditionValue
+    - api_field: serializedApplicationTemplate.serializedPolicies.description
+    - api_field: serializedApplicationTemplate.serializedPolicies.displayName
+    - api_field: serializedApplicationTemplate.serializedPolicies.policyRevisionUri
+    - api_field: serializedApplicationTemplate.serializedPolicies.policyType
+    - api_field: serializedApplicationTemplate.serializedPolicies.policyUri
+    - api_field: serializedApplicationTemplate.serializedPolicies.uri
+    - api_field: serializedApplicationTemplate.uri
+    - field: space
+      provider_only: true
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
