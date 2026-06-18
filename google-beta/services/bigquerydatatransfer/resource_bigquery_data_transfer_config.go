@@ -351,6 +351,38 @@ limited by this option.`,
 					},
 				},
 			},
+			"schedule_options_v2": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Options customizing different types of data transfer schedule.
+Only the event-driven schedule is exposed here; time-based and manual
+scheduling are configured through the 'schedule' and 'schedule_options'
+fields instead. 'event_driven_schedule' cannot be used together with
+'schedule' or 'schedule_options'.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"event_driven_schedule": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Event driven transfer schedule options. If set, the transfer will be
+scheduled upon events arrival.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"pubsub_subscription": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `Pub/Sub subscription name used to receive events. Only Google Cloud
+Storage data source support this option. Format:
+projects/{project}/subscriptions/{subscription}`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"sensitive_params": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -466,6 +498,12 @@ func resourceBigqueryDataTransferConfigCreate(d *schema.ResourceData, meta inter
 		return err
 	} else if v, ok := d.GetOkExists("schedule_options"); !tpgresource.IsEmptyValue(reflect.ValueOf(scheduleOptionsProp)) && (ok || !reflect.DeepEqual(v, scheduleOptionsProp)) {
 		obj["scheduleOptions"] = scheduleOptionsProp
+	}
+	scheduleOptionsV2Prop, err := expandBigqueryDataTransferConfigScheduleOptionsV2(d.Get("schedule_options_v2"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("schedule_options_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(scheduleOptionsV2Prop)) && (ok || !reflect.DeepEqual(v, scheduleOptionsV2Prop)) {
+		obj["scheduleOptionsV2"] = scheduleOptionsV2Prop
 	}
 	emailPreferencesProp, err := expandBigqueryDataTransferConfigEmailPreferences(d.Get("email_preferences"), d, config)
 	if err != nil {
@@ -742,6 +780,12 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("schedule_options"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduleOptionsProp)) {
 		obj["scheduleOptions"] = scheduleOptionsProp
 	}
+	scheduleOptionsV2Prop, err := expandBigqueryDataTransferConfigScheduleOptionsV2(d.Get("schedule_options_v2"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("schedule_options_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduleOptionsV2Prop)) {
+		obj["scheduleOptionsV2"] = scheduleOptionsV2Prop
+	}
 	emailPreferencesProp, err := expandBigqueryDataTransferConfigEmailPreferences(d.Get("email_preferences"), d, config)
 	if err != nil {
 		return err
@@ -808,6 +852,9 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 	}
 	if d.HasChange("schedule_options") {
 		updateMask = append(updateMask, "scheduleOptions")
+	}
+	if d.HasChange("schedule_options_v2") {
+		updateMask = append(updateMask, "scheduleOptionsV2")
 	}
 	if d.HasChange("email_preferences") {
 		updateMask = append(updateMask, "emailPreferences")
@@ -994,6 +1041,36 @@ func flattenBigqueryDataTransferConfigScheduleOptionsEndTime(v interface{}, d *s
 	return v
 }
 
+func flattenBigqueryDataTransferConfigScheduleOptionsV2(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["event_driven_schedule"] =
+		flattenBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedule(original["eventDrivenSchedule"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedule(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["pubsub_subscription"] =
+		flattenBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedulePubsubSubscription(original["pubsubSubscription"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedulePubsubSubscription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenBigqueryDataTransferConfigEmailPreferences(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1128,6 +1205,54 @@ func expandBigqueryDataTransferConfigScheduleOptionsStartTime(v interface{}, d t
 }
 
 func expandBigqueryDataTransferConfigScheduleOptionsEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryDataTransferConfigScheduleOptionsV2(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEventDrivenSchedule, err := expandBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedule(original["event_driven_schedule"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEventDrivenSchedule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["eventDrivenSchedule"] = transformedEventDrivenSchedule
+	}
+
+	return transformed, nil
+}
+
+func expandBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPubsubSubscription, err := expandBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedulePubsubSubscription(original["pubsub_subscription"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPubsubSubscription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pubsubSubscription"] = transformedPubsubSubscription
+	}
+
+	return transformed, nil
+}
+
+func expandBigqueryDataTransferConfigScheduleOptionsV2EventDrivenSchedulePubsubSubscription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1277,6 +1402,21 @@ func resourceBigqueryDataTransferConfigDecoder(d *schema.ResourceData, meta inte
 		res["params"] = params
 	}
 
+	// The API mirrors the legacy schedule / schedule_options fields into
+	// scheduleOptionsV2 (as timeBasedSchedule / manualSchedule) on read. Those
+	// sub-schedules are not modeled in the schema because they duplicate the
+	// existing schedule / schedule_options fields, so drop the echoed
+	// scheduleOptionsV2 when it carries no eventDrivenSchedule. This avoids a
+	// permanent diff for configs that use the legacy fields while still reading
+	// back a real event_driven_schedule normally.
+	if v, ok := res["scheduleOptionsV2"]; ok {
+		if scheduleOptionsV2, ok := v.(map[string]interface{}); ok {
+			if _, hasEventDriven := scheduleOptionsV2["eventDrivenSchedule"]; !hasEventDriven {
+				delete(res, "scheduleOptionsV2")
+			}
+		}
+	}
+
 	return res, nil
 }
 func resourceBigqueryDataTransferConfigPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
@@ -1313,6 +1453,9 @@ func ResourceBigqueryDataTransferConfigFlatten(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
 	if err = d.Set("schedule_options", flattenBigqueryDataTransferConfigScheduleOptions(res["scheduleOptions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Config: %s", err)
+	}
+	if err = d.Set("schedule_options_v2", flattenBigqueryDataTransferConfigScheduleOptionsV2(res["scheduleOptionsV2"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
 	if err = d.Set("email_preferences", flattenBigqueryDataTransferConfigEmailPreferences(res["emailPreferences"], d, config)); err != nil {

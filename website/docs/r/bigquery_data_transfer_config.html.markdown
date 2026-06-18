@@ -152,6 +152,52 @@ resource "google_bigquery_data_transfer_config" "salesforce_config" {
   }
 }
 ```
+## Example Usage - Bigquerydatatransfer Config Schedule Options V2
+
+
+```hcl
+resource "google_pubsub_topic" "event_driven_config" {
+  name = "my-topic"
+}
+
+resource "google_pubsub_subscription" "event_driven_config" {
+  name  = "my-subscription"
+  topic = google_pubsub_topic.event_driven_config.id
+}
+
+resource "google_storage_bucket" "event_driven_config" {
+  name                        = "my-bucket"
+  location                    = "US"
+  uniform_bucket_level_access = true
+}
+
+resource "google_bigquery_dataset" "my_dataset" {
+  dataset_id    = "my_dataset"
+  friendly_name = "foo"
+  description   = "bar"
+  location      = "US"
+}
+
+resource "google_bigquery_data_transfer_config" "event_driven_config" {
+  display_name           = "my-event-driven-config"
+  data_source_id         = "google_cloud_storage"
+  destination_dataset_id = google_bigquery_dataset.my_dataset.dataset_id
+  location               = google_bigquery_dataset.my_dataset.location
+
+  schedule_options_v2 {
+    event_driven_schedule {
+      pubsub_subscription = google_pubsub_subscription.event_driven_config.id
+    }
+  }
+
+  params = {
+    data_path_template              = "${google_storage_bucket.event_driven_config.url}/*.json"
+    destination_table_name_template = "my_table"
+    file_format                     = "JSON"
+    write_disposition               = "APPEND"
+  }
+}
+```
 
 ## Argument Reference
 
@@ -194,6 +240,15 @@ The following arguments are supported:
   (Optional)
   Options customizing the data transfer schedule.
   Structure is [documented below](#nested_schedule_options).
+
+* `schedule_options_v2` -
+  (Optional)
+  Options customizing different types of data transfer schedule.
+  Only the event-driven schedule is exposed here; time-based and manual
+  scheduling are configured through the `schedule` and `schedule_options`
+  fields instead. `event_driven_schedule` cannot be used together with
+  `schedule` or `schedule_options`.
+  Structure is [documented below](#nested_schedule_options_v2).
 
 * `email_preferences` -
   (Optional)
@@ -279,6 +334,23 @@ The following arguments are supported:
   scheduled at or after the end time. The end time can be changed at any
   moment. The time when a data transfer can be triggered manually is not
   limited by this option.
+
+<a name="nested_schedule_options_v2"></a>The `schedule_options_v2` block supports:
+
+* `event_driven_schedule` -
+  (Optional)
+  Event driven transfer schedule options. If set, the transfer will be
+  scheduled upon events arrival.
+  Structure is [documented below](#nested_schedule_options_v2_event_driven_schedule).
+
+
+<a name="nested_schedule_options_v2_event_driven_schedule"></a>The `event_driven_schedule` block supports:
+
+* `pubsub_subscription` -
+  (Optional)
+  Pub/Sub subscription name used to receive events. Only Google Cloud
+  Storage data source support this option. Format:
+  projects/{project}/subscriptions/{subscription}
 
 <a name="nested_email_preferences"></a>The `email_preferences` block supports:
 
