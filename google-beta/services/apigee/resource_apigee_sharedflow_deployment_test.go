@@ -59,7 +59,7 @@ func TestAccApigeeSharedflowDeployment_apigeeSharedflowDeploymentTestExample(t *
 				ResourceName:            "google_apigee_sharedflow_deployment.sharedflow_deployment_test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{},
+				ImportStateVerifyIgnore: []string{"org_id"},
 			},
 			{
 				Config: testAccApigeeSharedflowDeployment_apigeeSharedflowDeploymentTestExample(context, "./test-fixtures/apigee_sharedflow_bundle2.zip"),
@@ -68,7 +68,7 @@ func TestAccApigeeSharedflowDeployment_apigeeSharedflowDeploymentTestExample(t *
 				ResourceName:            "google_apigee_sharedflow_deployment.sharedflow_deployment_test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{},
+				ImportStateVerifyIgnore: []string{"org_id"},
 			},
 		},
 	})
@@ -162,7 +162,10 @@ resource "google_service_account" "sharedflow_sa" {
 
 resource "google_apigee_sharedflow_deployment" "sharedflow_deployment_test" {
   environment     = google_apigee_environment.apigee_environment.name
-  org_id          = google_apigee_sharedflow.test_apigee_sharedflow.org_id
+  # Use the fully-qualified org id ("organizations/<id>") to exercise org_id
+  # prefix normalization on the deployment resource
+  # (hashicorp/terraform-provider-google#25852).
+  org_id          = google_apigee_organization.apigee_org.id
   revision        = google_apigee_sharedflow.test_apigee_sharedflow.revision[length(google_apigee_sharedflow.test_apigee_sharedflow.revision)-1]
   sharedflow_id   = google_apigee_sharedflow.test_apigee_sharedflow.name
   service_account = google_service_account.sharedflow_sa.email
