@@ -154,12 +154,13 @@ func ResourceComputeNetworkAttachment() *schema.Resource {
 				Description: `An optional description of this resource. Provide this property when you create the resource.`,
 			},
 			"producer_accept_lists": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: `Projects that are allowed to connect to this network attachment. The project can be specified using its id or number.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Set: schema.HashString,
 			},
 			"producer_reject_lists": {
 				Type:        schema.TypeList,
@@ -707,7 +708,10 @@ func flattenComputeNetworkAttachmentProducerRejectLists(v interface{}, d *schema
 }
 
 func flattenComputeNetworkAttachmentProducerAcceptLists(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	return schema.NewSet(schema.HashString, v.([]interface{}))
 }
 
 func flattenComputeNetworkAttachmentFingerprint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -758,6 +762,7 @@ func expandComputeNetworkAttachmentProducerRejectLists(v interface{}, d tpgresou
 }
 
 func expandComputeNetworkAttachmentProducerAcceptLists(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	v = v.(*schema.Set).List()
 	return v, nil
 }
 
