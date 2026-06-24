@@ -733,8 +733,6 @@ The following arguments are supported:
 * `mode` -
   (Optional)
   The mode configures the repository to serve artifacts from different sources.
-  Default value is `STANDARD_REPOSITORY`.
-  Possible values are: `STANDARD_REPOSITORY`, `VIRTUAL_REPOSITORY`, `REMOTE_REPOSITORY`.
 
 * `virtual_repository_config` -
   (Optional)
