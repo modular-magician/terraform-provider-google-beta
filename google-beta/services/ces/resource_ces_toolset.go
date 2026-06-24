@@ -165,6 +165,128 @@ func ResourceCESToolset() *schema.Resource {
 the toolset's resource name. If not provided, a unique ID will be
 automatically assigned for the toolset.`,
 			},
+			"connector_toolset": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `A toolset that generates tools from an Integration Connectors Connection.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Required. The full resource name of the referenced Integration Connectors Connection. Format: 'projects/{project}/locations/{location}/connections/{connection}'`,
+						},
+						"connector_actions": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: `Required. The list of connector actions/entity operations to generate tools for.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"connection_action_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `ID of a Connection action for the tool to use.`,
+									},
+									"entity_operation": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Entity operation configuration for the tool to use.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"entity_id": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. ID of the entity.`,
+												},
+												"operation": {
+													Type:     schema.TypeString,
+													Required: true,
+													Description: `Required. Operation to perform on the entity.
+Possible values:
+OPERATION_TYPE_UNSPECIFIED
+LIST
+GET
+CREATE
+UPDATE
+DELETE`,
+												},
+											},
+										},
+									},
+									"input_fields": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. Entity fields to use as inputs for the operation. If no fields are specified, all fields of the Entity will be used.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"output_fields": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. Entity fields to return from the operation. If no fields are specified, all fields of the Entity will be returned.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+						"auth_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Configures how authentication is handled in Integration Connectors. By default, an admin authentication is passed in the Integration Connectors API requests. You can override it with a different end-user authentication config. Note: The Connection must have authentication override enabled in order to specify an EUC configuration here - otherwise, the Toolset creation will fail. See: https://cloud.google.com/application-integration/docs/configure-connectors-task#configure-authentication-override`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"oauth2_auth_code_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Oauth 2.0 Authorization Code authentication configuration.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"oauth_token": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. Oauth token parameter name to pass through. Must be in the format '$context.variables.<name_of_variable>'.`,
+												},
+											},
+										},
+									},
+									"oauth2_jwt_bearer_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `JWT Profile Oauth 2.0 Authorization Grant authentication configuration.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"client_key": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. Client parameter name to pass through. Must be in the format '$context.variables.<name_of_variable>'.`,
+												},
+												"issuer": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. Issuer parameter name to pass through. Must be in the format '$context.variables.<name_of_variable>'.`,
+												},
+												"subject": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. Subject parameter name to pass through. Must be in the format '$context.variables.<name_of_variable>'.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -781,6 +903,12 @@ func resourceCESToolsetCreate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("tool_fake_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(toolFakeConfigProp)) && (ok || !reflect.DeepEqual(v, toolFakeConfigProp)) {
 		obj["toolFakeConfig"] = toolFakeConfigProp
 	}
+	connectorToolsetProp, err := expandCESToolsetConnectorToolset(d.Get("connector_toolset"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("connector_toolset"); !tpgresource.IsEmptyValue(reflect.ValueOf(connectorToolsetProp)) && (ok || !reflect.DeepEqual(v, connectorToolsetProp)) {
+		obj["connectorToolset"] = connectorToolsetProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/toolsets?toolsetId={{toolset_id}}")
 	if err != nil {
@@ -1039,6 +1167,12 @@ func resourceCESToolsetUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("tool_fake_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, toolFakeConfigProp)) {
 		obj["toolFakeConfig"] = toolFakeConfigProp
 	}
+	connectorToolsetProp, err := expandCESToolsetConnectorToolset(d.Get("connector_toolset"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("connector_toolset"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, connectorToolsetProp)) {
+		obj["connectorToolset"] = connectorToolsetProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/toolsets/{{toolset_id}}")
 	if err != nil {
@@ -1071,6 +1205,10 @@ func resourceCESToolsetUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("tool_fake_config") {
 		updateMask = append(updateMask, "toolFakeConfig")
+	}
+
+	if d.HasChange("connector_toolset") {
+		updateMask = append(updateMask, "connectorToolset")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1695,6 +1833,144 @@ func flattenCESToolsetToolFakeConfigCodeBlock(v interface{}, d *schema.ResourceD
 	return []interface{}{transformed}
 }
 func flattenCESToolsetToolFakeConfigCodeBlockPythonCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolset(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["connection"] =
+		flattenCESToolsetConnectorToolsetConnection(original["connection"], d, config)
+	transformed["auth_config"] =
+		flattenCESToolsetConnectorToolsetAuthConfig(original["authConfig"], d, config)
+	transformed["connector_actions"] =
+		flattenCESToolsetConnectorToolsetConnectorActions(original["connectorActions"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolsetConnectorToolsetConnection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetAuthConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["oauth2_auth_code_config"] =
+		flattenCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfig(original["oauth2AuthCodeConfig"], d, config)
+	transformed["oauth2_jwt_bearer_config"] =
+		flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfig(original["oauth2JwtBearerConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["oauth_token"] =
+		flattenCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfigOauthToken(original["oauthToken"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfigOauthToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["issuer"] =
+		flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigIssuer(original["issuer"], d, config)
+	transformed["subject"] =
+		flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigSubject(original["subject"], d, config)
+	transformed["client_key"] =
+		flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigClientKey(original["clientKey"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigIssuer(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigSubject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetConnectorActions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"input_fields":         flattenCESToolsetConnectorToolsetConnectorActionsInputFields(original["inputFields"], d, config),
+			"output_fields":        flattenCESToolsetConnectorToolsetConnectorActionsOutputFields(original["outputFields"], d, config),
+			"connection_action_id": flattenCESToolsetConnectorToolsetConnectorActionsConnectionActionId(original["connectionActionId"], d, config),
+			"entity_operation":     flattenCESToolsetConnectorToolsetConnectorActionsEntityOperation(original["entityOperation"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenCESToolsetConnectorToolsetConnectorActionsInputFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetConnectorActionsOutputFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetConnectorActionsConnectionActionId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetConnectorActionsEntityOperation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["entity_id"] =
+		flattenCESToolsetConnectorToolsetConnectorActionsEntityOperationEntityId(original["entityId"], d, config)
+	transformed["operation"] =
+		flattenCESToolsetConnectorToolsetConnectorActionsEntityOperationOperation(original["operation"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolsetConnectorToolsetConnectorActionsEntityOperationEntityId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolsetConnectorToolsetConnectorActionsEntityOperationOperation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2581,6 +2857,244 @@ func expandCESToolsetToolFakeConfigCodeBlockPythonCode(v interface{}, d tpgresou
 	return v, nil
 }
 
+func expandCESToolsetConnectorToolset(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedConnection, err := expandCESToolsetConnectorToolsetConnection(original["connection"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnection); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["connection"] = transformedConnection
+	}
+
+	transformedAuthConfig, err := expandCESToolsetConnectorToolsetAuthConfig(original["auth_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authConfig"] = transformedAuthConfig
+	}
+
+	transformedConnectorActions, err := expandCESToolsetConnectorToolsetConnectorActions(original["connector_actions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnectorActions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["connectorActions"] = transformedConnectorActions
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolsetConnectorToolsetConnection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedOauth2AuthCodeConfig, err := expandCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfig(original["oauth2_auth_code_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOauth2AuthCodeConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oauth2AuthCodeConfig"] = transformedOauth2AuthCodeConfig
+	}
+
+	transformedOauth2JwtBearerConfig, err := expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfig(original["oauth2_jwt_bearer_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOauth2JwtBearerConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oauth2JwtBearerConfig"] = transformedOauth2JwtBearerConfig
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedOauthToken, err := expandCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfigOauthToken(original["oauth_token"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOauthToken); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oauthToken"] = transformedOauthToken
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfigOauth2AuthCodeConfigOauthToken(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIssuer, err := expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigIssuer(original["issuer"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIssuer); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["issuer"] = transformedIssuer
+	}
+
+	transformedSubject, err := expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigSubject(original["subject"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSubject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["subject"] = transformedSubject
+	}
+
+	transformedClientKey, err := expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigClientKey(original["client_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientKey"] = transformedClientKey
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigIssuer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigSubject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetAuthConfigOauth2JwtBearerConfigClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedInputFields, err := expandCESToolsetConnectorToolsetConnectorActionsInputFields(original["input_fields"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedInputFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["inputFields"] = transformedInputFields
+		}
+
+		transformedOutputFields, err := expandCESToolsetConnectorToolsetConnectorActionsOutputFields(original["output_fields"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOutputFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["outputFields"] = transformedOutputFields
+		}
+
+		transformedConnectionActionId, err := expandCESToolsetConnectorToolsetConnectorActionsConnectionActionId(original["connection_action_id"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedConnectionActionId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["connectionActionId"] = transformedConnectionActionId
+		}
+
+		transformedEntityOperation, err := expandCESToolsetConnectorToolsetConnectorActionsEntityOperation(original["entity_operation"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEntityOperation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["entityOperation"] = transformedEntityOperation
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActionsInputFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActionsOutputFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActionsConnectionActionId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActionsEntityOperation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEntityId, err := expandCESToolsetConnectorToolsetConnectorActionsEntityOperationEntityId(original["entity_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEntityId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["entityId"] = transformedEntityId
+	}
+
+	transformedOperation, err := expandCESToolsetConnectorToolsetConnectorActionsEntityOperationOperation(original["operation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOperation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["operation"] = transformedOperation
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActionsEntityOperationEntityId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolsetConnectorToolsetConnectorActionsEntityOperationOperation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceCESToolsetFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -2609,6 +3123,9 @@ func ResourceCESToolsetFlatten(d *schema.ResourceData, meta interface{}, res map
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
 	if err = d.Set("tool_fake_config", flattenCESToolsetToolFakeConfig(res["toolFakeConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Toolset: %s", err)
+	}
+	if err = d.Set("connector_toolset", flattenCESToolsetConnectorToolset(res["connectorToolset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
 	if err = d.Set("update_time", flattenCESToolsetUpdateTime(res["updateTime"], d, config)); err != nil {

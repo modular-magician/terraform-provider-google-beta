@@ -31,6 +31,8 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/ces"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/integrationconnectors"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -946,6 +948,104 @@ resource "google_ces_toolset" "ces_toolset_mcp_bearer_token_config" {
         bearer_token_config {
             token = "$context.variables.my_ces_toolset_auth_token"
         }
+    }
+  }
+}
+`, context)
+}
+
+func TestAccCESToolset_cesToolsetConnectorToolsetExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"account_id":       "test-sa" + randomSuffix,
+		"app_display_name": "tf-test-my-app" + randomSuffix,
+		"app_id":           "tf-test-app-id" + randomSuffix,
+		"connection_name":  "test-connector" + randomSuffix,
+		"location":         "us" + randomSuffix,
+		"toolset_id":       "toolset1" + randomSuffix,
+		"random_suffix":    randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCESToolsetDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCESToolset_cesToolsetConnectorToolsetExample(context),
+			},
+			{
+				ResourceName:            "google_ces_toolset.ces_toolset_connector_toolset",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"app", "location", "toolset_id"},
+			},
+			{
+				ResourceName:       "google_ces_toolset.ces_toolset_connector_toolset",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccCESToolset_cesToolsetConnectorToolsetExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "test_project" {}
+
+resource "google_service_account" "connector_sa" {
+  account_id   = "%{account_id}"
+  display_name = "Service Account for Connector"
+}
+
+resource "google_integration_connectors_connection" "connector_toolset_connection" {
+  name     = "%{connection_name}"
+  location = "us-central1"
+  connector_version = "projects/${data.google_project.test_project.project_id}/locations/global/providers/gcp/connectors/pubsub/versions/1"
+  description       = "Pub/Sub connector"
+  service_account   = google_service_account.connector_sa.email
+  
+  config_variable {
+      key = "project_id"
+      string_value = data.google_project.test_project.project_id
+  }
+  config_variable {
+      key = "topic_id"
+      string_value = "test-topic"
+  }
+}
+
+resource "google_ces_app" "ces_app_for_toolset" {
+  app_id = "%{app_id}"
+  location = "us"
+  description = "App used as parent for CES Toolset example"
+  display_name = "%{app_display_name}"
+
+  language_settings {
+    default_language_code    = "en-US"
+    supported_language_codes = ["es-ES", "fr-FR"]
+    enable_multilingual_support = true
+    fallback_action          = "escalate"
+  }
+  time_zone_settings {
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_toolset" "ces_toolset_connector_toolset" {
+  toolset_id = "%{toolset_id}"
+  location = "us"
+  app      = google_ces_app.ces_app_for_toolset.app_id
+  display_name = "Basic toolset display name"
+
+  connector_toolset {
+    connection = google_integration_connectors_connection.connector_toolset_connection.id
+    connector_actions {
+      connection_action_id = "publishMessage"
     }
   }
 }

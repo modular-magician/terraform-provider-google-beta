@@ -593,6 +593,70 @@ resource "google_ces_toolset" "ces_toolset_mcp_bearer_token_config" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=ces_toolset_connector_toolset&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Ces Toolset Connector Toolset
+
+
+```hcl
+data "google_project" "test_project" {}
+
+resource "google_service_account" "connector_sa" {
+  account_id   = "test-sa"
+  display_name = "Service Account for Connector"
+}
+
+resource "google_integration_connectors_connection" "connector_toolset_connection" {
+  name     = "test-connector"
+  location = "us-central1"
+  connector_version = "projects/${data.google_project.test_project.project_id}/locations/global/providers/gcp/connectors/pubsub/versions/1"
+  description       = "Pub/Sub connector"
+  service_account   = google_service_account.connector_sa.email
+  
+  config_variable {
+      key = "project_id"
+      string_value = data.google_project.test_project.project_id
+  }
+  config_variable {
+      key = "topic_id"
+      string_value = "test-topic"
+  }
+}
+
+resource "google_ces_app" "ces_app_for_toolset" {
+  app_id = "app-id"
+  location = "us"
+  description = "App used as parent for CES Toolset example"
+  display_name = "my-app"
+
+  language_settings {
+    default_language_code    = "en-US"
+    supported_language_codes = ["es-ES", "fr-FR"]
+    enable_multilingual_support = true
+    fallback_action          = "escalate"
+  }
+  time_zone_settings {
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_toolset" "ces_toolset_connector_toolset" {
+  toolset_id = "toolset1"
+  location = "us"
+  app      = google_ces_app.ces_app_for_toolset.app_id
+  display_name = "Basic toolset display name"
+
+  connector_toolset {
+    connection = google_integration_connectors_connection.connector_toolset_connection.id
+    connector_actions {
+      connection_action_id = "publishMessage"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -644,6 +708,11 @@ The following arguments are supported:
   (Optional)
   Configuration for tools behavior in fake mode.
   Structure is [documented below](#nested_tool_fake_config).
+
+* `connector_toolset` -
+  (Optional)
+  A toolset that generates tools from an Integration Connectors Connection.
+  Structure is [documented below](#nested_connector_toolset).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -1031,6 +1100,93 @@ The following arguments are supported:
 * `python_code` -
   (Required)
   Python code which will be invoked in tool fake mode.
+
+<a name="nested_connector_toolset"></a>The `connector_toolset` block supports:
+
+* `connection` -
+  (Required)
+  Required. The full resource name of the referenced Integration Connectors Connection. Format: `projects/{project}/locations/{location}/connections/{connection}`
+
+* `auth_config` -
+  (Optional)
+  Optional. Configures how authentication is handled in Integration Connectors. By default, an admin authentication is passed in the Integration Connectors API requests. You can override it with a different end-user authentication config. Note: The Connection must have authentication override enabled in order to specify an EUC configuration here - otherwise, the Toolset creation will fail. See: https://cloud.google.com/application-integration/docs/configure-connectors-task#configure-authentication-override
+  Structure is [documented below](#nested_connector_toolset_auth_config).
+
+* `connector_actions` -
+  (Required)
+  Required. The list of connector actions/entity operations to generate tools for.
+  Structure is [documented below](#nested_connector_toolset_connector_actions).
+
+
+<a name="nested_connector_toolset_auth_config"></a>The `auth_config` block supports:
+
+* `oauth2_auth_code_config` -
+  (Optional)
+  Oauth 2.0 Authorization Code authentication configuration.
+  Structure is [documented below](#nested_connector_toolset_auth_config_oauth2_auth_code_config).
+
+* `oauth2_jwt_bearer_config` -
+  (Optional)
+  JWT Profile Oauth 2.0 Authorization Grant authentication configuration.
+  Structure is [documented below](#nested_connector_toolset_auth_config_oauth2_jwt_bearer_config).
+
+
+<a name="nested_connector_toolset_auth_config_oauth2_auth_code_config"></a>The `oauth2_auth_code_config` block supports:
+
+* `oauth_token` -
+  (Required)
+  Required. Oauth token parameter name to pass through. Must be in the format `$context.variables.<name_of_variable>`.
+
+<a name="nested_connector_toolset_auth_config_oauth2_jwt_bearer_config"></a>The `oauth2_jwt_bearer_config` block supports:
+
+* `issuer` -
+  (Required)
+  Required. Issuer parameter name to pass through. Must be in the format `$context.variables.<name_of_variable>`.
+
+* `subject` -
+  (Required)
+  Required. Subject parameter name to pass through. Must be in the format `$context.variables.<name_of_variable>`.
+
+* `client_key` -
+  (Required)
+  Required. Client parameter name to pass through. Must be in the format `$context.variables.<name_of_variable>`.
+
+<a name="nested_connector_toolset_connector_actions"></a>The `connector_actions` block supports:
+
+* `input_fields` -
+  (Optional)
+  Optional. Entity fields to use as inputs for the operation. If no fields are specified, all fields of the Entity will be used.
+
+* `output_fields` -
+  (Optional)
+  Optional. Entity fields to return from the operation. If no fields are specified, all fields of the Entity will be returned.
+
+* `connection_action_id` -
+  (Optional)
+  ID of a Connection action for the tool to use.
+
+* `entity_operation` -
+  (Optional)
+  Entity operation configuration for the tool to use.
+  Structure is [documented below](#nested_connector_toolset_connector_actions_entity_operation).
+
+
+<a name="nested_connector_toolset_connector_actions_entity_operation"></a>The `entity_operation` block supports:
+
+* `entity_id` -
+  (Required)
+  Required. ID of the entity.
+
+* `operation` -
+  (Required)
+  Required. Operation to perform on the entity.
+  Possible values:
+  OPERATION_TYPE_UNSPECIFIED
+  LIST
+  GET
+  CREATE
+  UPDATE
+  DELETE
 
 ## Attributes Reference
 
