@@ -1,0 +1,28 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_cloudbuild_git_lab_config
+generation_type: mmv1
+source_file: products/cloudbuild/GitLabConfig.yaml
+api_service_name: cloudbuild.googleapis.com
+api_version: v1
+api_resource_type_kind: GitLabConfig
+fields:
+    - field: config_id
+      provider_only: true
+    - api_field: connectedRepositories.id
+    - api_field: connectedRepositories.webhookId
+    - api_field: createTime
+    - api_field: enterpriseConfig.hostUri
+    - api_field: enterpriseConfig.serviceDirectoryConfig.service
+    - api_field: enterpriseConfig.sslCa
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: secrets.apiAccessTokenVersion
+    - api_field: secrets.apiKeyVersion
+    - api_field: secrets.readAccessTokenVersion
+    - api_field: secrets.webhookSecretVersion
+    - api_field: username
+    - api_field: webhookKey
+    - field: deletion_policy
+      provider_only: true
