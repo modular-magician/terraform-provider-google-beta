@@ -375,6 +375,122 @@ resource "google_compute_http_health_check" "default" {
 `, context)
 }
 
+func TestAccComputeBackendService_backendServiceCacheZeroTtlExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"backend_service_name":   "tf-test-backend-service" + randomSuffix,
+		"http_health_check_name": "tf-test-health-check" + randomSuffix,
+		"random_suffix":          randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeBackendServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeBackendService_backendServiceCacheZeroTtlExample(context),
+			},
+			{
+				ResourceName:            "google_compute_backend_service.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"iap.0.oauth2_client_secret", "params", "security_settings.0.aws_v4_authentication.0.access_key"},
+			},
+			{
+				ResourceName:       "google_compute_backend_service.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeBackendService_backendServiceCacheZeroTtlExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_backend_service" "default" {
+  name          = "%{backend_service_name}"
+  health_checks = [google_compute_http_health_check.default.self_link]
+  enable_cdn    = true
+  cdn_policy {
+    cache_mode   = "CACHE_ALL_STATIC"
+    default_ttl  = 0
+    client_ttl   = 0
+    max_ttl      = 0
+    signed_url_cache_max_age_sec = 7200
+  }
+}
+
+resource "google_compute_http_health_check" "default" {
+  name               = "%{http_health_check_name}"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+`, context)
+}
+
+func TestAccComputeBackendService_backendServiceCacheOmittedTtlExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"backend_service_name":   "tf-test-backend-service" + randomSuffix,
+		"http_health_check_name": "tf-test-health-check" + randomSuffix,
+		"random_suffix":          randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeBackendServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeBackendService_backendServiceCacheOmittedTtlExample(context),
+			},
+			{
+				ResourceName:            "google_compute_backend_service.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"iap.0.oauth2_client_secret", "params", "security_settings.0.aws_v4_authentication.0.access_key"},
+			},
+			{
+				ResourceName:       "google_compute_backend_service.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeBackendService_backendServiceCacheOmittedTtlExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_backend_service" "default" {
+  name          = "%{backend_service_name}"
+  health_checks = [google_compute_http_health_check.default.self_link]
+  enable_cdn    = true
+  cdn_policy {
+    cache_mode   = "CACHE_ALL_STATIC"
+    signed_url_cache_max_age_sec = 7200
+    # TTLs are omitted complimentary to backend_service_cache_zero_ttl
+  }
+}
+
+resource "google_compute_http_health_check" "default" {
+  name               = "%{http_health_check_name}"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+`, context)
+}
+
 func TestAccComputeBackendService_backendServiceCacheBypassCacheOnRequestHeadersExample(t *testing.T) {
 	t.Parallel()
 

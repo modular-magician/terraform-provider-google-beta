@@ -4706,21 +4706,21 @@ func expandComputeRegionBackendServiceCdnPolicy(v interface{}, d tpgresource.Ter
 	transformedDefaultTtl, err := expandComputeRegionBackendServiceCdnPolicyDefaultTtl(original["default_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDefaultTtl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else {
 		transformed["defaultTtl"] = transformedDefaultTtl
 	}
 
 	transformedMaxTtl, err := expandComputeRegionBackendServiceCdnPolicyMaxTtl(original["max_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxTtl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else {
 		transformed["maxTtl"] = transformedMaxTtl
 	}
 
 	transformedClientTtl, err := expandComputeRegionBackendServiceCdnPolicyClientTtl(original["client_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedClientTtl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else {
 		transformed["clientTtl"] = transformedClientTtl
 	}
 
