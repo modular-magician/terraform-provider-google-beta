@@ -4,7 +4,7 @@ resource: google_access_context_manager_access_level_condition
 generation_type: mmv1
 source_file: products/accesscontextmanager/AccessLevelCondition.yaml
 api_service_name: accesscontextmanager.googleapis.com
-api_version: v1
+api_version: v1alpha
 api_resource_type_kind: AccessLevel
 fields:
     - field: access_level

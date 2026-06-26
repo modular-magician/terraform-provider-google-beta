@@ -4,7 +4,7 @@ resource: google_access_context_manager_service_perimeter
 generation_type: mmv1
 source_file: products/accesscontextmanager/ServicePerimeter.yaml
 api_service_name: accesscontextmanager.googleapis.com
-api_version: v1
+api_version: v1alpha
 api_resource_type_kind: ServicePerimeter
 fields:
     - api_field: createTime
@@ -37,8 +37,13 @@ fields:
     - api_field: spec.ingressPolicies.title
     - api_field: spec.resources
     - api_field: spec.restrictedServices
+    - api_field: spec.vpcAccessibleServices.allowedServicePatterns.modifiers.addRequestHeader.key
+    - api_field: spec.vpcAccessibleServices.allowedServicePatterns.modifiers.addRequestHeader.value
+    - api_field: spec.vpcAccessibleServices.allowedServicePatterns.pattern
+    - api_field: spec.vpcAccessibleServices.allowedServicePatterns.service
     - api_field: spec.vpcAccessibleServices.allowedServices
     - api_field: spec.vpcAccessibleServices.enableRestriction
+    - api_field: spec.vpcAccessibleServices.servicePatternsEnforcementScopes
     - api_field: status.accessLevels
     - api_field: status.egressPolicies.egressFrom.identities
     - api_field: status.egressPolicies.egressFrom.identityType
@@ -64,8 +69,13 @@ fields:
     - api_field: status.ingressPolicies.title
     - api_field: status.resources
     - api_field: status.restrictedServices
+    - api_field: status.vpcAccessibleServices.allowedServicePatterns.modifiers.addRequestHeader.key
+    - api_field: status.vpcAccessibleServices.allowedServicePatterns.modifiers.addRequestHeader.value
+    - api_field: status.vpcAccessibleServices.allowedServicePatterns.pattern
+    - api_field: status.vpcAccessibleServices.allowedServicePatterns.service
     - api_field: status.vpcAccessibleServices.allowedServices
     - api_field: status.vpcAccessibleServices.enableRestriction
+    - api_field: status.vpcAccessibleServices.servicePatternsEnforcementScopes
     - api_field: title
     - api_field: updateTime
     - api_field: useExplicitDryRunSpec
