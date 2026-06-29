@@ -54,6 +54,35 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+// PollCheckMetricDescriptorUpdate returns a poll check that waits until the
+// metric descriptor returned by the API reflects the desired mutable values.
+//
+// The Monitoring API has no in-place update for metric descriptors: an "update"
+// is a create (POST) that upserts the descriptor, and the change to mutable
+// fields such as description and display_name propagates with a delay. Polling
+// only for the descriptor's existence therefore succeeds against stale data and
+// leaves a permanent diff after apply. This check keeps polling until the read
+// value matches the configured description and display_name.
+func PollCheckMetricDescriptorUpdate(d *schema.ResourceData) transport_tpg.PollCheckResponseFunc {
+	return func(resp map[string]interface{}, respErr error) transport_tpg.PollResult {
+		if respErr != nil {
+			if transport_tpg.IsGoogleApiErrorWithCode(respErr, 404) {
+				return transport_tpg.PendingStatusPollResult("not found")
+			}
+			return transport_tpg.ErrorPollResult(respErr)
+		}
+
+		if want, ok := d.GetOk("description"); ok && resp["description"] != want.(string) {
+			return transport_tpg.PendingStatusPollResult("waiting for updated description to propagate")
+		}
+		if want, ok := d.GetOk("display_name"); ok && resp["displayName"] != want.(string) {
+			return transport_tpg.PendingStatusPollResult("waiting for updated display_name to propagate")
+		}
+
+		return transport_tpg.SuccessPollResult()
+	}
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -400,7 +429,7 @@ func resourceMonitoringMetricDescriptorCreate(d *schema.ResourceData, meta inter
 	}
 	d.SetId(id)
 
-	err = transport_tpg.PollingWaitTime(resourceMonitoringMetricDescriptorPollRead(d, meta), transport_tpg.PollCheckForExistence, "Creating MetricDescriptor", d.Timeout(schema.TimeoutCreate), 20)
+	err = transport_tpg.PollingWaitTime(resourceMonitoringMetricDescriptorPollRead(d, meta), PollCheckMetricDescriptorUpdate(d), "Creating MetricDescriptor", d.Timeout(schema.TimeoutCreate), 20)
 	if err != nil {
 		return fmt.Errorf("Error waiting to create MetricDescriptor: %s", err)
 	}
@@ -682,7 +711,7 @@ func resourceMonitoringMetricDescriptorUpdate(d *schema.ResourceData, meta inter
 		log.Printf("[DEBUG] Finished updating MetricDescriptor %q: %#v", d.Id(), res)
 	}
 
-	err = transport_tpg.PollingWaitTime(resourceMonitoringMetricDescriptorPollRead(d, meta), transport_tpg.PollCheckForExistence, "Updating MetricDescriptor", d.Timeout(schema.TimeoutUpdate), 20)
+	err = transport_tpg.PollingWaitTime(resourceMonitoringMetricDescriptorPollRead(d, meta), PollCheckMetricDescriptorUpdate(d), "Updating MetricDescriptor", d.Timeout(schema.TimeoutUpdate), 20)
 	if err != nil {
 		return err
 	}
