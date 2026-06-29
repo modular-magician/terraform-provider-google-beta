@@ -622,6 +622,13 @@ func resourceFirestoreFieldDelete(d *schema.ResourceData, meta interface{}) erro
 	})
 
 	if err != nil {
+		if transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
+			// The parent database (or project) no longer exists, so there is no field
+			// configuration left to clear. This can happen when the parent database is
+			// destroyed before the field. Treat as a successful delete.
+			log.Printf("[DEBUG] Field %q parent database not found, treating as already deleted", d.Id())
+			return nil
+		}
 		return fmt.Errorf("Error deleting Field %q: %s", d.Id(), err)
 	}
 
