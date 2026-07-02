@@ -13,6 +13,8 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: displayName
+    - api_field: endpointSpec.content
+      json: true
     - api_field: endpointSpec.type
     - api_field: interfaces.protocolBinding
     - api_field: interfaces.url
@@ -21,6 +23,7 @@ fields:
     - api_field: mcpServerSpec.content
       json: true
     - api_field: mcpServerSpec.type
+    - api_field: name
     - api_field: registryResource
     - field: service_id
       provider_only: true

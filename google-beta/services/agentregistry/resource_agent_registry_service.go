@@ -195,8 +195,15 @@ func ResourceAgentRegistryService() *schema.Resource {
 						"type": {
 							Type:         schema.TypeString,
 							Required:     true,
-							ValidateFunc: verify.ValidateEnum([]string{"NO_SPEC"}),
-							Description:  `The type of the Endpoint spec content. Possible values: ["NO_SPEC"]`,
+							ValidateFunc: verify.ValidateEnum([]string{"NO_SPEC", "OPENAPI_SPEC"}),
+							Description:  `The type of the Endpoint spec content. Possible values: ["NO_SPEC", "OPENAPI_SPEC"]`,
+						},
+						"content": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringIsJSON,
+							StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:  `The content of the Endpoint spec.`,
 						},
 					},
 				},
@@ -250,6 +257,11 @@ func ResourceAgentRegistryService() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The timestamp when the resource was created.`,
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The resource name of the Service.`,
 			},
 			"registry_resource": {
 				Type:        schema.TypeString,
@@ -738,6 +750,10 @@ func resourceAgentRegistryServiceImport(d *schema.ResourceData, meta interface{}
 	return []*schema.ResourceData{d}, nil
 }
 
+func flattenAgentRegistryServiceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenAgentRegistryServiceDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -846,10 +862,24 @@ func flattenAgentRegistryServiceEndpointSpec(v interface{}, d *schema.ResourceDa
 	transformed := make(map[string]interface{})
 	transformed["type"] =
 		flattenAgentRegistryServiceEndpointSpecType(original["type"], d, config)
+	transformed["content"] =
+		flattenAgentRegistryServiceEndpointSpecContent(original["content"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAgentRegistryServiceEndpointSpecType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenAgentRegistryServiceEndpointSpecContent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
 }
 
 func flattenAgentRegistryServiceRegistryResource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1021,6 +1051,13 @@ func expandAgentRegistryServiceEndpointSpec(v interface{}, d tpgresource.Terrafo
 		transformed["type"] = transformedType
 	}
 
+	transformedContent, err := expandAgentRegistryServiceEndpointSpecContent(original["content"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedContent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["content"] = transformedContent
+	}
+
 	return transformed, nil
 }
 
@@ -1028,9 +1065,24 @@ func expandAgentRegistryServiceEndpointSpecType(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
+func expandAgentRegistryServiceEndpointSpecContent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func ResourceAgentRegistryServiceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
+	if err = d.Set("name", flattenAgentRegistryServiceName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
 	if err = d.Set("display_name", flattenAgentRegistryServiceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
