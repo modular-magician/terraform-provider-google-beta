@@ -161,6 +161,62 @@ resource "google_agent_registry_service" "default" {
 `, context)
 }
 
+func TestAccAgentRegistryService_agentRegistryServiceEndpointExample(t *testing.T) {
+	acctest.SkipTestUntil(t, "2026-09-30")
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"service":       "tf-test-service" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckAgentRegistryServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAgentRegistryService_agentRegistryServiceEndpointExample(context),
+			},
+			{
+				ResourceName:            "google_agent_registry_service.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "service_id"},
+			},
+			{
+				ResourceName:       "google_agent_registry_service.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccAgentRegistryService_agentRegistryServiceEndpointExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+  resource "google_agent_registry_service" "default" {
+    location     = "us-central1"
+    service_id   = "%{service}"
+    description  = "My Endpoint Agent Registry Service"
+    display_name = "My Service"
+  
+    interfaces {
+      url              = "https://example.com"
+      protocol_binding = "HTTP_JSON"
+    }
+  
+    endpoint_spec {
+      type    = "OPENAPI_SPEC"
+      content = "{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"My API\",\"version\":\"1.0.0\"},\"paths\":{}}"
+    }
+  }
+`, context)
+}
+
 func testAccCheckAgentRegistryServiceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

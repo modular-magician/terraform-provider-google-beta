@@ -76,6 +76,32 @@ resource "google_agent_registry_service" "default" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=agent_registry_service_endpoint&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Agent Registry Service Endpoint
+
+
+```hcl
+  resource "google_agent_registry_service" "default" {
+    location     = "us-central1"
+    service_id   = "service"
+    description  = "My Endpoint Agent Registry Service"
+    display_name = "My Service"
+  
+    interfaces {
+      url              = "https://example.com"
+      protocol_binding = "HTTP_JSON"
+    }
+  
+    endpoint_spec {
+      type    = "OPENAPI_SPEC"
+      content = "{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"My API\",\"version\":\"1.0.0\"},\"paths\":{}}"
+    }
+  }
+```
 
 ## Argument Reference
 
@@ -168,13 +194,20 @@ The following arguments are supported:
 * `type` -
   (Required)
   The type of the Endpoint spec content.
-  Possible values are: `NO_SPEC`.
+  Possible values are: `NO_SPEC`, `OPENAPI_SPEC`.
+
+* `content` -
+  (Optional)
+  The content of the Endpoint spec.
 
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/services/{{service_id}}`
+
+* `name` -
+  The resource name of the Service.
 
 * `registry_resource` -
   The resource name of the resulting Agent, MCP Server, or Endpoint.
