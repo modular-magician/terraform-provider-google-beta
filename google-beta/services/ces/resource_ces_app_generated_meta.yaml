@@ -31,18 +31,35 @@ fields:
     - api_field: defaultChannelProfile.channelType
     - api_field: defaultChannelProfile.disableBargeInControl
     - api_field: defaultChannelProfile.disableDtmf
+    - api_field: defaultChannelProfile.instagramConfig.instagramAccountId
+    - api_field: defaultChannelProfile.noiseSuppressionLevel
     - api_field: defaultChannelProfile.personaProperty.persona
     - api_field: defaultChannelProfile.profileId
     - api_field: defaultChannelProfile.webWidgetConfig.modality
+    - api_field: defaultChannelProfile.webWidgetConfig.securitySettings.allowedOrigins
+    - api_field: defaultChannelProfile.webWidgetConfig.securitySettings.enableOriginCheck
+    - api_field: defaultChannelProfile.webWidgetConfig.securitySettings.enablePublicAccess
+    - api_field: defaultChannelProfile.webWidgetConfig.securitySettings.enableRecaptcha
     - api_field: defaultChannelProfile.webWidgetConfig.theme
     - api_field: defaultChannelProfile.webWidgetConfig.webWidgetTitle
+    - api_field: defaultChannelProfile.whatsappConfig.phoneNumber
+    - api_field: defaultChannelProfile.whatsappConfig.phoneNumberId
+    - api_field: defaultChannelProfile.whatsappConfig.wabaId
     - api_field: deploymentCount
     - api_field: description
     - api_field: displayName
+    - api_field: errorHandlingSettings.endSessionConfig.escalateSession
+    - api_field: errorHandlingSettings.errorHandlingStrategy
+    - api_field: errorHandlingSettings.fallbackResponseConfig.customFallbackMessages
+    - api_field: errorHandlingSettings.fallbackResponseConfig.maxFallbackAttempts
     - api_field: etag
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.expectationLevelMetricsThresholds.toolInvocationParameterCorrectnessThreshold
+    - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.toolMatchingSettings.extraToolCallBehavior
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.overallToolInvocationCorrectnessThreshold
+    - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.semanticSimilarityChannel
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.semanticSimilaritySuccessThreshold
+    - api_field: evaluationMetricsThresholds.goldenHallucinationMetricBehavior
+    - api_field: evaluationMetricsThresholds.scenarioHallucinationMetricBehavior
     - api_field: globalInstruction
     - api_field: guardrails
     - api_field: languageSettings.defaultLanguageCode
@@ -51,6 +68,7 @@ fields:
     - api_field: languageSettings.supportedLanguageCodes
     - field: location
       provider_only: true
+    - api_field: locked
     - api_field: loggingSettings.audioRecordingConfig.gcsBucket
     - api_field: loggingSettings.audioRecordingConfig.gcsPathPrefix
     - api_field: loggingSettings.bigqueryExportSettings.dataset
@@ -58,9 +76,18 @@ fields:
     - api_field: loggingSettings.bigqueryExportSettings.project
     - api_field: loggingSettings.cloudLoggingSettings.enableCloudLogging
     - api_field: loggingSettings.conversationLoggingSettings.disableConversationLogging
+    - api_field: loggingSettings.conversationLoggingSettings.retentionWindow
+    - api_field: loggingSettings.evaluationAudioRecordingConfig.gcsBucket
+    - api_field: loggingSettings.evaluationAudioRecordingConfig.gcsPathPrefix
+    - api_field: loggingSettings.metricAnalysisSettings.llmMetricsOptedOut
     - api_field: loggingSettings.redactionConfig.deidentifyTemplate
     - api_field: loggingSettings.redactionConfig.enableRedaction
     - api_field: loggingSettings.redactionConfig.inspectTemplate
+    - api_field: loggingSettings.unredactedAudioRecordingConfig.gcsBucket
+    - api_field: loggingSettings.unredactedAudioRecordingConfig.gcsPathPrefix
+    - api_field: loggingSettings.unredactedBigqueryExportSettings.dataset
+    - api_field: loggingSettings.unredactedBigqueryExportSettings.enabled
+    - api_field: loggingSettings.unredactedBigqueryExportSettings.project
     - api_field: metadata
     - api_field: modelSettings.model
     - api_field: modelSettings.temperature
@@ -84,6 +111,10 @@ fields:
     - api_field: variableDeclarations.schema.enum
     - api_field: variableDeclarations.schema.items
       json: true
+    - api_field: variableDeclarations.schema.maxItems
+    - api_field: variableDeclarations.schema.maximum
+    - api_field: variableDeclarations.schema.minItems
+    - api_field: variableDeclarations.schema.minimum
     - api_field: variableDeclarations.schema.nullable
     - api_field: variableDeclarations.schema.prefixItems
       json: true
@@ -94,5 +125,6 @@ fields:
     - api_field: variableDeclarations.schema.title
     - api_field: variableDeclarations.schema.type
     - api_field: variableDeclarations.schema.uniqueItems
+    - api_field: vpcScSettings.allowedOrigins
     - field: deletion_policy
       provider_only: true

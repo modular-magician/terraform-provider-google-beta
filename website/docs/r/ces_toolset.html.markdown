@@ -614,6 +614,11 @@ The following arguments are supported:
   automatically assigned for the toolset.
 
 
+* `connector_toolset` -
+  (Optional)
+  A toolset that generates tools from an Integration Connectors Connection.
+  Structure is [documented below](#nested_connector_toolset).
+
 * `description` -
   (Optional)
   The description of the toolset.
@@ -645,6 +650,12 @@ The following arguments are supported:
   Configuration for tools behavior in fake mode.
   Structure is [documented below](#nested_tool_fake_config).
 
+* `timeout` -
+  (Optional)
+  The timeout for the toolset execution. If not set, the default timeout is
+  30 seconds for SYNCHRONOUS toolsets and 60 seconds for ASYNCHRONOUS
+  toolsets.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -655,6 +666,98 @@ The following arguments are supported:
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
 
+
+<a name="nested_connector_toolset"></a>The `connector_toolset` block supports:
+
+* `connection` -
+  (Required)
+  The full resource name of the referenced Integration Connectors Connection.
+  Format: `projects/{project}/locations/{location}/connections/{connection}`
+
+* `auth_config` -
+  (Optional)
+  Configures how authentication is handled in Integration Connectors. By default, an admin authentication is passed in the Integration Connectors API requests. You can override it with a different end-user authentication config. Note: The Connection must have authentication override enabled in order to specify an EUC configuration here - otherwise, the Toolset creation will fail.
+  Structure is [documented below](#nested_connector_toolset_auth_config).
+
+* `connector_actions` -
+  (Required)
+  The list of connector actions/entity operations to generate tools for.
+  Structure is [documented below](#nested_connector_toolset_connector_actions).
+
+
+<a name="nested_connector_toolset_auth_config"></a>The `auth_config` block supports:
+
+* `oauth2_auth_code_config` -
+  (Optional)
+  Oauth 2.0 Authorization Code authentication configuration.
+  Structure is [documented below](#nested_connector_toolset_auth_config_oauth2_auth_code_config).
+
+* `oauth2_jwt_bearer_config` -
+  (Optional)
+  JWT Profile Oauth 2.0 Authorization Grant authentication configuration.
+  Structure is [documented below](#nested_connector_toolset_auth_config_oauth2_jwt_bearer_config).
+
+
+<a name="nested_connector_toolset_auth_config_oauth2_auth_code_config"></a>The `oauth2_auth_code_config` block supports:
+
+* `oauth_token` -
+  (Required)
+  Oauth token parameter name to pass through.
+  Must be in the format `$context.variables.<name_of_variable>`.
+
+<a name="nested_connector_toolset_auth_config_oauth2_jwt_bearer_config"></a>The `oauth2_jwt_bearer_config` block supports:
+
+* `client_key` -
+  (Required)
+  Client parameter name to pass through.
+  Must be in the format `$context.variables.<name_of_variable>`.
+
+* `issuer` -
+  (Required)
+  Issuer parameter name to pass through.
+  Must be in the format `$context.variables.<name_of_variable>`.
+
+* `subject` -
+  (Required)
+  Subject parameter name to pass through.
+  Must be in the format `$context.variables.<name_of_variable>`.
+
+<a name="nested_connector_toolset_connector_actions"></a>The `connector_actions` block supports:
+
+* `connection_action_id` -
+  (Optional)
+  ID of a Connection action for the tool to use.
+
+* `entity_operation` -
+  (Optional)
+  Entity operation configuration for the tool to use.
+  Structure is [documented below](#nested_connector_toolset_connector_actions_entity_operation).
+
+* `input_fields` -
+  (Optional)
+  Entity fields to use as inputs for the operation.
+
+* `output_fields` -
+  (Optional)
+  Entity fields to return from the operation.
+
+
+<a name="nested_connector_toolset_connector_actions_entity_operation"></a>The `entity_operation` block supports:
+
+* `entity_id` -
+  (Required)
+  ID of the entity.
+
+* `operation` -
+  (Required)
+  Operation to perform on the entity.
+  Possible values:
+  LIST
+  GET
+  CREATE
+  UPDATE
+  DELETE
+  Possible values are: `LIST`, `GET`, `CREATE`, `UPDATE`, `DELETE`.
 
 <a name="nested_open_api_toolset"></a>The `open_api_toolset` block supports:
 
@@ -871,6 +974,11 @@ The following arguments are supported:
   https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/tool/open-api#openapi-injection
   for more details.
 
+* `tool_overrides` -
+  (Optional)
+  Overrides for individual tools within this toolset.
+  Structure is [documented below](#nested_mcp_toolset_tool_overrides).
+
 
 <a name="nested_mcp_toolset_api_authentication"></a>The `api_authentication` block supports:
 
@@ -1013,6 +1121,20 @@ The following arguments are supported:
   (Required)
   The name of the allowed custom CA certificates. This
   can be used to disambiguate the custom CA certificates.
+
+<a name="nested_mcp_toolset_tool_overrides"></a>The `tool_overrides` block supports:
+
+* `description_override` -
+  (Optional)
+  Optional. Description override for the tool.
+
+* `name_override` -
+  (Optional)
+  Optional. Name override for the tool.
+
+* `tool` -
+  (Required)
+  Required. The name of the tool to override.
 
 <a name="nested_tool_fake_config"></a>The `tool_fake_config` block supports:
 

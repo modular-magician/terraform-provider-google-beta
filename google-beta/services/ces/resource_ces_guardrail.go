@@ -276,6 +276,12 @@ agent interaction.`,
 										Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 									},
+									"proactive_execution_enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
+									},
 								},
 							},
 						},
@@ -302,6 +308,12 @@ agent interaction.`,
 										Optional: true,
 										Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+									},
+									"proactive_execution_enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
 									},
 								},
 							},
@@ -330,6 +342,12 @@ agent interaction.`,
 										Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 									},
+									"proactive_execution_enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
+									},
 								},
 							},
 						},
@@ -356,6 +374,12 @@ agent interaction.`,
 										Optional: true,
 										Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+									},
+									"proactive_execution_enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
 									},
 								},
 							},
@@ -603,6 +627,36 @@ the policy's 'failOpen' configuration.`,
 					},
 				},
 			},
+			"model_armor": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Guardrail that uses Cloud Model Armor to sanitize the prompt or response.
+If the prompt or response is sanitized, the guardrail is triggered.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"model_armor_template": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `Model armor template resource name.
+Format: 'projects/{project_id}/locations/{location}/templates/{template_id}'`,
+						},
+						"sanitization_scope": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `When to run the sanitization check with model armor.
+Possible values: SANITIZATION_SCOPE_UNSPECIFIED, PROMPT, RESPONSE, PROMPT_AND_RESPONSE.`,
+						},
+						"fail_open": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If true, the guardrail will not trigger if it receives any errors from
+the model armor service. By default, the guardrail will trigger if it
+receives any errors from the model armor service.`,
+						},
+					},
+				},
+			},
 			"model_safety": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -749,6 +803,12 @@ func resourceCESGuardrailCreate(d *schema.ResourceData, meta interface{}) error 
 		return err
 	} else if v, ok := d.GetOkExists("llm_prompt_security"); !tpgresource.IsEmptyValue(reflect.ValueOf(llmPromptSecurityProp)) && (ok || !reflect.DeepEqual(v, llmPromptSecurityProp)) {
 		obj["llmPromptSecurity"] = llmPromptSecurityProp
+	}
+	modelArmorProp, err := expandCESGuardrailModelArmor(d.Get("model_armor"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("model_armor"); !tpgresource.IsEmptyValue(reflect.ValueOf(modelArmorProp)) && (ok || !reflect.DeepEqual(v, modelArmorProp)) {
+		obj["modelArmor"] = modelArmorProp
 	}
 	modelSafetyProp, err := expandCESGuardrailModelSafety(d.Get("model_safety"), d, config)
 	if err != nil {
@@ -1032,6 +1092,12 @@ func resourceCESGuardrailUpdate(d *schema.ResourceData, meta interface{}) error 
 	} else if v, ok := d.GetOkExists("llm_prompt_security"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, llmPromptSecurityProp)) {
 		obj["llmPromptSecurity"] = llmPromptSecurityProp
 	}
+	modelArmorProp, err := expandCESGuardrailModelArmor(d.Get("model_armor"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("model_armor"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, modelArmorProp)) {
+		obj["modelArmor"] = modelArmorProp
+	}
 	modelSafetyProp, err := expandCESGuardrailModelSafety(d.Get("model_safety"), d, config)
 	if err != nil {
 		return err
@@ -1078,6 +1144,10 @@ func resourceCESGuardrailUpdate(d *schema.ResourceData, meta interface{}) error 
 
 	if d.HasChange("llm_prompt_security") {
 		updateMask = append(updateMask, "llmPromptSecurity")
+	}
+
+	if d.HasChange("model_armor") {
+		updateMask = append(updateMask, "modelArmor")
 	}
 
 	if d.HasChange("model_safety") {
@@ -1316,6 +1386,8 @@ func flattenCESGuardrailCodeCallbackAfterAgentCallback(v interface{}, d *schema.
 		flattenCESGuardrailCodeCallbackAfterAgentCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESGuardrailCodeCallbackAfterAgentCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESGuardrailCodeCallbackAfterAgentCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESGuardrailCodeCallbackAfterAgentCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -1325,6 +1397,10 @@ func flattenCESGuardrailCodeCallbackAfterAgentCallbackDescription(v interface{},
 }
 
 func flattenCESGuardrailCodeCallbackAfterAgentCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailCodeCallbackAfterAgentCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1345,6 +1421,8 @@ func flattenCESGuardrailCodeCallbackAfterModelCallback(v interface{}, d *schema.
 		flattenCESGuardrailCodeCallbackAfterModelCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESGuardrailCodeCallbackAfterModelCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESGuardrailCodeCallbackAfterModelCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESGuardrailCodeCallbackAfterModelCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -1354,6 +1432,10 @@ func flattenCESGuardrailCodeCallbackAfterModelCallbackDescription(v interface{},
 }
 
 func flattenCESGuardrailCodeCallbackAfterModelCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailCodeCallbackAfterModelCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1374,6 +1456,8 @@ func flattenCESGuardrailCodeCallbackBeforeAgentCallback(v interface{}, d *schema
 		flattenCESGuardrailCodeCallbackBeforeAgentCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESGuardrailCodeCallbackBeforeAgentCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESGuardrailCodeCallbackBeforeAgentCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESGuardrailCodeCallbackBeforeAgentCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -1383,6 +1467,10 @@ func flattenCESGuardrailCodeCallbackBeforeAgentCallbackDescription(v interface{}
 }
 
 func flattenCESGuardrailCodeCallbackBeforeAgentCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailCodeCallbackBeforeAgentCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1403,6 +1491,8 @@ func flattenCESGuardrailCodeCallbackBeforeModelCallback(v interface{}, d *schema
 		flattenCESGuardrailCodeCallbackBeforeModelCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESGuardrailCodeCallbackBeforeModelCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESGuardrailCodeCallbackBeforeModelCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESGuardrailCodeCallbackBeforeModelCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -1412,6 +1502,10 @@ func flattenCESGuardrailCodeCallbackBeforeModelCallbackDescription(v interface{}
 }
 
 func flattenCESGuardrailCodeCallbackBeforeModelCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailCodeCallbackBeforeModelCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1670,6 +1764,35 @@ func flattenCESGuardrailLlmPromptSecurityDefaultSettings(v interface{}, d *schem
 	return []interface{}{transformed}
 }
 func flattenCESGuardrailLlmPromptSecurityDefaultSettingsDefaultPromptTemplate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailModelArmor(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["fail_open"] =
+		flattenCESGuardrailModelArmorFailOpen(original["failOpen"], d, config)
+	transformed["model_armor_template"] =
+		flattenCESGuardrailModelArmorModelArmorTemplate(original["modelArmorTemplate"], d, config)
+	transformed["sanitization_scope"] =
+		flattenCESGuardrailModelArmorSanitizationScope(original["sanitizationScope"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESGuardrailModelArmorFailOpen(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailModelArmorModelArmorTemplate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESGuardrailModelArmorSanitizationScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1943,6 +2066,13 @@ func expandCESGuardrailCodeCallbackAfterAgentCallback(v interface{}, d tpgresour
 		transformed["disabled"] = transformedDisabled
 	}
 
+	transformedProactiveExecutionEnabled, err := expandCESGuardrailCodeCallbackAfterAgentCallbackProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+	}
+
 	transformedPythonCode, err := expandCESGuardrailCodeCallbackAfterAgentCallbackPythonCode(original["python_code"], d, config)
 	if err != nil {
 		return nil, err
@@ -1958,6 +2088,10 @@ func expandCESGuardrailCodeCallbackAfterAgentCallbackDescription(v interface{}, 
 }
 
 func expandCESGuardrailCodeCallbackAfterAgentCallbackDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESGuardrailCodeCallbackAfterAgentCallbackProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1991,6 +2125,13 @@ func expandCESGuardrailCodeCallbackAfterModelCallback(v interface{}, d tpgresour
 		transformed["disabled"] = transformedDisabled
 	}
 
+	transformedProactiveExecutionEnabled, err := expandCESGuardrailCodeCallbackAfterModelCallbackProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+	}
+
 	transformedPythonCode, err := expandCESGuardrailCodeCallbackAfterModelCallbackPythonCode(original["python_code"], d, config)
 	if err != nil {
 		return nil, err
@@ -2006,6 +2147,10 @@ func expandCESGuardrailCodeCallbackAfterModelCallbackDescription(v interface{}, 
 }
 
 func expandCESGuardrailCodeCallbackAfterModelCallbackDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESGuardrailCodeCallbackAfterModelCallbackProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2039,6 +2184,13 @@ func expandCESGuardrailCodeCallbackBeforeAgentCallback(v interface{}, d tpgresou
 		transformed["disabled"] = transformedDisabled
 	}
 
+	transformedProactiveExecutionEnabled, err := expandCESGuardrailCodeCallbackBeforeAgentCallbackProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+	}
+
 	transformedPythonCode, err := expandCESGuardrailCodeCallbackBeforeAgentCallbackPythonCode(original["python_code"], d, config)
 	if err != nil {
 		return nil, err
@@ -2054,6 +2206,10 @@ func expandCESGuardrailCodeCallbackBeforeAgentCallbackDescription(v interface{},
 }
 
 func expandCESGuardrailCodeCallbackBeforeAgentCallbackDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESGuardrailCodeCallbackBeforeAgentCallbackProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2087,6 +2243,13 @@ func expandCESGuardrailCodeCallbackBeforeModelCallback(v interface{}, d tpgresou
 		transformed["disabled"] = transformedDisabled
 	}
 
+	transformedProactiveExecutionEnabled, err := expandCESGuardrailCodeCallbackBeforeModelCallbackProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+	}
+
 	transformedPythonCode, err := expandCESGuardrailCodeCallbackBeforeModelCallbackPythonCode(original["python_code"], d, config)
 	if err != nil {
 		return nil, err
@@ -2102,6 +2265,10 @@ func expandCESGuardrailCodeCallbackBeforeModelCallbackDescription(v interface{},
 }
 
 func expandCESGuardrailCodeCallbackBeforeModelCallbackDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESGuardrailCodeCallbackBeforeModelCallbackProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2490,6 +2657,54 @@ func expandCESGuardrailLlmPromptSecurityDefaultSettingsDefaultPromptTemplate(v i
 	return v, nil
 }
 
+func expandCESGuardrailModelArmor(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedFailOpen, err := expandCESGuardrailModelArmorFailOpen(original["fail_open"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFailOpen); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["failOpen"] = transformedFailOpen
+	}
+
+	transformedModelArmorTemplate, err := expandCESGuardrailModelArmorModelArmorTemplate(original["model_armor_template"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedModelArmorTemplate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["modelArmorTemplate"] = transformedModelArmorTemplate
+	}
+
+	transformedSanitizationScope, err := expandCESGuardrailModelArmorSanitizationScope(original["sanitization_scope"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSanitizationScope); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sanitizationScope"] = transformedSanitizationScope
+	}
+
+	return transformed, nil
+}
+
+func expandCESGuardrailModelArmorFailOpen(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESGuardrailModelArmorModelArmorTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESGuardrailModelArmorSanitizationScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCESGuardrailModelSafety(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -2591,6 +2806,9 @@ func ResourceCESGuardrailFlatten(d *schema.ResourceData, meta interface{}, res m
 		return fmt.Errorf("Error reading Guardrail: %s", err)
 	}
 	if err = d.Set("llm_prompt_security", flattenCESGuardrailLlmPromptSecurity(res["llmPromptSecurity"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Guardrail: %s", err)
+	}
+	if err = d.Set("model_armor", flattenCESGuardrailModelArmor(res["modelArmor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Guardrail: %s", err)
 	}
 	if err = d.Set("model_safety", flattenCESGuardrailModelSafety(res["modelSafety"], d, config)); err != nil {

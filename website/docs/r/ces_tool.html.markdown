@@ -1284,6 +1284,19 @@ The following arguments are supported:
   (Optional)
   The Python code to execute for the tool.
 
+* `service_directory_config` -
+  (Optional)
+  Service Directory configuration for VPC-SC, used to resolve service names within a perimeter.
+  Structure is [documented below](#nested_python_function_service_directory_config).
+
+
+<a name="nested_python_function_service_directory_config"></a>The `service_directory_config` block supports:
+
+* `service` -
+  (Required)
+  The name of [Service Directory](https://cloud.google.com/service-directory) service.
+  Format: projects/{project}/locations/{location}/namespaces/{namespace}/services/{service}
+
 <a name="nested_tool_fake_config"></a>The `tool_fake_config` block supports:
 
 * `enable_fake_mode` -
@@ -1392,10 +1405,23 @@ The following arguments are supported:
   (Optional)
   Optional. The Python code to execute for the tool.
 
+* `service_directory_config` -
+  (Optional)
+  Service Directory configuration for VPC-SC, used to resolve service names within a perimeter.
+  Structure is [documented below](#nested_widget_tool_data_mapping_python_function_service_directory_config).
+
 * `description` -
   (Output)
   The description of the Python function, parsed from the python code's
   docstring.
+
+
+<a name="nested_widget_tool_data_mapping_python_function_service_directory_config"></a>The `service_directory_config` block supports:
+
+* `service` -
+  (Required)
+  The name of [Service Directory](https://cloud.google.com/service-directory) service.
+  Format: projects/{project}/locations/{location}/namespaces/{namespace}/services/{service}
 
 <a name="nested_widget_tool_text_response_config"></a>The `text_response_config` block supports:
 
@@ -1786,6 +1812,10 @@ In addition to the arguments listed above, the following computed attributes are
 
 <a name="nested_mcp_tool_api_authentication_service_account_auth_config"></a>The `service_account_auth_config` block contains:
 
+* `scopes` -
+  (Output)
+  The OAuth scopes to grant.
+
 * `service_account` -
   (Output)
   The email address of the service account used for authenticatation. CES
@@ -1966,6 +1996,10 @@ In addition to the arguments listed above, the following computed attributes are
   The token endpoint in the OAuth provider to exchange for an access token.
 
 <a name="nested_open_api_tool_api_authentication_service_account_auth_config"></a>The `service_account_auth_config` block contains:
+
+* `scopes` -
+  (Output)
+  The OAuth scopes to grant.
 
 * `service_account` -
   (Output)

@@ -138,6 +138,23 @@ The following arguments are supported:
   Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
 
+* `experiment_config` -
+  (Optional)
+  Experiment configuration for the deployment.
+  Structure is [documented below](#nested_experiment_config).
+
+* `instagram_credentials` -
+  (Optional)
+  Ephemeral Meta credentials required when configuring a Instagram channel
+  profile.
+  Structure is [documented below](#nested_instagram_credentials).
+
+* `whatsapp_credentials` -
+  (Optional)
+  Ephemeral Meta credentials required when configuring a WhatsApp channel
+  profile.
+  Structure is [documented below](#nested_whatsapp_credentials).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -175,6 +192,16 @@ The following arguments are supported:
   (Optional)
   Whether to disable DTMF (dual-tone multi-frequency).
 
+* `instagram_config` -
+  (Optional)
+  Configuration specific to Instagram deployments.
+  Structure is [documented below](#nested_channel_profile_instagram_config).
+
+* `noise_suppression_level` -
+  (Optional)
+  The noise suppression level of the channel profile.
+  Available values are "low", "moderate", "high", "very_high".
+
 * `persona_property` -
   (Optional)
   Represents the persona property of a channel.
@@ -189,6 +216,17 @@ The following arguments are supported:
   Message for configuration for the web widget.
   Structure is [documented below](#nested_channel_profile_web_widget_config).
 
+* `whatsapp_config` -
+  (Optional)
+  Configuration specific to WhatsApp deployments.
+  Structure is [documented below](#nested_channel_profile_whatsapp_config).
+
+
+<a name="nested_channel_profile_instagram_config"></a>The `instagram_config` block supports:
+
+* `instagram_account_id` -
+  (Required)
+  The Instagram Account ID.
 
 <a name="nested_channel_profile_persona_property"></a>The `persona_property` block supports:
 
@@ -247,6 +285,92 @@ The following arguments are supported:
 * `enable_recaptcha` -
   (Optional)
   Indicates whether reCAPTCHA verification for the web widget is enabled.
+
+<a name="nested_channel_profile_whatsapp_config"></a>The `whatsapp_config` block supports:
+
+* `phone_number` -
+  (Optional)
+  The phone number in E.164 format.
+
+* `phone_number_id` -
+  (Required)
+  The Meta phone number ID.
+
+* `waba_id` -
+  (Required)
+  The WhatsApp Business Account ID.
+
+<a name="nested_experiment_config"></a>The `experiment_config` block supports:
+
+* `version_release` -
+  (Optional)
+  Version release for the experiment.
+  Structure is [documented below](#nested_experiment_config_version_release).
+
+
+<a name="nested_experiment_config_version_release"></a>The `version_release` block supports:
+
+* `state` -
+  (Optional)
+  State of the version release.
+  Possible values: STATE_UNSPECIFIED, PENDING, RUNNING, DONE, EXPIRED.
+
+* `traffic_allocations` -
+  (Optional)
+  Traffic allocations for the version release.
+  Structure is [documented below](#nested_experiment_config_version_release_traffic_allocations).
+
+
+<a name="nested_experiment_config_version_release_traffic_allocations"></a>The `traffic_allocations` block supports:
+
+* `app_version` -
+  (Optional)
+  App version of the traffic allocation.
+  Format: `projects/{project}/locations/{location}/apps/{app}/versions/{version}`
+
+* `id` -
+  (Optional)
+  Id of the traffic allocation. Free format string, up to 128 characters.
+
+* `traffic_percentage` -
+  (Optional)
+  Traffic percentage of the traffic allocation. Must be between 0 and 100.
+
+<a name="nested_instagram_credentials"></a>The `instagram_credentials` block supports:
+
+* `auth_code` -
+  (Required)
+  The Meta auth code provided by the embedded signup flow.
+
+* `conversation_profile_id` -
+  (Required)
+  The Conversation Profile ID to use for the deployment.
+
+<a name="nested_whatsapp_credentials"></a>The `whatsapp_credentials` block supports:
+
+* `auth_code` -
+  (Required)
+  The Meta auth code provided by the embedded signup flow.
+
+* `business_account_id` -
+  (Required)
+  The Business Account ID to use for the phone number.
+
+* `conversation_profile_id` -
+  (Required)
+  The Conversation Profile ID to use for the deployment.
+
+* `phone_number` -
+  (Required)
+  The phone number to register with WhatsApp.
+
+* `pin` -
+  (Required)
+  The 6-digit PIN created by the user for two-step verification.
+
+* `waba_id` -
+  (Required)
+  The WhatsApp Business Account ID.
 
 ## Attributes Reference
 

@@ -432,6 +432,11 @@ The following arguments are supported:
   (Optional)
   Human-readable description of the app.
 
+* `error_handling_settings` -
+  (Optional)
+  Settings to describe how errors should be handled in the app.
+  Structure is [documented below](#nested_error_handling_settings).
+
 * `evaluation_metrics_thresholds` -
   (Optional)
   Threshold settings for metrics in an Evaluation.
@@ -453,6 +458,11 @@ The following arguments are supported:
   (Optional)
   Language settings of the app.
   Structure is [documented below](#nested_language_settings).
+
+* `locked` -
+  (Optional)
+  Indicates whether the app is locked for changes. If the app is locked,
+  modifications to the app resources will be rejected.
 
 * `logging_settings` -
   (Optional)
@@ -493,6 +503,11 @@ The following arguments are supported:
   (Optional)
   The default client certificate settings for the app.
   Structure is [documented below](#nested_client_certificate_settings).
+
+* `vpc_sc_settings` -
+  (Optional)
+  VPC-SC settings for the app.
+  Structure is [documented below](#nested_vpc_sc_settings).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -637,6 +652,16 @@ The following arguments are supported:
   (Optional)
   Whether to disable DTMF (dual-tone multi-frequency).
 
+* `instagram_config` -
+  (Optional)
+  Configuration specific to Instagram deployments.
+  Structure is [documented below](#nested_default_channel_profile_instagram_config).
+
+* `noise_suppression_level` -
+  (Optional)
+  The noise suppression level of the channel profile.
+  Available values are "low", "moderate", "high", "very_high".
+
 * `persona_property` -
   (Optional)
   Represents the persona property of a channel.
@@ -651,6 +676,17 @@ The following arguments are supported:
   Message for configuration for the web widget.
   Structure is [documented below](#nested_default_channel_profile_web_widget_config).
 
+* `whatsapp_config` -
+  (Optional)
+  Configuration specific to WhatsApp deployments.
+  Structure is [documented below](#nested_default_channel_profile_whatsapp_config).
+
+
+<a name="nested_default_channel_profile_instagram_config"></a>The `instagram_config` block supports:
+
+* `instagram_account_id` -
+  (Required)
+  The Instagram Account ID.
 
 <a name="nested_default_channel_profile_persona_property"></a>The `persona_property` block supports:
 
@@ -673,6 +709,11 @@ The following arguments are supported:
   VOICE_ONLY
   CHAT_ONLY
 
+* `security_settings` -
+  (Optional)
+  Security settings for the web widget.
+  Structure is [documented below](#nested_default_channel_profile_web_widget_config_security_settings).
+
 * `theme` -
   (Optional)
   The theme of the web widget.
@@ -685,12 +726,106 @@ The following arguments are supported:
   (Optional)
   The title of the web widget.
 
+
+<a name="nested_default_channel_profile_web_widget_config_security_settings"></a>The `security_settings` block supports:
+
+* `allowed_origins` -
+  (Optional)
+  The origins that are allowed to host the web widget. An origin is
+  defined by RFC 6454. If empty, all origins are allowed.
+  A maximum of 100 origins is allowed.
+  Example: "https://example.com"
+
+* `enable_origin_check` -
+  (Optional)
+  Indicates whether origin check for the web widget is enabled.
+  If true, the web widget will check the origin of the website that
+  loads the web widget and only allow it to be loaded in the same origin
+  or any of the allowed origins.
+
+* `enable_public_access` -
+  (Optional)
+  Indicates whether public access to the web widget is enabled.
+  If true, the web widget will be publicly accessible.
+  If false, the web widget must be integrated with your own
+  authentication and authorization system to return valid credentials for
+  accessing the CES agent.
+
+* `enable_recaptcha` -
+  (Optional)
+  Indicates whether reCAPTCHA verification for the web widget is enabled.
+
+<a name="nested_default_channel_profile_whatsapp_config"></a>The `whatsapp_config` block supports:
+
+* `phone_number` -
+  (Optional)
+  The phone number in E.164 format.
+
+* `phone_number_id` -
+  (Required)
+  The Meta phone number ID.
+
+* `waba_id` -
+  (Required)
+  The WhatsApp Business Account ID.
+
+<a name="nested_error_handling_settings"></a>The `error_handling_settings` block supports:
+
+* `error_handling_strategy` -
+  (Optional)
+  The strategy to use for error handling.
+  Possible values:
+  ERROR_HANDLING_STRATEGY_UNSPECIFIED
+  NONE
+  FALLBACK_RESPONSE
+  END_SESSION
+
+* `fallback_response_config` -
+  (Optional)
+  Configuration for handling fallback responses.
+  Structure is [documented below](#nested_error_handling_settings_fallback_response_config).
+
+* `end_session_config` -
+  (Optional)
+  Configuration for ending the session in case of system errors (e.g. LLM
+  errors).
+  Structure is [documented below](#nested_error_handling_settings_end_session_config).
+
+
+<a name="nested_error_handling_settings_fallback_response_config"></a>The `fallback_response_config` block supports:
+
+* `custom_fallback_messages` -
+  (Optional)
+  The fallback messages in case of system errors (e.g. LLM errors),
+  mapped by supported language code.
+
+* `max_fallback_attempts` -
+  (Optional)
+  The maximum number of fallback attempts to make before the agent emitting
+  EndSession Signal.
+
+<a name="nested_error_handling_settings_end_session_config"></a>The `end_session_config` block supports:
+
+* `escalate_session` -
+  (Optional)
+  Whether to escalate the session in EndSession.
+
 <a name="nested_evaluation_metrics_thresholds"></a>The `evaluation_metrics_thresholds` block supports:
 
 * `golden_evaluation_metrics_thresholds` -
   (Optional)
   Settings for golden evaluations.
   Structure is [documented below](#nested_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds).
+
+* `golden_hallucination_metric_behavior` -
+  (Optional)
+  The hallucination metric behavior for golden evaluations.
+  Possible values: HALLUCINATION_METRIC_BEHAVIOR_UNSPECIFIED, DISABLED, ENABLED.
+
+* `scenario_hallucination_metric_behavior` -
+  (Optional)
+  The hallucination metric behavior for scenario evaluations.
+  Possible values: HALLUCINATION_METRIC_BEHAVIOR_UNSPECIFIED, DISABLED, ENABLED.
 
 
 <a name="nested_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds"></a>The `golden_evaluation_metrics_thresholds` block supports:
@@ -699,6 +834,11 @@ The following arguments are supported:
   (Optional)
   Expectation level metrics thresholds.
   Structure is [documented below](#nested_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_expectation_level_metrics_thresholds).
+
+* `tool_matching_settings` -
+  (Optional)
+  Settings for matching tool calls.
+  Structure is [documented below](#nested_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_tool_matching_settings).
 
 * `turn_level_metrics_thresholds` -
   (Optional)
@@ -713,12 +853,24 @@ The following arguments are supported:
   The success threshold for individual tool invocation parameter
   correctness. Must be a float between 0 and 1. Default is 1.0.
 
+<a name="nested_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_tool_matching_settings"></a>The `tool_matching_settings` block supports:
+
+* `extra_tool_call_behavior` -
+  (Optional)
+  Defines the behavior when an extra tool call is encountered.
+  Possible values: EXTRA_TOOL_CALL_BEHAVIOR_UNSPECIFIED, FAIL, ALLOW.
+
 <a name="nested_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_turn_level_metrics_thresholds"></a>The `turn_level_metrics_thresholds` block supports:
 
 * `overall_tool_invocation_correctness_threshold` -
   (Optional)
   The success threshold for overall tool invocation correctness. Must be
   a float between 0 and 1. Default is 1.0.
+
+* `semantic_similarity_channel` -
+  (Optional)
+  The semantic similarity channel to use for evaluation.
+  Possible values: SEMANTIC_SIMILARITY_CHANNEL_UNSPECIFIED, TEXT, AUDIO.
 
 * `semantic_similarity_success_threshold` -
   (Optional)
@@ -774,10 +926,37 @@ The following arguments are supported:
   Settings to describe the conversation logging behaviors for the app.
   Structure is [documented below](#nested_logging_settings_conversation_logging_settings).
 
+* `evaluation_audio_recording_config` -
+  (Optional)
+  Configuration for how audio interactions should be recorded for the
+  evaluation. By default, audio recording is not enabled for evaluation
+  sessions.
+  Structure is [documented below](#nested_logging_settings_evaluation_audio_recording_config).
+
+* `metric_analysis_settings` -
+  (Optional)
+  Settings to describe the conversation data collection behaviors for the LLM
+  analysis pipeline for the app.
+  Structure is [documented below](#nested_logging_settings_metric_analysis_settings).
+
 * `redaction_config` -
   (Optional)
   Configuration to instruct how sensitive data should be handled.
   Structure is [documented below](#nested_logging_settings_redaction_config).
+
+* `unredacted_audio_recording_config` -
+  (Optional)
+  Configures an additional recording of unredacted audio. This can be used to
+  maintain a raw audio copy when audio redaction is
+  enabled, typically for auditing or monitoring purposes.
+  Structure is [documented below](#nested_logging_settings_unredacted_audio_recording_config).
+
+* `unredacted_bigquery_export_settings` -
+  (Optional)
+  Configures the BigQuery export behaviors for the app.
+  The unredacted conversation data will be exported to BigQuery tables if it
+  is enabled.
+  Structure is [documented below](#nested_logging_settings_unredacted_bigquery_export_settings).
 
 
 <a name="nested_logging_settings_audio_recording_config"></a>The `audio_recording_config` block supports:
@@ -832,6 +1011,29 @@ The following arguments are supported:
   (Optional)
   Whether to disable conversation logging for the sessions.
 
+* `retention_window` -
+  (Optional)
+  Controls the retention window for the conversation.
+  If not set, the conversation will be retained for 365 days.
+
+<a name="nested_logging_settings_evaluation_audio_recording_config"></a>The `evaluation_audio_recording_config` block supports:
+
+* `gcs_bucket` -
+  (Optional)
+  The Cloud Storage bucket to store the session audio recordings.
+
+* `gcs_path_prefix` -
+  (Optional)
+  The Cloud Storage path prefix for audio recordings.
+
+<a name="nested_logging_settings_metric_analysis_settings"></a>The `metric_analysis_settings` block supports:
+
+* `llm_metrics_opted_out` -
+  (Optional)
+  Whether to collect conversation data for llm analysis metrics. If true,
+  conversation data will not be collected for llm analysis metrics;
+  otherwise, conversation data will be collected.
+
 <a name="nested_logging_settings_redaction_config"></a>The `redaction_config` block supports:
 
 * `deidentify_template` -
@@ -852,6 +1054,30 @@ The following arguments are supported:
   detection of sensitive data types.
   Format:
   `projects/{project}/locations/{location}/inspectTemplates/{inspect_template}`
+
+<a name="nested_logging_settings_unredacted_audio_recording_config"></a>The `unredacted_audio_recording_config` block supports:
+
+* `gcs_bucket` -
+  (Optional)
+  The Cloud Storage bucket to store the session audio recordings.
+
+* `gcs_path_prefix` -
+  (Optional)
+  The Cloud Storage path prefix for audio recordings.
+
+<a name="nested_logging_settings_unredacted_bigquery_export_settings"></a>The `unredacted_bigquery_export_settings` block supports:
+
+* `dataset` -
+  (Optional)
+  The BigQuery dataset to export the data to.
+
+* `enabled` -
+  (Optional)
+  Indicates whether the BigQuery export is enabled.
+
+* `project` -
+  (Optional)
+  The project ID of the BigQuery dataset to export the data to.
 
 <a name="nested_model_settings"></a>The `model_settings` block supports:
 
@@ -986,6 +1212,22 @@ The following arguments are supported:
   (Optional)
   Schema of the elements of Type.ARRAY.
 
+* `max_items` -
+  (Optional)
+  Indicate the items in the array must be unique. Only applies to TYPE.ARRAY.
+
+* `maximum` -
+  (Optional)
+  Maximum value of the element of primitive type.
+
+* `min_items` -
+  (Optional)
+  Indicate the items in the array must be unique. Only applies to TYPE.ARRAY.
+
+* `minimum` -
+  (Optional)
+  Minimum value of the element of primitive type.
+
 <a name="nested_client_certificate_settings"></a>The `client_certificate_settings` block supports:
 
 * `tls_certificate` -
@@ -1003,6 +1245,17 @@ The following arguments are supported:
   (Optional)
   The passphrase to decrypt the private key.
   Should be left unset if the private key is not encrypted.
+
+<a name="nested_vpc_sc_settings"></a>The `vpc_sc_settings` block supports:
+
+* `allowed_origins` -
+  (Optional)
+  The allowed HTTP(s) origins that OpenAPI tools in the App are able to
+  directly call when VPC Service Controls are enabled. These strings must
+  match the origin exactly, including the port if specified. For example,
+  "https://example.com" or "https://example.com:443".
+  This list does not yet apply to Python tools that may make direct HTTP
+  calls.
 
 ## Attributes Reference
 

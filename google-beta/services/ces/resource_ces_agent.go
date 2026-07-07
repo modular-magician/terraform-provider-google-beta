@@ -187,6 +187,12 @@ execution stops and any remaining callbacks are skipped.`,
 							Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 						},
+						"proactive_execution_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
+						},
 					},
 				},
 			},
@@ -216,6 +222,12 @@ execution stops and any remaining callbacks are skipped.`,
 							Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 						},
+						"proactive_execution_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
+						},
 					},
 				},
 			},
@@ -244,6 +256,12 @@ execution stops and any remaining callbacks are skipped.`,
 							Optional: true,
 							Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+						},
+						"proactive_execution_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
 						},
 					},
 				},
@@ -281,6 +299,12 @@ execution stops and any remaining callbacks are skipped.`,
 							Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 						},
+						"proactive_execution_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
+						},
 					},
 				},
 			},
@@ -310,6 +334,12 @@ execution stops and any remaining callbacks are skipped.`,
 							Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 						},
+						"proactive_execution_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
+						},
 					},
 				},
 			},
@@ -338,6 +368,12 @@ execution stops and any remaining callbacks are skipped.`,
 							Optional: true,
 							Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+						},
+						"proactive_execution_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.`,
 						},
 					},
 				},
@@ -442,6 +478,13 @@ execution. If not specified, the draft environment will be used.`,
 parameters names to be sent to the Dialogflow agent as input.`,
 							Elem: &schema.Schema{Type: schema.TypeString},
 						},
+						"language_code_variable": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The name of the variable that contains the language code to be used for
+the Dialogflow session. If unspecified, the default language code of the
+Dialogflow agent will be used.`,
+						},
 						"output_variable_mapping": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -486,6 +529,95 @@ Format:
 							Description: `The tools IDs to filter the toolset.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
+			"transfer_rules": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Agent transfer rules. If multiple rules match, the first one in the list will be used.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"child_agent": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `The resource name of the child agent the rule applies to.
+Format: 'projects/{project}/locations/{location}/apps/{app}/agents/{agent}'`,
+						},
+						"direction": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `The direction of the transfer.
+Possible values:
+  - DIRECTION_UNSPECIFIED
+  - PARENT_TO_CHILD
+  - CHILD_TO_PARENT`,
+						},
+						"deterministic_transfer": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Deterministic transfer rule. When the condition evaluates to true, the transfer occurs.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"expression_condition": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `A rule that evaluates a session state condition. If the condition evaluates to true, the transfer occurs.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"expression": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The string representation of cloud.api.Expression condition.`,
+												},
+											},
+										},
+									},
+									"python_code_condition": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `A rule that uses Python code block to evaluate the conditions. If the condition evaluates to true, the transfer occurs.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"python_code": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The python code to execute.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"disable_planner_transfer": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `A rule that prevents the planner from transferring to the target agent.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"expression_condition": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `If the condition evaluates to true, planner will not be allowed to transfer to the target agent.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"expression": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The string representation of cloud.api.Expression condition.`,
+												},
+											},
+										},
+									},
+								},
 							},
 						},
 					},
@@ -646,6 +778,12 @@ func resourceCESAgentCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("toolsets"); !tpgresource.IsEmptyValue(reflect.ValueOf(toolsetsProp)) && (ok || !reflect.DeepEqual(v, toolsetsProp)) {
 		obj["toolsets"] = toolsetsProp
+	}
+	transferRulesProp, err := expandCESAgentTransferRules(d.Get("transfer_rules"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("transfer_rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(transferRulesProp)) && (ok || !reflect.DeepEqual(v, transferRulesProp)) {
+		obj["transferRules"] = transferRulesProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/agents?agentId={{agent_id}}")
@@ -971,6 +1109,12 @@ func resourceCESAgentUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("toolsets"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, toolsetsProp)) {
 		obj["toolsets"] = toolsetsProp
 	}
+	transferRulesProp, err := expandCESAgentTransferRules(d.Get("transfer_rules"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("transfer_rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, transferRulesProp)) {
+		obj["transferRules"] = transferRulesProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/agents/{{name}}")
 	if err != nil {
@@ -1043,6 +1187,10 @@ func resourceCESAgentUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("toolsets") {
 		updateMask = append(updateMask, "toolsets")
+	}
+
+	if d.HasChange("transfer_rules") {
+		updateMask = append(updateMask, "transferRules")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1167,9 +1315,10 @@ func flattenCESAgentAfterAgentCallbacks(v interface{}, d *schema.ResourceData, c
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAgentAfterAgentCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAgentAfterAgentCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAgentAfterAgentCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAgentAfterAgentCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAgentAfterAgentCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAgentAfterAgentCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAgentAfterAgentCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -1179,6 +1328,10 @@ func flattenCESAgentAfterAgentCallbacksDescription(v interface{}, d *schema.Reso
 }
 
 func flattenCESAgentAfterAgentCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentAfterAgentCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1199,9 +1352,10 @@ func flattenCESAgentAfterModelCallbacks(v interface{}, d *schema.ResourceData, c
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAgentAfterModelCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAgentAfterModelCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAgentAfterModelCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAgentAfterModelCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAgentAfterModelCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAgentAfterModelCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAgentAfterModelCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -1211,6 +1365,10 @@ func flattenCESAgentAfterModelCallbacksDescription(v interface{}, d *schema.Reso
 }
 
 func flattenCESAgentAfterModelCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentAfterModelCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1231,9 +1389,10 @@ func flattenCESAgentAfterToolCallbacks(v interface{}, d *schema.ResourceData, co
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAgentAfterToolCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAgentAfterToolCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAgentAfterToolCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAgentAfterToolCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAgentAfterToolCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAgentAfterToolCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAgentAfterToolCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -1243,6 +1402,10 @@ func flattenCESAgentAfterToolCallbacksDescription(v interface{}, d *schema.Resou
 }
 
 func flattenCESAgentAfterToolCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentAfterToolCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1263,9 +1426,10 @@ func flattenCESAgentBeforeAgentCallbacks(v interface{}, d *schema.ResourceData, 
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAgentBeforeAgentCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAgentBeforeAgentCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAgentBeforeAgentCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAgentBeforeAgentCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAgentBeforeAgentCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAgentBeforeAgentCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAgentBeforeAgentCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -1275,6 +1439,10 @@ func flattenCESAgentBeforeAgentCallbacksDescription(v interface{}, d *schema.Res
 }
 
 func flattenCESAgentBeforeAgentCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentBeforeAgentCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1295,9 +1463,10 @@ func flattenCESAgentBeforeModelCallbacks(v interface{}, d *schema.ResourceData, 
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAgentBeforeModelCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAgentBeforeModelCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAgentBeforeModelCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAgentBeforeModelCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAgentBeforeModelCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAgentBeforeModelCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAgentBeforeModelCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -1307,6 +1476,10 @@ func flattenCESAgentBeforeModelCallbacksDescription(v interface{}, d *schema.Res
 }
 
 func flattenCESAgentBeforeModelCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentBeforeModelCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1327,9 +1500,10 @@ func flattenCESAgentBeforeToolCallbacks(v interface{}, d *schema.ResourceData, c
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAgentBeforeToolCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAgentBeforeToolCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAgentBeforeToolCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAgentBeforeToolCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAgentBeforeToolCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAgentBeforeToolCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAgentBeforeToolCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -1339,6 +1513,10 @@ func flattenCESAgentBeforeToolCallbacksDescription(v interface{}, d *schema.Reso
 }
 
 func flattenCESAgentBeforeToolCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentBeforeToolCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1433,6 +1611,8 @@ func flattenCESAgentRemoteDialogflowAgent(v interface{}, d *schema.ResourceData,
 		flattenCESAgentRemoteDialogflowAgentFlowId(original["flowId"], d, config)
 	transformed["input_variable_mapping"] =
 		flattenCESAgentRemoteDialogflowAgentInputVariableMapping(original["inputVariableMapping"], d, config)
+	transformed["language_code_variable"] =
+		flattenCESAgentRemoteDialogflowAgentLanguageCodeVariable(original["languageCodeVariable"], d, config)
 	transformed["output_variable_mapping"] =
 		flattenCESAgentRemoteDialogflowAgentOutputVariableMapping(original["outputVariableMapping"], d, config)
 	transformed["respect_response_interruption_settings"] =
@@ -1452,6 +1632,10 @@ func flattenCESAgentRemoteDialogflowAgentFlowId(v interface{}, d *schema.Resourc
 }
 
 func flattenCESAgentRemoteDialogflowAgentInputVariableMapping(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentRemoteDialogflowAgentLanguageCodeVariable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1494,6 +1678,114 @@ func flattenCESAgentToolsetsToolIds(v interface{}, d *schema.ResourceData, confi
 	return v
 }
 
+func flattenCESAgentTransferRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"child_agent":              flattenCESAgentTransferRulesChildAgent(original["childAgent"], d, config),
+			"deterministic_transfer":   flattenCESAgentTransferRulesDeterministicTransfer(original["deterministicTransfer"], d, config),
+			"direction":                flattenCESAgentTransferRulesDirection(original["direction"], d, config),
+			"disable_planner_transfer": flattenCESAgentTransferRulesDisablePlannerTransfer(original["disablePlannerTransfer"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenCESAgentTransferRulesChildAgent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentTransferRulesDeterministicTransfer(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["expression_condition"] =
+		flattenCESAgentTransferRulesDeterministicTransferExpressionCondition(original["expressionCondition"], d, config)
+	transformed["python_code_condition"] =
+		flattenCESAgentTransferRulesDeterministicTransferPythonCodeCondition(original["pythonCodeCondition"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAgentTransferRulesDeterministicTransferExpressionCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["expression"] =
+		flattenCESAgentTransferRulesDeterministicTransferExpressionConditionExpression(original["expression"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAgentTransferRulesDeterministicTransferExpressionConditionExpression(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentTransferRulesDeterministicTransferPythonCodeCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["python_code"] =
+		flattenCESAgentTransferRulesDeterministicTransferPythonCodeConditionPythonCode(original["pythonCode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAgentTransferRulesDeterministicTransferPythonCodeConditionPythonCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentTransferRulesDirection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAgentTransferRulesDisablePlannerTransfer(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["expression_condition"] =
+		flattenCESAgentTransferRulesDisablePlannerTransferExpressionCondition(original["expressionCondition"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAgentTransferRulesDisablePlannerTransferExpressionCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["expression"] =
+		flattenCESAgentTransferRulesDisablePlannerTransferExpressionConditionExpression(original["expression"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAgentTransferRulesDisablePlannerTransferExpressionConditionExpression(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESAgentUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1525,6 +1817,13 @@ func expandCESAgentAfterAgentCallbacks(v interface{}, d tpgresource.TerraformRes
 			transformed["disabled"] = transformedDisabled
 		}
 
+		transformedProactiveExecutionEnabled, err := expandCESAgentAfterAgentCallbacksProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+		}
+
 		transformedPythonCode, err := expandCESAgentAfterAgentCallbacksPythonCode(original["python_code"], d, config)
 		if err != nil {
 			return nil, err
@@ -1542,6 +1841,10 @@ func expandCESAgentAfterAgentCallbacksDescription(v interface{}, d tpgresource.T
 }
 
 func expandCESAgentAfterAgentCallbacksDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentAfterAgentCallbacksProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1576,6 +1879,13 @@ func expandCESAgentAfterModelCallbacks(v interface{}, d tpgresource.TerraformRes
 			transformed["disabled"] = transformedDisabled
 		}
 
+		transformedProactiveExecutionEnabled, err := expandCESAgentAfterModelCallbacksProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+		}
+
 		transformedPythonCode, err := expandCESAgentAfterModelCallbacksPythonCode(original["python_code"], d, config)
 		if err != nil {
 			return nil, err
@@ -1593,6 +1903,10 @@ func expandCESAgentAfterModelCallbacksDescription(v interface{}, d tpgresource.T
 }
 
 func expandCESAgentAfterModelCallbacksDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentAfterModelCallbacksProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1627,6 +1941,13 @@ func expandCESAgentAfterToolCallbacks(v interface{}, d tpgresource.TerraformReso
 			transformed["disabled"] = transformedDisabled
 		}
 
+		transformedProactiveExecutionEnabled, err := expandCESAgentAfterToolCallbacksProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+		}
+
 		transformedPythonCode, err := expandCESAgentAfterToolCallbacksPythonCode(original["python_code"], d, config)
 		if err != nil {
 			return nil, err
@@ -1644,6 +1965,10 @@ func expandCESAgentAfterToolCallbacksDescription(v interface{}, d tpgresource.Te
 }
 
 func expandCESAgentAfterToolCallbacksDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentAfterToolCallbacksProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1678,6 +2003,13 @@ func expandCESAgentBeforeAgentCallbacks(v interface{}, d tpgresource.TerraformRe
 			transformed["disabled"] = transformedDisabled
 		}
 
+		transformedProactiveExecutionEnabled, err := expandCESAgentBeforeAgentCallbacksProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+		}
+
 		transformedPythonCode, err := expandCESAgentBeforeAgentCallbacksPythonCode(original["python_code"], d, config)
 		if err != nil {
 			return nil, err
@@ -1695,6 +2027,10 @@ func expandCESAgentBeforeAgentCallbacksDescription(v interface{}, d tpgresource.
 }
 
 func expandCESAgentBeforeAgentCallbacksDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentBeforeAgentCallbacksProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1729,6 +2065,13 @@ func expandCESAgentBeforeModelCallbacks(v interface{}, d tpgresource.TerraformRe
 			transformed["disabled"] = transformedDisabled
 		}
 
+		transformedProactiveExecutionEnabled, err := expandCESAgentBeforeModelCallbacksProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+		}
+
 		transformedPythonCode, err := expandCESAgentBeforeModelCallbacksPythonCode(original["python_code"], d, config)
 		if err != nil {
 			return nil, err
@@ -1746,6 +2089,10 @@ func expandCESAgentBeforeModelCallbacksDescription(v interface{}, d tpgresource.
 }
 
 func expandCESAgentBeforeModelCallbacksDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentBeforeModelCallbacksProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1780,6 +2127,13 @@ func expandCESAgentBeforeToolCallbacks(v interface{}, d tpgresource.TerraformRes
 			transformed["disabled"] = transformedDisabled
 		}
 
+		transformedProactiveExecutionEnabled, err := expandCESAgentBeforeToolCallbacksProactiveExecutionEnabled(original["proactive_execution_enabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedProactiveExecutionEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["proactiveExecutionEnabled"] = transformedProactiveExecutionEnabled
+		}
+
 		transformedPythonCode, err := expandCESAgentBeforeToolCallbacksPythonCode(original["python_code"], d, config)
 		if err != nil {
 			return nil, err
@@ -1797,6 +2151,10 @@ func expandCESAgentBeforeToolCallbacksDescription(v interface{}, d tpgresource.T
 }
 
 func expandCESAgentBeforeToolCallbacksDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentBeforeToolCallbacksProactiveExecutionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1919,6 +2277,13 @@ func expandCESAgentRemoteDialogflowAgent(v interface{}, d tpgresource.TerraformR
 		transformed["inputVariableMapping"] = transformedInputVariableMapping
 	}
 
+	transformedLanguageCodeVariable, err := expandCESAgentRemoteDialogflowAgentLanguageCodeVariable(original["language_code_variable"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLanguageCodeVariable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["languageCodeVariable"] = transformedLanguageCodeVariable
+	}
+
 	transformedOutputVariableMapping, err := expandCESAgentRemoteDialogflowAgentOutputVariableMapping(original["output_variable_mapping"], d, config)
 	if err != nil {
 		return nil, err
@@ -1957,6 +2322,10 @@ func expandCESAgentRemoteDialogflowAgentInputVariableMapping(v interface{}, d tp
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandCESAgentRemoteDialogflowAgentLanguageCodeVariable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandCESAgentRemoteDialogflowAgentOutputVariableMapping(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
@@ -2015,6 +2384,189 @@ func expandCESAgentToolsetsToolset(v interface{}, d tpgresource.TerraformResourc
 }
 
 func expandCESAgentToolsetsToolIds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentTransferRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedChildAgent, err := expandCESAgentTransferRulesChildAgent(original["child_agent"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedChildAgent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["childAgent"] = transformedChildAgent
+		}
+
+		transformedDeterministicTransfer, err := expandCESAgentTransferRulesDeterministicTransfer(original["deterministic_transfer"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDeterministicTransfer); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["deterministicTransfer"] = transformedDeterministicTransfer
+		}
+
+		transformedDirection, err := expandCESAgentTransferRulesDirection(original["direction"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDirection); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["direction"] = transformedDirection
+		}
+
+		transformedDisablePlannerTransfer, err := expandCESAgentTransferRulesDisablePlannerTransfer(original["disable_planner_transfer"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisablePlannerTransfer); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["disablePlannerTransfer"] = transformedDisablePlannerTransfer
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandCESAgentTransferRulesChildAgent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentTransferRulesDeterministicTransfer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExpressionCondition, err := expandCESAgentTransferRulesDeterministicTransferExpressionCondition(original["expression_condition"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpressionCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expressionCondition"] = transformedExpressionCondition
+	}
+
+	transformedPythonCodeCondition, err := expandCESAgentTransferRulesDeterministicTransferPythonCodeCondition(original["python_code_condition"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPythonCodeCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pythonCodeCondition"] = transformedPythonCodeCondition
+	}
+
+	return transformed, nil
+}
+
+func expandCESAgentTransferRulesDeterministicTransferExpressionCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExpression, err := expandCESAgentTransferRulesDeterministicTransferExpressionConditionExpression(original["expression"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expression"] = transformedExpression
+	}
+
+	return transformed, nil
+}
+
+func expandCESAgentTransferRulesDeterministicTransferExpressionConditionExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentTransferRulesDeterministicTransferPythonCodeCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPythonCode, err := expandCESAgentTransferRulesDeterministicTransferPythonCodeConditionPythonCode(original["python_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPythonCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pythonCode"] = transformedPythonCode
+	}
+
+	return transformed, nil
+}
+
+func expandCESAgentTransferRulesDeterministicTransferPythonCodeConditionPythonCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentTransferRulesDirection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAgentTransferRulesDisablePlannerTransfer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExpressionCondition, err := expandCESAgentTransferRulesDisablePlannerTransferExpressionCondition(original["expression_condition"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpressionCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expressionCondition"] = transformedExpressionCondition
+	}
+
+	return transformed, nil
+}
+
+func expandCESAgentTransferRulesDisablePlannerTransferExpressionCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExpression, err := expandCESAgentTransferRulesDisablePlannerTransferExpressionConditionExpression(original["expression"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expression"] = transformedExpression
+	}
+
+	return transformed, nil
+}
+
+func expandCESAgentTransferRulesDisablePlannerTransferExpressionConditionExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2087,6 +2639,9 @@ func ResourceCESAgentFlatten(d *schema.ResourceData, meta interface{}, res map[s
 		return fmt.Errorf("Error reading Agent: %s", err)
 	}
 	if err = d.Set("toolsets", flattenCESAgentToolsets(res["toolsets"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Agent: %s", err)
+	}
+	if err = d.Set("transfer_rules", flattenCESAgentTransferRules(res["transferRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Agent: %s", err)
 	}
 	if err = d.Set("update_time", flattenCESAgentUpdateTime(res["updateTime"], d, config)); err != nil {

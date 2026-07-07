@@ -23,8 +23,14 @@ fields:
       provider_only: true
     - api_field: messages.chunks.agentTransfer.displayName
     - api_field: messages.chunks.agentTransfer.targetAgent
+    - api_field: messages.chunks.blob.data
+    - api_field: messages.chunks.blob.mimeType
+    - api_field: messages.chunks.defaultVariables
+      json: true
     - api_field: messages.chunks.image.data
     - api_field: messages.chunks.image.mimeType
+    - api_field: messages.chunks.payload
+      json: true
     - api_field: messages.chunks.text
     - api_field: messages.chunks.toolCall.args
       json: true
@@ -40,6 +46,7 @@ fields:
     - api_field: messages.chunks.toolResponse.tool
     - api_field: messages.chunks.toolResponse.toolsetTool.toolId
     - api_field: messages.chunks.toolResponse.toolsetTool.toolset
+    - api_field: messages.chunks.transcript
     - api_field: messages.chunks.updatedVariables
       json: true
     - api_field: messages.role

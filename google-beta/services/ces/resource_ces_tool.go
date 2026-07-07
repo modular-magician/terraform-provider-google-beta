@@ -1169,6 +1169,22 @@ provided, the first function defined in the python code will be used.`,
 							Optional:    true,
 							Description: `The Python code to execute for the tool.`,
 						},
+						"service_directory_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Service Directory configuration for VPC-SC, used to resolve service names within a perimeter.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"service": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `The name of [Service Directory](https://cloud.google.com/service-directory) service.
+Format: projects/{project}/locations/{location}/namespaces/{namespace}/services/{service}`,
+									},
+								},
+							},
+						},
 						"description": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -1270,6 +1286,22 @@ provided, the first function defined in the python code will be used.`,
 													Type:        schema.TypeString,
 													Optional:    true,
 													Description: `Optional. The Python code to execute for the tool.`,
+												},
+												"service_directory_config": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Service Directory configuration for VPC-SC, used to resolve service names within a perimeter.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"service": {
+																Type:     schema.TypeString,
+																Required: true,
+																Description: `The name of [Service Directory](https://cloud.google.com/service-directory) service.
+Format: projects/{project}/locations/{location}/namespaces/{namespace}/services/{service}`,
+															},
+														},
+													},
 												},
 												"description": {
 													Type:     schema.TypeString,
@@ -1733,6 +1765,14 @@ CLIENT_CREDENTIAL`,
 										Description: `Configurations for authentication using a custom service account.`,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
+												"scopes": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: `The OAuth scopes to grant.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
 												"service_account": {
 													Type:     schema.TypeString,
 													Computed: true,
@@ -1980,6 +2020,14 @@ CLIENT_CREDENTIAL`,
 										Description: `Configurations for authentication using a custom service account.`,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
+												"scopes": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: `The OAuth scopes to grant.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
 												"service_account": {
 													Type:     schema.TypeString,
 													Computed: true,
@@ -4201,10 +4249,16 @@ func flattenCESToolMcpToolApiAuthenticationServiceAccountAuthConfig(v interface{
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["scopes"] =
+		flattenCESToolMcpToolApiAuthenticationServiceAccountAuthConfigScopes(original["scopes"], d, config)
 	transformed["service_account"] =
 		flattenCESToolMcpToolApiAuthenticationServiceAccountAuthConfigServiceAccount(original["serviceAccount"], d, config)
 	return []interface{}{transformed}
 }
+func flattenCESToolMcpToolApiAuthenticationServiceAccountAuthConfigScopes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESToolMcpToolApiAuthenticationServiceAccountAuthConfigServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -4437,10 +4491,16 @@ func flattenCESToolOpenApiToolApiAuthenticationServiceAccountAuthConfig(v interf
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["scopes"] =
+		flattenCESToolOpenApiToolApiAuthenticationServiceAccountAuthConfigScopes(original["scopes"], d, config)
 	transformed["service_account"] =
 		flattenCESToolOpenApiToolApiAuthenticationServiceAccountAuthConfigServiceAccount(original["serviceAccount"], d, config)
 	return []interface{}{transformed}
 }
+func flattenCESToolOpenApiToolApiAuthenticationServiceAccountAuthConfigScopes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESToolOpenApiToolApiAuthenticationServiceAccountAuthConfigServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -4545,6 +4605,8 @@ func flattenCESToolPythonFunction(v interface{}, d *schema.ResourceData, config 
 		flattenCESToolPythonFunctionName(original["name"], d, config)
 	transformed["python_code"] =
 		flattenCESToolPythonFunctionPythonCode(original["pythonCode"], d, config)
+	transformed["service_directory_config"] =
+		flattenCESToolPythonFunctionServiceDirectoryConfig(original["serviceDirectoryConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESToolPythonFunctionDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4556,6 +4618,23 @@ func flattenCESToolPythonFunctionName(v interface{}, d *schema.ResourceData, con
 }
 
 func flattenCESToolPythonFunctionPythonCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolPythonFunctionServiceDirectoryConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["service"] =
+		flattenCESToolPythonFunctionServiceDirectoryConfigService(original["service"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolPythonFunctionServiceDirectoryConfigService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4862,6 +4941,8 @@ func flattenCESToolWidgetToolDataMappingPythonFunction(v interface{}, d *schema.
 		flattenCESToolWidgetToolDataMappingPythonFunctionName(original["name"], d, config)
 	transformed["python_code"] =
 		flattenCESToolWidgetToolDataMappingPythonFunctionPythonCode(original["pythonCode"], d, config)
+	transformed["service_directory_config"] =
+		flattenCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfig(original["serviceDirectoryConfig"], d, config)
 	transformed["description"] =
 		flattenCESToolWidgetToolDataMappingPythonFunctionDescription(original["description"], d, config)
 	return []interface{}{transformed}
@@ -4871,6 +4952,23 @@ func flattenCESToolWidgetToolDataMappingPythonFunctionName(v interface{}, d *sch
 }
 
 func flattenCESToolWidgetToolDataMappingPythonFunctionPythonCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["service"] =
+		flattenCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfigService(original["service"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfigService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -6873,6 +6971,13 @@ func expandCESToolPythonFunction(v interface{}, d tpgresource.TerraformResourceD
 		transformed["pythonCode"] = transformedPythonCode
 	}
 
+	transformedServiceDirectoryConfig, err := expandCESToolPythonFunctionServiceDirectoryConfig(original["service_directory_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServiceDirectoryConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serviceDirectoryConfig"] = transformedServiceDirectoryConfig
+	}
+
 	return transformed, nil
 }
 
@@ -6885,6 +6990,32 @@ func expandCESToolPythonFunctionName(v interface{}, d tpgresource.TerraformResou
 }
 
 func expandCESToolPythonFunctionPythonCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolPythonFunctionServiceDirectoryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedService, err := expandCESToolPythonFunctionServiceDirectoryConfigService(original["service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["service"] = transformedService
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolPythonFunctionServiceDirectoryConfigService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -7123,6 +7254,13 @@ func expandCESToolWidgetToolDataMappingPythonFunction(v interface{}, d tpgresour
 		transformed["pythonCode"] = transformedPythonCode
 	}
 
+	transformedServiceDirectoryConfig, err := expandCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfig(original["service_directory_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServiceDirectoryConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serviceDirectoryConfig"] = transformedServiceDirectoryConfig
+	}
+
 	transformedDescription, err := expandCESToolWidgetToolDataMappingPythonFunctionDescription(original["description"], d, config)
 	if err != nil {
 		return nil, err
@@ -7138,6 +7276,32 @@ func expandCESToolWidgetToolDataMappingPythonFunctionName(v interface{}, d tpgre
 }
 
 func expandCESToolWidgetToolDataMappingPythonFunctionPythonCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedService, err := expandCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfigService(original["service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["service"] = transformedService
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolWidgetToolDataMappingPythonFunctionServiceDirectoryConfigService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

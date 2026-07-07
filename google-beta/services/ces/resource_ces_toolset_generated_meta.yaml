@@ -11,6 +11,16 @@ autogen_version: 1
 fields:
     - field: app
       provider_only: true
+    - api_field: connectorToolset.authConfig.oauth2AuthCodeConfig.oauthToken
+    - api_field: connectorToolset.authConfig.oauth2JwtBearerConfig.clientKey
+    - api_field: connectorToolset.authConfig.oauth2JwtBearerConfig.issuer
+    - api_field: connectorToolset.authConfig.oauth2JwtBearerConfig.subject
+    - api_field: connectorToolset.connection
+    - api_field: connectorToolset.connectorActions.connectionActionId
+    - api_field: connectorToolset.connectorActions.entityOperation.entityId
+    - api_field: connectorToolset.connectorActions.entityOperation.operation
+    - api_field: connectorToolset.connectorActions.inputFields
+    - api_field: connectorToolset.connectorActions.outputFields
     - api_field: createTime
     - api_field: description
     - api_field: displayName
@@ -35,6 +45,9 @@ fields:
     - api_field: mcpToolset.serviceDirectoryConfig.service
     - api_field: mcpToolset.tlsConfig.caCerts.cert
     - api_field: mcpToolset.tlsConfig.caCerts.displayName
+    - api_field: mcpToolset.toolOverrides.descriptionOverride
+    - api_field: mcpToolset.toolOverrides.nameOverride
+    - api_field: mcpToolset.toolOverrides.tool
     - api_field: name
     - api_field: openApiToolset.apiAuthentication.apiKeyConfig.apiKeySecretVersion
     - api_field: openApiToolset.apiAuthentication.apiKeyConfig.keyName
@@ -54,6 +67,7 @@ fields:
     - api_field: openApiToolset.tlsConfig.caCerts.cert
     - api_field: openApiToolset.tlsConfig.caCerts.displayName
     - api_field: openApiToolset.url
+    - api_field: timeout
     - api_field: toolFakeConfig.codeBlock.pythonCode
     - api_field: toolFakeConfig.enableFakeMode
     - field: toolset_id

@@ -193,6 +193,27 @@ interrupt.`,
 							Optional:    true,
 							Description: `Whether to disable DTMF (dual-tone multi-frequency).`,
 						},
+						"instagram_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration specific to Instagram deployments.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"instagram_account_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The Instagram Account ID.`,
+									},
+								},
+							},
+						},
+						"noise_suppression_level": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The noise suppression level of the channel profile.
+Available values are "low", "moderate", "high", "very_high".`,
+						},
 						"persona_property": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -285,6 +306,31 @@ DARK`,
 								},
 							},
 						},
+						"whatsapp_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration specific to WhatsApp deployments.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"phone_number_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The Meta phone number ID.`,
+									},
+									"waba_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The WhatsApp Business Account ID.`,
+									},
+									"phone_number": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The phone number in E.164 format.`,
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -298,6 +344,119 @@ DARK`,
 				Required:    true,
 				ForceNew:    true,
 				Description: `Resource ID segment making up resource 'name'. It identifies the resource within its parent collection as described in https://google.aip.dev/122.`,
+			},
+			"experiment_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Experiment configuration for the deployment.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"version_release": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Version release for the experiment.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"state": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `State of the version release.
+Possible values: STATE_UNSPECIFIED, PENDING, RUNNING, DONE, EXPIRED.`,
+									},
+									"traffic_allocations": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Traffic allocations for the version release.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"app_version": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `App version of the traffic allocation.
+Format: 'projects/{project}/locations/{location}/apps/{app}/versions/{version}'`,
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Id of the traffic allocation. Free format string, up to 128 characters.`,
+												},
+												"traffic_percentage": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `Traffic percentage of the traffic allocation. Must be between 0 and 100.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"instagram_credentials": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Ephemeral Meta credentials required when configuring a Instagram channel
+profile.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"auth_code": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The Meta auth code provided by the embedded signup flow.`,
+						},
+						"conversation_profile_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The Conversation Profile ID to use for the deployment.`,
+						},
+					},
+				},
+			},
+			"whatsapp_credentials": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Ephemeral Meta credentials required when configuring a WhatsApp channel
+profile.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"auth_code": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The Meta auth code provided by the embedded signup flow.`,
+						},
+						"business_account_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The Business Account ID to use for the phone number.`,
+						},
+						"conversation_profile_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The Conversation Profile ID to use for the deployment.`,
+						},
+						"phone_number": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The phone number to register with WhatsApp.`,
+						},
+						"pin": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The 6-digit PIN created by the user for two-step verification.`,
+						},
+						"waba_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The WhatsApp Business Account ID.`,
+						},
+					},
+				},
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -371,6 +530,24 @@ func resourceCESDeploymentCreate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	experimentConfigProp, err := expandCESDeploymentExperimentConfig(d.Get("experiment_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("experiment_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(experimentConfigProp)) && (ok || !reflect.DeepEqual(v, experimentConfigProp)) {
+		obj["experimentConfig"] = experimentConfigProp
+	}
+	instagramCredentialsProp, err := expandCESDeploymentInstagramCredentials(d.Get("instagram_credentials"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("instagram_credentials"); !tpgresource.IsEmptyValue(reflect.ValueOf(instagramCredentialsProp)) && (ok || !reflect.DeepEqual(v, instagramCredentialsProp)) {
+		obj["instagramCredentials"] = instagramCredentialsProp
+	}
+	whatsappCredentialsProp, err := expandCESDeploymentWhatsappCredentials(d.Get("whatsapp_credentials"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("whatsapp_credentials"); !tpgresource.IsEmptyValue(reflect.ValueOf(whatsappCredentialsProp)) && (ok || !reflect.DeepEqual(v, whatsappCredentialsProp)) {
+		obj["whatsappCredentials"] = whatsappCredentialsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/deployments")
@@ -618,6 +795,24 @@ func resourceCESDeploymentUpdate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	experimentConfigProp, err := expandCESDeploymentExperimentConfig(d.Get("experiment_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("experiment_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, experimentConfigProp)) {
+		obj["experimentConfig"] = experimentConfigProp
+	}
+	instagramCredentialsProp, err := expandCESDeploymentInstagramCredentials(d.Get("instagram_credentials"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("instagram_credentials"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, instagramCredentialsProp)) {
+		obj["instagramCredentials"] = instagramCredentialsProp
+	}
+	whatsappCredentialsProp, err := expandCESDeploymentWhatsappCredentials(d.Get("whatsapp_credentials"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("whatsapp_credentials"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, whatsappCredentialsProp)) {
+		obj["whatsappCredentials"] = whatsappCredentialsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/deployments/{{name}}")
 	if err != nil {
@@ -638,6 +833,18 @@ func resourceCESDeploymentUpdate(d *schema.ResourceData, meta interface{}) error
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("experiment_config") {
+		updateMask = append(updateMask, "experimentConfig")
+	}
+
+	if d.HasChange("instagram_credentials") {
+		updateMask = append(updateMask, "instagramCredentials")
+	}
+
+	if d.HasChange("whatsapp_credentials") {
+		updateMask = append(updateMask, "whatsappCredentials")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -764,12 +971,18 @@ func flattenCESDeploymentChannelProfile(v interface{}, d *schema.ResourceData, c
 		flattenCESDeploymentChannelProfileDisableBargeInControl(original["disableBargeInControl"], d, config)
 	transformed["disable_dtmf"] =
 		flattenCESDeploymentChannelProfileDisableDtmf(original["disableDtmf"], d, config)
+	transformed["instagram_config"] =
+		flattenCESDeploymentChannelProfileInstagramConfig(original["instagramConfig"], d, config)
+	transformed["noise_suppression_level"] =
+		flattenCESDeploymentChannelProfileNoiseSuppressionLevel(original["noiseSuppressionLevel"], d, config)
 	transformed["persona_property"] =
 		flattenCESDeploymentChannelProfilePersonaProperty(original["personaProperty"], d, config)
 	transformed["profile_id"] =
 		flattenCESDeploymentChannelProfileProfileId(original["profileId"], d, config)
 	transformed["web_widget_config"] =
 		flattenCESDeploymentChannelProfileWebWidgetConfig(original["webWidgetConfig"], d, config)
+	transformed["whatsapp_config"] =
+		flattenCESDeploymentChannelProfileWhatsappConfig(original["whatsappConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESDeploymentChannelProfileChannelType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -781,6 +994,27 @@ func flattenCESDeploymentChannelProfileDisableBargeInControl(v interface{}, d *s
 }
 
 func flattenCESDeploymentChannelProfileDisableDtmf(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentChannelProfileInstagramConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["instagram_account_id"] =
+		flattenCESDeploymentChannelProfileInstagramConfigInstagramAccountId(original["instagramAccountId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentChannelProfileInstagramConfigInstagramAccountId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentChannelProfileNoiseSuppressionLevel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -871,6 +1105,35 @@ func flattenCESDeploymentChannelProfileWebWidgetConfigSecuritySettingsEnableReca
 	return v
 }
 
+func flattenCESDeploymentChannelProfileWhatsappConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["phone_number"] =
+		flattenCESDeploymentChannelProfileWhatsappConfigPhoneNumber(original["phoneNumber"], d, config)
+	transformed["phone_number_id"] =
+		flattenCESDeploymentChannelProfileWhatsappConfigPhoneNumberId(original["phoneNumberId"], d, config)
+	transformed["waba_id"] =
+		flattenCESDeploymentChannelProfileWhatsappConfigWabaId(original["wabaId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentChannelProfileWhatsappConfigPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentChannelProfileWhatsappConfigPhoneNumberId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentChannelProfileWhatsappConfigWabaId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESDeploymentCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -883,6 +1146,106 @@ func flattenCESDeploymentEtag(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
+func flattenCESDeploymentExperimentConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["version_release"] =
+		flattenCESDeploymentExperimentConfigVersionRelease(original["versionRelease"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentExperimentConfigVersionRelease(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["state"] =
+		flattenCESDeploymentExperimentConfigVersionReleaseState(original["state"], d, config)
+	transformed["traffic_allocations"] =
+		flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocations(original["trafficAllocations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentExperimentConfigVersionReleaseState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"app_version":        flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsAppVersion(original["appVersion"], d, config),
+			"id":                 flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsId(original["id"], d, config),
+			"traffic_percentage": flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsTrafficPercentage(original["trafficPercentage"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsAppVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsTrafficPercentage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenCESDeploymentInstagramCredentials(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["auth_code"] =
+		flattenCESDeploymentInstagramCredentialsAuthCode(original["authCode"], d, config)
+	transformed["conversation_profile_id"] =
+		flattenCESDeploymentInstagramCredentialsConversationProfileId(original["conversationProfileId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentInstagramCredentialsAuthCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentInstagramCredentialsConversationProfileId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESDeploymentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -891,6 +1254,53 @@ func flattenCESDeploymentName(v interface{}, d *schema.ResourceData, config *tra
 }
 
 func flattenCESDeploymentUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentWhatsappCredentials(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["auth_code"] =
+		flattenCESDeploymentWhatsappCredentialsAuthCode(original["authCode"], d, config)
+	transformed["business_account_id"] =
+		flattenCESDeploymentWhatsappCredentialsBusinessAccountId(original["businessAccountId"], d, config)
+	transformed["conversation_profile_id"] =
+		flattenCESDeploymentWhatsappCredentialsConversationProfileId(original["conversationProfileId"], d, config)
+	transformed["phone_number"] =
+		flattenCESDeploymentWhatsappCredentialsPhoneNumber(original["phoneNumber"], d, config)
+	transformed["pin"] =
+		flattenCESDeploymentWhatsappCredentialsPin(original["pin"], d, config)
+	transformed["waba_id"] =
+		flattenCESDeploymentWhatsappCredentialsWabaId(original["wabaId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentWhatsappCredentialsAuthCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentWhatsappCredentialsBusinessAccountId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentWhatsappCredentialsConversationProfileId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentWhatsappCredentialsPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentWhatsappCredentialsPin(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentWhatsappCredentialsWabaId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -931,6 +1341,20 @@ func expandCESDeploymentChannelProfile(v interface{}, d tpgresource.TerraformRes
 		transformed["disableDtmf"] = transformedDisableDtmf
 	}
 
+	transformedInstagramConfig, err := expandCESDeploymentChannelProfileInstagramConfig(original["instagram_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInstagramConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["instagramConfig"] = transformedInstagramConfig
+	}
+
+	transformedNoiseSuppressionLevel, err := expandCESDeploymentChannelProfileNoiseSuppressionLevel(original["noise_suppression_level"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNoiseSuppressionLevel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["noiseSuppressionLevel"] = transformedNoiseSuppressionLevel
+	}
+
 	transformedPersonaProperty, err := expandCESDeploymentChannelProfilePersonaProperty(original["persona_property"], d, config)
 	if err != nil {
 		return nil, err
@@ -952,6 +1376,13 @@ func expandCESDeploymentChannelProfile(v interface{}, d tpgresource.TerraformRes
 		transformed["webWidgetConfig"] = transformedWebWidgetConfig
 	}
 
+	transformedWhatsappConfig, err := expandCESDeploymentChannelProfileWhatsappConfig(original["whatsapp_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWhatsappConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["whatsappConfig"] = transformedWhatsappConfig
+	}
+
 	return transformed, nil
 }
 
@@ -964,6 +1395,36 @@ func expandCESDeploymentChannelProfileDisableBargeInControl(v interface{}, d tpg
 }
 
 func expandCESDeploymentChannelProfileDisableDtmf(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentChannelProfileInstagramConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedInstagramAccountId, err := expandCESDeploymentChannelProfileInstagramConfigInstagramAccountId(original["instagram_account_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInstagramAccountId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["instagramAccountId"] = transformedInstagramAccountId
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentChannelProfileInstagramConfigInstagramAccountId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentChannelProfileNoiseSuppressionLevel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1111,7 +1572,279 @@ func expandCESDeploymentChannelProfileWebWidgetConfigSecuritySettingsEnableRecap
 	return v, nil
 }
 
+func expandCESDeploymentChannelProfileWhatsappConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPhoneNumber, err := expandCESDeploymentChannelProfileWhatsappConfigPhoneNumber(original["phone_number"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumber"] = transformedPhoneNumber
+	}
+
+	transformedPhoneNumberId, err := expandCESDeploymentChannelProfileWhatsappConfigPhoneNumberId(original["phone_number_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumberId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumberId"] = transformedPhoneNumberId
+	}
+
+	transformedWabaId, err := expandCESDeploymentChannelProfileWhatsappConfigWabaId(original["waba_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWabaId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["wabaId"] = transformedWabaId
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentChannelProfileWhatsappConfigPhoneNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentChannelProfileWhatsappConfigPhoneNumberId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentChannelProfileWhatsappConfigWabaId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCESDeploymentDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentExperimentConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedVersionRelease, err := expandCESDeploymentExperimentConfigVersionRelease(original["version_release"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVersionRelease); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["versionRelease"] = transformedVersionRelease
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentExperimentConfigVersionRelease(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedState, err := expandCESDeploymentExperimentConfigVersionReleaseState(original["state"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["state"] = transformedState
+	}
+
+	transformedTrafficAllocations, err := expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocations(original["traffic_allocations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTrafficAllocations); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["trafficAllocations"] = transformedTrafficAllocations
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentExperimentConfigVersionReleaseState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAppVersion, err := expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsAppVersion(original["app_version"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAppVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["appVersion"] = transformedAppVersion
+		}
+
+		transformedId, err := expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsId(original["id"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["id"] = transformedId
+		}
+
+		transformedTrafficPercentage, err := expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsTrafficPercentage(original["traffic_percentage"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTrafficPercentage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["trafficPercentage"] = transformedTrafficPercentage
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsAppVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentExperimentConfigVersionReleaseTrafficAllocationsTrafficPercentage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentInstagramCredentials(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAuthCode, err := expandCESDeploymentInstagramCredentialsAuthCode(original["auth_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authCode"] = transformedAuthCode
+	}
+
+	transformedConversationProfileId, err := expandCESDeploymentInstagramCredentialsConversationProfileId(original["conversation_profile_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConversationProfileId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["conversationProfileId"] = transformedConversationProfileId
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentInstagramCredentialsAuthCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentInstagramCredentialsConversationProfileId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentWhatsappCredentials(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAuthCode, err := expandCESDeploymentWhatsappCredentialsAuthCode(original["auth_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authCode"] = transformedAuthCode
+	}
+
+	transformedBusinessAccountId, err := expandCESDeploymentWhatsappCredentialsBusinessAccountId(original["business_account_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedBusinessAccountId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["businessAccountId"] = transformedBusinessAccountId
+	}
+
+	transformedConversationProfileId, err := expandCESDeploymentWhatsappCredentialsConversationProfileId(original["conversation_profile_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConversationProfileId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["conversationProfileId"] = transformedConversationProfileId
+	}
+
+	transformedPhoneNumber, err := expandCESDeploymentWhatsappCredentialsPhoneNumber(original["phone_number"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumber"] = transformedPhoneNumber
+	}
+
+	transformedPin, err := expandCESDeploymentWhatsappCredentialsPin(original["pin"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPin); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pin"] = transformedPin
+	}
+
+	transformedWabaId, err := expandCESDeploymentWhatsappCredentialsWabaId(original["waba_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWabaId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["wabaId"] = transformedWabaId
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentWhatsappCredentialsAuthCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentWhatsappCredentialsBusinessAccountId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentWhatsappCredentialsConversationProfileId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentWhatsappCredentialsPhoneNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentWhatsappCredentialsPin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentWhatsappCredentialsWabaId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1138,10 +1871,19 @@ func ResourceCESDeploymentFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("etag", flattenCESDeploymentEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+	if err = d.Set("experiment_config", flattenCESDeploymentExperimentConfig(res["experimentConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Deployment: %s", err)
+	}
+	if err = d.Set("instagram_credentials", flattenCESDeploymentInstagramCredentials(res["instagramCredentials"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Deployment: %s", err)
+	}
 	if err = d.Set("name", flattenCESDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
 	if err = d.Set("update_time", flattenCESDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Deployment: %s", err)
+	}
+	if err = d.Set("whatsapp_credentials", flattenCESDeploymentWhatsappCredentials(res["whatsappCredentials"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
 

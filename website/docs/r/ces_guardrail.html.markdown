@@ -434,6 +434,12 @@ The following arguments are supported:
   based on the LLM classification.
   Structure is [documented below](#nested_llm_prompt_security).
 
+* `model_armor` -
+  (Optional)
+  Guardrail that uses Cloud Model Armor to sanitize the prompt or response.
+  If the prompt or response is sanitized, the guardrail is triggered.
+  Structure is [documented below](#nested_model_armor).
+
 * `model_safety` -
   (Optional)
   Model safety settings overrides. When this is set, it will override the
@@ -543,6 +549,11 @@ The following arguments are supported:
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
 
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
+
 * `python_code` -
   (Required)
   The python code to execute for the callback.
@@ -557,6 +568,11 @@ The following arguments are supported:
   (Optional)
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
+
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
 
 * `python_code` -
   (Required)
@@ -573,6 +589,11 @@ The following arguments are supported:
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
 
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
+
 * `python_code` -
   (Required)
   The python code to execute for the callback.
@@ -587,6 +608,11 @@ The following arguments are supported:
   (Optional)
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
+
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
 
 * `python_code` -
   (Required)
@@ -756,6 +782,24 @@ The following arguments are supported:
   The default prompt template used by the system.
   This field is for display purposes to show the user what prompt
   the system uses by default. It is OUTPUT_ONLY.
+
+<a name="nested_model_armor"></a>The `model_armor` block supports:
+
+* `fail_open` -
+  (Optional)
+  If true, the guardrail will not trigger if it receives any errors from
+  the model armor service. By default, the guardrail will trigger if it
+  receives any errors from the model armor service.
+
+* `model_armor_template` -
+  (Required)
+  Model armor template resource name.
+  Format: `projects/{project_id}/locations/{location}/templates/{template_id}`
+
+* `sanitization_scope` -
+  (Required)
+  When to run the sanitization check with model armor.
+  Possible values: SANITIZATION_SCOPE_UNSPECIFIED, PROMPT, RESPONSE, PROMPT_AND_RESPONSE.
 
 <a name="nested_model_safety"></a>The `model_safety` block supports:
 

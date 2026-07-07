@@ -113,7 +113,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_account_auth_config" 
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         service_account_auth_config {
@@ -174,7 +174,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_account_auth_config" 
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service-updated"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service-updated"
     }
     api_authentication {
         service_account_auth_config {
@@ -270,7 +270,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_oauth_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         oauth_config {
@@ -330,7 +330,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_oauth_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         oauth_config {
@@ -429,7 +429,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_agent_id_token_auth_c
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         service_agent_id_token_auth_config {
@@ -484,7 +484,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_agent_id_token_auth_c
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         service_agent_id_token_auth_config {
@@ -578,7 +578,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_api_key_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         api_key_config {
@@ -636,7 +636,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_api_key_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         api_key_config {
@@ -740,7 +740,7 @@ resource "google_ces_toolset" "ces_toolset_bearer_token_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
       bearer_token_config {
@@ -803,7 +803,7 @@ resource "google_ces_toolset" "ces_toolset_bearer_token_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
        bearer_token_config {
@@ -880,6 +880,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_account_auth_config" {
   location = "us"
   app      = google_ces_app.ces_app_for_toolset.app_id
   display_name = "Basic toolset display name"
+  timeout  = "30s"
   mcp_toolset {
     server_address = "https://api.example.com/mcp/"
     tls_config {
@@ -889,13 +890,18 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_account_auth_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         service_account_auth_config {
             service_account = "${google_service_account.ces_test_service_account.email}"
             scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         }
+    }
+    tool_overrides {
+        tool = "my-tool"
+        name_override = "my-tool-alias"
+        description_override = "overridden tool description"
     }
   }
 }
@@ -928,6 +934,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_account_auth_config" {
   location = "us"
   app      = google_ces_app.ces_app_for_toolset.app_id
   display_name = "Basic toolset display name"
+  timeout  = "45s"
   mcp_toolset {
     server_address = "https://api.example.com/mcp/"
     tls_config {
@@ -937,13 +944,18 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_account_auth_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service-updated"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service-updated"
     }
     api_authentication {
         service_account_auth_config {
             service_account = "${google_service_account.ces_test_service_account.email}"
             scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         }
+    }
+    tool_overrides {
+        tool = "my-tool"
+        name_override = "my-tool-alias-updated"
+        description_override = "overridden tool description updated"
     }
   }
 }
@@ -1020,7 +1032,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_oauth_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         oauth_config {
@@ -1067,7 +1079,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_oauth_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         oauth_config {
@@ -1153,7 +1165,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_bearer_token_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         bearer_token_config {
@@ -1196,7 +1208,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_bearer_token_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         bearer_token_config {
@@ -1280,7 +1292,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_api_key_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         api_key_config {
@@ -1327,7 +1339,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_api_key_config" {
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         api_key_config {
@@ -1414,7 +1426,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_agent_id_token_auth_confi
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         service_agent_id_token_auth_config {}
@@ -1458,10 +1470,145 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_agent_id_token_auth_confi
         }
     }
     service_directory_config {
-      service = "projects/example/locations/us/namespaces/namespace/services/service"
+      service = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
         service_agent_id_token_auth_config {}
+    }
+  }
+}
+`, context)
+}
+
+func TestAccCESToolset_cesToolsetConnectorToolsetExample_update(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCESToolsetDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCESToolset_cesToolsetConnectorToolsetExample_full(context),
+			},
+			{
+				ResourceName:            "google_ces_toolset.ces_toolset_connector",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"app_id"},
+			},
+			{
+				Config: testAccCESToolset_cesToolsetConnectorToolsetExample_update(context),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_ces_toolset.ces_toolset_connector", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_ces_toolset.ces_toolset_connector",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"app_id"},
+			},
+		},
+	})
+}
+
+func testAccCESToolset_cesToolsetConnectorToolsetExample_full(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_ces_app" "ces_app_for_toolset" {
+  app_id = "tf-test-app-id%{random_suffix}"
+  location = "us"
+  description = "App used as parent for CES Toolset example"
+  display_name = "tf-test-my-app%{random_suffix}"
+  language_settings {
+    default_language_code    = "en-US"
+    supported_language_codes = ["es-ES", "fr-FR"]
+    enable_multilingual_support = true
+    fallback_action          = "escalate"
+  }
+  time_zone_settings {
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_toolset" "ces_toolset_connector" {
+  toolset_id = "connector-toolset-%{random_suffix}"
+  location = "us"
+  app      = google_ces_app.ces_app_for_toolset.app_id
+  display_name = "Connector toolset display name"
+
+  connector_toolset {
+    connection = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/connections/my-connection"
+    auth_config {
+        oauth2_auth_code_config {
+            oauth_token = "$context.variables.connector_oauth_token"
+        }
+    }
+    connector_actions {
+        connection_action_id = "action-id-1"
+        input_fields = ["input_field_1"]
+    }
+    connector_actions {
+        entity_operation {
+            entity_id = "entity-1"
+            operation = "CREATE"
+        }
+        output_fields = ["output_field_1"]
+    }
+  }
+}
+`, context)
+}
+
+func testAccCESToolset_cesToolsetConnectorToolsetExample_update(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_ces_app" "ces_app_for_toolset" {
+  app_id = "tf-test-app-id%{random_suffix}"
+  location = "us"
+  description = "App used as parent for CES Toolset example"
+  display_name = "tf-test-my-app%{random_suffix}"
+  language_settings {
+    default_language_code    = "en-US"
+    supported_language_codes = ["es-ES", "fr-FR"]
+    enable_multilingual_support = true
+    fallback_action          = "escalate"
+  }
+  time_zone_settings {
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_toolset" "ces_toolset_connector" {
+  toolset_id = "connector-toolset-%{random_suffix}"
+  location = "us"
+  app      = google_ces_app.ces_app_for_toolset.app_id
+  display_name = "Connector toolset display name updated"
+
+  connector_toolset {
+    connection = "projects/\${google_ces_app.ces_app_for_toolset.project}/locations/us/connections/my-connection-updated"
+    auth_config {
+        oauth2_jwt_bearer_config {
+            client_key = "$context.variables.connector_client_key"
+            issuer = "$context.variables.connector_issuer"
+            subject = "$context.variables.connector_subject"
+        }
+    }
+    connector_actions {
+        connection_action_id = "action-id-2"
+        input_fields = ["input_field_1_updated"]
+    }
+    connector_actions {
+        entity_operation {
+            entity_id = "entity-2"
+            operation = "UPDATE"
+        }
+        output_fields = ["output_field_1_updated"]
     }
   }
 }

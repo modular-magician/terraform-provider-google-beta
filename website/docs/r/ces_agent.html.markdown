@@ -432,6 +432,11 @@ The following arguments are supported:
   List of toolsets for the agent.
   Structure is [documented below](#nested_toolsets).
 
+* `transfer_rules` -
+  (Optional)
+  Agent transfer rules. If multiple rules match, the first one in the list will be used.
+  Structure is [documented below](#nested_transfer_rules).
+
 * `agent_id` -
   (Optional)
   The ID to use for the agent, which will become the final component of
@@ -460,6 +465,11 @@ The following arguments are supported:
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
 
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
+
 * `python_code` -
   (Required)
   The python code to execute for the callback.
@@ -474,6 +484,11 @@ The following arguments are supported:
   (Optional)
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
+
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
 
 * `python_code` -
   (Required)
@@ -490,6 +505,11 @@ The following arguments are supported:
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
 
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
+
 * `python_code` -
   (Required)
   The python code to execute for the callback.
@@ -504,6 +524,11 @@ The following arguments are supported:
   (Optional)
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
+
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
 
 * `python_code` -
   (Required)
@@ -520,6 +545,11 @@ The following arguments are supported:
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
 
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
+
 * `python_code` -
   (Required)
   The python code to execute for the callback.
@@ -534,6 +564,11 @@ The following arguments are supported:
   (Optional)
   Whether the callback is disabled. Disabled callbacks are ignored by the
   agent.
+
+* `proactive_execution_enabled` -
+  (Optional)
+  If enabled, the callback will also be executed on intermediate model
+  outputs. This setting only affects after model callback.
 
 * `python_code` -
   (Required)
@@ -576,6 +611,12 @@ The following arguments are supported:
   The mapping of the app variables names to the Dialogflow session
   parameters names to be sent to the Dialogflow agent as input.
 
+* `language_code_variable` -
+  (Optional)
+  The name of the variable that contains the language code to be used for
+  the Dialogflow session. If unspecified, the default language code of the
+  Dialogflow agent will be used.
+
 * `output_variable_mapping` -
   (Optional)
   The mapping of the Dialogflow session parameters names to the app
@@ -597,6 +638,71 @@ The following arguments are supported:
 * `tool_ids` -
   (Optional)
   The tools IDs to filter the toolset.
+
+<a name="nested_transfer_rules"></a>The `transfer_rules` block supports:
+
+* `child_agent` -
+  (Required)
+  The resource name of the child agent the rule applies to.
+  Format: `projects/{project}/locations/{location}/apps/{app}/agents/{agent}`
+
+* `deterministic_transfer` -
+  (Optional)
+  Deterministic transfer rule. When the condition evaluates to true, the transfer occurs.
+  Structure is [documented below](#nested_transfer_rules_deterministic_transfer).
+
+* `direction` -
+  (Required)
+  The direction of the transfer.
+  Possible values:
+    - DIRECTION_UNSPECIFIED
+    - PARENT_TO_CHILD
+    - CHILD_TO_PARENT
+
+* `disable_planner_transfer` -
+  (Optional)
+  A rule that prevents the planner from transferring to the target agent.
+  Structure is [documented below](#nested_transfer_rules_disable_planner_transfer).
+
+
+<a name="nested_transfer_rules_deterministic_transfer"></a>The `deterministic_transfer` block supports:
+
+* `expression_condition` -
+  (Optional)
+  A rule that evaluates a session state condition. If the condition evaluates to true, the transfer occurs.
+  Structure is [documented below](#nested_transfer_rules_deterministic_transfer_expression_condition).
+
+* `python_code_condition` -
+  (Optional)
+  A rule that uses Python code block to evaluate the conditions. If the condition evaluates to true, the transfer occurs.
+  Structure is [documented below](#nested_transfer_rules_deterministic_transfer_python_code_condition).
+
+
+<a name="nested_transfer_rules_deterministic_transfer_expression_condition"></a>The `expression_condition` block supports:
+
+* `expression` -
+  (Required)
+  The string representation of cloud.api.Expression condition.
+
+<a name="nested_transfer_rules_deterministic_transfer_python_code_condition"></a>The `python_code_condition` block supports:
+
+* `python_code` -
+  (Required)
+  The python code to execute.
+
+<a name="nested_transfer_rules_disable_planner_transfer"></a>The `disable_planner_transfer` block supports:
+
+* `expression_condition` -
+  (Required)
+  If the condition evaluates to true, planner will not be allowed to transfer to the target agent.
+  Structure is [documented below](#nested_transfer_rules_disable_planner_transfer_expression_condition).
+
+
+<a name="nested_transfer_rules_disable_planner_transfer_expression_condition"></a>The `expression_condition` block supports:
+
+* `expression` -
+  (Required)
+  The string representation of cloud.api.Expression condition.
 
 ## Attributes Reference
 
