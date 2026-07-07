@@ -205,6 +205,8 @@ fields:
     api_field: 'properties.scheduling.localSsdRecoveryTimeout.nanos'
   - field: 'scheduling.local_ssd_recovery_timeout.seconds'
     api_field: 'properties.scheduling.localSsdRecoveryTimeout.seconds'
+  - field: 'scheduling.location_hint'
+    api_field: 'properties.scheduling.locationHint'
   - field: 'scheduling.maintenance_interval'
     api_field: 'properties.scheduling.maintenanceInterval'
   - field: 'scheduling.max_run_duration.nanos'

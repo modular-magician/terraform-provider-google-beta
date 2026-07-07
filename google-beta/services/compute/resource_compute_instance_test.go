@@ -1989,6 +1989,7 @@ func TestAccComputeInstance_scheduling(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "scheduling.0.location_hint", "custom-hint"),
 				),
 			},
 			computeInstanceImportStep("us-central1-a", instanceName, []string{}),
@@ -9234,6 +9235,7 @@ resource "google_compute_instance" "foobar" {
 
   scheduling {
     automatic_restart = false
+    location_hint     = "custom-hint"
   }
 }
 `, instance)
@@ -9264,6 +9266,7 @@ resource "google_compute_instance" "foobar" {
   scheduling {
     automatic_restart = false
     preemptible       = true
+    location_hint     = "custom-hint"
   }
 }
 `, instance)
