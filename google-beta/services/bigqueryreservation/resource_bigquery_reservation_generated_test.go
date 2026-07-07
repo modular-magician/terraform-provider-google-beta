@@ -74,7 +74,7 @@ func TestAccBigqueryReservationReservation_bigqueryReservationBasicExample(t *te
 				ResourceName:            "google_bigquery_reservation.reservation",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "name", "reservation_group"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "reservation_group", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_bigquery_reservation.reservation",
@@ -100,6 +100,9 @@ resource "google_bigquery_reservation" "reservation" {
 	autoscale {
    	  max_slots = 100
     }
+	labels = {
+	  "environment" = "production"
+	}
 }
 `, context)
 }
@@ -126,7 +129,7 @@ func TestAccBigqueryReservationReservation_bigqueryReservationWithDisasterRecove
 				ResourceName:            "google_bigquery_reservation.reservation",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "name", "reservation_group"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "reservation_group", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_bigquery_reservation.reservation",
