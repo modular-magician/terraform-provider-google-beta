@@ -77,6 +77,12 @@ func TestAccSecretManagerSecretVersion_secretVersionBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project", "secret"},
 			},
+			{
+				ResourceName:       "google_secret_manager_secret_version.secret-version-basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -128,6 +134,12 @@ func TestAccSecretManagerSecretVersion_secretVersionBasicWriteOnlyExample(t *tes
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project", "secret"},
+			},
+			{
+				ResourceName:       "google_secret_manager_secret_version.secret-version-basic-write-only",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -181,6 +193,12 @@ func TestAccSecretManagerSecretVersion_secretVersionDeletionPolicyAbandonExample
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_policy", "project", "secret"},
 			},
+			{
+				ResourceName:       "google_secret_manager_secret_version.secret-version-deletion-policy",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -232,6 +250,12 @@ func TestAccSecretManagerSecretVersion_secretVersionDeletionPolicyDisableExample
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_policy", "project", "secret"},
+			},
+			{
+				ResourceName:       "google_secret_manager_secret_version.secret-version-deletion-policy",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -285,6 +309,12 @@ func TestAccSecretManagerSecretVersion_secretVersionWithBase64StringSecretDataEx
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"is_secret_data_base64", "project", "secret"},
 			},
+			{
+				ResourceName:       "google_secret_manager_secret_version.secret-version-base64",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -336,6 +366,12 @@ func TestAccSecretManagerSecretVersion_secretVersionWithBase64StringSecretDataWr
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"is_secret_data_base64", "project", "secret"},
+			},
+			{
+				ResourceName:       "google_secret_manager_secret_version.secret-version-base64-write-only",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

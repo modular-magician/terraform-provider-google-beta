@@ -146,6 +146,25 @@ func ResourceSecretManagerSecretVersion() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"version": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"secret": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
+		ResourceBehavior: schema.ResourceBehavior{
+			MutableIdentity: true,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"secret_data_wo_version": {
 				Type:        schema.TypeInt,
@@ -343,6 +362,22 @@ func resourceSecretManagerSecretVersionCreate(d *schema.ResourceData, meta inter
 
 	log.Printf("[DEBUG] Finished creating SecretVersion %q: %#v", d.Id(), res)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if versionValue, ok := d.GetOk("version"); ok && versionValue.(string) != "" {
+			if err = identity.Set("version", versionValue.(string)); err != nil {
+				return fmt.Errorf("Error setting version: %s", err)
+			}
+		}
+		if secretValue, ok := d.GetOk("secret"); ok && secretValue.(string) != "" {
+			if err = identity.Set("secret", secretValue.(string)); err != nil {
+				return fmt.Errorf("Error setting secret: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	return resourceSecretManagerSecretVersionRead(d, meta)
 }
 
@@ -415,6 +450,24 @@ func resourceSecretManagerSecretVersionRead(d *schema.ResourceData, meta interfa
 	err = ResourceSecretManagerSecretVersionFlatten(d, meta, res, config, userAgent, billingProject, url, headers)
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("version"); !ok && v == "" {
+			err = identity.Set("version", d.Get("version").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting version: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("secret"); !ok && v == "" {
+			err = identity.Set("secret", d.Get("secret").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting secret: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 
 	return nil
@@ -503,26 +556,49 @@ func resourceSecretManagerSecretVersionImport(d *schema.ResourceData, meta inter
 	config := meta.(*transport_tpg.Config)
 
 	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
+	if err := tpgresource.ParseImportId([]string{"(?P<secret>projects/.+/secrets/.+)/versions/(?P<version>.+)$"}, d, config); err != nil {
 		return nil, err
 	}
 
 	name := d.Get("name").(string)
-	secretRegex := regexp.MustCompile("(projects/.+/secrets/.+)/versions/.+$")
-	versionRegex := regexp.MustCompile("projects/(.+)/secrets/(.+)/versions/(.+)$")
+	if name == "" {
+		secret := d.Get("secret").(string)
+		version := d.Get("version").(string)
+		if secret == "" || version == "" {
+			return nil, fmt.Errorf("Error setting import identity: both secret and version must be set")
+		}
 
-	parts := secretRegex.FindStringSubmatch(name)
-	if len(parts) != 2 {
+		name = fmt.Sprintf("%s/versions/%s", secret, version)
+		if err := d.Set("name", name); err != nil {
+			return nil, fmt.Errorf("Error setting name: %s", err)
+		}
+		d.SetId(name)
+	}
+
+	versionRegex := regexp.MustCompile("^projects/([^/]+)/secrets/([^/]+)/versions/(.+)$")
+
+	parts := versionRegex.FindStringSubmatch(name)
+	if len(parts) != 4 {
 		return nil, fmt.Errorf("Version name does not fit the format `projects/{{project}}/secrets/{{secret}}/versions/{{version}}`")
 	}
-	if err := d.Set("secret", parts[1]); err != nil {
+	secretName := fmt.Sprintf("projects/%s/secrets/%s", parts[1], parts[2])
+	if err := d.Set("secret", secretName); err != nil {
 		return nil, fmt.Errorf("Error setting secret: %s", err)
 	}
 
-	parts = versionRegex.FindStringSubmatch(name)
-
 	if err := d.Set("version", parts[3]); err != nil {
 		return nil, fmt.Errorf("Error setting version: %s", err)
+	}
+
+	if err := d.Set("project", parts[1]); err != nil {
+		return nil, fmt.Errorf("Error setting project: %s", err)
+	}
+
+	if err := tpgresource.SetResourceIdentityAttributes(d, map[string]interface{}{
+		"secret":  secretName,
+		"version": parts[3],
+	}); err != nil {
+		return nil, err
 	}
 
 	// Explicitly set virtual fields to default values on import
