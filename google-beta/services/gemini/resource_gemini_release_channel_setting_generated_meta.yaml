@@ -13,12 +13,10 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: releaseChannel
-    - field: release_channel_setting_id
-      provider_only: true
+    - api_field: releaseChannelSettingId
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime

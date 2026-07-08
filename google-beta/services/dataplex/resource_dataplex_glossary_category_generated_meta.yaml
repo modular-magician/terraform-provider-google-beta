@@ -7,18 +7,15 @@ api_service_name: dataplex.googleapis.com
 api_version: v1
 api_resource_type_kind: GlossaryCategory
 fields:
-    - field: category_id
-      provider_only: true
+    - api_field: categoryId
     - api_field: createTime
     - api_field: description
     - api_field: displayName
     - field: effective_labels
       provider_only: true
-    - field: glossary_id
-      provider_only: true
+    - api_field: glossaryId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: parent
     - field: terraform_labels

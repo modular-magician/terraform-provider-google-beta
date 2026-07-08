@@ -12,16 +12,13 @@ fields:
     - api_field: accessSettings.enableWebApp
     - api_field: accessSettings.languageCode
     - api_field: accessSettings.workforceIdentityPoolProvider
-    - field: collection_id
-      provider_only: true
+    - api_field: collectionId
     - api_field: configId
-    - field: engine_id
-      provider_only: true
+    - api_field: engineId
     - api_field: homepageSetting.shortcuts.destinationUri
     - api_field: homepageSetting.shortcuts.icon.url
     - api_field: homepageSetting.shortcuts.title
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: uiBranding.logo.url
     - api_field: uiSettings.dataStoreUiConfigs.facetField.displayName
@@ -56,5 +53,4 @@ fields:
     - api_field: uiSettings.generativeAnswerConfig.resultCount
     - api_field: uiSettings.interactionType
     - api_field: uiSettings.resultDescriptionType
-    - field: widget_config_id
-      provider_only: true
+    - api_field: widgetConfigId

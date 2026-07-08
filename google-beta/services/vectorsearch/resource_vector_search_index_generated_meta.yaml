@@ -9,8 +9,7 @@ api_resource_type_kind: Index
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: collection_id
-      provider_only: true
+    - api_field: collectionId
     - api_field: createTime
     - api_field: dedicatedInfrastructure.autoscalingSpec.maxReplicaCount
     - api_field: dedicatedInfrastructure.autoscalingSpec.minReplicaCount
@@ -23,11 +22,9 @@ fields:
       provider_only: true
     - api_field: filterFields
     - api_field: indexField
-    - field: index_id
-      provider_only: true
+    - api_field: indexId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: storeFields
     - field: terraform_labels

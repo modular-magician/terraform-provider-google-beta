@@ -9,17 +9,14 @@ api_resource_type_kind: AppVersion
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: app
-      provider_only: true
-    - field: app_version_id
-      provider_only: true
+    - api_field: app
+    - api_field: appVersionId
     - api_field: createTime
     - api_field: creator
     - api_field: description
     - api_field: displayName
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: snapshot.agents.afterAgentCallbacks.description
     - api_field: snapshot.agents.afterAgentCallbacks.disabled

@@ -12,11 +12,8 @@ fields:
     - api_field: disabled
     - api_field: name
     - api_field: state
-    - field: workload_identity_pool_id
-      provider_only: true
-    - field: workload_identity_pool_managed_identity_id
-      provider_only: true
-    - field: workload_identity_pool_namespace_id
-      provider_only: true
+    - api_field: workload_identity_pool_id
+    - api_field: workload_identity_pool_managed_identity_id
+    - api_field: workload_identity_pool_namespace_id
     - field: deletion_policy
       provider_only: true

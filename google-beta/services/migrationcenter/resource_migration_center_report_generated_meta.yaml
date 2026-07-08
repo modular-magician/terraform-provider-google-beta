@@ -12,13 +12,10 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: displayName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: report_config
-      provider_only: true
-    - field: report_id
-      provider_only: true
+    - api_field: report_config
+    - api_field: reportId
     - api_field: state
     - api_field: summary.allAssetsStats.coreCountHistogram.buckets.count
     - api_field: summary.allAssetsStats.coreCountHistogram.buckets.lowerBound

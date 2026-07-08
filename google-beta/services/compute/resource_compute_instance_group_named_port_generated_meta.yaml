@@ -9,13 +9,11 @@ api_resource_type_kind: InstanceGroup
 api_variant_patterns:
     - projects/{project}/zones/{zone}/instanceGroups/{instanceGroup}
 fields:
-    - field: group
-      provider_only: true
+    - api_field: group
     - api_field: namedPorts.name
       field: name
     - api_field: namedPorts.port
       field: port
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

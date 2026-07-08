@@ -25,8 +25,7 @@ fields:
     - api_field: bitbucketDataCenterConfig.serviceDirectoryConfig.service
     - api_field: bitbucketDataCenterConfig.sslCaCertificate
     - api_field: bitbucketDataCenterConfig.webhookSecretSecretVersion
-    - field: connection_id
-      provider_only: true
+    - api_field: connectionId
     - api_field: createTime
     - api_field: cryptoKeyConfig.keyReference
     - api_field: deleteTime
@@ -75,8 +74,7 @@ fields:
     - api_field: installationState.message
     - api_field: installationState.stage
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: reconciling
     - field: terraform_labels

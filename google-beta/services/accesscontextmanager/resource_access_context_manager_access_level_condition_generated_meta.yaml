@@ -7,8 +7,7 @@ api_service_name: accesscontextmanager.googleapis.com
 api_version: v1
 api_resource_type_kind: AccessLevel
 fields:
-    - field: access_level
-      provider_only: true
+    - api_field: accessLevel
     - field: access_policy_id
       provider_only: true
     - api_field: basic.conditions.devicePolicy.allowedDeviceManagementLevels

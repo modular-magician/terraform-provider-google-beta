@@ -8,8 +8,7 @@ api_version: beta
 api_resource_type_kind: NetworkEndpointGroup
 fields:
     - api_field: fqdn
-    - field: global_network_endpoint_group
-      provider_only: true
+    - api_field: globalNetworkEndpointGroup
     - api_field: ipAddress
     - api_field: port
     - field: deletion_policy

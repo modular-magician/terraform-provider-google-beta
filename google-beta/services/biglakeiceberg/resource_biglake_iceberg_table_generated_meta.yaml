@@ -7,12 +7,10 @@ api_service_name: biglake.googleapis.com
 api_version: v1
 api_resource_type_kind: IcebergTable
 fields:
-    - field: catalog
-      provider_only: true
+    - api_field: catalog
     - api_field: location
     - api_field: name
-    - field: namespace
-      provider_only: true
+    - api_field: namespace
     - api_field: partition-spec.fields.field-id
     - api_field: partition-spec.fields.name
     - api_field: partition-spec.fields.source-id

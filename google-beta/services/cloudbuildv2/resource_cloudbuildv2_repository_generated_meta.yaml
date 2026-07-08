@@ -12,11 +12,9 @@ fields:
     - field: effective_annotations
       provider_only: true
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: parent_connection
-      provider_only: true
+    - api_field: parent_connection
     - api_field: remoteUri
     - api_field: updateTime
     - field: deletion_policy

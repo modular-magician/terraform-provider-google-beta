@@ -83,7 +83,6 @@ fields:
       field: redirect_options.target
     - api_field: rules.redirectOptions.type
       field: redirect_options.type
-    - field: security_policy
-      provider_only: true
+    - api_field: security_policy
     - field: deletion_policy
       provider_only: true

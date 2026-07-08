@@ -14,11 +14,9 @@ fields:
     - api_field: initialConfig.license
     - api_field: initialConfig.readme
     - api_field: instance
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: repository_id
-      provider_only: true
+    - api_field: repository_id
     - api_field: uid
     - api_field: updateTime
     - api_field: uris.api

@@ -16,13 +16,10 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: odb_subnet_id
-      provider_only: true
-    - field: odbnetwork
-      provider_only: true
+    - api_field: odbSubnetId
+    - api_field: odbnetwork
     - api_field: purpose
     - api_field: state
     - field: terraform_labels

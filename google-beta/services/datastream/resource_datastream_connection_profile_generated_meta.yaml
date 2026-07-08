@@ -8,10 +8,8 @@ api_version: v1
 api_resource_type_kind: ConnectionProfile
 fields:
     - api_field: bigqueryProfile
-    - field: connection_profile_id
-      provider_only: true
-    - field: create_without_validation
-      provider_only: true
+    - api_field: connectionProfileId
+    - api_field: create_without_validation
     - api_field: displayName
     - field: effective_labels
       provider_only: true
@@ -23,8 +21,7 @@ fields:
     - api_field: gcsProfile.bucket
     - api_field: gcsProfile.rootPath
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mongodbProfile.additionalOptions
     - api_field: mongodbProfile.hostAddresses.hostname
     - api_field: mongodbProfile.hostAddresses.port

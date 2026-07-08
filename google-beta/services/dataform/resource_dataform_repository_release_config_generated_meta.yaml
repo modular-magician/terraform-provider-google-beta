@@ -23,10 +23,8 @@ fields:
     - api_field: recentScheduledReleaseRecords.errorStatus.code
     - api_field: recentScheduledReleaseRecords.errorStatus.message
     - api_field: recentScheduledReleaseRecords.releaseTime
-    - field: region
-      provider_only: true
-    - field: repository
-      provider_only: true
+    - api_field: region
+    - api_field: repository
     - api_field: timeZone
     - field: deletion_policy
       provider_only: true

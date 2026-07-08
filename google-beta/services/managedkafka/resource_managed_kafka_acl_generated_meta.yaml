@@ -11,13 +11,10 @@ fields:
     - api_field: aclEntries.operation
     - api_field: aclEntries.permissionType
     - api_field: aclEntries.principal
-    - field: acl_id
-      provider_only: true
-    - field: cluster
-      provider_only: true
+    - api_field: aclId
+    - api_field: cluster
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: patternType
     - api_field: resourceName

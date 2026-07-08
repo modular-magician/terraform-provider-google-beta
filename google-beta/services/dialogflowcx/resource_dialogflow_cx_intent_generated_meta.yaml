@@ -23,8 +23,7 @@ fields:
     - api_field: parameters.id
     - api_field: parameters.isList
     - api_field: parameters.redact
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: priority
     - field: terraform_labels
       provider_only: true

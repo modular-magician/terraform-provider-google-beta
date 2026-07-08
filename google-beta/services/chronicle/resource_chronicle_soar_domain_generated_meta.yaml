@@ -11,10 +11,8 @@ autogen_version: 1
 fields:
     - api_field: displayName
     - api_field: environmentsJson
-    - field: instance
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: instance
+    - api_field: location
     - api_field: name
     - api_field: soarDomainId
     - field: deletion_policy

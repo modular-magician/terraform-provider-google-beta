@@ -46,8 +46,7 @@ fields:
     - api_field: latestCreatedRevision
     - api_field: latestReadyRevision
     - api_field: launchStage
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: observedGeneration
     - api_field: reconciling

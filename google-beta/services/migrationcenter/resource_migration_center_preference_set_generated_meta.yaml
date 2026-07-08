@@ -12,11 +12,9 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: displayName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: preference_set_id
-      provider_only: true
+    - api_field: preferenceSetId
     - api_field: updateTime
     - api_field: virtualMachinePreferences.commitmentPlan
     - api_field: virtualMachinePreferences.computeEnginePreferences.licenseType

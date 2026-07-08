@@ -12,8 +12,7 @@ fields:
       provider_only: true
     - api_field: excludedNetworks
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - field: terraform_labels
       provider_only: true

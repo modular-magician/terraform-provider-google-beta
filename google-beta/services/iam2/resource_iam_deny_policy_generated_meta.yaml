@@ -11,10 +11,8 @@ cai_asset_name_formats:
 fields:
     - api_field: displayName
     - api_field: etag
-    - field: name
-      provider_only: true
-    - field: parent
-      provider_only: true
+    - api_field: name
+    - api_field: parent
     - api_field: rules.denyRule.denialCondition.description
     - api_field: rules.denyRule.denialCondition.expression
     - api_field: rules.denyRule.denialCondition.location

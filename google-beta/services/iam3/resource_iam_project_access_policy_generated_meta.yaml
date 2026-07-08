@@ -9,8 +9,7 @@ api_resource_type_kind: AccessPolicy
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: access_policy_id
-      provider_only: true
+    - api_field: accessPolicyId
     - api_field: annotations
     - api_field: createTime
     - api_field: details.rules.conditions.key
@@ -27,8 +26,7 @@ fields:
     - field: effective_annotations
       provider_only: true
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: uid
     - api_field: updateTime

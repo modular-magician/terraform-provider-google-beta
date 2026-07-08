@@ -11,13 +11,10 @@ cai_asset_name_formats:
 api_variant_patterns:
     - folders/{folder}/locations/{location}/notificationConfigs/{notificationConfig}
 fields:
-    - field: config_id
-      provider_only: true
+    - api_field: configId
     - api_field: description
-    - field: folder
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: folder
+    - api_field: location
     - api_field: name
     - api_field: pubsubTopic
     - api_field: serviceAccount

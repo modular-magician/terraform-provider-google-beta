@@ -52,8 +52,7 @@ fields:
     - api_field: readReplicasMode
     - api_field: redisConfigs
     - api_field: redisVersion
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: replicaCount
     - api_field: reservedIpRange
     - api_field: secondaryIpRange

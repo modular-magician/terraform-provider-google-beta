@@ -9,14 +9,11 @@ api_resource_type_kind: AppProfile
 cai_asset_name_formats:
     - //bigtable.googleapis.com/projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}
 fields:
-    - field: app_profile_id
-      provider_only: true
+    - api_field: appProfileId
     - api_field: dataBoostIsolationReadOnly.computeBillingOwner
     - api_field: description
-    - field: ignore_warnings
-      provider_only: true
-    - field: instance
-      provider_only: true
+    - api_field: ignoreWarnings
+    - api_field: instance
     - api_field: multiClusterRoutingUseAny
     - api_field: name
     - api_field: singleClusterRouting.allowTransactionalWrites

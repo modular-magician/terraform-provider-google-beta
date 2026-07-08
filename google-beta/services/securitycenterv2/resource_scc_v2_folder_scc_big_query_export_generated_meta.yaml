@@ -9,16 +9,13 @@ api_resource_type_kind: BigQueryExport
 api_variant_patterns:
     - folders/{folder}/locations/{location}/bigQueryExports/{bigQueryExport}
 fields:
-    - field: big_query_export_id
-      provider_only: true
+    - api_field: bigQueryExportId
     - api_field: createTime
     - api_field: dataset
     - api_field: description
     - api_field: filter
-    - field: folder
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: folder
+    - api_field: location
     - api_field: mostRecentEditor
     - api_field: name
     - api_field: principal

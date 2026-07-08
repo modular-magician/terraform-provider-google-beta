@@ -10,8 +10,7 @@ fields:
     - field: create_ignore_already_exists
       provider_only: true
     - api_field: createTime
-    - field: group
-      provider_only: true
+    - api_field: group
     - api_field: memberKey.id
     - api_field: memberKey.namespace
     - api_field: name

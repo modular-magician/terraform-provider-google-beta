@@ -8,12 +8,10 @@ api_version: v1
 api_resource_type_kind: DnsZone
 fields:
     - api_field: description
-    - field: dns_zone_id
-      provider_only: true
+    - api_field: dnsZoneId
     - api_field: domain
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: peeringConfig.targetNetworkId
     - api_field: peeringConfig.targetProjectId
     - field: deletion_policy

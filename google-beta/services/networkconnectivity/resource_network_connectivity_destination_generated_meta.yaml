@@ -18,10 +18,8 @@ fields:
     - api_field: etag
     - api_field: ipPrefix
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: multicloud_data_transfer_config
-      provider_only: true
+    - api_field: location
+    - api_field: multicloudDataTransferConfig
     - api_field: name
     - api_field: stateTimeline.states.effectiveTime
     - api_field: stateTimeline.states.state

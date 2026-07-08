@@ -15,22 +15,18 @@ fields:
     - api_field: boostAction.interpolationBoostSpec.controlPoint.boostAmount
     - api_field: boostAction.interpolationBoostSpec.fieldName
     - api_field: boostAction.interpolationBoostSpec.interpolationType
-    - field: collection_id
-      provider_only: true
+    - api_field: collectionId
     - api_field: conditions.activeTimeRange.endTime
     - api_field: conditions.activeTimeRange.startTime
     - api_field: conditions.queryRegex
     - api_field: conditions.queryTerms.fullMatch
     - api_field: conditions.queryTerms.value
-    - field: control_id
-      provider_only: true
+    - api_field: controlId
     - api_field: displayName
-    - field: engine_id
-      provider_only: true
+    - api_field: engineId
     - api_field: filterAction.dataStore
     - api_field: filterAction.filter
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: promoteAction.dataStore
     - api_field: promoteAction.searchLinkPromotion.description

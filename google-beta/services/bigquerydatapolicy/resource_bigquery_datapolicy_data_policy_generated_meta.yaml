@@ -11,8 +11,7 @@ fields:
     - api_field: dataMaskingPolicy.routine
     - api_field: dataPolicyId
     - api_field: dataPolicyType
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: policyTag
     - field: deletion_policy

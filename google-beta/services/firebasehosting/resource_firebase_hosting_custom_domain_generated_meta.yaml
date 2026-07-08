@@ -26,8 +26,7 @@ fields:
     - api_field: cert.verification.http.path
     - api_field: certPreference
     - api_field: createTime
-    - field: custom_domain
-      provider_only: true
+    - api_field: custom_domain
     - api_field: deleteTime
     - api_field: etag
     - api_field: expireTime
@@ -51,8 +50,7 @@ fields:
     - api_field: requiredDnsUpdates.discovered.records.rdata
     - api_field: requiredDnsUpdates.discovered.records.requiredAction
     - api_field: requiredDnsUpdates.discovered.records.type
-    - field: site_id
-      provider_only: true
+    - api_field: site_id
     - api_field: updateTime
     - field: wait_dns_verification
       provider_only: true

@@ -13,11 +13,9 @@ fields:
     - api_field: description
     - api_field: displayName
     - api_field: isDefault
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: qa_scorecard_id
-      provider_only: true
+    - api_field: qaScorecardId
     - api_field: source
     - api_field: updateTime
     - field: deletion_policy

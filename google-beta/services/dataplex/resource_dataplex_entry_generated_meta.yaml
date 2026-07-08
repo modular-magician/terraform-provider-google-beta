@@ -15,10 +15,8 @@ fields:
     - api_field: aspects.aspect.updateTime
     - api_field: aspects.aspectKey
     - api_field: createTime
-    - field: entry_group_id
-      provider_only: true
-    - field: entry_id
-      provider_only: true
+    - api_field: entryGroupId
+    - api_field: entryId
     - api_field: entrySource.ancestors.name
     - api_field: entrySource.ancestors.type
     - api_field: entrySource.createTime
@@ -32,8 +30,7 @@ fields:
     - api_field: entrySource.updateTime
     - api_field: entryType
     - api_field: fullyQualifiedName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: parentEntry
     - api_field: updateTime

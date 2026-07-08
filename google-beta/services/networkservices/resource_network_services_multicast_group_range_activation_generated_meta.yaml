@@ -15,14 +15,12 @@ fields:
       provider_only: true
     - api_field: ipCidrRange
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logConfig.enabled
     - api_field: multicastDomainActivation
     - api_field: multicastGroupConsumerActivations
     - api_field: multicastGroupRange
-    - field: multicast_group_range_activation_id
-      provider_only: true
+    - api_field: multicastGroupRangeActivationId
     - api_field: name
     - api_field: state.state
     - field: terraform_labels

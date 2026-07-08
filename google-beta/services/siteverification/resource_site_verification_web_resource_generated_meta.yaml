@@ -10,8 +10,7 @@ fields:
     - api_field: owners
     - api_field: site.identifier
     - api_field: site.type
-    - field: verification_method
-      provider_only: true
+    - api_field: verification_method
     - api_field: id
       field: web_resource_id
     - field: deletion_policy

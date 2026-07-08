@@ -15,10 +15,8 @@ fields:
     - api_field: bigqueryTableSpec.viewSpec.viewQuery
     - api_field: description
     - api_field: displayName
-    - field: entry_group
-      provider_only: true
-    - field: entry_id
-      provider_only: true
+    - api_field: entryGroup
+    - api_field: entryId
     - api_field: gcsFilesetSpec.filePatterns
     - api_field: gcsFilesetSpec.sampleGcsFileSpecs.filePath
     - api_field: gcsFilesetSpec.sampleGcsFileSpecs.sizeBytes

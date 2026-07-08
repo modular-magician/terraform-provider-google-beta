@@ -9,11 +9,9 @@ api_resource_type_kind: Assignment
 fields:
     - api_field: assignee
     - api_field: jobType
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: reservation
-      provider_only: true
+    - api_field: reservation
     - api_field: state
     - field: deletion_policy
       provider_only: true

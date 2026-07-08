@@ -9,8 +9,7 @@ api_resource_type_kind: Subscription
 fields:
     - api_field: commercialInfo.cloudMarketplace.order
     - api_field: creationTime
-    - field: data_exchange_id
-      provider_only: true
+    - api_field: dataExchangeId
     - api_field: destinationDataset.datasetReference.datasetId
     - api_field: destinationDataset.datasetReference.projectId
     - api_field: destinationDataset.description
@@ -27,10 +26,8 @@ fields:
       field: linked_dataset_map.listing
     - api_field: linkedResources.linkedDataset
     - api_field: linkedResources.listing
-    - field: listing_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: listingId
+    - api_field: location
     - api_field: logLinkedDatasetQueryUserEmail
     - api_field: name
     - api_field: organizationDisplayName

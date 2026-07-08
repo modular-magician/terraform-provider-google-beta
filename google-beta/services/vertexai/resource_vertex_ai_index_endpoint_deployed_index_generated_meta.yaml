@@ -20,8 +20,7 @@ fields:
     - api_field: displayName
     - api_field: enableAccessLogging
     - api_field: index
-    - field: index_endpoint
-      provider_only: true
+    - api_field: indexEndpoint
     - api_field: indexSyncTime
     - api_field: name
     - api_field: privateEndpoints.matchGrpcAddress
@@ -29,8 +28,7 @@ fields:
     - api_field: privateEndpoints.pscAutomatedEndpoints.network
     - api_field: privateEndpoints.pscAutomatedEndpoints.projectId
     - api_field: privateEndpoints.serviceAttachment
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: reservedIpRanges
     - field: deletion_policy
       provider_only: true

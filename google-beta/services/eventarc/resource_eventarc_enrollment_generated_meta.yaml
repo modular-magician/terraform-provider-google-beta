@@ -16,12 +16,10 @@ fields:
       provider_only: true
     - field: effective_labels
       provider_only: true
-    - field: enrollment_id
-      provider_only: true
+    - api_field: enrollmentId
     - api_field: etag
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: messageBus
     - api_field: name
     - field: terraform_labels

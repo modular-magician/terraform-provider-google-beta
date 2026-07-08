@@ -7,15 +7,13 @@ api_service_name: healthcare.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: ConsentStore
 fields:
-    - field: dataset
-      provider_only: true
+    - api_field: dataset
     - api_field: defaultConsentTtl
     - field: effective_labels
       provider_only: true
     - api_field: enableConsentCreateOnUpdate
     - api_field: labels
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: terraform_labels
       provider_only: true
     - field: deletion_policy

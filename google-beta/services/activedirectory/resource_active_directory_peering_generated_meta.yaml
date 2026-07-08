@@ -13,10 +13,8 @@ fields:
       provider_only: true
     - api_field: labels
     - api_field: name
-    - field: peering_id
-      provider_only: true
-    - field: status
-      provider_only: true
+    - api_field: peeringId
+    - api_field: status
     - api_field: statusMessage
     - field: terraform_labels
       provider_only: true

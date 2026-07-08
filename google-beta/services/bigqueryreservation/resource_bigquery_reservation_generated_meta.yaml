@@ -12,11 +12,9 @@ fields:
     - api_field: concurrency
     - api_field: edition
     - api_field: ignoreIdleSlots
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maxSlots
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: originalPrimaryLocation
     - api_field: primaryLocation
     - api_field: replicationStatus.error.code

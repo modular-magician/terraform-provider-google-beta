@@ -55,8 +55,7 @@ fields:
     - api_field: expireTime
     - api_field: issues
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: managementSettings.preferredRenewalMethod
     - api_field: managementSettings.renewalMethod
     - api_field: managementSettings.transferLockState

@@ -23,8 +23,7 @@ fields:
       provider_only: true
     - api_field: displayName
     - api_field: endTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maxConcurrentRunCount
     - api_field: maxRunCount
     - api_field: name

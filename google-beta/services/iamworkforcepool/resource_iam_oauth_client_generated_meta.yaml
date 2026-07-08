@@ -16,11 +16,9 @@ fields:
     - api_field: disabled
     - api_field: displayName
     - api_field: expireTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: oauth_client_id
-      provider_only: true
+    - api_field: oauthClientId
     - api_field: state
     - field: deletion_policy
       provider_only: true

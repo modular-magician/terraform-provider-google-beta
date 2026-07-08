@@ -24,10 +24,8 @@ fields:
     - api_field: gcsNotebookSource.generation
     - api_field: gcsNotebookSource.uri
     - api_field: gcsOutputUri
-    - field: location
-      provider_only: true
-    - field: notebook_execution_job_id
-      provider_only: true
+    - api_field: location
+    - api_field: notebookExecutionJobId
     - api_field: notebookRuntimeTemplateResourceName
     - api_field: serviceAccount
     - field: deletion_policy

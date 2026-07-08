@@ -17,10 +17,8 @@ fields:
     - api_field: bapConfig.enabledActions
     - api_field: bapConfig.supportedConnectorModes
     - api_field: blockingReasons
-    - field: collection_display_name
-      provider_only: true
-    - field: collection_id
-      provider_only: true
+    - api_field: collectionDisplayName
+    - api_field: collectionId
     - api_field: connectorModes
     - api_field: connectorType
     - api_field: createTime
@@ -44,8 +42,7 @@ fields:
     - api_field: kmsKeyName
     - api_field: lastSyncTime
     - api_field: latestPauseTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: params
     - api_field: privateConnectivityProjectId

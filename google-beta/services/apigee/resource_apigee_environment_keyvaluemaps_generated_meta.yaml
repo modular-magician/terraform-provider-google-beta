@@ -7,8 +7,7 @@ api_service_name: apigee.googleapis.com
 api_version: v1
 api_resource_type_kind: KeyValueMap
 fields:
-    - field: env_id
-      provider_only: true
+    - api_field: envId
     - api_field: name
     - field: deletion_policy
       provider_only: true

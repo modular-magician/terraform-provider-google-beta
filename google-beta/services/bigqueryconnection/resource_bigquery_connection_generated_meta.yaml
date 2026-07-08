@@ -43,8 +43,7 @@ fields:
     - api_field: friendlyName
     - api_field: hasCredential
     - api_field: kmsKeyName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: spark.metastoreServiceConfig.metastoreService
     - api_field: spark.serviceAccountId

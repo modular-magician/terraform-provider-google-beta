@@ -131,8 +131,7 @@ fields:
     - api_field: ignoredFiles
     - api_field: includeBuildLogs
     - api_field: includedFiles
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: pubsubConfig.serviceAccountEmail
     - api_field: pubsubConfig.state

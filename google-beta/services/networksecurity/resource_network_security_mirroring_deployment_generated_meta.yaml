@@ -13,11 +13,9 @@ fields:
       provider_only: true
     - api_field: forwardingRule
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mirroringDeploymentGroup
-    - field: mirroring_deployment_id
-      provider_only: true
+    - api_field: mirroringDeploymentId
     - api_field: name
     - api_field: reconciling
     - api_field: state

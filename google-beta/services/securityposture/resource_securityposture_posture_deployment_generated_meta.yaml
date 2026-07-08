@@ -17,13 +17,10 @@ fields:
     - api_field: desiredPostureRevisionId
     - api_field: etag
     - api_field: failureMessage
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: parent
-      provider_only: true
-    - field: posture_deployment_id
-      provider_only: true
+    - api_field: parent
+    - api_field: postureDeploymentId
     - api_field: postureId
     - api_field: postureRevisionId
     - api_field: reconciling

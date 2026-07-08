@@ -7,13 +7,11 @@ api_service_name: apigee.googleapis.com
 api_version: v1
 api_resource_type_kind: SecurityMonitoringCondition
 fields:
-    - field: condition_id
-      provider_only: true
+    - api_field: conditionId
     - api_field: createTime
     - api_field: includeAllResources
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: profile
     - api_field: scope
     - api_field: totalDeployedResources

@@ -18,14 +18,11 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: etag
-    - field: git_repository_link_id
-      provider_only: true
+    - api_field: gitRepositoryLinkId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: parent_connection
-      provider_only: true
+    - api_field: parent_connection
     - api_field: reconciling
     - field: terraform_labels
       provider_only: true

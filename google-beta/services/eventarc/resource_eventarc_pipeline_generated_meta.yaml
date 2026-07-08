@@ -33,13 +33,11 @@ fields:
     - api_field: inputPayloadFormat.json
     - api_field: inputPayloadFormat.protobuf.schemaDefinition
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: loggingConfig.logSeverity
     - api_field: mediations.transformation.transformationTemplate
     - api_field: name
-    - field: pipeline_id
-      provider_only: true
+    - api_field: pipelineId
     - api_field: retryPolicy.maxAttempts
     - api_field: retryPolicy.maxRetryDelay
     - api_field: retryPolicy.minRetryDelay

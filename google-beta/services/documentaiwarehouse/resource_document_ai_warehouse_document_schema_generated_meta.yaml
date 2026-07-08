@@ -11,11 +11,9 @@ api_variant_patterns:
 fields:
     - api_field: displayName
     - api_field: documentIsFolder
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: project_number
-      provider_only: true
+    - api_field: project_number
     - api_field: propertyDefinitions.dateTimeTypeOptions
     - api_field: propertyDefinitions.displayName
     - api_field: propertyDefinitions.enumTypeOptions.possibleValues

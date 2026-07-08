@@ -17,8 +17,7 @@ fields:
     - api_field: eucConfig.eucDisabled
     - api_field: idleShutdownConfig.idleTimeout
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: machineSpec.acceleratorCount
     - api_field: machineSpec.acceleratorType
     - api_field: machineSpec.machineType

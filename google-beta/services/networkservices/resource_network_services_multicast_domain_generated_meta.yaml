@@ -19,11 +19,9 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: multicastDomainGroup
-    - field: multicast_domain_id
-      provider_only: true
+    - api_field: multicastDomainId
     - api_field: name
     - api_field: state.state
     - field: terraform_labels

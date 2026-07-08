@@ -16,10 +16,8 @@ fields:
     - api_field: filters.changeTypes
     - api_field: filters.entryTypes
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: metadata_feed_id
-      provider_only: true
+    - api_field: location
+    - api_field: metadataFeedId
     - api_field: name
     - api_field: pubsubTopic
     - api_field: scope.entryGroups

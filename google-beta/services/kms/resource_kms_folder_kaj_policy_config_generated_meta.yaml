@@ -10,5 +10,4 @@ api_variant_patterns:
     - folders/{{folder}}/kajPolicyConfig
 fields:
     - api_field: defaultKeyAccessJustificationPolicy.allowedAccessReasons
-    - field: folder
-      provider_only: true
+    - api_field: folder

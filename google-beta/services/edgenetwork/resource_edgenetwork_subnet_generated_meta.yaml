@@ -14,18 +14,15 @@ fields:
     - api_field: ipv4Cidr
     - api_field: ipv6Cidr
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: network
     - api_field: state
-    - field: subnet_id
-      provider_only: true
+    - api_field: subnet_id
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime
     - api_field: vlanId
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

@@ -9,8 +9,7 @@ api_resource_type_kind: DatasetConfig
 fields:
     - api_field: activityDataRetentionPeriodDays
     - api_field: createTime
-    - field: dataset_config_id
-      provider_only: true
+    - api_field: datasetConfigId
     - api_field: datasetConfigState
     - api_field: description
     - api_field: excludeCloudStorageBuckets.cloudStorageBuckets.bucketName
@@ -26,8 +25,7 @@ fields:
     - api_field: link.linked
     - field: link_dataset
       provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: organizationNumber
     - api_field: organizationScope

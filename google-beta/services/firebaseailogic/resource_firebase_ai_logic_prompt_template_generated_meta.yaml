@@ -11,13 +11,11 @@ autogen_version: 1
 fields:
     - api_field: createTime
     - api_field: displayName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: locked
     - api_field: model
     - api_field: name
-    - field: regional_propagation_disabled
-      provider_only: true
+    - api_field: regionalPropagationDisabled
     - api_field: stateChangeTime
     - api_field: templateId
     - api_field: templateString

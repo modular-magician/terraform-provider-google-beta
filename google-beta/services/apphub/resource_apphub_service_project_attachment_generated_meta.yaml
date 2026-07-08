@@ -12,8 +12,7 @@ fields:
     - api_field: createTime
     - api_field: name
     - api_field: serviceProject
-    - field: service_project_attachment_id
-      provider_only: true
+    - api_field: serviceProjectAttachmentId
     - api_field: state
     - api_field: uid
     - field: deletion_policy

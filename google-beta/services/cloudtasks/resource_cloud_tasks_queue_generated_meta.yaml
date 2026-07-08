@@ -26,8 +26,7 @@ fields:
     - api_field: httpTarget.uriOverride.queryOverride.queryParams
     - api_field: httpTarget.uriOverride.scheme
     - api_field: httpTarget.uriOverride.uriOverrideEnforceMode
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: rateLimits.maxBurstSize
     - api_field: rateLimits.maxConcurrentDispatches

@@ -11,19 +11,14 @@ fields:
     - api_field: claimMapping
     - api_field: description
     - api_field: displayName
-    - field: hard_delete
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: hardDelete
+    - api_field: location
     - api_field: name
-    - field: provider_id
-      provider_only: true
+    - api_field: providerId
     - api_field: purgeTime
-    - field: scim_tenant_id
-      provider_only: true
+    - api_field: scimTenantId
     - api_field: serviceAgent
     - api_field: state
-    - field: workforce_pool_id
-      provider_only: true
+    - api_field: workforcePoolId
     - field: deletion_policy
       provider_only: true

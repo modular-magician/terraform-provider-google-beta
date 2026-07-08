@@ -7,10 +7,8 @@ api_service_name: discoveryengine.googleapis.com
 api_version: v1
 api_resource_type_kind: Assistant
 fields:
-    - field: assistant_id
-      provider_only: true
-    - field: collection_id
-      provider_only: true
+    - api_field: assistantId
+    - api_field: collectionId
     - api_field: customerPolicy.bannedPhrases.ignoreDiacritics
     - api_field: customerPolicy.bannedPhrases.matchType
     - api_field: customerPolicy.bannedPhrases.phrase
@@ -19,12 +17,10 @@ fields:
     - api_field: customerPolicy.modelArmorConfig.userPromptTemplate
     - api_field: description
     - api_field: displayName
-    - field: engine_id
-      provider_only: true
+    - api_field: engineId
     - api_field: generationConfig.defaultLanguage
     - api_field: generationConfig.systemInstruction.additionalSystemInstruction
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: webGroundingType
     - field: deletion_policy

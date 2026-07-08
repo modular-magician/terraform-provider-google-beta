@@ -23,8 +23,7 @@ fields:
     - api_field: peeringNetwork
     - api_field: providedActivationKey
     - api_field: pscRoutingEnabled
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: remoteAccountId
     - api_field: remoteProfile
     - api_field: stackType

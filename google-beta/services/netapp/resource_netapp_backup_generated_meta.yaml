@@ -17,10 +17,8 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: ontapSource.snapshotUuid
     - api_field: ontapSource.storagePool
     - api_field: ontapSource.volumeUuid
@@ -29,8 +27,7 @@ fields:
     - api_field: state
     - field: terraform_labels
       provider_only: true
-    - field: vault_name
-      provider_only: true
+    - api_field: vault_name
     - api_field: volumeRegion
     - api_field: volumeUsageBytes
     - field: deletion_policy

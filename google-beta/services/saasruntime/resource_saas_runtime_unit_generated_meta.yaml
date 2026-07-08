@@ -28,8 +28,7 @@ fields:
     - api_field: inputVariables.value
     - api_field: inputVariables.variable
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maintenance.pinnedUntilTime
     - api_field: managementMode
     - api_field: name
@@ -47,8 +46,7 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: uid
-    - field: unit_id
-      provider_only: true
+    - api_field: unitId
     - api_field: unitKind
     - api_field: updateTime
     - field: deletion_policy

@@ -8,8 +8,7 @@ api_version: v1
 api_resource_type_kind: AutokeyConfig
 fields:
     - api_field: etag
-    - field: folder
-      provider_only: true
+    - api_field: folder
     - api_field: keyProject
     - api_field: keyProjectResolutionMode
     - field: deletion_policy

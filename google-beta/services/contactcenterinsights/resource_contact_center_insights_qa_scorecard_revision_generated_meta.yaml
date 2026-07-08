@@ -11,13 +11,10 @@ autogen_version: 2
 fields:
     - api_field: alternateIds
     - api_field: createTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: qa_scorecard
-      provider_only: true
-    - field: qa_scorecard_revision_id
-      provider_only: true
+    - api_field: qaScorecard
+    - api_field: qaScorecardRevisionId
     - api_field: snapshot.createTime
     - api_field: snapshot.description
     - api_field: snapshot.displayName

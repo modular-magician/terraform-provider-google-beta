@@ -16,8 +16,7 @@ fields:
     - api_field: encryptionSpec.kmsKeyName
     - api_field: labels
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: runCount
     - field: terraform_labels
       provider_only: true

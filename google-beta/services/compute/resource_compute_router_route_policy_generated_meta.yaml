@@ -9,10 +9,8 @@ api_resource_type_kind: Router
 fields:
     - api_field: fingerprint
     - api_field: name
-    - field: region
-      provider_only: true
-    - field: router
-      provider_only: true
+    - api_field: region
+    - api_field: router
     - api_field: terms.actions.description
     - api_field: terms.actions.expression
     - api_field: terms.actions.location

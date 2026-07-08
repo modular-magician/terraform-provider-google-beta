@@ -69,8 +69,7 @@ fields:
     - api_field: dataQualitySpec.rules.threshold
     - api_field: dataQualitySpec.rules.uniquenessExpectation
     - api_field: dataQualitySpec.samplingPercent
-    - field: data_scan_id
-      provider_only: true
+    - api_field: dataScanId
     - api_field: description
     - api_field: displayName
     - field: effective_labels
@@ -85,8 +84,7 @@ fields:
     - api_field: executionStatus.latestJobEndTime
     - api_field: executionStatus.latestJobStartTime
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: state
     - field: terraform_labels

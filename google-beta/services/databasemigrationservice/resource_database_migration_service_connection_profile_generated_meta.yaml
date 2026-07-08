@@ -44,8 +44,7 @@ fields:
     - api_field: cloudsql.settings.tier
     - api_field: cloudsql.settings.userLabels
     - api_field: cloudsql.settings.zone
-    - field: connection_profile_id
-      provider_only: true
+    - api_field: connectionProfileId
     - api_field: createTime
     - api_field: provider
       field: dbprovider
@@ -56,8 +55,7 @@ fields:
     - api_field: error.details
     - api_field: error.message
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mysql.cloudSqlId
     - api_field: mysql.host
     - api_field: mysql.password

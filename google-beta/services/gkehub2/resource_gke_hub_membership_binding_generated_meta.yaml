@@ -12,12 +12,9 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: membership_binding_id
-      provider_only: true
-    - field: membership_id
-      provider_only: true
+    - api_field: location
+    - api_field: membershipBindingId
+    - api_field: membership_id
     - api_field: name
     - api_field: scope
     - api_field: state.code

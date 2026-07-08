@@ -26,11 +26,9 @@ fields:
     - api_field: displayName
     - api_field: enablementState
     - api_field: lastEditor
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

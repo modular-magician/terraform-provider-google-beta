@@ -46,8 +46,7 @@ fields:
       field: predefined_rules.target_secure_tag.state
     - api_field: predefinedRules.targetServiceAccounts
     - api_field: predefinedRules.tlsInspect
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: rules.action
       field: rule.action
     - api_field: rules.description

@@ -11,15 +11,13 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: locations.location
     - api_field: locations.state
     - api_field: locationsDetails.location
     - api_field: locationsDetails.state
     - api_field: mirroringEndpointGroup
-    - field: mirroring_endpoint_group_association_id
-      provider_only: true
+    - api_field: mirroringEndpointGroupAssociationId
     - api_field: name
     - api_field: network
     - api_field: reconciling

@@ -7,8 +7,7 @@ api_service_name: firebasestorage.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Bucket
 fields:
-    - field: bucket_id
-      provider_only: true
+    - api_field: bucket_id
     - api_field: name
     - field: deletion_policy
       provider_only: true

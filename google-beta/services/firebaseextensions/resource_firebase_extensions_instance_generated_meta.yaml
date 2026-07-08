@@ -21,8 +21,7 @@ fields:
     - api_field: errorStatus.details
     - api_field: errorStatus.message
     - api_field: etag
-    - field: instance_id
-      provider_only: true
+    - api_field: instance_id
     - api_field: lastOperationName
     - api_field: lastOperationType
     - api_field: name

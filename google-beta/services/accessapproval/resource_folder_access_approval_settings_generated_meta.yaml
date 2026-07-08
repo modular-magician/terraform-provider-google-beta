@@ -14,8 +14,7 @@ fields:
     - api_field: enrolledAncestor
     - api_field: enrolledServices.cloudProduct
     - api_field: enrolledServices.enrollmentLevel
-    - field: folder_id
-      provider_only: true
+    - api_field: folder_id
     - api_field: invalidKeyVersion
     - api_field: name
     - api_field: notificationEmails

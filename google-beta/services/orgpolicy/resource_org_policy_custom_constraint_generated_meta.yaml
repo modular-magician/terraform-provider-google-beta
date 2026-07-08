@@ -13,8 +13,7 @@ fields:
     - api_field: displayName
     - api_field: methodTypes
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: resourceTypes
     - api_field: updateTime
     - field: deletion_policy

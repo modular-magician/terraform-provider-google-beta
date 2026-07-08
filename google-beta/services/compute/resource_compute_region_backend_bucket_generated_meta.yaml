@@ -12,8 +12,7 @@ fields:
     - api_field: description
     - api_field: loadBalancingScheme
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: selfLink
     - field: deletion_policy
       provider_only: true

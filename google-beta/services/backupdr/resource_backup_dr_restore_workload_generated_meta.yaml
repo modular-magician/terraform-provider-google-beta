@@ -7,10 +7,8 @@ api_service_name: backupdr.googleapis.com
 api_version: v1beta
 api_resource_type_kind: RestoreWorkload
 fields:
-    - field: backup_id
-      provider_only: true
-    - field: backup_vault_id
-      provider_only: true
+    - api_field: backup_id
+    - api_field: backup_vault_id
     - api_field: clearOverridesFieldMask
     - api_field: computeInstanceRestoreProperties.advancedMachineFeatures.enableNestedVirtualization
     - api_field: computeInstanceRestoreProperties.advancedMachineFeatures.enableUefiNetworking
@@ -123,8 +121,7 @@ fields:
     - api_field: computeInstanceTargetEnvironment.project
     - api_field: computeInstanceTargetEnvironment.useProjectServiceAccount
     - api_field: computeInstanceTargetEnvironment.zone
-    - field: data_source_id
-      provider_only: true
+    - api_field: data_source_id
     - api_field: deleteRestoredInstance
     - api_field: diskRestoreProperties.accessMode
     - api_field: diskRestoreProperties.architecture
@@ -153,8 +150,7 @@ fields:
     - api_field: diskTargetEnvironment.project
     - api_field: diskTargetEnvironment.useProjectServiceAccount
     - api_field: diskTargetEnvironment.zone
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: regionDiskTargetEnvironment.project
     - api_field: regionDiskTargetEnvironment.region

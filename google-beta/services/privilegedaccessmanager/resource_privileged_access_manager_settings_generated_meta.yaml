@@ -27,10 +27,8 @@ fields:
     - api_field: emailNotificationSettings.customNotificationBehavior.requesterNotifications.grantRevoked
     - api_field: emailNotificationSettings.disableAllNotifications
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: serviceAccountApproverSettings.enabled
     - api_field: updateTime

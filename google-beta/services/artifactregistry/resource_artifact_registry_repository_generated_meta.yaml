@@ -36,8 +36,7 @@ fields:
     - api_field: format
     - api_field: kmsKeyName
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mavenConfig.allowSnapshotOverwrites
     - api_field: mavenConfig.versionPolicy
     - api_field: mode
@@ -60,8 +59,7 @@ fields:
     - api_field: remoteRepositoryConfig.upstreamCredentials.usernamePasswordCredentials.username
     - api_field: remoteRepositoryConfig.yumRepository.publicRepository.repositoryBase
     - api_field: remoteRepositoryConfig.yumRepository.publicRepository.repositoryPath
-    - field: repository_id
-      provider_only: true
+    - api_field: repository_id
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime

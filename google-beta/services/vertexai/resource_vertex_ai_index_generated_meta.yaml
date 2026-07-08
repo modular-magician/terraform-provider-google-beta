@@ -32,8 +32,7 @@ fields:
     - api_field: metadata.isCompleteOverwrite
     - api_field: metadataSchemaUri
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime

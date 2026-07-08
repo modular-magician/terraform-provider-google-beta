@@ -12,8 +12,7 @@ fields:
     - api_field: description
     - field: effective_labels
       provider_only: true
-    - field: hub
-      provider_only: true
+    - api_field: hub
     - api_field: labels
     - api_field: name
     - api_field: routeTable

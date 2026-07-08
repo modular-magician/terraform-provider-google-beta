@@ -7,16 +7,14 @@ api_service_name: analyticshub.googleapis.com
 api_version: v1
 api_resource_type_kind: DataExchange
 fields:
-    - field: data_exchange_id
-      provider_only: true
+    - api_field: data_exchange_id
     - api_field: description
     - api_field: discoveryType
     - api_field: displayName
     - api_field: documentation
     - api_field: icon
     - api_field: listingCount
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logLinkedDatasetQueryUserEmail
     - api_field: name
     - api_field: primaryContact

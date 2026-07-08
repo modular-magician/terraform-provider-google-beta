@@ -13,11 +13,9 @@ fields:
     - api_field: displayName
     - field: effective_labels
       provider_only: true
-    - field: glossary_id
-      provider_only: true
+    - api_field: glossaryId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: termCount
     - field: terraform_labels

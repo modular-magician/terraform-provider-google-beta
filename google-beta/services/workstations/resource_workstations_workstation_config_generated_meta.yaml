@@ -61,8 +61,7 @@ fields:
     - api_field: host.gceInstance.vmTags
     - api_field: idleTimeout
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maxUsableWorkstations
     - api_field: name
     - api_field: persistentDirectories.gceHd.archiveTimeout
@@ -82,9 +81,7 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: uid
-    - field: workstation_cluster_id
-      provider_only: true
-    - field: workstation_config_id
-      provider_only: true
+    - api_field: workstationClusterId
+    - api_field: workstationConfigId
     - field: deletion_policy
       provider_only: true

@@ -14,17 +14,14 @@ fields:
     - api_field: chatEngineConfig.allowCrossRegion
     - api_field: chatEngineConfig.dialogflowAgentToLink
     - api_field: chatEngineMetadata.dialogflowAgent
-    - field: collection_id
-      provider_only: true
+    - api_field: collection_id
     - api_field: commonConfig.companyName
     - api_field: createTime
     - api_field: dataStoreIds
     - api_field: displayName
-    - field: engine_id
-      provider_only: true
+    - api_field: engineId
     - api_field: industryVertical
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: updateTime
     - field: deletion_policy

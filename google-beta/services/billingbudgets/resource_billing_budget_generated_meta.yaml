@@ -21,8 +21,7 @@ fields:
     - api_field: amount.specifiedAmount.currencyCode
     - api_field: amount.specifiedAmount.nanos
     - api_field: amount.specifiedAmount.units
-    - field: billing_account
-      provider_only: true
+    - api_field: billingAccount
     - api_field: budgetFilter.calendarPeriod
     - api_field: budgetFilter.creditTypes
     - api_field: budgetFilter.creditTypesTreatment

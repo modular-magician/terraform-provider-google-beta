@@ -23,9 +23,7 @@ fields:
       field: desired_user_created_endpoints.connections.psc_connection.psc_connection_status
     - api_field: endpoints.connections.pscConnection.serviceAttachment
       field: desired_user_created_endpoints.connections.psc_connection.service_attachment
-    - field: name
-      provider_only: true
-    - field: region
-      provider_only: true
+    - api_field: name
+    - api_field: region
     - field: deletion_policy
       provider_only: true

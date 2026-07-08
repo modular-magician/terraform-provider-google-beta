@@ -12,12 +12,9 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: enabled
-    - field: gateway_security_policy
-      provider_only: true
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: gateway_security_policy
+    - api_field: location
+    - api_field: name
     - api_field: priority
     - api_field: selfLink
     - api_field: sessionMatcher

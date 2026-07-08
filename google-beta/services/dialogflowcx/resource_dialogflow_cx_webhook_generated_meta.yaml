@@ -30,8 +30,7 @@ fields:
     - api_field: genericWebService.uri
     - api_field: genericWebService.webhookType
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: securitySettings
     - api_field: serviceDirectory.genericWebService.allowedCaCerts
     - api_field: serviceDirectory.genericWebService.httpMethod

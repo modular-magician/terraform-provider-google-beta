@@ -15,8 +15,7 @@ fields:
     - api_field: hostnames
     - api_field: labels
     - api_field: meshes
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: rules.action.corsPolicy.allowCredentials
     - api_field: rules.action.corsPolicy.allowHeaders
     - api_field: rules.action.corsPolicy.allowMethods

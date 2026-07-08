@@ -21,7 +21,6 @@ fields:
     - api_field: config.rewrites.run.region
     - api_field: config.rewrites.run.serviceId
     - api_field: name
-    - field: site_id
-      provider_only: true
+    - api_field: site_id
     - api_field: name
       field: version_id

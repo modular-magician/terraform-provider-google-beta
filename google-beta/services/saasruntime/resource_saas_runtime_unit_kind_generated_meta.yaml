@@ -26,8 +26,7 @@ fields:
     - api_field: inputVariableMappings.to.inputVariable
     - api_field: inputVariableMappings.variable
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: outputVariableMappings.from.dependency
     - api_field: outputVariableMappings.from.outputVariable
@@ -39,8 +38,7 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: uid
-    - field: unit_kind_id
-      provider_only: true
+    - api_field: unitKindId
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

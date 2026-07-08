@@ -33,8 +33,7 @@ fields:
       field: egress_to.roles
     - api_field: status.egressPolicies.etag
       field: etag
-    - field: perimeter
-      provider_only: true
+    - api_field: perimeter
     - api_field: status.egressPolicies.title
       field: title
     - field: deletion_policy

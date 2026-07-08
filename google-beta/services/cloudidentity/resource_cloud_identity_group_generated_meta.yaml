@@ -14,8 +14,7 @@ fields:
     - api_field: displayName
     - api_field: groupKey.id
     - api_field: groupKey.namespace
-    - field: initial_group_config
-      provider_only: true
+    - api_field: initialGroupConfig
     - api_field: labels
     - api_field: name
     - api_field: parent

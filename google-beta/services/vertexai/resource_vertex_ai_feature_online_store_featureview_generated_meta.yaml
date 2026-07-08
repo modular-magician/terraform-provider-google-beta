@@ -12,16 +12,13 @@ fields:
     - api_field: createTime
     - field: effective_labels
       provider_only: true
-    - field: feature_online_store
-      provider_only: true
+    - api_field: featureOnlineStore
     - api_field: featureRegistrySource.featureGroups.featureGroupId
     - api_field: featureRegistrySource.featureGroups.featureIds
     - api_field: featureRegistrySource.projectNumber
     - api_field: labels
-    - field: name
-      provider_only: true
-    - field: region
-      provider_only: true
+    - api_field: name
+    - api_field: region
     - api_field: syncConfig.continuous
     - api_field: syncConfig.cron
     - field: terraform_labels

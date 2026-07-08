@@ -7,16 +7,14 @@ api_service_name: ces.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Evaluation
 fields:
-    - field: app
-      provider_only: true
+    - api_field: app
     - api_field: createTime
     - api_field: createdBy
     - api_field: description
     - api_field: displayName
     - api_field: etag
     - api_field: evaluationDatasets
-    - field: evaluation_id
-      provider_only: true
+    - api_field: evaluationId
     - api_field: evaluationRuns
     - api_field: golden.evaluationExpectations
     - api_field: golden.turns.rootSpan.attributes
@@ -88,8 +86,7 @@ fields:
     - api_field: golden.turns.steps.userInput.willContinue
     - api_field: invalid
     - api_field: lastUpdatedBy
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: scenario.evaluationExpectations
     - api_field: scenario.maxTurns

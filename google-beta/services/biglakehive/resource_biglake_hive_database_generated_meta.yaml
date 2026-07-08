@@ -7,13 +7,11 @@ api_service_name: biglake.googleapis.com
 api_version: v1beta
 api_resource_type_kind: HiveDatabase
 fields:
-    - field: catalog
-      provider_only: true
+    - api_field: catalog
     - api_field: createTime
     - api_field: description
     - api_field: locationUri
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: parameters
     - api_field: updateTime
     - field: deletion_policy

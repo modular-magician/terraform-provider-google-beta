@@ -30,15 +30,11 @@ fields:
     - api_field: etag
     - api_field: framework.framework
     - api_field: framework.majorRevisionId
-    - field: framework_deployment_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: frameworkDeploymentId
+    - api_field: location
     - api_field: name
-    - field: organization
-      provider_only: true
-    - field: parent
-      provider_only: true
+    - api_field: organization
+    - api_field: parent
     - api_field: targetResourceConfig.existingTargetResource
     - api_field: targetResourceConfig.targetResourceCreationConfig.folderCreationConfig.folderDisplayName
     - api_field: targetResourceConfig.targetResourceCreationConfig.folderCreationConfig.parent

@@ -28,10 +28,8 @@ fields:
     - api_field: executionStatus.latestJob.uid
     - api_field: executionStatus.updateTime
     - api_field: labels
-    - field: lake
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: lake
+    - api_field: location
     - api_field: name
     - api_field: notebook.archiveUris
     - api_field: notebook.fileUris
@@ -62,8 +60,7 @@ fields:
     - api_field: spark.sqlScript
     - api_field: spark.sqlScriptFile
     - api_field: state
-    - field: task_id
-      provider_only: true
+    - api_field: taskId
     - field: terraform_labels
       provider_only: true
     - api_field: triggerSpec.disabled

@@ -11,11 +11,9 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: interceptEndpointGroup
-    - field: intercept_endpoint_group_association_id
-      provider_only: true
+    - api_field: interceptEndpointGroupAssociationId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: locations.location
     - api_field: locations.state
     - api_field: locationsDetails.location

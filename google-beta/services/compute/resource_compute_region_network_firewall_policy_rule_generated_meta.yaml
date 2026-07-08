@@ -19,8 +19,7 @@ fields:
       field: disabled
     - api_field: rules.enableLogging
       field: enable_logging
-    - field: firewall_policy
-      provider_only: true
+    - api_field: firewallPolicy
     - api_field: rules.kind
       field: kind
     - api_field: rules.match.destAddressGroups
@@ -63,8 +62,7 @@ fields:
       field: match.src_threat_intelligences
     - api_field: rules.priority
       field: priority
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: rules.ruleName
       field: rule_name
     - api_field: rules.ruleTupleCount

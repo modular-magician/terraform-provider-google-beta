@@ -22,10 +22,8 @@ fields:
     - api_field: issuancePolicy.baselineValues.aiaOcspServers
     - api_field: issuancePolicy.baselineValues.caOptions.isCa
     - api_field: issuancePolicy.baselineValues.caOptions.maxIssuerPathLength
-    - field: issuance_policy.baseline_values.ca_options.non_ca
-      provider_only: true
-    - field: issuance_policy.baseline_values.ca_options.zero_max_issuer_path_length
-      provider_only: true
+    - api_field: issuancePolicy.baselineValues.caOptions.nonCa
+    - api_field: issuancePolicy.baselineValues.caOptions.zeroMaxIssuerPathLength
     - api_field: issuancePolicy.baselineValues.keyUsage.baseKeyUsage.certSign
     - api_field: issuancePolicy.baselineValues.keyUsage.baseKeyUsage.contentCommitment
     - api_field: issuancePolicy.baselineValues.keyUsage.baseKeyUsage.crlSign
@@ -60,10 +58,8 @@ fields:
     - api_field: issuancePolicy.identityConstraints.celExpression.title
     - api_field: issuancePolicy.maximumLifetime
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: publishingOptions.encodingFormat
     - api_field: publishingOptions.publishCaCert
     - api_field: publishingOptions.publishCrl

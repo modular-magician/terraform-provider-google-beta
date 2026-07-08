@@ -12,11 +12,9 @@ fields:
     - api_field: attestation.content
     - api_field: attestation.format
     - api_field: expireTime
-    - field: import_job_id
-      provider_only: true
+    - api_field: importJobId
     - api_field: importMethod
-    - field: key_ring
-      provider_only: true
+    - api_field: keyRing
     - api_field: name
     - api_field: protectionLevel
     - api_field: publicKey.pem

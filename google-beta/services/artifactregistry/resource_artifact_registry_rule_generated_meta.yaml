@@ -12,14 +12,11 @@ fields:
     - api_field: condition.expression
     - api_field: condition.location
     - api_field: condition.title
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: operation
     - api_field: packageId
-    - field: repository_id
-      provider_only: true
-    - field: rule_id
-      provider_only: true
+    - api_field: repository_id
+    - api_field: rule_id
     - field: deletion_policy
       provider_only: true

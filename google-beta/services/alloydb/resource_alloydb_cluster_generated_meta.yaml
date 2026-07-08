@@ -22,8 +22,7 @@ fields:
     - api_field: automatedBackupPolicy.weeklySchedule.startTimes.seconds
     - api_field: backupSource.backupName
     - api_field: backupdrBackupSource.backup
-    - field: cluster_id
-      provider_only: true
+    - api_field: clusterId
     - api_field: clusterType
     - api_field: continuousBackupConfig.enabled
     - api_field: continuousBackupConfig.encryptionConfig.kmsKeyName
@@ -53,8 +52,7 @@ fields:
       provider_only: true
     - api_field: initialUser.user
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maintenanceUpdatePolicy.maintenanceWindows.day
     - api_field: maintenanceUpdatePolicy.maintenanceWindows.startTime.hours
     - api_field: maintenanceUpdatePolicy.maintenanceWindows.startTime.minutes

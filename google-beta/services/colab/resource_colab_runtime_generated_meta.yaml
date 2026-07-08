@@ -15,10 +15,8 @@ fields:
     - api_field: displayName
     - api_field: expirationTime
     - api_field: isUpgradable
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: notebookRuntimeTemplateRef.notebookRuntimeTemplate
     - api_field: notebookRuntimeType
     - api_field: runtimeUser

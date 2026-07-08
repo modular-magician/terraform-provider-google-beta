@@ -11,10 +11,8 @@ autogen_version: 1
 fields:
     - api_field: createTime
     - api_field: displayName
-    - field: instance
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: instance
+    - api_field: location
     - api_field: name
     - api_field: outcomeFilters.outcomeFilterOperator
     - api_field: outcomeFilters.outcomeValue

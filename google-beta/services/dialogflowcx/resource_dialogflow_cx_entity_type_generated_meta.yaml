@@ -14,11 +14,9 @@ fields:
     - api_field: entities.value
     - api_field: excludedPhrases.value
     - api_field: kind
-    - field: language_code
-      provider_only: true
+    - api_field: languageCode
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: redact
     - field: deletion_policy
       provider_only: true

@@ -7,12 +7,10 @@ api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: NetworkEndpointGroup
 fields:
-    - field: network_endpoint_group
-      provider_only: true
+    - api_field: networkEndpointGroup
     - api_field: networkEndpoints.instance
     - api_field: networkEndpoints.ipAddress
     - api_field: networkEndpoints.port
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

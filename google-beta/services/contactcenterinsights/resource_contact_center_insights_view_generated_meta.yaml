@@ -11,8 +11,7 @@ autogen_version: 1
 fields:
     - api_field: createTime
     - api_field: displayName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: updateTime
     - api_field: value

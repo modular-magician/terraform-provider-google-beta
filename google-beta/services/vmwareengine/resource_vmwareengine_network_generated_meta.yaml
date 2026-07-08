@@ -10,10 +10,8 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: etag
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: state
     - api_field: type
     - api_field: uid

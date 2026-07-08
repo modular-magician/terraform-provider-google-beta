@@ -9,16 +9,14 @@ api_resource_type_kind: SecurityGatewayApplication
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: application_id
-      provider_only: true
+    - api_field: applicationId
     - api_field: createTime
     - api_field: displayName
     - api_field: endpointMatchers.hostname
     - api_field: endpointMatchers.ports
     - api_field: name
     - api_field: schema
-    - field: security_gateway_id
-      provider_only: true
+    - api_field: securityGatewayId
     - api_field: updateTime
     - api_field: upstreams.egressPolicy.regions
     - api_field: upstreams.external.endpoints.hostname

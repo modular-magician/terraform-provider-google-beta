@@ -12,14 +12,11 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: filter
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mostRecentEditor
-    - field: mute_config_id
-      provider_only: true
+    - api_field: mute_config_id
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: type
     - api_field: updateTime
     - field: deletion_policy

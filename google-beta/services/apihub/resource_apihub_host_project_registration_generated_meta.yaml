@@ -13,8 +13,6 @@ autogen_version: 1
 fields:
     - api_field: createTime
     - api_field: gcpProject
-    - field: host_project_registration_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: hostProjectRegistrationId
+    - api_field: location
     - api_field: name

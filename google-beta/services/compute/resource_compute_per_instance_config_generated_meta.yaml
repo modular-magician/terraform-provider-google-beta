@@ -9,8 +9,7 @@ api_resource_type_kind: InstanceGroupManager
 api_variant_patterns:
     - projects/{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}
 fields:
-    - field: instance_group_manager
-      provider_only: true
+    - api_field: instanceGroupManager
     - field: minimal_action
       provider_only: true
     - field: most_disruptive_allowed_action
@@ -41,7 +40,6 @@ fields:
       provider_only: true
     - field: remove_instance_state_on_destroy
       provider_only: true
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

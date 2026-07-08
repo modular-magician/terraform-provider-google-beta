@@ -10,11 +10,9 @@ fields:
     - api_field: databaseUrl
     - field: desired_state
       provider_only: true
-    - field: instance_id
-      provider_only: true
+    - api_field: instance_id
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: state
     - api_field: type
     - field: deletion_policy

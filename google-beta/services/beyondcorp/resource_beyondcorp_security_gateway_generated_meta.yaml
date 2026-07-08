@@ -17,8 +17,7 @@ fields:
       field: hubs.region
     - api_field: hubs.value.internetGateway.assignedIps
       field: hubs.internet_gateway.assigned_ips
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logging
     - api_field: name
     - api_field: proxyProtocolConfig.allowedClientHeaders
@@ -29,8 +28,7 @@ fields:
     - api_field: proxyProtocolConfig.contextualHeaders.userInfo.outputType
     - api_field: proxyProtocolConfig.gatewayIdentity
     - api_field: proxyProtocolConfig.metadataHeaders
-    - field: security_gateway_id
-      provider_only: true
+    - api_field: securityGatewayId
     - api_field: serviceDiscovery.apiGateway.resourceOverride.path
     - api_field: state
     - api_field: updateTime

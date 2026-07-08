@@ -14,8 +14,7 @@ fields:
       field: generative_language_config.api_key_wo
     - field: generative_language_config.api_key_wo_version
       provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: telemetryConfig.mode
     - api_field: telemetryConfig.samplingRate

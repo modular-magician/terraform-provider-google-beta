@@ -25,8 +25,7 @@ fields:
     - api_field: customConfig.severity
     - api_field: displayName
     - api_field: enablementState
-    - field: folder
-      provider_only: true
+    - api_field: folder
     - api_field: lastEditor
     - api_field: name
     - api_field: updateTime

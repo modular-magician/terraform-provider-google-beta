@@ -12,14 +12,12 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logConfig.enable
     - api_field: logConfig.minLogLevel
     - api_field: logConfig.sampleRate
     - api_field: mainVersionId
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime

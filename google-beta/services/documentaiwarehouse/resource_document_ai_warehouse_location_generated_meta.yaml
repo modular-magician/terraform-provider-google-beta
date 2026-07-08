@@ -11,7 +11,5 @@ fields:
     - api_field: databaseType
     - api_field: documentCreatorDefaultRole
     - api_field: kmsKey
-    - field: location
-      provider_only: true
-    - field: project_number
-      provider_only: true
+    - api_field: location
+    - api_field: project_number

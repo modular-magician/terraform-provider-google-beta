@@ -14,8 +14,7 @@ fields:
       provider_only: true
     - api_field: hostname
     - api_field: labels
-    - field: map
-      provider_only: true
+    - api_field: map
     - api_field: matcher
     - api_field: name
     - api_field: state

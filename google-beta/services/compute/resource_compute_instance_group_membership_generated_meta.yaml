@@ -10,9 +10,7 @@ api_variant_patterns:
     - projects/{project}/zones/{zone}/instanceGroups/{instanceGroup}
 fields:
     - api_field: instance
-    - field: instance_group
-      provider_only: true
-    - field: zone
-      provider_only: true
+    - api_field: instanceGroup
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

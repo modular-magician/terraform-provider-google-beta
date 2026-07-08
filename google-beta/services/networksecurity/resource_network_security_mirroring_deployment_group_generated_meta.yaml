@@ -13,12 +13,10 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: locations.location
     - api_field: locations.state
-    - field: mirroring_deployment_group_id
-      provider_only: true
+    - api_field: mirroringDeploymentGroupId
     - api_field: name
     - api_field: network
     - api_field: reconciling

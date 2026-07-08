@@ -18,7 +18,6 @@ fields:
     - api_field: name
     - api_field: notificationEmails
     - api_field: project
-    - field: project_id
-      provider_only: true
+    - api_field: project_id
     - field: deletion_policy
       provider_only: true

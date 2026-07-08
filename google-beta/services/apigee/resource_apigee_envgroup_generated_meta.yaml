@@ -9,7 +9,6 @@ api_resource_type_kind: EnvironmentGroup
 fields:
     - api_field: hostnames
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - field: deletion_policy
       provider_only: true

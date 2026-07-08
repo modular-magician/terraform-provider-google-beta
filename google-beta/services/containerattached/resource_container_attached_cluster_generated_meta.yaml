@@ -21,8 +21,7 @@ fields:
     - api_field: fleet.membership
     - api_field: fleet.project
     - api_field: kubernetesVersion
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: loggingConfig.componentConfig.enableComponents
     - api_field: monitoringConfig.managedPrometheusConfig.enabled
     - api_field: name

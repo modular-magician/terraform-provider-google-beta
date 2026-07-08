@@ -13,8 +13,7 @@ fields:
     - api_field: cloudKmsConfig.kmsProjectId
     - api_field: cloudKmsConfig.kmsRing
     - api_field: createSampleIntegrations
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: runAsServiceAccount
     - field: deletion_policy
       provider_only: true

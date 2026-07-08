@@ -41,8 +41,7 @@ fields:
     - api_field: p4ServiceAccount
     - api_field: patchRevision
     - api_field: privateInstance
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: serviceAccount
     - api_field: serviceEndpoint
     - api_field: state

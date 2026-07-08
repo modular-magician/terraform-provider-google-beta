@@ -8,8 +8,7 @@ api_version: v1beta
 api_resource_type_kind: Backup
 fields:
     - api_field: annotations
-    - field: backup_id
-      provider_only: true
+    - api_field: backupId
     - api_field: clusterName
     - api_field: clusterUid
     - api_field: createTime
@@ -28,8 +27,7 @@ fields:
     - api_field: expiryQuantity.totalRetentionCount
     - api_field: expiryTime
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: reconciling
     - api_field: sizeBytes

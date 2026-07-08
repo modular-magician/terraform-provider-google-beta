@@ -361,10 +361,8 @@ fields:
     - api_field: description
     - api_field: displayName
     - api_field: name
-    - field: parent
-      provider_only: true
-    - field: template_id
-      provider_only: true
+    - api_field: parent
+    - api_field: templateId
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

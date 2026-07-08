@@ -12,8 +12,7 @@ fields:
     - api_field: agentTool.agent
     - api_field: agentTool.description
     - api_field: agentTool.name
-    - field: app
-      provider_only: true
+    - api_field: app
     - api_field: clientFunction.description
     - api_field: clientFunction.name
     - api_field: clientFunction.parameters.additionalProperties
@@ -135,8 +134,7 @@ fields:
     - api_field: googleSearchTool.preferredDomains
     - api_field: googleSearchTool.promptConfig.textPrompt
     - api_field: googleSearchTool.promptConfig.voicePrompt
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mcpTool.apiAuthentication.apiKeyConfig.apiKeySecretVersion
     - api_field: mcpTool.apiAuthentication.apiKeyConfig.keyName
     - api_field: mcpTool.apiAuthentication.apiKeyConfig.requestLocation
@@ -205,8 +203,7 @@ fields:
     - api_field: timeout
     - api_field: toolFakeConfig.codeBlock.pythonCode
     - api_field: toolFakeConfig.enableFakeMode
-    - field: tool_id
-      provider_only: true
+    - api_field: toolId
     - api_field: updateTime
     - api_field: widgetTool.dataMapping.fieldMappings
     - api_field: widgetTool.dataMapping.mode

@@ -10,10 +10,8 @@ autogen_status: true
 autogen_version: 1
 fields:
     - api_field: annotations
-    - field: backend
-      provider_only: true
-    - field: build_id
-      provider_only: true
+    - api_field: backend
+    - api_field: buildId
     - api_field: buildLogsUri
     - api_field: createTime
     - api_field: displayName
@@ -29,8 +27,7 @@ fields:
     - api_field: etag
     - api_field: image
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: source.codebase.author.displayName
     - api_field: source.codebase.author.email

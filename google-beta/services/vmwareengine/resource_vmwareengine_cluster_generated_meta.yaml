@@ -40,16 +40,14 @@ fields:
     - api_field: datastoreMountConfig.nfsVersion
     - api_field: datastoreMountConfig.servers
     - api_field: management
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: nodeTypeConfigs.key
       field: node_type_configs.node_type_id
     - api_field: nodeTypeConfigs.value.customCoreCount
       field: node_type_configs.custom_core_count
     - api_field: nodeTypeConfigs.value.nodeCount
       field: node_type_configs.node_count
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: state
     - api_field: uid
     - api_field: updateTime

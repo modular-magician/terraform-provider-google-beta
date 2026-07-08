@@ -48,8 +48,7 @@ fields:
     - api_field: encryptedCredential
     - api_field: expiryNotificationDuration
     - api_field: lastModifierEmail
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: overrideValidTime
     - api_field: reason

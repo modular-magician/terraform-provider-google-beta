@@ -22,10 +22,8 @@ fields:
     - api_field: error.details
     - api_field: error.message
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: migration_job_id
-      provider_only: true
+    - api_field: location
+    - api_field: migrationJobId
     - api_field: name
     - api_field: objectsConfig.sourceObjectsConfig.objectConfigs.objectIdentifier.database
     - api_field: objectsConfig.sourceObjectsConfig.objectConfigs.objectIdentifier.schema

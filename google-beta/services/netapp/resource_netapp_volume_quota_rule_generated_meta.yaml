@@ -13,17 +13,14 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: state
     - api_field: stateDetails
     - api_field: target
     - field: terraform_labels
       provider_only: true
     - api_field: type
-    - field: volume_name
-      provider_only: true
+    - api_field: volume_name
     - field: deletion_policy
       provider_only: true

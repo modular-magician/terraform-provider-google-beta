@@ -7,15 +7,13 @@ api_service_name: firebaseapphosting.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Traffic
 fields:
-    - field: backend
-      provider_only: true
+    - api_field: backend
     - api_field: createTime
     - api_field: current.splits.build
     - api_field: current.splits.percent
     - api_field: deleteTime
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: rolloutPolicy.codebaseBranch
     - api_field: rolloutPolicy.disabled

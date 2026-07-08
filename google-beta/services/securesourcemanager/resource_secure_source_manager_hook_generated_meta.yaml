@@ -10,14 +10,11 @@ fields:
     - api_field: createTime
     - api_field: disabled
     - api_field: events
-    - field: hook_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: hook_id
+    - api_field: location
     - api_field: name
     - api_field: pushOption.branchFilter
-    - field: repository_id
-      provider_only: true
+    - api_field: repository_id
     - api_field: sensitiveQueryString
     - api_field: targetUri
     - api_field: uid

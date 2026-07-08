@@ -7,8 +7,7 @@ api_service_name: blockchainnodeengine.googleapis.com
 api_version: v1
 api_resource_type_kind: BlockchainNode
 fields:
-    - field: blockchain_node_id
-      provider_only: true
+    - api_field: blockchainNodeId
     - api_field: blockchainType
     - api_field: connectionInfo.endpointInfo.jsonRpcApiEndpoint
     - api_field: connectionInfo.endpointInfo.websocketsApiEndpoint
@@ -29,8 +28,7 @@ fields:
     - api_field: ethereumDetails.validatorConfig.beaconFeeRecipient
     - api_field: ethereumDetails.validatorConfig.mevRelayUrls
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - field: terraform_labels
       provider_only: true

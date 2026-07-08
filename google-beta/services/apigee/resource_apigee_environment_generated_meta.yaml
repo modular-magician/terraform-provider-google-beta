@@ -18,8 +18,7 @@ fields:
     - api_field: nodeConfig.currentAggregateNodeCount
     - api_field: nodeConfig.maxNodeCount
     - api_field: nodeConfig.minNodeCount
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: properties.property.name
     - api_field: properties.property.value
     - api_field: type

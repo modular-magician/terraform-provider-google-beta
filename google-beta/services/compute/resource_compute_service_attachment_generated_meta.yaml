@@ -32,8 +32,7 @@ fields:
     - api_field: region
     - field: send_propagated_connection_limit_if_zero
       provider_only: true
-    - field: show_nat_ips
-      provider_only: true
+    - api_field: showNatIps
     - api_field: targetService
     - api_field: tunnelingConfig.encapsulationProfile
     - api_field: tunnelingConfig.routingMode

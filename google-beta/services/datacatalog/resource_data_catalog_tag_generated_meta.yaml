@@ -23,8 +23,7 @@ fields:
     - api_field: fields.value.timestampValue
       field: fields.timestamp_value
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: template
     - api_field: templateDisplayName
       field: template_displayname

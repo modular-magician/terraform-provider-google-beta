@@ -10,8 +10,7 @@ api_variant_patterns:
     - folders/{folder}/settings
 fields:
     - api_field: disableDefaultSink
-    - field: folder
-      provider_only: true
+    - api_field: folder
     - api_field: kmsKeyName
     - api_field: kmsServiceAccountId
     - api_field: loggingServiceAccountId

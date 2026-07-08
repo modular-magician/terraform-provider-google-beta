@@ -59,8 +59,7 @@ fields:
     - api_field: backfillAll.sqlServerExcludedObjects.schemas.tables.columns.scale
     - api_field: backfillAll.sqlServerExcludedObjects.schemas.tables.table
     - api_field: backfillNone
-    - field: create_without_validation
-      provider_only: true
+    - api_field: create_without_validation
     - api_field: customerManagedEncryptionKey
     - field: desired_state
       provider_only: true
@@ -88,8 +87,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: ruleSets.customizationRules.bigqueryClustering.columns
     - api_field: ruleSets.customizationRules.bigqueryPartitioning.ingestionTimePartition.partitioningTimeGranularity
@@ -240,8 +238,7 @@ fields:
     - api_field: sourceConfig.sqlServerSourceConfig.maxConcurrentCdcTasks
     - api_field: sourceConfig.sqlServerSourceConfig.transactionLogs
     - api_field: state
-    - field: stream_id
-      provider_only: true
+    - api_field: streamId
     - field: terraform_labels
       provider_only: true
     - field: deletion_policy

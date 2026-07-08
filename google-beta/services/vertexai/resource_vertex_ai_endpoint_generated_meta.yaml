@@ -41,11 +41,9 @@ fields:
     - api_field: encryptionSpec.kmsKeyName
     - api_field: etag
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: modelDeploymentMonitoringJob
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: network
     - api_field: predictRequestResponseLoggingConfig.bigqueryDestination.outputUri
     - api_field: predictRequestResponseLoggingConfig.enabled
@@ -59,8 +57,7 @@ fields:
     - api_field: privateServiceConnectConfig.pscAutomationConfigs.network
     - api_field: privateServiceConnectConfig.pscAutomationConfigs.projectId
     - api_field: privateServiceConnectConfig.pscAutomationConfigs.state
-    - field: region
-      provider_only: true
+    - api_field: region
     - field: terraform_labels
       provider_only: true
     - api_field: trafficSplit

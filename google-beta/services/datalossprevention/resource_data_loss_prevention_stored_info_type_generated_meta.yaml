@@ -18,11 +18,9 @@ fields:
     - api_field: largeCustomDictionary.cloudStorageFileSet.url
     - api_field: largeCustomDictionary.outputPath.path
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: regex.groupIndexes
     - api_field: regex.pattern
-    - field: stored_info_type_id
-      provider_only: true
+    - api_field: storedInfoTypeId
     - field: deletion_policy
       provider_only: true

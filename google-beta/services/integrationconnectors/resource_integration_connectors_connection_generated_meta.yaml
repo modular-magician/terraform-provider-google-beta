@@ -115,14 +115,12 @@ fields:
     - api_field: eventingRuntimeData.status.description
     - api_field: eventingRuntimeData.status.state
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: lockConfig.locked
     - api_field: lockConfig.reason
     - api_field: logConfig.enabled
     - api_field: logConfig.level
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: nodeConfig.maxNodeCount
     - api_field: nodeConfig.minNodeCount
     - api_field: serviceAccount

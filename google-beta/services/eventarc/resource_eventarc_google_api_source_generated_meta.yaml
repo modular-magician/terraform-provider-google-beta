@@ -17,11 +17,9 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: etag
-    - field: google_api_source_id
-      provider_only: true
+    - api_field: googleApiSourceId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: loggingConfig.logSeverity
     - api_field: name
     - field: terraform_labels

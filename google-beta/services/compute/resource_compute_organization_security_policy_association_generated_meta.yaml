@@ -17,7 +17,7 @@ fields:
       field: excluded_projects
     - api_field: associations.name
       field: name
-    - field: policy_id
-      provider_only: true
+    - api_field: securityPolicyId
+      field: policy_id
     - field: deletion_policy
       provider_only: true

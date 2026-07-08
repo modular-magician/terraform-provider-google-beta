@@ -16,14 +16,12 @@ fields:
     - api_field: effectiveServiceAccount
     - api_field: gdceCluster.gdceCluster
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: reconciling
     - api_field: requestedState
     - api_field: serviceAccount
-    - field: service_instance_id
-      provider_only: true
+    - api_field: serviceInstanceId
     - api_field: sparkServiceInstanceConfig
     - api_field: state
     - api_field: stateMessage

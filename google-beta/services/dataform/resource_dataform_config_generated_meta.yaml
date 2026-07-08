@@ -8,5 +8,4 @@ api_version: v1beta1
 api_resource_type_kind: Config
 fields:
     - api_field: defaultKmsKeyName
-    - field: region
-      provider_only: true
+    - api_field: region

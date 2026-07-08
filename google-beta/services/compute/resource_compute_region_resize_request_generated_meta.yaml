@@ -9,8 +9,7 @@ api_resource_type_kind: InstanceGroupManagerResizeRequest
 fields:
     - api_field: creationTimestamp
     - api_field: description
-    - field: instance_group_manager
-      provider_only: true
+    - api_field: instanceGroupManager
     - api_field: name
     - api_field: region
     - api_field: requestedRunDuration.nanos

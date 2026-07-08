@@ -10,14 +10,12 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: profileAssessmentConfigs.key
       field: profile_assessment_configs.assessment
     - api_field: profileAssessmentConfigs.value.weight
       field: profile_assessment_configs.weight
-    - field: profile_id
-      provider_only: true
+    - api_field: profileId
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

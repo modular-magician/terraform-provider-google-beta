@@ -12,13 +12,10 @@ fields:
     - api_field: description
     - api_field: displayName
     - api_field: entries.value
-    - field: instance
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: instance
+    - api_field: location
     - api_field: name
-    - field: reference_list_id
-      provider_only: true
+    - api_field: referenceListId
     - api_field: revisionCreateTime
     - api_field: ruleAssociationsCount
     - api_field: rules

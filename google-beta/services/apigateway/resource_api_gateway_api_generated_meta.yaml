@@ -7,8 +7,7 @@ api_service_name: apigateway.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Api
 fields:
-    - field: api_id
-      provider_only: true
+    - api_field: apiId
     - api_field: createTime
     - api_field: displayName
     - field: effective_labels

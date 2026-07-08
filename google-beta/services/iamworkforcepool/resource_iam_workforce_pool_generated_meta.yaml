@@ -12,13 +12,11 @@ fields:
     - api_field: description
     - api_field: disabled
     - api_field: displayName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: parent
     - api_field: sessionDuration
     - api_field: state
-    - field: workforce_pool_id
-      provider_only: true
+    - api_field: workforcePoolId
     - field: deletion_policy
       provider_only: true

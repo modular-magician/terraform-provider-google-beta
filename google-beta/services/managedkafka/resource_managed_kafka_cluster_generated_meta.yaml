@@ -12,16 +12,14 @@ fields:
     - api_field: brokerCapacityConfig.diskSizeGib
     - api_field: capacityConfig.memoryBytes
     - api_field: capacityConfig.vcpuCount
-    - field: cluster_id
-      provider_only: true
+    - api_field: clusterId
     - api_field: createTime
     - field: effective_labels
       provider_only: true
     - api_field: gcpConfig.accessConfig.networkConfigs.subnet
     - api_field: gcpConfig.kmsKey
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: rebalanceConfig.mode
     - api_field: state

@@ -18,8 +18,7 @@ fields:
     - api_field: allowedDataAccessLabels.logType
     - api_field: author
     - api_field: createTime
-    - field: data_access_scope_id
-      provider_only: true
+    - api_field: dataAccessScopeId
     - api_field: deniedDataAccessLabels.assetNamespace
     - api_field: deniedDataAccessLabels.dataAccessLabel
     - api_field: deniedDataAccessLabels.displayName
@@ -28,11 +27,9 @@ fields:
     - api_field: deniedDataAccessLabels.logType
     - api_field: description
     - api_field: displayName
-    - field: instance
-      provider_only: true
+    - api_field: instance
     - api_field: lastEditor
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: updateTime
     - field: deletion_policy

@@ -12,11 +12,9 @@ fields:
     - api_field: customTlsFeatures
     - api_field: description
     - api_field: excludePublicCaSet
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: minTlsVersion
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: tlsFeatureProfile
     - api_field: trustConfig
     - api_field: updateTime

@@ -12,11 +12,9 @@ fields:
     - api_field: description
     - field: effective_labels
       provider_only: true
-    - field: intercept_deployment_group_id
-      provider_only: true
+    - api_field: interceptDeploymentGroupId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: locations.location
     - api_field: locations.state
     - api_field: name

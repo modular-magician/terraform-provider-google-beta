@@ -22,11 +22,9 @@ fields:
     - api_field: recentScheduledExecutionRecords.errorStatus.message
     - api_field: recentScheduledExecutionRecords.executionTime
     - api_field: recentScheduledExecutionRecords.workflowInvocation
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: releaseConfig
-    - field: repository
-      provider_only: true
+    - api_field: repository
     - api_field: timeZone
     - field: deletion_policy
       provider_only: true

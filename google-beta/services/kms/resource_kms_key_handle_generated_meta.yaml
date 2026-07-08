@@ -8,7 +8,6 @@ api_version: v1
 api_resource_type_kind: KeyHandle
 fields:
     - api_field: kmsKey
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: resourceTypeSelector

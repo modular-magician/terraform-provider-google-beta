@@ -24,16 +24,12 @@ fields:
     - api_field: cloudControlDetails.parameters.parameterValue.stringValue
     - api_field: description
     - api_field: displayName
-    - field: framework_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: frameworkId
+    - api_field: location
     - api_field: majorRevisionId
     - api_field: name
-    - field: organization
-      provider_only: true
-    - field: parent
-      provider_only: true
+    - api_field: organization
+    - api_field: parent
     - api_field: supportedCloudProviders
     - api_field: supportedEnforcementModes
     - api_field: supportedTargetResourceTypes

@@ -17,8 +17,7 @@ fields:
     - api_field: ignoredClustersSelector.labelSelector
     - api_field: labels
     - api_field: name
-    - field: rollout_sequence_id
-      provider_only: true
+    - api_field: rollout_sequence_id
     - api_field: stages.clusterSelector.labelSelector
     - api_field: stages.fleetProjects
     - api_field: stages.soakDuration

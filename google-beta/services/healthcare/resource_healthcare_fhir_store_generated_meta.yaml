@@ -13,8 +13,7 @@ fields:
     - api_field: consentConfig.consentHeaderHandling.profile
     - api_field: consentConfig.enforcedAdminConsents
     - api_field: consentConfig.version
-    - field: dataset
-      provider_only: true
+    - api_field: dataset
     - api_field: defaultSearchHandlingStrict
     - api_field: disableReferentialIntegrity
     - api_field: disableResourceVersioning

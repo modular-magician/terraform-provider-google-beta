@@ -12,8 +12,7 @@ fields:
     - api_field: backupOdbSubnet
     - api_field: backupSubnetCidr
     - api_field: cidr
-    - field: cloud_vm_cluster_id
-      provider_only: true
+    - api_field: cloudVmClusterId
     - api_field: createTime
     - field: deletion_protection
       provider_only: true
@@ -26,8 +25,7 @@ fields:
     - api_field: identityConnector.connectionState
     - api_field: identityConnector.serviceAgentEmail
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: network
     - api_field: odbNetwork

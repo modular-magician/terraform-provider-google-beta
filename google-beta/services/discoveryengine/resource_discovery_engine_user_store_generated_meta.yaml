@@ -10,8 +10,6 @@ fields:
     - api_field: defaultLicenseConfig
     - api_field: enableExpiredLicenseAutoUpdate
     - api_field: enableLicenseAutoRegister
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: user_store_id
-      provider_only: true
+    - api_field: user_store_id

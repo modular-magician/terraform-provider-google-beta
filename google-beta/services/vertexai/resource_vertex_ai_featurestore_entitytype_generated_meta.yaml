@@ -12,8 +12,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: etag
-    - field: featurestore
-      provider_only: true
+    - api_field: featurestore
     - api_field: labels
     - api_field: monitoringConfig.categoricalThresholdConfig.value
     - api_field: monitoringConfig.importFeaturesAnalysis.anomalyDetectionBaseline
@@ -23,8 +22,7 @@ fields:
     - api_field: monitoringConfig.snapshotAnalysis.monitoringInterval
     - api_field: monitoringConfig.snapshotAnalysis.monitoringIntervalDays
     - api_field: monitoringConfig.snapshotAnalysis.stalenessDays
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: offlineStorageTtlDays
     - field: terraform_labels
       provider_only: true

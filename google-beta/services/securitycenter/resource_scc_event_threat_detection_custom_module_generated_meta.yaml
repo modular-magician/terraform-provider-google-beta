@@ -15,8 +15,7 @@ fields:
     - api_field: enablementState
     - api_field: lastEditor
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: type
     - api_field: updateTime
     - field: deletion_policy

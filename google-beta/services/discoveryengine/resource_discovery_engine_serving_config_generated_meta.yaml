@@ -8,16 +8,12 @@ api_version: v1
 api_resource_type_kind: ServingConfig
 fields:
     - api_field: boostControlIds
-    - field: collection_id
-      provider_only: true
-    - field: engine_id
-      provider_only: true
+    - api_field: collectionId
+    - api_field: engineId
     - api_field: filterControlIds
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: promoteControlIds
     - api_field: redirectControlIds
-    - field: serving_config_id
-      provider_only: true
+    - api_field: servingConfigId
     - api_field: synonymsControlIds

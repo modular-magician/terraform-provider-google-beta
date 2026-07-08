@@ -7,8 +7,7 @@ api_service_name: backupdr.googleapis.com
 api_version: v1beta
 api_resource_type_kind: BackupPlan
 fields:
-    - field: backup_plan_id
-      provider_only: true
+    - api_field: backup_plan_id
     - api_field: backupRules.backupRetentionDays
     - api_field: backupRules.ruleId
     - api_field: backupRules.standardSchedule.backupWindow.endHourOfDay
@@ -27,8 +26,7 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: diskBackupPlanProperties.guestFlush
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logRetentionDays
     - api_field: maxCustomOnDemandRetentionDays
     - api_field: name

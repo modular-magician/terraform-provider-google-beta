@@ -11,11 +11,9 @@ fields:
     - api_field: createTime
     - api_field: dataStoreIds
     - api_field: displayName
-    - field: engine_id
-      provider_only: true
+    - api_field: engineId
     - api_field: industryVertical
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mediaRecommendationEngineConfig.engineFeaturesConfig.mostPopularConfig.timeWindowDays
     - api_field: mediaRecommendationEngineConfig.engineFeaturesConfig.recommendedForYouConfig.contextEventType
     - api_field: mediaRecommendationEngineConfig.optimizationObjective

@@ -12,11 +12,9 @@ fields:
     - api_field: advancedSiteSearchConfig.disableAutomaticRefresh
     - api_field: advancedSiteSearchConfig.disableInitialIndex
     - api_field: contentConfig
-    - field: create_advanced_site_search
-      provider_only: true
+    - api_field: createAdvancedSiteSearch
     - api_field: createTime
-    - field: data_store_id
-      provider_only: true
+    - api_field: dataStoreId
     - api_field: defaultSchemaId
     - api_field: displayName
     - api_field: documentProcessingConfig.chunkingConfig.layoutBasedChunkingConfig.chunkSize
@@ -50,11 +48,9 @@ fields:
       field: document_processing_config.parsing_config_overrides.ocr_parsing_config.use_native_text
     - api_field: industryVertical
     - api_field: kmsKeyName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: skip_default_schema_creation
-      provider_only: true
+    - api_field: skipDefaultSchemaCreation
     - api_field: solutionTypes
     - field: deletion_policy
       provider_only: true

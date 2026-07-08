@@ -170,8 +170,7 @@ fields:
     - api_field: knowledgeConnectorSettings.triggerFulfillment.webhook
     - api_field: languageCode
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: transitionRouteGroups
     - api_field: transitionRoutes.condition
     - api_field: transitionRoutes.intent

@@ -7,8 +7,7 @@ api_service_name: bigqueryreservation.googleapis.com
 api_version: v1
 api_resource_type_kind: BiReservation
 fields:
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: preferredTables.datasetId
     - api_field: preferredTables.projectId

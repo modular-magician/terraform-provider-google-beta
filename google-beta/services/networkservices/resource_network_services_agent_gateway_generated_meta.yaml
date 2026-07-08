@@ -17,8 +17,7 @@ fields:
     - api_field: etag
     - api_field: googleManaged.governedAccessPath
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: networkConfig.dnsPeeringConfig.domains
     - api_field: networkConfig.dnsPeeringConfig.targetNetwork

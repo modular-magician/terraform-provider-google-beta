@@ -11,8 +11,7 @@ fields:
     - api_field: authorizedNetworks
     - field: deletion_protection
       provider_only: true
-    - field: domain_name
-      provider_only: true
+    - api_field: domainName
     - field: effective_labels
       provider_only: true
     - api_field: fqdn

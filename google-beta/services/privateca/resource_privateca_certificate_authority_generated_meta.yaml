@@ -9,8 +9,7 @@ api_resource_type_kind: CertificateAuthority
 fields:
     - api_field: accessUrls.caCertificateAccessUrl
     - api_field: accessUrls.crlAccessUrls
-    - field: certificate_authority_id
-      provider_only: true
+    - api_field: certificateAuthorityId
     - api_field: config.subjectConfig.subject.commonName
     - api_field: config.subjectConfig.subject.countryCode
     - api_field: config.subjectConfig.subject.locality
@@ -30,10 +29,8 @@ fields:
     - api_field: config.x509Config.aiaOcspServers
     - api_field: config.x509Config.caOptions.isCa
     - api_field: config.x509Config.caOptions.maxIssuerPathLength
-    - field: config.x509_config.ca_options.non_ca
-      provider_only: true
-    - field: config.x509_config.ca_options.zero_max_issuer_path_length
-      provider_only: true
+    - api_field: config.x509Config.caOptions.nonCa
+    - api_field: config.x509Config.caOptions.zeroMaxIssuerPathLength
     - api_field: config.x509Config.keyUsage.baseKeyUsage.certSign
     - api_field: config.x509Config.keyUsage.baseKeyUsage.contentCommitment
     - api_field: config.x509Config.keyUsage.baseKeyUsage.crlSign
@@ -68,22 +65,17 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: gcsBucket
-    - field: ignore_active_certificates_on_deletion
-      provider_only: true
+    - api_field: ignore_active_certificates_on_deletion
     - api_field: keySpec.algorithm
     - api_field: keySpec.cloudKmsKeyVersion
     - api_field: labels
     - api_field: lifetime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: pem_ca_certificate
-      provider_only: true
+    - api_field: pem_ca_certificate
     - api_field: pemCaCertificates
-    - field: pool
-      provider_only: true
-    - field: skip_grace_period
-      provider_only: true
+    - api_field: pool
+    - api_field: skip_grace_period
     - api_field: state
     - api_field: subordinateConfig.certificateAuthority
     - api_field: subordinateConfig.pemIssuerChain.pemCertificates

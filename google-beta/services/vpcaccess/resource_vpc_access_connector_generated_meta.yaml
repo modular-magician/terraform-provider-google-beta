@@ -16,8 +16,7 @@ fields:
     - api_field: minThroughput
     - api_field: name
     - api_field: network
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: selfLink
     - api_field: state
     - api_field: subnet.name

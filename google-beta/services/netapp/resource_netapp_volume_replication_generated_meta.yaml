@@ -33,11 +33,9 @@ fields:
     - api_field: hybridReplicationType
     - api_field: hybridReplicationUserCommands.commands
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mirrorState
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: replication_enabled
       provider_only: true
     - api_field: replicationSchedule
@@ -55,8 +53,7 @@ fields:
     - api_field: transferStats.totalTransferDuration
     - api_field: transferStats.transferBytes
     - api_field: transferStats.updateTime
-    - field: volume_name
-      provider_only: true
+    - api_field: volumeName
     - field: wait_for_mirror
       provider_only: true
     - field: deletion_policy

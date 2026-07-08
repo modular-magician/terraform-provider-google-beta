@@ -7,18 +7,15 @@ api_service_name: discoveryengine.googleapis.com
 api_version: v1
 api_resource_type_kind: CmekConfig
 fields:
-    - field: cmek_config_id
-      provider_only: true
+    - api_field: cmekConfigId
     - api_field: isDefault
     - api_field: kmsKey
     - api_field: kmsKeyVersion
     - api_field: lastRotationTimestampMicros
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: notebooklmState
-    - field: set_default
-      provider_only: true
+    - api_field: setDefault
     - api_field: singleRegionKeys.kmsKey
     - api_field: state
     - field: deletion_policy

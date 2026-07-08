@@ -13,17 +13,13 @@ api_variant_patterns:
     - projects/{project}/locations/{location}/buckets/{bucket}/links/{link}
 fields:
     - api_field: bigqueryDataset.datasetId
-    - field: bucket
-      provider_only: true
+    - api_field: bucket
     - api_field: createTime
     - api_field: description
     - api_field: lifecycleState
-    - field: link_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: linkId
+    - api_field: location
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - field: deletion_policy
       provider_only: true

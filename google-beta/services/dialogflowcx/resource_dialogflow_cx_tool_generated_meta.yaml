@@ -45,8 +45,7 @@ fields:
     - api_field: openApiSpec.textSchema
     - api_field: openApiSpec.tlsConfig.caCerts.cert
     - api_field: openApiSpec.tlsConfig.caCerts.displayName
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: toolType
     - field: deletion_policy
       provider_only: true

@@ -14,8 +14,7 @@ fields:
     - api_field: kmsKey
     - api_field: labels
     - api_field: name
-    - field: parameter_id
-      provider_only: true
+    - api_field: parameterId
     - api_field: policyMember.iamPolicyNamePrincipal
     - api_field: policyMember.iamPolicyUidPrincipal
     - field: terraform_labels

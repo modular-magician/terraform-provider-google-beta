@@ -31,13 +31,11 @@ fields:
     - api_field: displayName
     - api_field: documentation.externalUri
     - api_field: hostingService.serviceUri
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: ownershipType
     - api_field: pluginCategory
-    - field: plugin_id
-      provider_only: true
+    - api_field: pluginId
     - api_field: state
     - api_field: updateTime
     - field: deletion_policy

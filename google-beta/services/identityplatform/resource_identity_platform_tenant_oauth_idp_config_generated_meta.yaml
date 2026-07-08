@@ -13,7 +13,6 @@ fields:
     - api_field: enabled
     - api_field: issuer
     - api_field: name
-    - field: tenant
-      provider_only: true
+    - api_field: tenant
     - field: deletion_policy
       provider_only: true

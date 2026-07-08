@@ -9,15 +9,13 @@ api_resource_type_kind: Toolset
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: app
-      provider_only: true
+    - api_field: app
     - api_field: createTime
     - api_field: description
     - api_field: displayName
     - api_field: etag
     - api_field: executionType
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mcpToolset.apiAuthentication.apiKeyConfig.apiKeySecretVersion
     - api_field: mcpToolset.apiAuthentication.apiKeyConfig.keyName
     - api_field: mcpToolset.apiAuthentication.apiKeyConfig.requestLocation
@@ -56,8 +54,7 @@ fields:
     - api_field: openApiToolset.url
     - api_field: toolFakeConfig.codeBlock.pythonCode
     - api_field: toolFakeConfig.enableFakeMode
-    - field: toolset_id
-      provider_only: true
+    - api_field: toolsetId
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

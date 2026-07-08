@@ -18,8 +18,7 @@ fields:
     - api_field: interconnectAttachment.region
     - api_field: kind
     - api_field: labels
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: network
     - api_field: nextHopIlbIp
     - api_field: nextHopOtherRoutes

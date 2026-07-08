@@ -24,5 +24,4 @@ fields:
     - api_field: llmModelSettings.model
     - api_field: llmModelSettings.promptText
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent

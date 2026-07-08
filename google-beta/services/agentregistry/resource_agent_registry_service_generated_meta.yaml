@@ -16,15 +16,13 @@ fields:
     - api_field: endpointSpec.type
     - api_field: interfaces.protocolBinding
     - api_field: interfaces.url
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mcpServerSpec.content
       json: true
     - api_field: mcpServerSpec.type
     - api_field: name
     - api_field: registryResource
-    - field: service_id
-      provider_only: true
+    - api_field: serviceId
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

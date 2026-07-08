@@ -106,8 +106,7 @@ fields:
     - api_field: runtimeApiVersion
     - api_field: runtimeChannel
     - api_field: runtimeMainExecutablePath
-    - field: service
-      provider_only: true
+    - api_field: service
     - api_field: serviceAccount
     - api_field: servingStatus
     - api_field: id

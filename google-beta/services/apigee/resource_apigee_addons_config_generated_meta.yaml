@@ -14,7 +14,6 @@ fields:
     - api_field: addonsConfig.connectorsPlatformConfig.expiresAt
     - api_field: addonsConfig.integrationConfig.enabled
     - api_field: addonsConfig.monetizationConfig.enabled
-    - field: org
-      provider_only: true
+    - api_field: org
     - field: deletion_policy
       provider_only: true

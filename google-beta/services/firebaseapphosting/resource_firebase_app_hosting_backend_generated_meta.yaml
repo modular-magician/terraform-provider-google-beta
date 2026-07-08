@@ -11,8 +11,7 @@ autogen_version: 1
 fields:
     - api_field: annotations
     - api_field: appId
-    - field: backend_id
-      provider_only: true
+    - api_field: backendId
     - api_field: codebase.repository
     - api_field: codebase.rootDirectory
     - api_field: createTime
@@ -25,8 +24,7 @@ fields:
     - api_field: environment
     - api_field: etag
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: managedResources.runService.service
     - api_field: name
     - api_field: serviceAccount

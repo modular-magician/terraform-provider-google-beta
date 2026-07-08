@@ -10,8 +10,7 @@ fields:
     - api_field: createTime
     - api_field: displayName
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: tool.connectorSpec.actions.connectionActionId
     - api_field: tool.connectorSpec.actions.entityOperation.entityId
     - api_field: tool.connectorSpec.actions.entityOperation.operation

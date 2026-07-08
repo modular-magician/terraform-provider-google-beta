@@ -9,8 +9,7 @@ api_resource_type_kind: TeamFolder
 fields:
     - api_field: displayName
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: name
       field: teamfolder_id
     - field: deletion_policy

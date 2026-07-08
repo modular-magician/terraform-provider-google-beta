@@ -19,10 +19,8 @@ fields:
     - api_field: oidc.jwksJson
     - api_field: saml.idpMetadataXml
     - api_field: state
-    - field: workload_identity_pool_id
-      provider_only: true
-    - field: workload_identity_pool_provider_id
-      provider_only: true
+    - api_field: workloadIdentityPoolId
+    - api_field: workloadIdentityPoolProviderId
     - api_field: x509.trustStore.intermediateCas.pemCertificate
     - api_field: x509.trustStore.trustAnchors.pemCertificate
     - field: deletion_policy

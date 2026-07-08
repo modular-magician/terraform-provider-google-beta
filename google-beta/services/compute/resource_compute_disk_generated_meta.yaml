@@ -31,8 +31,7 @@ fields:
     - api_field: guestOsFeatures.type
     - api_field: sourceImage
       field: image
-    - field: interface
-      provider_only: true
+    - api_field: interface
     - api_field: labelFingerprint
     - api_field: labels
     - api_field: lastAttachTimestamp

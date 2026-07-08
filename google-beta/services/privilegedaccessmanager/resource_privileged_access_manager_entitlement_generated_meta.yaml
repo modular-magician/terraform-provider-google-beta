@@ -20,15 +20,12 @@ fields:
     - api_field: approvalWorkflow.manualApprovals.steps.id
     - api_field: createTime
     - api_field: eligibleUsers.principals
-    - field: entitlement_id
-      provider_only: true
+    - api_field: entitlementId
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maxRequestDuration
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: privilegedAccess.gcpIamAccess.resource
     - api_field: privilegedAccess.gcpIamAccess.resourceType
     - api_field: privilegedAccess.gcpIamAccess.roleBindings.conditionExpression

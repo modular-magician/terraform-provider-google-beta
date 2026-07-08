@@ -7,8 +7,7 @@ api_service_name: iap.googleapis.com
 api_version: v1
 api_resource_type_kind: IdentityAwareProxyClient
 fields:
-    - field: brand
-      provider_only: true
+    - api_field: brand
     - api_field: name
       field: client_id
     - api_field: displayName

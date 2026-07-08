@@ -16,10 +16,8 @@ fields:
       field: ingestion.rule.integration_selector.integration
     - api_field: ingestion.rules.lineageEnablement.enabled
       field: ingestion.rule.lineage_enablement.enabled
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - field: deletion_policy
       provider_only: true

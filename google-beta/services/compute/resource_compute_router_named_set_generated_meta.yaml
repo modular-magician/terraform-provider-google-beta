@@ -21,10 +21,8 @@ fields:
       field: fingerprint
     - api_field: resource.name
       field: name
-    - field: region
-      provider_only: true
-    - field: router
-      provider_only: true
+    - api_field: region
+    - api_field: router
     - api_field: resource.type
       field: type
     - field: deletion_policy

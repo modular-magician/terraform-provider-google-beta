@@ -60,9 +60,7 @@ fields:
     - api_field: inspectConfig.ruleSet.rules.hotwordRule.proximity.windowAfter
     - api_field: inspectConfig.ruleSet.rules.hotwordRule.proximity.windowBefore
     - api_field: name
-    - field: parent
-      provider_only: true
-    - field: template_id
-      provider_only: true
+    - api_field: parent
+    - api_field: templateId
     - field: deletion_policy
       provider_only: true

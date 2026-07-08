@@ -81,9 +81,7 @@ fields:
       field: rate_limit_options.rate_limit_threshold.count
     - api_field: rules.rateLimitOptions.rateLimitThreshold.intervalSec
       field: rate_limit_options.rate_limit_threshold.interval_sec
-    - field: region
-      provider_only: true
-    - field: security_policy
-      provider_only: true
+    - api_field: region
+    - api_field: security_policy
     - field: deletion_policy
       provider_only: true

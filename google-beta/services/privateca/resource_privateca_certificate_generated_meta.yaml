@@ -7,8 +7,7 @@ api_service_name: privateca.googleapis.com
 api_version: v1
 api_resource_type_kind: Certificate
 fields:
-    - field: certificate_authority
-      provider_only: true
+    - api_field: certificate_authority
     - api_field: certificateDescription.aiaIssuingCertificateUrls
     - api_field: certificateDescription.authorityKeyId.keyId
     - api_field: certificateDescription.certFingerprint.sha256Hash
@@ -89,10 +88,8 @@ fields:
     - api_field: config.x509Config.aiaOcspServers
     - api_field: config.x509Config.caOptions.isCa
     - api_field: config.x509Config.caOptions.maxIssuerPathLength
-    - field: config.x509_config.ca_options.non_ca
-      provider_only: true
-    - field: config.x509_config.ca_options.zero_max_issuer_path_length
-      provider_only: true
+    - api_field: config.x509Config.caOptions.nonCa
+    - api_field: config.x509Config.caOptions.zeroMaxIssuerPathLength
     - api_field: config.x509Config.keyUsage.baseKeyUsage.certSign
     - api_field: config.x509Config.keyUsage.baseKeyUsage.contentCommitment
     - api_field: config.x509Config.keyUsage.baseKeyUsage.crlSign
@@ -125,15 +122,12 @@ fields:
     - api_field: issuerCertificateAuthority
     - api_field: labels
     - api_field: lifetime
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: pemCertificate
     - api_field: pemCertificateChain
     - api_field: pemCsr
-    - field: pool
-      provider_only: true
+    - api_field: pool
     - api_field: revocationDetails.revocationState
     - api_field: revocationDetails.revocationTime
     - field: terraform_labels

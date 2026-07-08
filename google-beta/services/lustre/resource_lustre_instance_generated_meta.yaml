@@ -23,12 +23,10 @@ fields:
       provider_only: true
     - api_field: filesystem
     - api_field: gkeSupportEnabled
-    - field: instance_id
-      provider_only: true
+    - api_field: instanceId
     - api_field: kmsKey
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maintenancePolicy.maintenanceExclusionWindow.endDate.day
     - api_field: maintenancePolicy.maintenanceExclusionWindow.endDate.month
     - api_field: maintenancePolicy.maintenanceExclusionWindow.endDate.year

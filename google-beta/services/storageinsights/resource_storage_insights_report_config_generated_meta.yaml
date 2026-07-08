@@ -20,8 +20,7 @@ fields:
     - api_field: frequencyOptions.startDate.day
     - api_field: frequencyOptions.startDate.month
     - api_field: frequencyOptions.startDate.year
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: objectMetadataReportOptions.metadataFields
     - api_field: objectMetadataReportOptions.storageDestinationOptions.bucket

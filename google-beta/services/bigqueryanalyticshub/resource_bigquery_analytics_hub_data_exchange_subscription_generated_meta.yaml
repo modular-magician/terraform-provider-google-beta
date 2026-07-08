@@ -9,12 +9,9 @@ api_resource_type_kind: Subscription
 fields:
     - api_field: creationTime
     - api_field: dataExchange
-    - field: data_exchange_id
-      provider_only: true
-    - field: data_exchange_location
-      provider_only: true
-    - field: data_exchange_project
-      provider_only: true
+    - api_field: dataExchangeId
+    - api_field: dataExchangeLocation
+    - api_field: dataExchangeProject
     - api_field: destinationDataset.datasetReference.datasetId
     - api_field: destinationDataset.datasetReference.projectId
     - api_field: destinationDataset.description
@@ -32,8 +29,7 @@ fields:
       field: linked_dataset_map.listing
     - api_field: linkedResources.linkedDataset
     - api_field: linkedResources.listing
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logLinkedDatasetQueryUserEmail
     - api_field: name
     - api_field: organizationDisplayName

@@ -19,8 +19,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: monitoringEndpoint
     - api_field: name
     - api_field: namespace
@@ -33,16 +32,14 @@ fields:
     - api_field: pysparkApplicationConfig.mainPythonFileUri
     - api_field: pysparkApplicationConfig.pythonFileUris
     - api_field: reconciling
-    - field: serviceinstance
-      provider_only: true
+    - api_field: serviceinstance
     - api_field: sparkApplicationConfig.archiveUris
     - api_field: sparkApplicationConfig.args
     - api_field: sparkApplicationConfig.fileUris
     - api_field: sparkApplicationConfig.jarFileUris
     - api_field: sparkApplicationConfig.mainClass
     - api_field: sparkApplicationConfig.mainJarFileUri
-    - field: spark_application_id
-      provider_only: true
+    - api_field: sparkApplicationId
     - api_field: sparkRApplicationConfig.archiveUris
     - api_field: sparkRApplicationConfig.args
     - api_field: sparkRApplicationConfig.fileUris

@@ -15,11 +15,9 @@ fields:
       provider_only: true
     - api_field: enabled
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: monthlyBackupLimit
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: state
     - field: terraform_labels
       provider_only: true

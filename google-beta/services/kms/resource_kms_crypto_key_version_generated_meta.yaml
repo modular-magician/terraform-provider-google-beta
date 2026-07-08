@@ -15,8 +15,7 @@ fields:
     - api_field: attestation.externalProtectionLevelOptions.ekmConnectionKeyPath
     - api_field: attestation.externalProtectionLevelOptions.externalKeyUri
     - api_field: attestation.format
-    - field: crypto_key
-      provider_only: true
+    - api_field: cryptoKey
     - api_field: externalProtectionLevelOptions.ekmConnectionKeyPath
     - api_field: externalProtectionLevelOptions.externalKeyUri
     - api_field: generateTime

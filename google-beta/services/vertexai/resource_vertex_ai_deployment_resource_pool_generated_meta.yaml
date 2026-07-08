@@ -16,7 +16,6 @@ fields:
     - api_field: dedicatedResources.maxReplicaCount
     - api_field: dedicatedResources.minReplicaCount
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - field: deletion_policy
       provider_only: true

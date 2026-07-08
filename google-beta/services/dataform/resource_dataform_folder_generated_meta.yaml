@@ -12,7 +12,6 @@ fields:
     - api_field: name
       field: folder_id
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - field: deletion_policy
       provider_only: true

@@ -8,15 +8,13 @@ api_version: v1
 api_resource_type_kind: Engine
 fields:
     - api_field: appType
-    - field: collection_id
-      provider_only: true
+    - api_field: collectionId
     - api_field: commonConfig.companyName
     - api_field: createTime
     - api_field: dataStoreIds
     - api_field: disableAnalytics
     - api_field: displayName
-    - field: engine_id
-      provider_only: true
+    - api_field: engineId
     - api_field: features
     - api_field: industryVertical
     - api_field: kmsKeyName
@@ -27,8 +25,7 @@ fields:
     - api_field: knowledgeGraphConfig.featureConfig.disablePrivateKgEnrichment
     - api_field: knowledgeGraphConfig.featureConfig.disablePrivateKgQueryUiChips
     - api_field: knowledgeGraphConfig.featureConfig.disablePrivateKgQueryUnderstanding
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: searchEngineConfig.requiredSubscriptionTier
     - api_field: searchEngineConfig.searchAddOns

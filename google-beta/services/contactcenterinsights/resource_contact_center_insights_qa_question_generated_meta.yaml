@@ -18,19 +18,16 @@ fields:
     - api_field: answerChoices.strValue
     - api_field: answerInstructions
     - api_field: createTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: metrics.accuracy
     - api_field: name
     - api_field: order
     - api_field: predefinedQuestionConfig.type
     - api_field: qaQuestionDataOptions.conversationDataOptions.includeDialogflowInteractionData
-    - field: qa_scorecard
-      provider_only: true
+    - api_field: qaScorecard
     - api_field: questionBody
     - api_field: questionType
-    - field: revision
-      provider_only: true
+    - api_field: revision
     - api_field: tags
     - api_field: tuningMetadata.datasetValidationWarnings
     - api_field: tuningMetadata.totalValidLabelCount

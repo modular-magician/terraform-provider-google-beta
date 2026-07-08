@@ -12,11 +12,9 @@ fields:
     - api_field: endDate.month
     - api_field: endDate.year
     - api_field: freeTrial
-    - field: license_config_id
-      provider_only: true
+    - api_field: licenseConfigId
     - api_field: licenseCount
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: startDate.day
     - api_field: startDate.month

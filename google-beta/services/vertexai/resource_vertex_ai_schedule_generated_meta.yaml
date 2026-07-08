@@ -84,8 +84,7 @@ fields:
     - api_field: lastResumeTime
     - api_field: lastScheduledRunResponse.runResponse
     - api_field: lastScheduledRunResponse.scheduledRunTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maxConcurrentActiveRunCount
     - api_field: maxConcurrentRunCount
     - api_field: maxRunCount

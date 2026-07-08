@@ -7,10 +7,8 @@ api_service_name: deploymentmanager.googleapis.com
 api_version: v2
 api_resource_type_kind: Deployment
 fields:
-    - field: create_policy
-      provider_only: true
-    - field: delete_policy
-      provider_only: true
+    - api_field: createPolicy
+    - api_field: deletePolicy
     - api_field: id
       field: deployment_id
     - api_field: description
@@ -18,8 +16,7 @@ fields:
     - api_field: labels.value
     - api_field: manifest
     - api_field: name
-    - field: preview
-      provider_only: true
+    - api_field: preview
     - api_field: selfLink
     - api_field: target.config.content
     - api_field: target.imports.content

@@ -13,8 +13,7 @@ fields:
     - api_field: localData.localDatas.rrdatas
     - api_field: localData.localDatas.ttl
     - api_field: localData.localDatas.type
-    - field: response_policy
-      provider_only: true
+    - api_field: response_policy
     - api_field: ruleName
     - field: deletion_policy
       provider_only: true

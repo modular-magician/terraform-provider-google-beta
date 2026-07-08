@@ -14,11 +14,9 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: enableCustomerDataSharing
-    - field: gemini_gcp_enablement_setting_id
-      provider_only: true
+    - api_field: geminiGcpEnablementSettingId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - field: terraform_labels
       provider_only: true

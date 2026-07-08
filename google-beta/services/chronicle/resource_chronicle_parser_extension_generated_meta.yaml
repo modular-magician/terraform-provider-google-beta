@@ -25,14 +25,11 @@ fields:
     - api_field: fieldExtractors.preprocessConfig.grokRegex
     - api_field: fieldExtractors.preprocessConfig.target
     - api_field: fieldExtractors.transformedCbnSnippet
-    - field: instance
-      provider_only: true
+    - api_field: instance
     - api_field: lastLiveTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: log
-    - field: log_type
-      provider_only: true
+    - api_field: log_type
     - api_field: name
     - api_field: parserextension
     - api_field: state

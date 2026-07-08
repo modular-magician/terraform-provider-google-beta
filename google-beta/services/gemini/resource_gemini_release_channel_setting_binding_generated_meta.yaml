@@ -15,14 +15,11 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: product
-    - field: release_channel_setting_id
-      provider_only: true
-    - field: setting_binding_id
-      provider_only: true
+    - api_field: releaseChannelSettingId
+    - api_field: settingBindingId
     - api_field: target
     - field: terraform_labels
       provider_only: true

@@ -11,8 +11,7 @@ fields:
     - api_field: basicService.serviceType
     - api_field: displayName
     - api_field: name
-    - field: service_id
-      provider_only: true
+    - api_field: serviceId
     - api_field: telemetry.resourceName
     - api_field: userLabels
     - field: deletion_policy

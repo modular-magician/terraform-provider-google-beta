@@ -46,10 +46,8 @@ fields:
       field: initial_replication.role
     - api_field: kmsKeyName
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: networks.connectMode
     - api_field: networks.ipAddresses
     - api_field: networks.modes
@@ -63,7 +61,6 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: tier
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

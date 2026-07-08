@@ -147,10 +147,8 @@ fields:
     - api_field: orchestrationState.previousIterationState.rolloutResource
     - api_field: orchestrationState.previousIterationState.startTime
     - api_field: orchestrationState.previousIterationState.state
-    - field: organization_id
-      provider_only: true
-    - field: policy_orchestrator_id
-      provider_only: true
+    - api_field: organizationId
+    - api_field: policyOrchestratorId
     - api_field: reconciling
     - api_field: state
     - field: terraform_labels

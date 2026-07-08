@@ -11,12 +11,10 @@ fields:
     - api_field: createTime
     - api_field: dimensions
     - api_field: etag
-    - field: ignore_safety_checks
-      provider_only: true
+    - api_field: ignore_safety_checks
     - api_field: justification
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: quotaConfig.annotations
     - api_field: quotaConfig.grantedValue
     - api_field: quotaConfig.preferredValue

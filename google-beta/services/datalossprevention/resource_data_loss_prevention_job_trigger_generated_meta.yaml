@@ -107,11 +107,9 @@ fields:
     - api_field: inspectJob.storageConfig.timespanConfig.timestampField.name
     - api_field: lastRunTime
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: status
-    - field: trigger_id
-      provider_only: true
+    - api_field: triggerId
     - api_field: triggers.manual
     - api_field: triggers.schedule.recurrencePeriodDuration
     - api_field: updateTime

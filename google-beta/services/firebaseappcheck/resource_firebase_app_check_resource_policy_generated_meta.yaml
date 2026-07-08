@@ -11,8 +11,7 @@ fields:
     - api_field: etag
     - api_field: name
       field: resource_policy_id
-    - field: service_id
-      provider_only: true
+    - api_field: service_id
     - api_field: targetResource
     - api_field: updateTime
     - field: deletion_policy

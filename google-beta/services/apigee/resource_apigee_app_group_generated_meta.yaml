@@ -16,8 +16,7 @@ fields:
     - api_field: displayName
     - api_field: lastModifiedAt
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: organization
     - api_field: status
     - field: deletion_policy

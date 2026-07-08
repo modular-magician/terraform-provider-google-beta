@@ -16,8 +16,7 @@ fields:
     - api_field: gclbTargets.targetHttpsProxy
     - api_field: gclbTargets.targetSslProxy
     - api_field: labels
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime

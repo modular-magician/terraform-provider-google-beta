@@ -15,7 +15,6 @@ fields:
       field: import_custom_routes
     - api_field: peerings.importSubnetRoutesWithPublicIp
       field: import_subnet_routes_with_public_ip
-    - field: network
-      provider_only: true
+    - api_field: network
     - api_field: peerings.name
       field: peering

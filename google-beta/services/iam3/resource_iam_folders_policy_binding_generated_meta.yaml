@@ -19,14 +19,11 @@ fields:
     - field: effective_annotations
       provider_only: true
     - api_field: etag
-    - field: folder
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: folder
+    - api_field: location
     - api_field: name
     - api_field: policy
-    - field: policy_binding_id
-      provider_only: true
+    - api_field: policyBindingId
     - api_field: policyKind
     - api_field: policyUid
     - api_field: target.principalSet

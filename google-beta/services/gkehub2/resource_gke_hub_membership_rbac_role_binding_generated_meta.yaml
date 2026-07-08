@@ -9,12 +9,9 @@ api_resource_type_kind: RBACRoleBinding
 fields:
     - api_field: createTime
     - api_field: deleteTime
-    - field: location
-      provider_only: true
-    - field: membership_id
-      provider_only: true
-    - field: membership_rbac_role_binding_id
-      provider_only: true
+    - api_field: location
+    - api_field: membership_id
+    - api_field: membershipRbacRoleBindingId
     - api_field: name
     - api_field: role.predefinedRole
     - api_field: state.code

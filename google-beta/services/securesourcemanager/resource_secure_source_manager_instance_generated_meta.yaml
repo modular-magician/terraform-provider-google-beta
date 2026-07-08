@@ -14,12 +14,10 @@ fields:
     - api_field: hostConfig.gitHttp
     - api_field: hostConfig.gitSsh
     - api_field: hostConfig.html
-    - field: instance_id
-      provider_only: true
+    - api_field: instance_id
     - api_field: kmsKey
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: privateConfig.caPool
     - api_field: privateConfig.customHostConfig.api

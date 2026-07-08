@@ -13,12 +13,10 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logMetadata
     - api_field: logPromptsAndResponses
-    - field: logging_setting_id
-      provider_only: true
+    - api_field: loggingSettingId
     - api_field: name
     - field: terraform_labels
       provider_only: true

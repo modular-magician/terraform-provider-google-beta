@@ -29,8 +29,7 @@ fields:
     - api_field: pubsubTarget.attributes
     - api_field: pubsubTarget.data
     - api_field: pubsubTarget.topicName
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: retryConfig.maxBackoffDuration
     - api_field: retryConfig.maxDoublings
     - api_field: retryConfig.maxRetryDuration

@@ -27,8 +27,7 @@ fields:
     - api_field: hiveMetastoreConfig.kerberosConfig.principal
     - api_field: hiveMetastoreConfig.version
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maintenanceWindow.dayOfWeek
     - api_field: maintenanceWindow.hourOfDay
     - api_field: metadataIntegration.dataCatalogConfig.enabled
@@ -49,8 +48,7 @@ fields:
     - api_field: scheduledBackup.cronSchedule
     - api_field: scheduledBackup.enabled
     - api_field: scheduledBackup.timeZone
-    - field: service_id
-      provider_only: true
+    - api_field: serviceId
     - api_field: state
     - api_field: stateMessage
     - api_field: tags

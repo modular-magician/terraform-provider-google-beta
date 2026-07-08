@@ -10,8 +10,7 @@ fields:
     - api_field: accessLevels
     - api_field: groupKey
     - api_field: name
-    - field: organization_id
-      provider_only: true
+    - api_field: organizationId
     - api_field: scopedAccessSettings.activeSettings.accessLevels
     - api_field: scopedAccessSettings.activeSettings.sessionSettings.maxInactivity
     - api_field: scopedAccessSettings.activeSettings.sessionSettings.sessionLength

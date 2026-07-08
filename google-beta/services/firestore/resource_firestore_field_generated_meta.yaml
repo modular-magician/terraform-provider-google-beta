@@ -7,12 +7,9 @@ api_service_name: firestore.googleapis.com
 api_version: v1
 api_resource_type_kind: Field
 fields:
-    - field: collection
-      provider_only: true
-    - field: database
-      provider_only: true
-    - field: field
-      provider_only: true
+    - api_field: collection
+    - api_field: database
+    - api_field: field
     - api_field: indexConfig.indexes.arrayConfig
     - api_field: indexConfig.indexes.order
     - api_field: indexConfig.indexes.queryScope

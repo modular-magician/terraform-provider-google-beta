@@ -13,8 +13,7 @@ fields:
     - api_field: lastUpdateTime
     - api_field: name
     - api_field: pipelineSources
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: scheduleInfo.nextJobTime
     - api_field: scheduleInfo.schedule
     - api_field: scheduleInfo.timeZone

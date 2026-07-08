@@ -9,5 +9,4 @@ api_resource_type_kind: PublisherModel
 fields:
     - api_field: enablementState
     - api_field: publisherEndpoint
-    - field: publisher_model_name
-      provider_only: true
+    - api_field: publisherModelName

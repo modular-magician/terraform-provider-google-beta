@@ -18,8 +18,7 @@ fields:
     - api_field: executionHistoryLevel
     - api_field: labels
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: revisionId
     - api_field: serviceAccount
     - api_field: sourceContents

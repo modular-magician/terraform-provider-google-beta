@@ -44,8 +44,7 @@ fields:
     - api_field: linkedVpnTunnels.includeImportRanges
     - api_field: linkedVpnTunnels.siteToSiteDataTransfer
     - api_field: linkedVpnTunnels.uris
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: reasons.code
     - api_field: reasons.message

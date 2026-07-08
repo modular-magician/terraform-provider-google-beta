@@ -9,8 +9,7 @@ api_resource_type_kind: DomainMapping
 cai_asset_name_formats:
     - //run.googleapis.com/projects/{{project}}/locations/{{location}}/domainmappings/{{name}}
 fields:
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: metadata.annotations
     - field: metadata.effective_annotations
       provider_only: true
@@ -24,8 +23,7 @@ fields:
     - field: metadata.terraform_labels
       provider_only: true
     - api_field: metadata.uid
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: spec.certificateMode
     - api_field: spec.forceOverride
     - api_field: spec.routeName

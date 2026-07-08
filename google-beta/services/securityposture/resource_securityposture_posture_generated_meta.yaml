@@ -10,11 +10,9 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: policySets.description
     - api_field: policySets.policies.complianceStandards.control
     - api_field: policySets.policies.complianceStandards.standard
@@ -65,8 +63,7 @@ fields:
     - api_field: policySets.policies.description
     - api_field: policySets.policies.policyId
     - api_field: policySets.policySetId
-    - field: posture_id
-      provider_only: true
+    - api_field: postureId
     - api_field: reconciling
     - api_field: revisionId
     - api_field: state

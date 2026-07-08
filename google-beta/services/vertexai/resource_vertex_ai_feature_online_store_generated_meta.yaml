@@ -25,11 +25,9 @@ fields:
     - field: force_destroy
       provider_only: true
     - api_field: labels
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: optimized
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: state
     - field: terraform_labels
       provider_only: true

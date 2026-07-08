@@ -9,8 +9,7 @@ api_resource_type_kind: ConnectCluster
 fields:
     - api_field: capacityConfig.memoryBytes
     - api_field: capacityConfig.vcpuCount
-    - field: connect_cluster_id
-      provider_only: true
+    - api_field: connectClusterId
     - api_field: createTime
     - field: effective_labels
       provider_only: true
@@ -19,8 +18,7 @@ fields:
     - api_field: gcpConfig.accessConfig.networkConfigs.primarySubnet
     - api_field: kafkaCluster
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: state
     - field: terraform_labels

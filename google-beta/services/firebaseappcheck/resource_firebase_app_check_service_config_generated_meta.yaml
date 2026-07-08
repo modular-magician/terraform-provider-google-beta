@@ -9,7 +9,6 @@ api_resource_type_kind: Service
 fields:
     - api_field: enforcementMode
     - api_field: name
-    - field: service_id
-      provider_only: true
+    - api_field: service_id
     - field: deletion_policy
       provider_only: true

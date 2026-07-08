@@ -7,8 +7,7 @@ api_service_name: cloudaicompanion.googleapis.com
 api_version: v1
 api_resource_type_kind: CodeRepositoryIndex
 fields:
-    - field: code_repository_index_id
-      provider_only: true
+    - api_field: codeRepositoryIndexId
     - api_field: createTime
     - field: effective_labels
       provider_only: true
@@ -16,8 +15,7 @@ fields:
       provider_only: true
     - api_field: kmsKey
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: state
     - field: terraform_labels

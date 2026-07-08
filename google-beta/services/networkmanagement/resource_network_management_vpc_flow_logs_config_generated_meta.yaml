@@ -16,8 +16,7 @@ fields:
     - api_field: flowSampling
     - api_field: interconnectAttachment
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: metadata
     - api_field: metadataFields
     - api_field: name
@@ -28,8 +27,7 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime
-    - field: vpc_flow_logs_config_id
-      provider_only: true
+    - api_field: vpcFlowLogsConfigId
     - api_field: vpnTunnel
     - field: deletion_policy
       provider_only: true

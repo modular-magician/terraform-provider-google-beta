@@ -15,11 +15,9 @@ fields:
       provider_only: true
     - api_field: entitlementId
     - api_field: gcpOracleZone
-    - field: goldengate_deployment_id
-      provider_only: true
+    - api_field: goldengateDeploymentId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: ociUrl
     - api_field: odbNetwork

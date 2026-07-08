@@ -8,18 +8,15 @@ api_version: v1
 api_resource_type_kind: BareMetalNodePool
 fields:
     - api_field: annotations
-    - field: bare_metal_cluster
-      provider_only: true
+    - api_field: bareMetalCluster
     - api_field: createTime
     - api_field: deleteTime
     - api_field: displayName
     - field: effective_annotations
       provider_only: true
     - api_field: etag
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: nodePoolConfig.labels
     - api_field: nodePoolConfig.nodeConfigs.labels
     - api_field: nodePoolConfig.nodeConfigs.nodeIp

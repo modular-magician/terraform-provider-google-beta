@@ -47,8 +47,7 @@ fields:
     - api_field: maintenanceVersion
     - api_field: managedBackupSource.backup
     - api_field: managedServerCa.caCerts.certificates
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: nodeType
     - api_field: persistenceConfig.aofConfig.appendFsync
     - api_field: persistenceConfig.mode
@@ -64,8 +63,7 @@ fields:
     - api_field: pscServiceAttachments.connectionType
     - api_field: pscServiceAttachments.serviceAttachment
     - api_field: redisConfigs
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: replicaCount
     - api_field: serverCaMode
     - api_field: serverCaPool

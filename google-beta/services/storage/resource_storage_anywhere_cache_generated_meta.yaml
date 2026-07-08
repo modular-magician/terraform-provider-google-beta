@@ -9,8 +9,7 @@ api_resource_type_kind: AnywhereCache
 fields:
     - api_field: admissionPolicy
     - api_field: anywhereCacheId
-    - field: bucket
-      provider_only: true
+    - api_field: bucket
     - api_field: createTime
     - api_field: ingestOnWrite
     - api_field: pendingUpdate

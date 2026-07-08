@@ -12,5 +12,4 @@ fields:
     - api_field: enablement
     - api_field: inherited
     - api_field: inheritedFrom
-    - field: parent
-      provider_only: true
+    - api_field: parent

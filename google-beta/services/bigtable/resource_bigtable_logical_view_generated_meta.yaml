@@ -10,10 +10,8 @@ cai_asset_name_formats:
     - //bigtable.googleapis.com/projects/{{project}}/instances/{{instance}}/logicalViews/{{logical_view_id}}
 fields:
     - api_field: deletionProtection
-    - field: instance
-      provider_only: true
-    - field: logical_view_id
-      provider_only: true
+    - api_field: instance
+    - api_field: logicalViewId
     - api_field: name
     - api_field: query
     - field: deletion_policy

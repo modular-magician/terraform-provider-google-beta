@@ -7,15 +7,12 @@ api_service_name: bigqueryreservation.googleapis.com
 api_version: v1
 api_resource_type_kind: CapacityCommitment
 fields:
-    - field: capacity_commitment_id
-      provider_only: true
+    - api_field: capacityCommitmentId
     - api_field: commitmentEndTime
     - api_field: commitmentStartTime
     - api_field: edition
-    - field: enforce_single_admin_project_per_org
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: enforceSingleAdminProjectPerOrg
+    - api_field: location
     - api_field: name
     - api_field: plan
     - api_field: renewalPlan

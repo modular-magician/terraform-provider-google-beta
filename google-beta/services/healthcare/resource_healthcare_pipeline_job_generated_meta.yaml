@@ -8,14 +8,12 @@ api_version: v1beta1
 api_resource_type_kind: PipelineJob
 fields:
     - api_field: backfillPipelineJob.mappingPipelineJob
-    - field: dataset
-      provider_only: true
+    - api_field: dataset
     - api_field: disableLineage
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mappingPipelineJob.fhirStoreDestination
     - api_field: mappingPipelineJob.fhirStreamingSource.description
     - api_field: mappingPipelineJob.fhirStreamingSource.fhirStore

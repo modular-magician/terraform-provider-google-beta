@@ -9,8 +9,7 @@ api_resource_type_kind: WireGroup
 fields:
     - api_field: adminEnabled
     - api_field: creationTimestamp
-    - field: cross_site_network
-      provider_only: true
+    - api_field: crossSiteNetwork
     - api_field: description
     - api_field: endpoints.key
       field: endpoints.endpoint

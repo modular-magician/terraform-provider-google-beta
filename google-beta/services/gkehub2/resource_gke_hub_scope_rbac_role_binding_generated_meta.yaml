@@ -16,10 +16,8 @@ fields:
     - api_field: name
     - api_field: role.customRole
     - api_field: role.predefinedRole
-    - field: scope_id
-      provider_only: true
-    - field: scope_rbac_role_binding_id
-      provider_only: true
+    - api_field: scope_id
+    - api_field: scopeRbacRoleBindingId
     - api_field: state.code
     - field: terraform_labels
       provider_only: true

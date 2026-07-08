@@ -11,7 +11,6 @@ fields:
     - api_field: endpointControlPolicy.allowedOrigins
     - api_field: endpointControlPolicy.enforcementScope
     - api_field: etag
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: updateTime

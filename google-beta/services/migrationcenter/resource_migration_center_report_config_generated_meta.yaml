@@ -14,11 +14,9 @@ fields:
     - api_field: displayName
     - api_field: groupPreferencesetAssignments.group
     - api_field: groupPreferencesetAssignments.preferenceSet
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: report_config_id
-      provider_only: true
+    - api_field: reportConfigId
     - api_field: updateTime
     - field: deletion_policy
       provider_only: true

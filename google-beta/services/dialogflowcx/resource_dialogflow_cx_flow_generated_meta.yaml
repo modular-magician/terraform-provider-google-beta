@@ -102,8 +102,7 @@ fields:
     - api_field: nluSettings.classificationThreshold
     - api_field: nluSettings.modelTrainingMode
     - api_field: nluSettings.modelType
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: transitionRouteGroups
     - api_field: transitionRoutes.condition
     - api_field: transitionRoutes.intent

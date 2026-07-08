@@ -29,8 +29,7 @@ fields:
       field: ingress_to.resources
     - api_field: spec.ingressPolicies.ingressTo.roles
       field: ingress_to.roles
-    - field: perimeter
-      provider_only: true
+    - api_field: perimeter
     - api_field: spec.ingressPolicies.title
       field: title
     - field: deletion_policy

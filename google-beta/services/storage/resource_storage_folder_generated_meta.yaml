@@ -7,8 +7,7 @@ api_service_name: storage.googleapis.com
 api_version: v1
 api_resource_type_kind: Folder
 fields:
-    - field: bucket
-      provider_only: true
+    - api_field: bucket
     - api_field: createTime
     - field: force_destroy
       provider_only: true

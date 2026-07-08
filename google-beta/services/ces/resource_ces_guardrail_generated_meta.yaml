@@ -13,8 +13,7 @@ fields:
     - api_field: action.respondImmediately.responses.disabled
     - api_field: action.respondImmediately.responses.text
     - api_field: action.transferAgent.agent
-    - field: app
-      provider_only: true
+    - api_field: app
     - api_field: codeCallback.afterAgentCallback.description
     - api_field: codeCallback.afterAgentCallback.disabled
     - api_field: codeCallback.afterAgentCallback.pythonCode
@@ -37,8 +36,7 @@ fields:
     - api_field: displayName
     - api_field: enabled
     - api_field: etag
-    - field: guardrail_id
-      provider_only: true
+    - api_field: guardrailId
     - api_field: llmPolicy.allowShortUtterance
     - api_field: llmPolicy.failOpen
     - api_field: llmPolicy.maxConversationMessages
@@ -55,8 +53,7 @@ fields:
     - api_field: llmPromptSecurity.customPolicy.prompt
     - api_field: llmPromptSecurity.defaultSettings.defaultPromptTemplate
     - api_field: llmPromptSecurity.failOpen
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: modelSafety.safetySettings.category
     - api_field: modelSafety.safetySettings.threshold
     - api_field: name

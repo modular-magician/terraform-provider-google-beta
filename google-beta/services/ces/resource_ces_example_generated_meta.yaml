@@ -9,18 +9,15 @@ api_resource_type_kind: Example
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: app
-      provider_only: true
+    - api_field: app
     - api_field: createTime
     - api_field: description
     - api_field: displayName
     - api_field: entryAgent
     - api_field: etag
-    - field: example_id
-      provider_only: true
+    - api_field: exampleId
     - api_field: invalid
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: messages.chunks.agentTransfer.displayName
     - api_field: messages.chunks.agentTransfer.targetAgent
     - api_field: messages.chunks.image.data

@@ -8,13 +8,11 @@ api_version: v1
 api_resource_type_kind: EndpointAttachment
 fields:
     - api_field: connectionState
-    - field: endpoint_attachment_id
-      provider_only: true
+    - api_field: endpointAttachmentId
     - api_field: host
     - api_field: location
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: serviceAttachment
     - field: deletion_policy
       provider_only: true

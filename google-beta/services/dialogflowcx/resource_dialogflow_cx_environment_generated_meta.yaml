@@ -10,8 +10,7 @@ fields:
     - api_field: description
     - api_field: displayName
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: updateTime
     - api_field: versionConfigs.version
     - field: deletion_policy

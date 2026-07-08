@@ -14,8 +14,7 @@ fields:
     - api_field: healthSources
     - api_field: id
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: selfLinkWithId
     - field: deletion_policy
       provider_only: true

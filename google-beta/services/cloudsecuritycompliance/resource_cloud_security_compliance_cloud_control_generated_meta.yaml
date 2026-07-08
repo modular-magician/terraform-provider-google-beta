@@ -13,18 +13,15 @@ autogen_status: true
 autogen_version: 1
 fields:
     - api_field: categories
-    - field: cloud_control_id
-      provider_only: true
+    - api_field: cloudControlId
     - api_field: createTime
     - api_field: description
     - api_field: displayName
     - api_field: findingCategory
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: majorRevisionId
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: parameterSpec.defaultValue.boolValue
     - api_field: parameterSpec.defaultValue.numberValue
     - api_field: parameterSpec.defaultValue.oneofValue.name
@@ -81,8 +78,7 @@ fields:
     - api_field: parameterSpec.validation.intRange.min
     - api_field: parameterSpec.validation.regexpPattern.pattern
     - api_field: parameterSpec.valueType
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: relatedFrameworks
     - api_field: remediationSteps
     - api_field: rules.celExpression.expression

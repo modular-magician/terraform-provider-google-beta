@@ -13,10 +13,8 @@ fields:
     - api_field: attributes.name
     - api_field: attributes.value
     - api_field: callbackUrl
-    - field: consumer_key
-      provider_only: true
-    - field: consumer_secret
-      provider_only: true
+    - api_field: consumerKey
+    - api_field: consumerSecret
     - api_field: createdAt
     - api_field: credentials.apiProducts.apiproduct
     - api_field: credentials.apiProducts.status
@@ -28,14 +26,12 @@ fields:
     - api_field: credentials.issuedAt
     - api_field: credentials.scopes
     - api_field: credentials.status
-    - field: developer_email
-      provider_only: true
+    - api_field: developer_email
     - api_field: developerId
     - api_field: keyExpiresIn
     - api_field: lastModifiedAt
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: scopes
     - api_field: status
     - field: deletion_policy

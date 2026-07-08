@@ -7,11 +7,9 @@ api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: Disk
 fields:
-    - field: disk
-      provider_only: true
+    - api_field: disk
     - api_field: resourcePolicies.name
       field: name
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

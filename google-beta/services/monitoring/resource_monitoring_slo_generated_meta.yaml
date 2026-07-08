@@ -35,8 +35,7 @@ fields:
       field: request_based_sli.good_total_ratio.total_service_filter
     - api_field: rollingPeriod
       field: rolling_period_days
-    - field: service
-      provider_only: true
+    - api_field: service
     - api_field: name
       field: slo_id
     - api_field: userLabels

@@ -17,12 +17,10 @@ fields:
     - api_field: entitlementId
     - api_field: gcpOracleZone
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: network
-    - field: odb_network_id
-      provider_only: true
+    - api_field: odbNetworkId
     - api_field: state
     - field: terraform_labels
       provider_only: true

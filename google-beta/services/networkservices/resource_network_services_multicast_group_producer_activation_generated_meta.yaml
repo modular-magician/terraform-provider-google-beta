@@ -14,10 +14,8 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
-    - field: multicast_group_producer_activation_id
-      provider_only: true
+    - api_field: location
+    - api_field: multicastGroupProducerActivationId
     - api_field: multicastGroupRangeActivation
     - api_field: multicastProducerAssociation
     - api_field: name

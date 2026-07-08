@@ -9,8 +9,7 @@ api_resource_type_kind: Batch
 api_variant_patterns:
     - projects/{project}/locations/{location}/batches/{batch}
 fields:
-    - field: batch_id
-      provider_only: true
+    - api_field: batchId
     - api_field: createTime
     - api_field: creator
     - field: effective_labels
@@ -26,8 +25,7 @@ fields:
     - api_field: environmentConfig.peripheralsConfig.metastoreService
     - api_field: environmentConfig.peripheralsConfig.sparkHistoryServerConfig.dataprocCluster
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: operation
     - api_field: pysparkBatch.archiveUris

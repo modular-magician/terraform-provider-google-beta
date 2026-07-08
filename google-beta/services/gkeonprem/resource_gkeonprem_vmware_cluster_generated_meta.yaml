@@ -46,10 +46,8 @@ fields:
     - api_field: loadBalancer.vipConfig.controlPlaneVip
     - api_field: loadBalancer.vipConfig.ingressVip
     - api_field: localName
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: networkConfig.controlPlaneV2Config.controlPlaneIpBlock.gateway
     - api_field: networkConfig.controlPlaneV2Config.controlPlaneIpBlock.ips.hostname
     - api_field: networkConfig.controlPlaneV2Config.controlPlaneIpBlock.ips.ip
@@ -67,8 +65,7 @@ fields:
     - api_field: networkConfig.vcenterNetwork
     - api_field: onPremVersion
     - api_field: reconciling
-    - field: skip_validations
-      provider_only: true
+    - api_field: skipValidations
     - api_field: state
     - api_field: status.conditions.lastTransitionTime
     - api_field: status.conditions.message

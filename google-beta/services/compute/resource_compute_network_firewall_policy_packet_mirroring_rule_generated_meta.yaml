@@ -17,8 +17,7 @@ fields:
       field: direction
     - api_field: packetMirroringRules.disabled
       field: disabled
-    - field: firewall_policy
-      provider_only: true
+    - api_field: firewallPolicy
     - api_field: packetMirroringRules.kind
       field: kind
     - api_field: packetMirroringRules.match.destIpRanges

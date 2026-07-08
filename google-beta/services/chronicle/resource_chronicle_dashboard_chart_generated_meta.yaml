@@ -140,12 +140,9 @@ fields:
     - api_field: dashboardQuery.input.timeWindow.startTime
     - api_field: dashboardQuery.name
     - api_field: dashboardQuery.query
-    - field: instance
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: instance
+    - api_field: location
     - api_field: name
-    - field: native_dashboard
-      provider_only: true
+    - api_field: nativeDashboard
     - field: deletion_policy
       provider_only: true

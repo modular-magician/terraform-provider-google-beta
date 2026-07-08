@@ -17,8 +17,7 @@ fields:
     - api_field: hcx.internalIp
     - api_field: hcx.state
     - api_field: hcx.version
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: managementCluster.autoscalingSettings.autoscalingPolicies.key
       field: management_cluster.autoscaling_settings.autoscaling_policies.autoscale_policy_id
     - api_field: managementCluster.autoscalingSettings.autoscalingPolicies.value.consumedMemoryThresholds.scaleIn
@@ -49,8 +48,7 @@ fields:
       field: management_cluster.node_type_configs.node_count
     - api_field: managementCluster.stretchedClusterConfig.preferredLocation
     - api_field: managementCluster.stretchedClusterConfig.secondaryLocation
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: networkConfig.dnsServerIp
     - api_field: networkConfig.managementCidr
     - api_field: networkConfig.managementIpAddressLayoutVersion

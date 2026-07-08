@@ -19,12 +19,10 @@ fields:
     - api_field: disableVpcPeering
     - api_field: displayName
     - api_field: name
-    - field: project_id
-      provider_only: true
+    - api_field: projectId
     - api_field: properties.property.name
     - api_field: properties.property.value
-    - field: retention
-      provider_only: true
+    - api_field: retention
     - api_field: runtimeDatabaseEncryptionKeyName
     - api_field: runtimeType
     - api_field: subscriptionType

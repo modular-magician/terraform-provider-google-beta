@@ -14,12 +14,10 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logConfig.enabled
     - api_field: multicastConsumerAssociation
-    - field: multicast_group_consumer_activation_id
-      provider_only: true
+    - api_field: multicastGroupConsumerActivationId
     - api_field: multicastGroupRangeActivation
     - api_field: name
     - api_field: state.state

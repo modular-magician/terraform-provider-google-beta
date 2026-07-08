@@ -18,7 +18,6 @@ fields:
     - api_field: tpu.nodeSpec.node.runtimeVersion
     - api_field: tpu.nodeSpec.nodeId
     - api_field: tpu.nodeSpec.parent
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

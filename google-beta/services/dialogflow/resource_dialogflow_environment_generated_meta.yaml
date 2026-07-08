@@ -9,8 +9,7 @@ api_resource_type_kind: Environment
 fields:
     - api_field: agentVersion
     - api_field: description
-    - field: environmentid
-      provider_only: true
+    - api_field: environmentid
     - api_field: fulfillment.displayName
     - api_field: fulfillment.features.type
     - api_field: fulfillment.genericWebService.password
@@ -18,8 +17,7 @@ fields:
     - api_field: fulfillment.genericWebService.uri
     - api_field: fulfillment.genericWebService.username
     - api_field: fulfillment.name
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: state
     - api_field: textToSpeechSettings.enableTextToSpeech

@@ -15,11 +15,8 @@ fields:
     - api_field: detectionExclusionApplication.deletedCuratedRuleSets
     - api_field: detectionExclusionApplication.rules
     - api_field: enabled
-    - field: findings_refinement
-      provider_only: true
-    - field: instance
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: findings_refinement
+    - api_field: instance
+    - api_field: location
     - api_field: name
     - api_field: updateTime

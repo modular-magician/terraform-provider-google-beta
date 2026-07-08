@@ -17,8 +17,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: etag
-    - field: folder_id
-      provider_only: true
+    - api_field: folderId
     - api_field: labels
     - api_field: name
     - api_field: orchestratedResource.id
@@ -149,8 +148,7 @@ fields:
     - api_field: orchestrationState.previousIterationState.rolloutResource
     - api_field: orchestrationState.previousIterationState.startTime
     - api_field: orchestrationState.previousIterationState.state
-    - field: policy_orchestrator_id
-      provider_only: true
+    - api_field: policyOrchestratorId
     - api_field: reconciling
     - api_field: state
     - field: terraform_labels

@@ -62,11 +62,9 @@ fields:
     - api_field: config.pubsubDestination.topic
     - field: effective_labels
       provider_only: true
-    - field: job_template_id
-      provider_only: true
+    - api_field: jobTemplateId
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - field: terraform_labels
       provider_only: true

@@ -27,8 +27,7 @@ fields:
     - api_field: publicDelegatedSubPrefixs.name
     - api_field: publicDelegatedSubPrefixs.region
     - api_field: publicDelegatedSubPrefixs.status
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: selfLink
     - field: deletion_policy
       provider_only: true

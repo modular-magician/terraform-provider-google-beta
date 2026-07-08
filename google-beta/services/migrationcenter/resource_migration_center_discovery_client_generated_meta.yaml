@@ -11,8 +11,7 @@ autogen_version: 2
 fields:
     - api_field: createTime
     - api_field: description
-    - field: discovery_client_id
-      provider_only: true
+    - api_field: discoveryClientId
     - api_field: displayName
     - field: effective_labels
       provider_only: true
@@ -22,8 +21,7 @@ fields:
     - api_field: expireTime
     - api_field: heartbeatTime
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: serviceAccount
     - api_field: signalsEndpoint

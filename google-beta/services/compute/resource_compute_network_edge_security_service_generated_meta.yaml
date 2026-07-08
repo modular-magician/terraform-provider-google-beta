@@ -11,8 +11,7 @@ fields:
     - api_field: description
     - api_field: fingerprint
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: securityPolicy
     - api_field: selfLink
     - api_field: selfLinkWithId

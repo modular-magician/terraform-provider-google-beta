@@ -30,8 +30,7 @@ fields:
     - api_field: etag
     - api_field: eventDataContentType
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: eventFilters.attribute
       field: matching_criteria.attribute
     - api_field: eventFilters.operator

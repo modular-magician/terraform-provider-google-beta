@@ -12,8 +12,7 @@ fields:
     - api_field: availabilityType
     - api_field: clientConnectionConfig.requireConnectors
     - api_field: clientConnectionConfig.sslConfig.sslMode
-    - field: cluster
-      provider_only: true
+    - api_field: cluster
     - api_field: connectionPoolConfig.enabled
     - api_field: connectionPoolConfig.flags
     - api_field: connectionPoolConfig.poolerCount
@@ -25,8 +24,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: gceZone
-    - field: instance_id
-      provider_only: true
+    - api_field: instanceId
     - api_field: instanceType
     - api_field: ipAddress
     - api_field: labels

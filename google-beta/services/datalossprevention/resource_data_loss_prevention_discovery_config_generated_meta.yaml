@@ -34,16 +34,14 @@ fields:
     - api_field: errors.timestamp
     - api_field: inspectTemplates
     - api_field: lastRunTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: orgConfig.location.folderId
     - api_field: orgConfig.location.organizationId
     - api_field: orgConfig.projectId
     - api_field: otherCloudStartingLocation.awsLocation.accountId
     - api_field: otherCloudStartingLocation.awsLocation.allAssetInventoryAssets
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: status
     - api_field: targets.bigQueryTarget.cadence.inspectTemplateModifiedCadence.frequency
     - api_field: targets.bigQueryTarget.cadence.schemaModifiedCadence.frequency

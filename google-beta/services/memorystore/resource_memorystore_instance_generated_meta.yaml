@@ -51,12 +51,10 @@ fields:
     - api_field: engineConfigs
     - api_field: engineVersion
     - api_field: gcsSource.uris
-    - field: instance_id
-      provider_only: true
+    - api_field: instanceId
     - api_field: kmsKey
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maintenancePolicy.createTime
     - api_field: maintenancePolicy.updateTime
     - api_field: maintenancePolicy.weeklyMaintenanceWindow.day

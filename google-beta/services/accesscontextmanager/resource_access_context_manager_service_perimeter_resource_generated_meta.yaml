@@ -11,8 +11,7 @@ fields:
       provider_only: true
     - api_field: status.resources.etag
       field: etag
-    - field: perimeter_name
-      provider_only: true
+    - api_field: perimeterName
     - api_field: status.resources.resource
       field: resource
     - field: deletion_policy

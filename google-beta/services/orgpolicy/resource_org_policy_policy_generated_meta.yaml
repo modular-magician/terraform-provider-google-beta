@@ -28,8 +28,7 @@ fields:
     - api_field: dryRunSpec.updateTime
     - api_field: etag
     - api_field: name
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - api_field: spec.etag
     - api_field: spec.inheritFromParent
     - api_field: spec.reset

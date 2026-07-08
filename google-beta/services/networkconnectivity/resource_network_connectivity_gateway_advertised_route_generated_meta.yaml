@@ -13,13 +13,11 @@ fields:
       provider_only: true
     - api_field: ipRange
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: priority
     - api_field: recipient
-    - field: spoke
-      provider_only: true
+    - api_field: spoke
     - api_field: state
     - field: terraform_labels
       provider_only: true

@@ -33,13 +33,10 @@ fields:
     - api_field: disable
     - api_field: displayName
     - api_field: errorMessage
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: plugin
-      provider_only: true
-    - field: plugin_instance_id
-      provider_only: true
+    - api_field: plugin
+    - api_field: pluginInstanceId
     - api_field: state
     - api_field: updateTime
     - field: deletion_policy

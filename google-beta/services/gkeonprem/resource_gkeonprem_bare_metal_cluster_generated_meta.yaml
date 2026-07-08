@@ -63,11 +63,9 @@ fields:
     - api_field: loadBalancer.vipConfig.controlPlaneVip
     - api_field: loadBalancer.vipConfig.ingressVip
     - api_field: localName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maintenanceConfig.maintenanceAddressCidrBlocks
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: networkConfig.advancedNetworking
     - api_field: networkConfig.islandModeCidr.podAddressCidrBlocks
     - api_field: networkConfig.islandModeCidr.serviceAddressCidrBlocks

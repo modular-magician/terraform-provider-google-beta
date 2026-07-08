@@ -25,8 +25,7 @@ fields:
     - api_field: errorCategory
     - api_field: etag
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: provision.inputVariables.type
     - api_field: provision.inputVariables.value
@@ -37,8 +36,7 @@ fields:
       provider_only: true
     - api_field: uid
     - api_field: unit
-    - field: unit_operation_id
-      provider_only: true
+    - api_field: unitOperationId
     - api_field: updateTime
     - api_field: upgrade.inputVariables.type
     - api_field: upgrade.inputVariables.value

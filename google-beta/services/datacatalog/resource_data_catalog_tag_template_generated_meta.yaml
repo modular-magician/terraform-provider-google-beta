@@ -24,12 +24,9 @@ fields:
       field: fields.type.enum_type.allowed_values.display_name
     - api_field: fields.value.type.primitiveType
       field: fields.type.primitive_type
-    - field: force_delete
-      provider_only: true
+    - api_field: forceDelete
     - api_field: name
-    - field: region
-      provider_only: true
-    - field: tag_template_id
-      provider_only: true
+    - api_field: region
+    - api_field: tagTemplateId
     - field: deletion_policy
       provider_only: true

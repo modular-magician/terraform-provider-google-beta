@@ -50,14 +50,12 @@ fields:
       field: filters.is_standard_time_range_filter_enabled
     - api_field: definition.fingerprint
       field: fingerprint
-    - field: instance
-      provider_only: true
+    - api_field: instance
     - api_field: dashboardUserData.isPinned
       field: is_pinned
     - api_field: dashboardUserData.lastViewedTime
       field: last_viewed_time
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: type
     - api_field: updateTime

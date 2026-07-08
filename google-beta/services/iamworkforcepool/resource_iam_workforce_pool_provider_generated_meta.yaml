@@ -33,8 +33,7 @@ fields:
     - api_field: extraAttributesOauth2Client.clientSecret.value.thumbprint
     - api_field: extraAttributesOauth2Client.issuerUri
     - api_field: extraAttributesOauth2Client.queryParameters.filter
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: oidc.clientId
     - api_field: oidc.clientSecret.value.plainText
@@ -48,12 +47,10 @@ fields:
     - api_field: oidc.webSsoConfig.additionalScopes
     - api_field: oidc.webSsoConfig.assertionClaimsBehavior
     - api_field: oidc.webSsoConfig.responseType
-    - field: provider_id
-      provider_only: true
+    - api_field: providerId
     - api_field: saml.idpMetadataXml
     - api_field: scimUsage
     - api_field: state
-    - field: workforce_pool_id
-      provider_only: true
+    - api_field: workforcePoolId
     - field: deletion_policy
       provider_only: true

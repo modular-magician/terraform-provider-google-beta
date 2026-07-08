@@ -43,8 +43,7 @@ fields:
     - api_field: operationGroup.operationConfigs.quota.interval
     - api_field: operationGroup.operationConfigs.quota.limit
     - api_field: operationGroup.operationConfigs.quota.timeUnit
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: proxies
     - api_field: quota
     - api_field: quotaCounterScope

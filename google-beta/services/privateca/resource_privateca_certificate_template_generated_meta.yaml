@@ -18,11 +18,9 @@ fields:
     - api_field: identityConstraints.celExpression.location
     - api_field: identityConstraints.celExpression.title
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: maximumLifetime
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: passthroughExtensions.additionalExtensions.objectIdPath
     - api_field: passthroughExtensions.knownExtensions
     - api_field: predefinedValues.additionalExtensions.critical
@@ -31,10 +29,8 @@ fields:
     - api_field: predefinedValues.aiaOcspServers
     - api_field: predefinedValues.caOptions.isCa
     - api_field: predefinedValues.caOptions.maxIssuerPathLength
-    - field: predefined_values.ca_options.null_ca
-      provider_only: true
-    - field: predefined_values.ca_options.zero_max_issuer_path_length
-      provider_only: true
+    - api_field: predefinedValues.caOptions.nullCa
+    - api_field: predefinedValues.caOptions.zeroMaxIssuerPathLength
     - api_field: predefinedValues.keyUsage.baseKeyUsage.certSign
     - api_field: predefinedValues.keyUsage.baseKeyUsage.contentCommitment
     - api_field: predefinedValues.keyUsage.baseKeyUsage.crlSign

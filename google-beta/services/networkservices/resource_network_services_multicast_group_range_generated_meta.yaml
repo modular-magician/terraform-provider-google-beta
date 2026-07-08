@@ -17,12 +17,10 @@ fields:
       provider_only: true
     - api_field: ipCidrRange
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: logConfig.enabled
     - api_field: multicastDomain
-    - field: multicast_group_range_id
-      provider_only: true
+    - api_field: multicastGroupRangeId
     - api_field: name
     - api_field: requireExplicitAccept
     - api_field: reservedInternalRange

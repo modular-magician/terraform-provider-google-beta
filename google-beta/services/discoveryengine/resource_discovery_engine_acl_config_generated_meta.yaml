@@ -9,6 +9,5 @@ api_resource_type_kind: AclConfig
 fields:
     - api_field: idpConfig.externalIdpConfig.workforcePoolName
     - api_field: idpConfig.idpType
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name

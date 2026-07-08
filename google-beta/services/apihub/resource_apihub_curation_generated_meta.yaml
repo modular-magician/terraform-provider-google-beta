@@ -10,8 +10,7 @@ autogen_status: true
 autogen_version: 1
 fields:
     - api_field: createTime
-    - field: curation_id
-      provider_only: true
+    - api_field: curationId
     - api_field: description
     - api_field: displayName
     - api_field: endpoint.applicationIntegrationEndpointDetails.triggerId
@@ -19,8 +18,7 @@ fields:
     - api_field: lastExecutionErrorCode
     - api_field: lastExecutionErrorMessage
     - api_field: lastExecutionState
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: pluginInstanceActions.actionId
     - api_field: pluginInstanceActions.pluginInstance

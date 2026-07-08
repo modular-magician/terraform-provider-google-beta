@@ -13,8 +13,7 @@ fields:
     - api_field: healthAggregationPolicy
     - api_field: id
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - api_field: selfLinkWithId
     - api_field: sourceType
     - api_field: sources

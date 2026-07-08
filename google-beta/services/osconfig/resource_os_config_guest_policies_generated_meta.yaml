@@ -21,8 +21,7 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: etag
-    - field: guest_policy_id
-      provider_only: true
+    - api_field: guestPolicyId
     - api_field: name
     - api_field: packageRepositories.apt.archiveType
     - api_field: packageRepositories.apt.components

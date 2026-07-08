@@ -14,10 +14,8 @@ fields:
     - api_field: externalIp.state
     - api_field: internetAccess.enabled
     - api_field: internetAccess.state
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: uid
     - api_field: updateTime
     - api_field: vmwareEngineNetwork

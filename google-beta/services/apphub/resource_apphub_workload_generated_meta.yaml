@@ -11,8 +11,7 @@ api_variant_patterns:
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: application_id
-      provider_only: true
+    - api_field: applicationId
     - api_field: attributes.businessOwners.displayName
     - api_field: attributes.businessOwners.email
     - api_field: attributes.criticality.type
@@ -25,14 +24,12 @@ fields:
     - api_field: description
     - api_field: discoveredWorkload
     - api_field: displayName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: state
     - api_field: uid
     - api_field: updateTime
-    - field: workload_id
-      provider_only: true
+    - api_field: workloadId
     - api_field: workloadProperties.extendedMetadata.key
     - api_field: workloadProperties.extendedMetadata.value.extendedMetadataSchema
     - api_field: workloadProperties.extendedMetadata.value.metadataStruct

@@ -8,18 +8,15 @@ api_version: v1
 api_resource_type_kind: BranchRule
 fields:
     - api_field: allowStaleReviews
-    - field: branch_rule_id
-      provider_only: true
+    - api_field: branch_rule_id
     - api_field: createTime
     - api_field: disabled
     - api_field: includePattern
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: minimumApprovalsCount
     - api_field: minimumReviewsCount
     - api_field: name
-    - field: repository_id
-      provider_only: true
+    - api_field: repository_id
     - api_field: requireCommentsResolved
     - api_field: requireLinearHistory
     - api_field: requirePullRequest

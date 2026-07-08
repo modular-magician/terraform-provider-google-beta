@@ -10,8 +10,7 @@ fields:
     - api_field: appId
     - api_field: defaultUrl
     - api_field: name
-    - field: site_id
-      provider_only: true
+    - api_field: site_id
     - api_field: type
     - field: deletion_policy
       provider_only: true

@@ -9,12 +9,10 @@ api_resource_type_kind: NotificationConfig
 api_variant_patterns:
     - organizations/{organization}/notificationConfigs/{notificationConfig}
 fields:
-    - field: config_id
-      provider_only: true
+    - api_field: configId
     - api_field: description
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: pubsubTopic
     - api_field: serviceAccount
     - api_field: streamingConfig.filter

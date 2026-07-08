@@ -55,8 +55,7 @@ fields:
       provider_only: true
     - api_field: runtime
     - api_field: runtimeApiVersion
-    - field: service
-      provider_only: true
+    - api_field: service
     - api_field: serviceAccount
     - api_field: threadsafe
     - api_field: id

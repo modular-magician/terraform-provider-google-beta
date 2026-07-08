@@ -17,8 +17,7 @@ fields:
     - api_field: lastUpdateTime
     - api_field: name
     - api_field: org
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: self
     - api_field: targetType
     - field: deletion_policy

@@ -12,11 +12,9 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: interconnect
-    - field: interconnect_attachment_id
-      provider_only: true
+    - api_field: interconnect_attachment_id
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: mtu
     - api_field: name
     - api_field: network
@@ -24,7 +22,6 @@ fields:
       provider_only: true
     - api_field: updateTime
     - api_field: vlanId
-    - field: zone
-      provider_only: true
+    - api_field: zone
     - field: deletion_policy
       provider_only: true

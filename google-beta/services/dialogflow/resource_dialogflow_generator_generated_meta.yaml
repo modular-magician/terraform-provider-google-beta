@@ -13,8 +13,7 @@ fields:
     - api_field: inferenceParameter.temperature
     - api_field: inferenceParameter.topK
     - api_field: inferenceParameter.topP
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: publishedModel
     - api_field: summarizationContext.fewShotExamples.conversationContext.messageEntries.createTime

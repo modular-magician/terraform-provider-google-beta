@@ -18,12 +18,10 @@ fields:
       provider_only: true
     - api_field: etag
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: reconciling
-    - field: service_id
-      provider_only: true
+    - api_field: serviceId
     - field: terraform_labels
       provider_only: true
     - api_field: uid

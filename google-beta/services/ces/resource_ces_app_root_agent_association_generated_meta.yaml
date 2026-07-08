@@ -8,9 +8,7 @@ api_version: v1beta
 api_resource_type_kind: App
 fields:
     - api_field: agentId
-    - field: app_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: appId
+    - api_field: location
     - field: deletion_policy
       provider_only: true

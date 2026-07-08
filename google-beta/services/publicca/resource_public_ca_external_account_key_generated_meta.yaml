@@ -11,8 +11,7 @@ fields:
     - api_field: b64MacKey
       field: b64url_mac_key
     - api_field: keyId
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: b64MacKey
       field: mac_key
     - api_field: name

@@ -51,10 +51,8 @@ fields:
     - api_field: installationState.actionUri
     - api_field: installationState.message
     - api_field: installationState.stage
-    - field: location
-      provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: location
+    - api_field: name
     - api_field: reconciling
     - api_field: updateTime
     - field: deletion_policy

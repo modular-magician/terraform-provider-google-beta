@@ -9,9 +9,7 @@ api_resource_type_kind: Service
 fields:
     - api_field: metadata
     - api_field: name
-    - field: namespace
-      provider_only: true
-    - field: service_id
-      provider_only: true
+    - api_field: namespace
+    - api_field: serviceId
     - field: deletion_policy
       provider_only: true

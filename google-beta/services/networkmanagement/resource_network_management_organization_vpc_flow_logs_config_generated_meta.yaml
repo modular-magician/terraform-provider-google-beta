@@ -16,18 +16,15 @@ fields:
     - api_field: filterExpr
     - api_field: flowSampling
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: metadata
     - api_field: metadataFields
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: state
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime
-    - field: vpc_flow_logs_config_id
-      provider_only: true
+    - api_field: vpcFlowLogsConfigId
     - field: deletion_policy
       provider_only: true

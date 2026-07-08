@@ -15,7 +15,6 @@ fields:
     - api_field: languageTag
     - api_field: name
     - api_field: notificationCategorySubscriptions
-    - field: parent
-      provider_only: true
+    - api_field: parent
     - field: deletion_policy
       provider_only: true

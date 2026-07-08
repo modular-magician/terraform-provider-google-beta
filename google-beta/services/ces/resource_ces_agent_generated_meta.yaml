@@ -16,10 +16,8 @@ fields:
     - api_field: afterToolCallbacks.description
     - api_field: afterToolCallbacks.disabled
     - api_field: afterToolCallbacks.pythonCode
-    - field: agent_id
-      provider_only: true
-    - field: app
-      provider_only: true
+    - api_field: agentId
+    - api_field: app
     - api_field: beforeAgentCallbacks.description
     - api_field: beforeAgentCallbacks.disabled
     - api_field: beforeAgentCallbacks.pythonCode
@@ -38,8 +36,7 @@ fields:
     - api_field: guardrails
     - api_field: instruction
     - api_field: llmAgent
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: modelSettings.model
     - api_field: modelSettings.temperature
     - api_field: name

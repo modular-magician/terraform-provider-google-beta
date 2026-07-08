@@ -35,10 +35,8 @@ fields:
     - api_field: preservedState.internalIPs.value.ipAddress.address
       field: preserved_state.internal_ip.ip_address.address
     - api_field: preservedState.metadata
-    - field: region
-      provider_only: true
-    - field: region_instance_group_manager
-      provider_only: true
+    - api_field: region
+    - api_field: regionInstanceGroupManager
     - field: remove_instance_on_destroy
       provider_only: true
     - field: remove_instance_state_on_destroy

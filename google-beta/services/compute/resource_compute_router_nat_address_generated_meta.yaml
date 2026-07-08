@@ -11,10 +11,8 @@ fields:
       field: drain_nat_ips
     - api_field: nats.natIps
       field: nat_ips
-    - field: region
-      provider_only: true
-    - field: router
-      provider_only: true
+    - api_field: region
+    - api_field: router
     - api_field: nats.name
       field: router_nat
     - field: deletion_policy

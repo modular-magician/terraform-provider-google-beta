@@ -27,8 +27,7 @@ fields:
     - api_field: deployConfig.systemLabels
     - api_field: deployedModelDisplayName
     - api_field: deployedModelId
-    - field: endpoint
-      provider_only: true
+    - api_field: endpoint
     - api_field: endpointConfig.dedicatedEndpointEnabled
     - api_field: endpointConfig.endpointDisplayName
     - api_field: endpointConfig.privateServiceConnectConfig.enablePrivateServiceConnect
@@ -41,8 +40,7 @@ fields:
     - api_field: endpointConfig.privateServiceConnectConfig.pscAutomationConfigs.state
     - api_field: endpointConfig.privateServiceConnectConfig.serviceAttachment
     - api_field: huggingFaceModelId
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: modelConfig.acceptEula
     - api_field: modelConfig.containerSpec.args
     - api_field: modelConfig.containerSpec.command

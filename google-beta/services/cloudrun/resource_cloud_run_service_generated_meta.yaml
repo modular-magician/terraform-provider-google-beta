@@ -11,8 +11,7 @@ cai_asset_name_formats:
 fields:
     - field: autogenerate_revision_name
       provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: metadata.annotations
     - field: metadata.effective_annotations
       provider_only: true
@@ -26,8 +25,7 @@ fields:
     - field: metadata.terraform_labels
       provider_only: true
     - api_field: metadata.uid
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: status.conditions.message
     - api_field: status.conditions.reason
     - api_field: status.conditions.status

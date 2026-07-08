@@ -9,8 +9,7 @@ api_resource_type_kind: App
 autogen_status: true
 autogen_version: 1
 fields:
-    - field: app_id
-      provider_only: true
+    - api_field: appId
     - api_field: audioProcessingConfig.ambientSoundConfig.gcsUri
     - api_field: audioProcessingConfig.ambientSoundConfig.prebuiltAmbientSound
     - api_field: audioProcessingConfig.ambientSoundConfig.volumeGainDb
@@ -49,8 +48,7 @@ fields:
     - api_field: languageSettings.enableMultilingualSupport
     - api_field: languageSettings.fallbackAction
     - api_field: languageSettings.supportedLanguageCodes
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: loggingSettings.audioRecordingConfig.gcsBucket
     - api_field: loggingSettings.audioRecordingConfig.gcsPathPrefix
     - api_field: loggingSettings.bigqueryExportSettings.dataset

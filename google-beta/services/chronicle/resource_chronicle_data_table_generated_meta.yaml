@@ -17,15 +17,12 @@ fields:
     - api_field: columnInfo.originalColumn
     - api_field: columnInfo.repeatedValues
     - api_field: createTime
-    - field: data_table_id
-      provider_only: true
+    - api_field: dataTableId
     - api_field: dataTableUuid
     - api_field: description
     - api_field: displayName
-    - field: instance
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: instance
+    - api_field: location
     - api_field: name
     - api_field: rowTimeToLive
     - api_field: rowTimeToLiveUpdateTime

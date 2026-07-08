@@ -18,11 +18,9 @@ fields:
     - api_field: errorBudget.allowedCount
     - api_field: errorBudget.allowedPercentage
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: rollout_kind_id
-      provider_only: true
+    - api_field: rolloutKindId
     - api_field: rolloutOrchestrationStrategy
     - field: terraform_labels
       provider_only: true

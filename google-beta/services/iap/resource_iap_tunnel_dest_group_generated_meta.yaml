@@ -9,10 +9,8 @@ api_resource_type_kind: TunnelDestGroup
 fields:
     - api_field: cidrs
     - api_field: fqdns
-    - field: group_name
-      provider_only: true
+    - api_field: group_name
     - api_field: name
-    - field: region
-      provider_only: true
+    - api_field: region
     - field: deletion_policy
       provider_only: true

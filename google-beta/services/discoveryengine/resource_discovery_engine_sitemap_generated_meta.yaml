@@ -8,13 +8,10 @@ api_version: v1
 api_resource_type_kind: Sitemap
 fields:
     - api_field: createTime
-    - field: data_store_id
-      provider_only: true
-    - field: location
-      provider_only: true
+    - api_field: dataStoreId
+    - api_field: location
     - api_field: name
-    - field: sitemap_id
-      provider_only: true
+    - api_field: sitemapId
     - api_field: uri
     - field: deletion_policy
       provider_only: true

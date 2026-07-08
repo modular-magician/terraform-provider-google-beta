@@ -12,12 +12,10 @@ fields:
     - api_field: displayName
     - api_field: feedbackContexts.attribute
     - api_field: feedbackContexts.values
-    - field: feedback_id
-      provider_only: true
+    - api_field: feedbackId
     - api_field: feedbackType
     - api_field: name
-    - field: org_id
-      provider_only: true
+    - api_field: orgId
     - api_field: reason
     - api_field: updateTime
     - field: deletion_policy

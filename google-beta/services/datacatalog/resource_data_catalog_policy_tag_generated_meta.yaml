@@ -12,7 +12,6 @@ fields:
     - api_field: displayName
     - api_field: name
     - api_field: parentPolicyTag
-    - field: taxonomy
-      provider_only: true
+    - api_field: taxonomy
     - field: deletion_policy
       provider_only: true

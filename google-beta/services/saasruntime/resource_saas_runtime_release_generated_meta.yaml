@@ -26,14 +26,12 @@ fields:
     - api_field: inputVariables.value
     - api_field: inputVariables.variable
     - api_field: labels
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: outputVariables.type
     - api_field: outputVariables.value
     - api_field: outputVariables.variable
-    - field: release_id
-      provider_only: true
+    - api_field: releaseId
     - api_field: releaseRequirements.upgradeableFromReleases
     - field: terraform_labels
       provider_only: true

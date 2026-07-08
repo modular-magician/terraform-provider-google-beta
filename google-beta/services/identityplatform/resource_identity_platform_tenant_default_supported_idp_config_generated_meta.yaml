@@ -10,10 +10,8 @@ fields:
     - api_field: clientId
     - api_field: clientSecret
     - api_field: enabled
-    - field: idp_id
-      provider_only: true
+    - api_field: idpId
     - api_field: name
-    - field: tenant
-      provider_only: true
+    - api_field: tenant
     - field: deletion_policy
       provider_only: true

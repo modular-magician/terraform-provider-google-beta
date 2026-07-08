@@ -7,8 +7,6 @@ api_service_name: cloudresourcemanager.googleapis.com
 api_version: v3
 api_resource_type_kind: Capability
 fields:
-    - field: capability_name
-      provider_only: true
-    - field: parent
-      provider_only: true
+    - api_field: capability_name
+    - api_field: parent
     - api_field: value

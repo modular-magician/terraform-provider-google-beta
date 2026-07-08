@@ -62,8 +62,7 @@ fields:
     - api_field: patchConfig.zypper.severities
     - api_field: patchConfig.zypper.withOptional
     - api_field: patchConfig.zypper.withUpdate
-    - field: patch_deployment_id
-      provider_only: true
+    - api_field: patchDeploymentId
     - api_field: recurringSchedule.endTime
     - api_field: recurringSchedule.lastExecuteTime
     - api_field: recurringSchedule.monthly.monthDay

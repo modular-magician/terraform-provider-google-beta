@@ -9,16 +9,14 @@ api_resource_type_kind: BigQueryExport
 api_variant_patterns:
     - organizations/{organization}/bigQueryExports/{bigQueryExport}
 fields:
-    - field: big_query_export_id
-      provider_only: true
+    - api_field: bigQueryExportId
     - api_field: createTime
     - api_field: dataset
     - api_field: description
     - api_field: filter
     - api_field: mostRecentEditor
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: principal
     - api_field: updateTime
     - field: deletion_policy

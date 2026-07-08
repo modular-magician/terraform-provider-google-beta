@@ -367,11 +367,9 @@ fields:
     - api_field: feed
     - field: feed_service_account
       provider_only: true
-    - field: instance
-      provider_only: true
+    - api_field: instance
     - api_field: lastFeedInitiationTime
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
     - api_field: readOnly
     - api_field: referenceId

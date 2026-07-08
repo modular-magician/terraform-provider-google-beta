@@ -9,9 +9,7 @@ api_resource_type_kind: OrganizationSettings
 fields:
     - api_field: defaultStorageLocation
     - api_field: kmsKeyName
-    - field: location
-      provider_only: true
+    - api_field: location
     - api_field: name
-    - field: organization
-      provider_only: true
+    - api_field: organization
     - api_field: serviceAccountId
