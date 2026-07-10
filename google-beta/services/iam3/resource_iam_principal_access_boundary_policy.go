@@ -211,6 +211,35 @@ or '//cloudresourcemanager.googleapis.com/projects/my-project-id'.`,
 										Optional:    true,
 										Description: `The description of the principal access boundary policy rule. Must be less than or equal to 256 characters.`,
 									},
+									"operation": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `The operation attributes that determine whether this rule applies to a request.
+If this field is not specified, the rule applies to all operations.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"excluded_permissions": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Description: `Specifies the permissions that this rule excludes from the set of affected permissions.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													Set: schema.HashString,
+												},
+												"permissions": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Description: `The permissions that are explicitly affected by this rule.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													Set: schema.HashString,
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -732,6 +761,7 @@ func flattenIAM3PrincipalAccessBoundaryPolicyDetailsRules(v interface{}, d *sche
 			"description": flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesDescription(original["description"], d, config),
 			"resources":   flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesResources(original["resources"], d, config),
 			"effect":      flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesEffect(original["effect"], d, config),
+			"operation":   flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperation(original["operation"], d, config),
 		})
 	}
 	return transformed
@@ -746,6 +776,35 @@ func flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesResources(v interface{}
 
 func flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesEffect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["permissions"] =
+		flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationPermissions(original["permissions"], d, config)
+	transformed["excluded_permissions"] =
+		flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationExcludedPermissions(original["excludedPermissions"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationPermissions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return schema.NewSet(schema.HashString, v.([]interface{}))
+}
+
+func flattenIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationExcludedPermissions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return schema.NewSet(schema.HashString, v.([]interface{}))
 }
 
 func flattenIAM3PrincipalAccessBoundaryPolicyDetailsEnforcementVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -823,6 +882,13 @@ func expandIAM3PrincipalAccessBoundaryPolicyDetailsRules(v interface{}, d tpgres
 			transformed["effect"] = transformedEffect
 		}
 
+		transformedOperation, err := expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperation(original["operation"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOperation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["operation"] = transformedOperation
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -837,6 +903,45 @@ func expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesResources(v interface{},
 }
 
 func expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesEffect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPermissions, err := expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationPermissions(original["permissions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPermissions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["permissions"] = transformedPermissions
+	}
+
+	transformedExcludedPermissions, err := expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationExcludedPermissions(original["excluded_permissions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExcludedPermissions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["excludedPermissions"] = transformedExcludedPermissions
+	}
+
+	return transformed, nil
+}
+
+func expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationPermissions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	v = v.(*schema.Set).List()
+	return v, nil
+}
+
+func expandIAM3PrincipalAccessBoundaryPolicyDetailsRulesOperationExcludedPermissions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	v = v.(*schema.Set).List()
 	return v, nil
 }
 

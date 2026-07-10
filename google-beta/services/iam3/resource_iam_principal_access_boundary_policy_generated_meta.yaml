@@ -12,6 +12,8 @@ fields:
     - api_field: details.enforcementVersion
     - api_field: details.rules.description
     - api_field: details.rules.effect
+    - api_field: details.rules.operation.excludedPermissions
+    - api_field: details.rules.operation.permissions
     - api_field: details.rules.resources
     - api_field: displayName
     - field: effective_annotations

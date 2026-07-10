@@ -156,6 +156,23 @@ The following arguments are supported:
   The access relationship of principals to the resources in this rule.
   Possible values: ALLOW
 
+* `operation` -
+  (Optional)
+  The operation attributes that determine whether this rule applies to a request.
+  If this field is not specified, the rule applies to all operations.
+  Structure is [documented below](#nested_details_rules_operation).
+
+
+<a name="nested_details_rules_operation"></a>The `operation` block supports:
+
+* `permissions` -
+  (Optional)
+  The permissions that are explicitly affected by this rule.
+
+* `excluded_permissions` -
+  (Optional)
+  Specifies the permissions that this rule excludes from the set of affected permissions.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
