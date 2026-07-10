@@ -47,8 +47,7 @@ fields:
     - api_field: maintenancePolicy.window.recurringWindow.recurrence
     - api_field: maintenancePolicy.window.recurringWindow.window.endTime
     - api_field: maintenancePolicy.window.recurringWindow.window.startTime
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: networking.clusterIpv4CidrBlocks
     - api_field: networking.clusterIpv6CidrBlocks
     - api_field: networking.networkType

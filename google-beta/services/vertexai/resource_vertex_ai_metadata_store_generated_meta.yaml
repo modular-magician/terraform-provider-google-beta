@@ -10,8 +10,7 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: encryptionSpec.kmsKeyName
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: region
       provider_only: true
     - api_field: state.diskUtilizationBytes

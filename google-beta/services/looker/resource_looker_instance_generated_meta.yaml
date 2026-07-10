@@ -40,8 +40,7 @@ fields:
     - api_field: maintenanceWindow.startTime.minutes
     - api_field: maintenanceWindow.startTime.nanos
     - api_field: maintenanceWindow.startTime.seconds
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: oauthConfig.clientId
     - api_field: oauthConfig.clientSecret
     - api_field: periodicExportConfig.gcsUri

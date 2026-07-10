@@ -19,8 +19,7 @@ fields:
     - api_field: labels
     - api_field: logConfig.enable
     - api_field: logConfig.sampleRate
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: requireTls
     - api_field: routing.hostRules.description
       field: routing.host_rule.description

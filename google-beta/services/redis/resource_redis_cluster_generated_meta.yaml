@@ -47,8 +47,7 @@ fields:
     - api_field: maintenanceVersion
     - api_field: managedBackupSource.backup
     - api_field: managedServerCa.caCerts.certificates
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: nodeType
     - api_field: persistenceConfig.aofConfig.appendFsync
     - api_field: persistenceConfig.mode

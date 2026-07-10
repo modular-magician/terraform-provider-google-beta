@@ -19,8 +19,7 @@ fields:
     - api_field: mtlsPolicy.clientValidationCa.grpcEndpoint.targetUri
     - api_field: mtlsPolicy.clientValidationMode
     - api_field: mtlsPolicy.clientValidationTrustConfig
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: serverCertificate.certificateProviderInstance.pluginInstance
     - api_field: serverCertificate.grpcEndpoint.targetUri
     - field: terraform_labels

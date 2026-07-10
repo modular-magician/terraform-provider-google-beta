@@ -10,8 +10,7 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: locationUri
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: primary_location
       provider_only: true
     - api_field: replicas.region

@@ -20,8 +20,7 @@ fields:
     - api_field: latestRevision
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: quotaValidation
     - api_field: serviceAccount
     - api_field: state

@@ -28,8 +28,7 @@ fields:
     - api_field: federated-catalog-options.unity-catalog-info.catalog-name
     - api_field: federated-catalog-options.unity-catalog-info.instance-name
     - api_field: federated-catalog-options.unity-catalog-info.service-principal-application-id
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: primary_location
       provider_only: true
     - api_field: replicas.region

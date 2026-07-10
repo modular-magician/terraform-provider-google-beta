@@ -21,8 +21,7 @@ fields:
     - api_field: loggingQuery.summaryFieldEnd
     - api_field: loggingQuery.summaryFieldStart
     - api_field: loggingQuery.summaryFields.field
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: opsAnalyticsQuery.sqlQueryText
     - field: parent
       provider_only: true

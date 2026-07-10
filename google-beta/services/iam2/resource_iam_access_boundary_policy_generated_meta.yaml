@@ -9,8 +9,7 @@ api_resource_type_kind: Policy
 fields:
     - api_field: displayName
     - api_field: etag
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: parent
       provider_only: true
     - api_field: rules.accessBoundaryRule.availabilityCondition.description

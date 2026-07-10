@@ -18,8 +18,7 @@ fields:
     - api_field: logConfig.minLogLevel
     - api_field: logConfig.sampleRate
     - api_field: mainVersionId
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime

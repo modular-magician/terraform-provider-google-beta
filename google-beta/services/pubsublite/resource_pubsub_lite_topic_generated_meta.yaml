@@ -7,8 +7,7 @@ api_service_name: pubsublite.googleapis.com
 api_version: v1
 api_resource_type_kind: Topic
 fields:
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: partitionConfig.capacity.publishMibPerSec
     - api_field: partitionConfig.capacity.subscribeMibPerSec
     - api_field: partitionConfig.count

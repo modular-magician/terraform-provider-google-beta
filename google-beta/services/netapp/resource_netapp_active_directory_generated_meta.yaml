@@ -23,8 +23,7 @@ fields:
     - api_field: ldapSigning
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: netBiosPrefix
     - api_field: nfsUsersWithLdap
     - api_field: organizationalUnit

@@ -17,8 +17,7 @@ fields:
     - field: location
       provider_only: true
     - api_field: metrics.systemMetrics
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: softwareConfig.customGpuDriverPath
     - api_field: softwareConfig.enableHealthMonitoring
     - api_field: softwareConfig.idleShutdown

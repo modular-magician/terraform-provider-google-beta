@@ -17,8 +17,7 @@ fields:
     - api_field: flexShielding.flexShieldingRegions
     - api_field: labels
     - api_field: maxAttempts
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: originAddress
     - api_field: originOverrideAction.headerAction.requestHeadersToAdd.headerName
     - api_field: originOverrideAction.headerAction.requestHeadersToAdd.headerValue

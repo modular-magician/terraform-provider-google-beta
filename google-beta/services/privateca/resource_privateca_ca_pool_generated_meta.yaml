@@ -62,8 +62,7 @@ fields:
     - api_field: labels
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: publishingOptions.encodingFormat
     - api_field: publishingOptions.publishCaCert
     - api_field: publishingOptions.publishCrl

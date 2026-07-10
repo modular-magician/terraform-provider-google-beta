@@ -9,5 +9,4 @@ api_resource_type_kind: Organization
 fields:
     - api_field: etag
     - api_field: identities
-    - field: name
-      provider_only: true
+    - api_field: name

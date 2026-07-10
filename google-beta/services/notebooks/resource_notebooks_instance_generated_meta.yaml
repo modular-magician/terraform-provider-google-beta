@@ -30,8 +30,7 @@ fields:
       provider_only: true
     - api_field: machineType
     - api_field: metadata
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: network
     - api_field: nicType
     - api_field: noProxyAccess

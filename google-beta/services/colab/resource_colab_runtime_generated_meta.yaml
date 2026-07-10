@@ -17,8 +17,7 @@ fields:
     - api_field: isUpgradable
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: notebookRuntimeTemplateRef.notebookRuntimeTemplate
     - api_field: notebookRuntimeType
     - api_field: runtimeUser

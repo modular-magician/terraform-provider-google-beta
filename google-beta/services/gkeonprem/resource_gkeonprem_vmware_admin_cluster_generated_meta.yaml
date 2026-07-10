@@ -39,8 +39,7 @@ fields:
     - api_field: localName
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: networkConfig.dhcpIpConfig.enabled
     - api_field: networkConfig.haControlPlaneConfig.controlPlaneIpBlock.gateway
     - api_field: networkConfig.haControlPlaneConfig.controlPlaneIpBlock.ips.hostname

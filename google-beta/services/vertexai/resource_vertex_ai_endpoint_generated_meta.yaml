@@ -44,8 +44,7 @@ fields:
     - field: location
       provider_only: true
     - api_field: modelDeploymentMonitoringJob
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: network
     - api_field: predictRequestResponseLoggingConfig.bigqueryDestination.outputUri
     - api_field: predictRequestResponseLoggingConfig.enabled

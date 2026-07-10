@@ -26,8 +26,7 @@ fields:
     - field: metadata.terraform_labels
       provider_only: true
     - api_field: metadata.uid
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: status.conditions.message
     - api_field: status.conditions.reason
     - api_field: status.conditions.status

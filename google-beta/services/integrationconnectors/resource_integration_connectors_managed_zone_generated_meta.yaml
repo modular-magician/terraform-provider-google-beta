@@ -13,8 +13,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: targetProject
     - api_field: targetVpc
     - field: terraform_labels

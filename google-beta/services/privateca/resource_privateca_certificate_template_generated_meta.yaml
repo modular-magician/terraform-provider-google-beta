@@ -21,8 +21,7 @@ fields:
     - field: location
       provider_only: true
     - api_field: maximumLifetime
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: passthroughExtensions.additionalExtensions.objectIdPath
     - api_field: passthroughExtensions.knownExtensions
     - api_field: predefinedValues.additionalExtensions.critical

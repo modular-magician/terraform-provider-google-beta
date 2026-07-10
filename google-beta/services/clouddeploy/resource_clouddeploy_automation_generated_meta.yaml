@@ -20,8 +20,7 @@ fields:
     - api_field: labels
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: rules.advanceRolloutRule.id
     - api_field: rules.advanceRolloutRule.sourcePhases
     - api_field: rules.advanceRolloutRule.wait

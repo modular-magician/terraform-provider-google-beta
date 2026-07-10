@@ -48,8 +48,7 @@ fields:
     - api_field: localName
     - field: location
       provider_only: true
-    - field: name
-      provider_only: true
+    - api_field: name
     - api_field: networkConfig.controlPlaneV2Config.controlPlaneIpBlock.gateway
     - api_field: networkConfig.controlPlaneV2Config.controlPlaneIpBlock.ips.hostname
     - api_field: networkConfig.controlPlaneV2Config.controlPlaneIpBlock.ips.ip

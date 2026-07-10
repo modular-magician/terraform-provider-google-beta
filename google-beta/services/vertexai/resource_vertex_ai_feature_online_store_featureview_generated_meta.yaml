@@ -18,8 +18,7 @@ fields:
     - api_field: featureRegistrySource.featureGroups.featureIds
     - api_field: featureRegistrySource.projectNumber
     - api_field: labels
-    - field: name
-      provider_only: true
+    - api_field: name
     - field: region
       provider_only: true
     - api_field: syncConfig.continuous
