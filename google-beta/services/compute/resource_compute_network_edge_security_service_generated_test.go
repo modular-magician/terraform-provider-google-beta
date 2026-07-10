@@ -59,6 +59,7 @@ func TestAccComputeNetworkEdgeSecurityService_computeNetworkEdgeSecurityServiceB
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
+		"region":        "us-east1",
 		"resource_name": "tf-test-my-edge-security-service" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -93,7 +94,7 @@ resource "google_compute_network_edge_security_service" "default" {
   provider     = google-beta  
 
   name         = "%{resource_name}"
-  region       = "us-east1"
+  region       = "%{region}"
   description  = "My basic resource"
 }
 `, context)
