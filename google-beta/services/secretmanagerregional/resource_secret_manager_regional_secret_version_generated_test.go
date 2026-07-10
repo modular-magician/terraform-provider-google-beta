@@ -95,6 +95,100 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
 `, context)
 }
 
+func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionBasicWriteOnlyExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"data":          "tf-test-regional-secret-data-write-only" + randomSuffix,
+		"secret_id":     "tf-test-regional-secret-version-write-only" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckSecretManagerRegionalRegionalSecretVersionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionBasicWriteOnlyExample(context),
+			},
+			{
+				ResourceName:            "google_secret_manager_regional_secret_version.regional-secret-version-basic-write-only",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "secret"},
+			},
+		},
+	})
+}
+
+func testAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionBasicWriteOnlyExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_secret_manager_regional_secret" "secret-basic-write-only" {
+  secret_id = "%{secret_id}"
+  location  = "us-central1"
+
+  labels = {
+    label = "my-label"
+  }
+}
+
+resource "google_secret_manager_regional_secret_version" "regional-secret-version-basic-write-only" {
+  secret                 = google_secret_manager_regional_secret.secret-basic-write-only.id
+  secret_data_wo_version = 1
+  secret_data_wo         = "%{data}"
+}
+`, context)
+}
+
+func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionWithBase64StringSecretDataWriteOnlyExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"data":          "./test-fixtures/binary-file.pfx",
+		"secret_id":     "tf-test-regional-secret-version-base64-write-only" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckSecretManagerRegionalRegionalSecretVersionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionWithBase64StringSecretDataWriteOnlyExample(context),
+			},
+			{
+				ResourceName:            "google_secret_manager_regional_secret_version.regional-secret-version-base64-write-only",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"is_secret_data_base64", "location", "secret"},
+			},
+		},
+	})
+}
+
+func testAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionWithBase64StringSecretDataWriteOnlyExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_secret_manager_regional_secret" "secret-basic" {
+  secret_id = "%{secret_id}"
+  location  = "us-central1"
+}
+
+resource "google_secret_manager_regional_secret_version" "regional-secret-version-base64-write-only" {
+  secret = google_secret_manager_regional_secret.secret-basic.id
+
+  is_secret_data_base64  = true
+  secret_data_wo_version = 1
+  secret_data_wo         = filebase64("%{data}")
+}
+`, context)
+}
+
 func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionWithBase64DataExample(t *testing.T) {
 	t.Parallel()
 

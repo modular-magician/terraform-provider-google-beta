@@ -42,9 +42,10 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_update(t *testing.T) {
 				Config: testAccSecretManagerRegionalRegionalSecretVersion_basic(context),
 			},
 			{
-				ResourceName:      "google_secret_manager_regional_secret_version.secret-version-basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_secret_manager_regional_secret_version.secret-version-basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"secret_data_wo_version"},
 			},
 			{
 				Config: testAccSecretManagerRegionalRegionalSecretVersion_disable(context),
@@ -55,15 +56,16 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_update(t *testing.T) {
 				ImportStateVerify: true,
 				// at this point the secret data is disabled and so reading the data on import will
 				// give an empty string
-				ImportStateVerifyIgnore: []string{"secret_data"},
+				ImportStateVerifyIgnore: []string{"secret_data", "secret_data_wo_version"},
 			},
 			{
 				Config: testAccSecretManagerRegionalRegionalSecretVersion_basic(context),
 			},
 			{
-				ResourceName:      "google_secret_manager_regional_secret_version.secret-version-basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_secret_manager_regional_secret_version.secret-version-basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"secret_data_wo_version"},
 			},
 		},
 	})
@@ -86,9 +88,10 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_cmekOutputOnly(t *testing
 				Config: testAccSecretManagerRegionalRegionalSecretVersion_cmekOutputOnly(context),
 			},
 			{
-				ResourceName:      "google_secret_manager_regional_secret_version.secret-version-cmek",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_secret_manager_regional_secret_version.secret-version-cmek",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"secret_data_wo_version"},
 			},
 		},
 	})
