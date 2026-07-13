@@ -386,6 +386,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: ValidateCustomEndpoint,
 			},
+			"chrome_policy_custom_endpoint": &schema.Schema{
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: ValidateCustomEndpoint,
+			},
 			"chronicle_custom_endpoint": &schema.Schema{
 				Type:         schema.TypeString,
 				Optional:     true,
