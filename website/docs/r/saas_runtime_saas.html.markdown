@@ -117,11 +117,6 @@ In addition to the arguments listed above, the following computed attributes are
   generation of a resource. It can be used to confirm that the client
   and server agree on the ordering of a resource being written.
 
-* `name` -
-  Identifier. The resource name (full URI of the resource) following the standard naming
-  scheme:
-  "projects/{project}/locations/{location}/saas/{saas}"
-
 * `uid` -
   The unique identifier of the resource. UID is unique in the time
   and space for this resource within the scope of the service. It is

@@ -217,14 +217,6 @@ list to generate a rollout plan.`,
 generation of a resource. It can be used to confirm that the client
 and server agree on the ordering of a resource being written.`,
 			},
-			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Description: `Identifier. The resource name (full URI of the resource) following the standard naming
-scheme:
-
-"projects/{project}/locations/{location}/saas/{saas}"`,
-			},
 			"terraform_labels": {
 				Type:     schema.TypeMap,
 				Computed: true,
@@ -712,10 +704,6 @@ func flattenSaasRuntimeSaasLocationsName(v interface{}, d *schema.ResourceData, 
 	return v
 }
 
-func flattenSaasRuntimeSaasName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenSaasRuntimeSaasUid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -814,9 +802,6 @@ func ResourceSaasRuntimeSaasFlatten(d *schema.ResourceData, meta interface{}, re
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
 	if err = d.Set("locations", flattenSaasRuntimeSaasLocations(res["locations"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Saas: %s", err)
-	}
-	if err = d.Set("name", flattenSaasRuntimeSaasName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
 	if err = d.Set("uid", flattenSaasRuntimeSaasUid(res["uid"], d, config)); err != nil {
