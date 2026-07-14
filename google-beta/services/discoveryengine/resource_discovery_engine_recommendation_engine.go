@@ -682,6 +682,13 @@ func resourceDiscoveryEngineRecommendationEngineUpdate(d *schema.ResourceData, m
 			log.Printf("[DEBUG] Finished updating RecommendationEngine %q: %#v", d.Id(), res)
 		}
 
+		err = DiscoveryEngineOperationWaitTime(
+			config, res, project, "Updating RecommendationEngine", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceDiscoveryEngineRecommendationEngineRead(d, meta)

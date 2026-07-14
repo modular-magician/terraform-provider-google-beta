@@ -662,6 +662,13 @@ func resourceDiscoveryEngineChatEngineUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[DEBUG] Finished updating ChatEngine %q: %#v", d.Id(), res)
 		}
 
+		err = DiscoveryEngineOperationWaitTime(
+			config, res, project, "Updating ChatEngine", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceDiscoveryEngineChatEngineRead(d, meta)

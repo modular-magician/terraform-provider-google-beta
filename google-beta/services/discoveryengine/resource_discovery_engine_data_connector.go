@@ -1095,6 +1095,13 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG] Finished updating DataConnector %q: %#v", d.Id(), res)
 		}
 
+		err = DiscoveryEngineOperationWaitTime(
+			config, res, project, "Updating DataConnector", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceDiscoveryEngineDataConnectorRead(d, meta)

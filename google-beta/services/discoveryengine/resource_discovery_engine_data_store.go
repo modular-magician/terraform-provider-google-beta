@@ -858,6 +858,13 @@ func resourceDiscoveryEngineDataStoreUpdate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG] Finished updating DataStore %q: %#v", d.Id(), res)
 		}
 
+		err = DiscoveryEngineOperationWaitTime(
+			config, res, project, "Updating DataStore", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceDiscoveryEngineDataStoreRead(d, meta)

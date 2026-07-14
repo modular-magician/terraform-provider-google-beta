@@ -791,6 +791,13 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG] Finished updating SearchEngine %q: %#v", d.Id(), res)
 		}
 
+		err = DiscoveryEngineOperationWaitTime(
+			config, res, project, "Updating SearchEngine", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceDiscoveryEngineSearchEngineRead(d, meta)
