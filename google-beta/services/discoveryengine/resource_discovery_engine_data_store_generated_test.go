@@ -109,7 +109,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreKmsKeyNameExample(t
 
 	context := map[string]interface{}{
 		"data_store_id": "tf-test-data-store-id" + randomSuffix,
-		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
+		"kms_key_name":  kms.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us", "tftest-shared-key-5").CryptoKey.Name,
 		"random_suffix": randomSuffix,
 	}
 
