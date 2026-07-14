@@ -1,0 +1,24 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_storage_rapid_cache
+generation_type: mmv1
+source_file: products/storage/RapidCache.yaml
+api_service_name: storage.googleapis.com
+api_version: v1
+api_resource_type_kind: RapidCache
+fields:
+    - api_field: admissionPolicy
+    - field: bucket
+      provider_only: true
+    - api_field: cacheType
+    - api_field: createTime
+    - api_field: ingestOnWrite
+    - api_field: pendingUpdate
+    - api_field: anywhereCacheId
+      field: rapid_cache_id
+    - api_field: state
+    - api_field: ttl
+    - api_field: updateTime
+    - api_field: zone
+    - field: deletion_policy
+      provider_only: true
