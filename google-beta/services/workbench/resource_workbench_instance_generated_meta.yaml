@@ -34,6 +34,7 @@ fields:
     - api_field: gceSetup.enableIpForwarding
     - api_field: gceSetup.machineType
     - api_field: gceSetup.metadata
+    - api_field: gceSetup.minCpuPlatform
     - api_field: gceSetup.networkInterfaces.accessConfigs.externalIp
     - api_field: gceSetup.networkInterfaces.network
     - api_field: gceSetup.networkInterfaces.nicType

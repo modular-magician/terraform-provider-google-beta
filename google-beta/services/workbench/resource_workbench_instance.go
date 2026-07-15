@@ -696,6 +696,12 @@ https://cloud.google.com/vpc/docs/using-routes#canipforward`,
 							Description:      `Optional. Custom metadata to apply to this instance.`,
 							Elem:             &schema.Schema{Type: schema.TypeString},
 						},
+						"min_cpu_platform": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Optional:    true,
+							Description: `Optional. The minimum CPU platform to use for this instance.`,
+						},
 						"network_interfaces": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -1469,6 +1475,9 @@ func resourceWorkbenchInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 		newUpdateMask = append(newUpdateMask, "gce_setup.container_image")
 		stopInstance = true
 	}
+	if d.HasChange("gce_setup.0.min_cpu_platform") {
+		newUpdateMask = append(newUpdateMask, "gce_setup.min_cpu_platform")
+	}
 	if d.HasChange("gce_setup.0.data_disks.0.resource_policies") {
 		newUpdateMask = append(newUpdateMask, "gce_setup.data_disks.resource_policies")
 	}
@@ -1718,6 +1727,8 @@ func flattenWorkbenchInstanceGceSetup(v interface{}, d *schema.ResourceData, con
 		flattenWorkbenchInstanceGceSetupConfidentialInstanceConfig(original["confidentialInstanceConfig"], d, config)
 	transformed["reservation_affinity"] =
 		flattenWorkbenchInstanceGceSetupReservationAffinity(original["reservationAffinity"], d, config)
+	transformed["min_cpu_platform"] =
+		flattenWorkbenchInstanceGceSetupMinCpuPlatform(original["minCpuPlatform"], d, config)
 	return []interface{}{transformed}
 }
 func flattenWorkbenchInstanceGceSetupMachineType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2028,6 +2039,10 @@ func flattenWorkbenchInstanceGceSetupReservationAffinityValues(v interface{}, d 
 	return v
 }
 
+func flattenWorkbenchInstanceGceSetupMinCpuPlatform(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenWorkbenchInstanceProxyUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2287,6 +2302,13 @@ func expandWorkbenchInstanceGceSetup(v interface{}, d tpgresource.TerraformResou
 		return nil, err
 	} else if val := reflect.ValueOf(transformedReservationAffinity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["reservationAffinity"] = transformedReservationAffinity
+	}
+
+	transformedMinCpuPlatform, err := expandWorkbenchInstanceGceSetupMinCpuPlatform(original["min_cpu_platform"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinCpuPlatform); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["minCpuPlatform"] = transformedMinCpuPlatform
 	}
 
 	return transformed, nil
@@ -2827,6 +2849,10 @@ func expandWorkbenchInstanceGceSetupReservationAffinityKey(v interface{}, d tpgr
 }
 
 func expandWorkbenchInstanceGceSetupReservationAffinityValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandWorkbenchInstanceGceSetupMinCpuPlatform(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
