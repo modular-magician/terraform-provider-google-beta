@@ -8,6 +8,8 @@ api_version: v1
 api_resource_type_kind: Pipeline
 fields:
     - api_field: createTime
+    - field: desired_state
+      provider_only: true
     - api_field: displayName
     - api_field: jobCount
     - api_field: lastUpdateTime

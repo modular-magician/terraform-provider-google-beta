@@ -107,16 +107,18 @@ The following arguments are supported:
   https://cloud.google.com/dataflow/docs/reference/data-pipelines/rest/v1/projects.locations.pipelines#pipelinetype
   Possible values are: `PIPELINE_TYPE_UNSPECIFIED`, `PIPELINE_TYPE_BATCH`, `PIPELINE_TYPE_STREAMING`.
 
-* `state` -
-  (Required)
-  The state of the pipeline. When the pipeline is created, the state is set to 'PIPELINE_STATE_ACTIVE' by default. State changes can be requested by setting the state to stopping, paused, or resuming. State cannot be changed through pipelines.patch requests.
-  https://cloud.google.com/dataflow/docs/reference/data-pipelines/rest/v1/projects.locations.pipelines#state
-  Possible values are: `STATE_UNSPECIFIED`, `STATE_RESUMING`, `STATE_ACTIVE`, `STATE_STOPPING`, `STATE_ARCHIVED`, `STATE_PAUSED`.
-
 
 * `display_name` -
   (Optional)
   The display name of the pipeline. It can contain only letters ([A-Za-z]), numbers ([0-9]), hyphens (-), and underscores (_).
+
+* `state` -
+  (Optional, Deprecated)
+  (Deprecated) The state of the pipeline. Use `desired_state` to control the pipeline state.
+  https://cloud.google.com/dataflow/docs/reference/data-pipelines/rest/v1/projects.locations.pipelines#state
+  Possible values are: `STATE_UNSPECIFIED`, `STATE_RESUMING`, `STATE_ACTIVE`, `STATE_STOPPING`, `STATE_ARCHIVED`, `STATE_PAUSED`.
+
+  ~> **Warning:** Use `desired_state` instead to control pipeline state. This field will be removed as an input in a future major version.
 
 * `workload` -
   (Optional)
@@ -152,6 +154,10 @@ The following arguments are supported:
 	When set to "ABANDON", the command will remove the resource from Terraform
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
+* `desired_state` - (Optional) The desired state of the pipeline. Set this field to `STATE_ACTIVE` to start the pipeline
+or `STATE_ARCHIVED` to archive the pipeline.
+Possible values: STATE_ACTIVE, STATE_ARCHIVED.
+
 
 
 <a name="nested_workload"></a>The `workload` block supports:

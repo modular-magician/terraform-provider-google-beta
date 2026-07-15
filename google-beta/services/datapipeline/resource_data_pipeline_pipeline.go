@@ -54,6 +54,22 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+func resourceDataPipelinePipelineCustomDiffFunc(diff tpgresource.TerraformResourceDiff) error {
+	if diff.HasChange("desired_state") {
+		_, new := diff.GetChange("desired_state")
+		newState := new.(string)
+
+		if newState != "STATE_ACTIVE" && newState != "STATE_ARCHIVED" {
+			return fmt.Errorf("`desired_state` can only be set to `STATE_ACTIVE` or `STATE_ARCHIVED`")
+		}
+	}
+	return nil
+}
+
+func resourceDataPipelinePipelineCustomDiff(_ context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	return resourceDataPipelinePipelineCustomDiffFunc(diff)
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -113,6 +129,7 @@ func ResourceDataPipelinePipeline() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			resourceDataPipelinePipelineCustomDiff,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
 		),
@@ -149,14 +166,6 @@ func ResourceDataPipelinePipeline() *schema.Resource {
 "- PROJECT_ID can contain letters ([A-Za-z]), numbers ([0-9]), hyphens (-), colons (:), and periods (.). For more information, see Identifying projects."
 "LOCATION_ID is the canonical ID for the pipeline's location. The list of available locations can be obtained by calling google.cloud.location.Locations.ListLocations. Note that the Data Pipelines service is not available in all regions. It depends on Cloud Scheduler, an App Engine application, so it's only available in App Engine regions."
 "PIPELINE_ID is the ID of the pipeline. Must be unique for the selected project and location."`,
-			},
-			"state": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"STATE_UNSPECIFIED", "STATE_RESUMING", "STATE_ACTIVE", "STATE_STOPPING", "STATE_ARCHIVED", "STATE_PAUSED"}),
-				Description: `The state of the pipeline. When the pipeline is created, the state is set to 'PIPELINE_STATE_ACTIVE' by default. State changes can be requested by setting the state to stopping, paused, or resuming. State cannot be changed through pipelines.patch requests.
-https://cloud.google.com/dataflow/docs/reference/data-pipelines/rest/v1/projects.locations.pipelines#state Possible values: ["STATE_UNSPECIFIED", "STATE_RESUMING", "STATE_ACTIVE", "STATE_STOPPING", "STATE_ARCHIVED", "STATE_PAUSED"]`,
 			},
 			"type": {
 				Type:         schema.TypeString,
@@ -217,6 +226,16 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 				Optional:    true,
 				ForceNew:    true,
 				Description: `Optional. A service account email to be used with the Cloud Scheduler job. If not specified, the default compute engine service account will be used.`,
+			},
+			"state": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				Deprecated:   "Use `desired_state` instead to control pipeline state. This field will be removed as an input in a future major version.",
+				ValidateFunc: verify.ValidateEnum([]string{"STATE_UNSPECIFIED", "STATE_RESUMING", "STATE_ACTIVE", "STATE_STOPPING", "STATE_ARCHIVED", "STATE_PAUSED", ""}),
+				Description: `(Deprecated) The state of the pipeline. Use 'desired_state' to control the pipeline state.
+https://cloud.google.com/dataflow/docs/reference/data-pipelines/rest/v1/projects.locations.pipelines#state Possible values: ["STATE_UNSPECIFIED", "STATE_RESUMING", "STATE_ACTIVE", "STATE_STOPPING", "STATE_ARCHIVED", "STATE_PAUSED"]`,
+				ConflictsWith: []string{},
 			},
 			"workload": {
 				Type:     schema.TypeList,
@@ -586,6 +605,14 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 				Description: `The timestamp when the pipeline was last modified. Set by the Data Pipelines service.
 A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".`,
 			},
+			"desired_state": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The desired state of the pipeline. Set this field to 'STATE_ACTIVE' to start the pipeline
+or 'STATE_ARCHIVED' to archive the pipeline.
+Possible values: STATE_ACTIVE, STATE_ARCHIVED.`,
+				ConflictsWith: []string{"state"},
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -666,6 +693,11 @@ func resourceDataPipelinePipelineCreate(d *schema.ResourceData, meta interface{}
 		obj["pipelineSources"] = pipelineSourcesProp
 	}
 
+	obj, err = resourceDataPipelinePipelineEncoder(d, meta, obj)
+	if err != nil {
+		return err
+	}
+
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{region}}/pipelines")
 	if err != nil {
 		return err
@@ -706,6 +738,23 @@ func resourceDataPipelinePipelineCreate(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	desiredState := d.Get("desired_state").(string)
+	if desiredState == "STATE_ARCHIVED" {
+		stopUrl := fmt.Sprintf("https://datapipelines.googleapis.com/v1/%s:stop", res["name"].(string))
+		_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    stopUrl,
+			UserAgent: userAgent,
+			Body:      map[string]interface{}{},
+			Timeout:   d.Timeout(schema.TimeoutCreate),
+		})
+		if err != nil {
+			return fmt.Errorf("Error archiving Pipeline after creation %q: %s", res["name"].(string), err)
+		}
+	}
 
 	log.Printf("[DEBUG] Finished creating Pipeline %q: %#v", d.Id(), res)
 
@@ -883,6 +932,12 @@ func resourceDataPipelinePipelineUpdate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, typeProp)) {
 		obj["type"] = typeProp
 	}
+	stateProp, err := expandDataPipelinePipelineState(d.Get("state"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("state"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, stateProp)) {
+		obj["state"] = stateProp
+	}
 	workloadProp, err := expandDataPipelinePipelineWorkload(d.Get("workload"), d, config)
 	if err != nil {
 		return err
@@ -894,6 +949,11 @@ func resourceDataPipelinePipelineUpdate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("schedule_info"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduleInfoProp)) {
 		obj["scheduleInfo"] = scheduleInfoProp
+	}
+
+	obj, err = resourceDataPipelinePipelineEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{region}}/pipelines/{{name}}")
@@ -913,6 +973,10 @@ func resourceDataPipelinePipelineUpdate(d *schema.ResourceData, meta interface{}
 		updateMask = append(updateMask, "type")
 	}
 
+	if d.HasChange("state") {
+		updateMask = append(updateMask, "state")
+	}
+
 	if d.HasChange("workload") {
 		updateMask = append(updateMask, "workload")
 	}
@@ -925,6 +989,78 @@ func resourceDataPipelinePipelineUpdate(d *schema.ResourceData, meta interface{}
 	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
 	if err != nil {
 		return err
+	}
+	if d.HasChange("desired_state") {
+		newState := d.Get("desired_state").(string)
+		if newState == "STATE_ARCHIVED" {
+			stopUrl := strings.Split(url, "?updateMask=")[0] + ":stop"
+			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "POST",
+				Project:   billingProject,
+				RawURL:    stopUrl,
+				UserAgent: userAgent,
+				Body:      map[string]interface{}{},
+				Timeout:   d.Timeout(schema.TimeoutUpdate),
+			})
+			if err != nil {
+				return fmt.Errorf("Error archiving Pipeline %q: %s", d.Id(), err)
+			}
+
+			// Poll until the pipeline reaches STATE_ARCHIVED (the :stop endpoint is async).
+			getUrl := strings.Split(url, "?updateMask=")[0]
+			timeout := d.Timeout(schema.TimeoutUpdate)
+			start := time.Now()
+			for time.Since(start) < timeout {
+				res, pollErr := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+					Config:    config,
+					Method:    "GET",
+					Project:   billingProject,
+					RawURL:    getUrl,
+					UserAgent: userAgent,
+					Timeout:   d.Timeout(schema.TimeoutUpdate),
+				})
+				if pollErr != nil {
+					return fmt.Errorf("Error polling Pipeline %q state: %s", d.Id(), pollErr)
+				}
+				state, _ := res["state"].(string)
+				if state == "STATE_ARCHIVED" {
+					break
+				}
+				if state != "STATE_STOPPING" {
+					return fmt.Errorf("Pipeline %q in unexpected state %q after :stop", d.Id(), state)
+				}
+				time.Sleep(5 * time.Second)
+			}
+
+			// Skip the PATCH and refresh state from API.
+			return resourceDataPipelinePipelineRead(d, meta)
+
+		} else if newState == "STATE_ACTIVE" {
+			runUrl := strings.Split(url, "?updateMask=")[0] + ":run"
+			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "POST",
+				Project:   billingProject,
+				RawURL:    runUrl,
+				UserAgent: userAgent,
+				Body:      map[string]interface{}{},
+				Timeout:   d.Timeout(schema.TimeoutUpdate),
+			})
+			if err != nil {
+				return fmt.Errorf("Error starting Pipeline %q: %s", d.Id(), err)
+			}
+			// Skip the PATCH and refresh state from API.
+			return resourceDataPipelinePipelineRead(d, meta)
+
+		} else {
+			return fmt.Errorf(
+				"Cannot change `desired_state` to %q after creation: the Data Pipelines API does not support "+
+					"state transitions via the PATCH endpoint. Supported transitions are handled via the "+
+					":run and :stop endpoints for `STATE_ACTIVE` and `STATE_ARCHIVED`.",
+				newState,
+			)
+		}
 	}
 
 	// err == nil indicates that the billing_project value was found
@@ -1027,6 +1163,8 @@ func resourceDataPipelinePipelineImport(d *schema.ResourceData, meta interface{}
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -2359,6 +2497,13 @@ func expandDataPipelinePipelinePipelineSources(v interface{}, d tpgresource.Terr
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceDataPipelinePipelineEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	// The Data Pipelines API does not support changing state via PATCH.
+	// State management is handled by post_create for the initial pause request
+	// and by pre_update for archiving.
+	return obj, nil
 }
 
 func ResourceDataPipelinePipelineFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
