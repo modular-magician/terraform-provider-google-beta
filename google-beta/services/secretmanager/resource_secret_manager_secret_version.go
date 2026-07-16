@@ -147,28 +147,28 @@ func ResourceSecretManagerSecretVersion() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"secret_data_wo_version": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Triggers update of secret data write-only. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
-				Default:     0,
-			},
 			"secret_data": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ForceNew:      true,
 				Description:   `The secret data. Must be no larger than 64KiB.`,
 				Sensitive:     true,
-				ConflictsWith: []string{},
+				ConflictsWith: []string{"secret_data_wo"},
 			},
 			"secret_data_wo": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				Description:   `The secret data. Must be no larger than 64KiB. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
+				Description:   `The secret data. Must be no larger than 64KiB.`,
 				WriteOnly:     true,
 				ConflictsWith: []string{"secret_data"},
-				RequiredWith:  []string{},
+				RequiredWith:  []string{"secret_data_wo_version"},
+			},
+			"secret_data_wo_version": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  `Triggers update of 'secret_data_wo' write-only. Increment this value when an update to 'secret_data_wo' is needed. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
+				RequiredWith: []string{"secret_data_wo"},
 			},
 
 			"secret": {
