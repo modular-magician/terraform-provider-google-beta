@@ -160,7 +160,7 @@ func ResourceSecretManagerSecretVersion() *schema.Resource {
 				ForceNew:      true,
 				Description:   `The secret data. Must be no larger than 64KiB.`,
 				Sensitive:     true,
-				ConflictsWith: []string{},
+				ConflictsWith: []string{"secret_data_wo"},
 			},
 			"secret_data_wo": {
 				Type:          schema.TypeString,
@@ -168,7 +168,7 @@ func ResourceSecretManagerSecretVersion() *schema.Resource {
 				Description:   `The secret data. Must be no larger than 64KiB. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
 				WriteOnly:     true,
 				ConflictsWith: []string{"secret_data"},
-				RequiredWith:  []string{},
+				RequiredWith:  []string{"secret_data_wo_version"},
 			},
 
 			"secret": {
