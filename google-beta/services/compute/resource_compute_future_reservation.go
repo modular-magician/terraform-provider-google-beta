@@ -2320,7 +2320,7 @@ func flattenComputeFutureReservationZone(v interface{}, d *schema.ResourceData, 
 	if v == nil {
 		return v
 	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
+	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func expandComputeFutureReservationDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
