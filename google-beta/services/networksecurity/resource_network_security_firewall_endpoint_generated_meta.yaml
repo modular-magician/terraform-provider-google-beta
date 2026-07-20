@@ -26,5 +26,11 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: updateTime
+    - api_field: wildfireSettings.enabled
+    - api_field: wildfireSettings.wildfireInlineCloudAnalysisSettings.maxAnalysisDuration
+    - api_field: wildfireSettings.wildfireInlineCloudAnalysisSettings.timeoutAction
+    - api_field: wildfireSettings.wildfireRealtimeLookupDuration
+    - api_field: wildfireSettings.wildfireRealtimeLookupTimeoutAction
+    - api_field: wildfireSettings.wildfireRegion
     - field: deletion_policy
       provider_only: true

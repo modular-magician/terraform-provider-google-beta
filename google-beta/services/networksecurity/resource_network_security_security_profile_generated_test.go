@@ -27,12 +27,14 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/networksecurity"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/networkservices"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -448,6 +450,262 @@ resource "google_network_security_security_profile" "default" {
     mirroring_endpoint_group    = google_network_security_mirroring_endpoint_group.default.id
     mirroring_deployment_groups = [google_network_security_mirroring_deployment_group.default.id]
   }
+}
+`, context)
+}
+
+func TestAccNetworkSecuritySecurityProfile_networkSecurityProfileWildfireBasicExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"org_id":               envvar.GetTestOrgFromEnv(t),
+		"project":              envvar.GetTestProjectFromEnv(),
+		"authz_extension_name": "tf-test-wildfire-authz-ext" + randomSuffix,
+		"ext_authority":        "ext11.com",
+		"ext_fail_open":        false,
+		"ext_timeout":          "0.1s",
+		"gateway_name":         "tf-test-wildfire-gateway" + randomSuffix,
+		"inline_action":        "ALERT",
+		"inline_direction":     "DOWNLOAD",
+		"network_name":         "tf-test-wildfire-network" + randomSuffix,
+		"policy_name":          "tf-test-wildfire-authz-policy" + randomSuffix,
+		"profile_description":  "Initial SWP security profile description",
+		"proxy_subnet_name":    "tf-test-wildfire-proxy-subnet" + randomSuffix,
+		"realtime_lookup":      false,
+		"resource_name":        "tf-test-wildfire-security-profile" + randomSuffix,
+		"submission_direction": "UPLOAD",
+		"subnet_name":          "tf-test-wildfire-subnet" + randomSuffix,
+		"random_suffix":        randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"org_id":               envvar.GetTestOrgFromEnv(t),
+		"project":              envvar.GetTestProjectFromEnv(),
+		"authz_extension_name": "tf-test-wildfire-authz-ext" + randomSuffix,
+		"ext_authority":        "ext11-updated.com",
+		"ext_fail_open":        true,
+		"ext_timeout":          "0.4s",
+		"gateway_name":         "tf-test-wildfire-gateway" + randomSuffix,
+		"inline_action":        "DENY",
+		"inline_direction":     "BOTH",
+		"network_name":         "tf-test-wildfire-network" + randomSuffix,
+		"policy_name":          "tf-test-wildfire-authz-policy" + randomSuffix,
+		"profile_description":  "Updated SWP security profile description",
+		"proxy_subnet_name":    "tf-test-wildfire-proxy-subnet" + randomSuffix,
+		"realtime_lookup":      true,
+		"resource_name":        "tf-test-wildfire-security-profile" + randomSuffix,
+		"submission_direction": "BOTH",
+		"subnet_name":          "tf-test-wildfire-subnet" + randomSuffix,
+		"random_suffix":        randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckNetworkSecuritySecurityProfileDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkSecuritySecurityProfile_networkSecurityProfileWildfireBasicExample(context),
+			},
+			{
+				ResourceName:            "google_network_security_security_profile.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "parent", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_security_security_profile.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccNetworkSecuritySecurityProfile_networkSecurityProfileWildfireBasicExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_network_security_security_profile.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_network_security_security_profile.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "parent", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_security_security_profile.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccNetworkSecuritySecurityProfile_networkSecurityProfileWildfireBasicExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "default" {
+  provider                = google-beta
+  name                    = "%{network_name}"
+  project                 = "%{project}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "backend" {
+  provider      = google-beta
+  name          = "%{subnet_name}"
+  project       = "%{project}"
+  region        = "us-west1"
+  ip_cidr_range = "10.1.2.0/24"
+
+  network = google_compute_network.default.id
+}
+
+resource "google_compute_subnetwork" "proxy_only" {
+  provider      = google-beta
+  name          = "%{proxy_subnet_name}"
+  project       = "%{project}"
+  region        = "us-west1"
+  ip_cidr_range = "10.129.0.0/23"
+
+  purpose = "REGIONAL_MANAGED_PROXY"
+  role    = "ACTIVE"
+
+  network = google_compute_network.default.id
+}
+
+resource "google_compute_address" "swp_ip" {
+  provider = google-beta
+
+  name         = "%{gateway_name}"
+  project      = "%{project}"
+  region       = "us-west1"
+
+  subnetwork   = google_compute_subnetwork.backend.id
+  address_type = "INTERNAL"
+  purpose      = "GCE_ENDPOINT"
+}
+
+resource "google_network_security_gateway_security_policy" "default" {
+  provider = google-beta
+
+  name     = "%{gateway_name}"
+  project  = "%{project}"
+  location = "us-west1"
+}
+
+resource "google_network_services_gateway" "default" {
+  provider = google-beta
+
+  name     = "%{gateway_name}"
+  project  = "%{project}"
+  location = "us-west1"
+
+  type = "SECURE_WEB_GATEWAY"
+
+  delete_swg_autogen_router_on_destroy = true
+
+  addresses = [
+    google_compute_address.swp_ip.address
+  ]
+
+  ports = [443]
+
+  scope      = "swp-scope"
+  network    = google_compute_network.default.id
+  subnetwork = google_compute_subnetwork.backend.id
+
+  gateway_security_policy = google_network_security_gateway_security_policy.default.id
+
+  depends_on = [
+    google_compute_subnetwork.proxy_only
+  ]
+}
+
+resource "google_network_services_authz_extension" "default" {
+  provider = google-beta
+
+  name     = "%{authz_extension_name}"
+  project  = "%{project}"
+  location = "us-west1"
+
+  description           = "my description"
+  load_balancing_scheme = "INTERNAL_MANAGED"
+
+  authority = "%{ext_authority}"
+  service   = "authz-server.internal.net" 
+
+  timeout   = "%{ext_timeout}"
+  fail_open = %{ext_fail_open}
+
+  forward_headers = [
+    "Authorization"
+  ]
+}
+
+resource "google_network_security_security_profile" "default" {
+  provider = google-beta
+
+  name        = "%{resource_name}"
+  parent      = "organizations/%{org_id}"
+  description = "%{profile_description}"
+  location    = "global"
+  type        = "WILDFIRE_ANALYSIS"
+
+  wildfire_analysis_profile {
+    wildfire_realtime_lookup = %{realtime_lookup}
+    wildfire_inline_cloud_analysis_rules {
+      action = "%{inline_action}"
+      custom_file_types {
+        file_types = ["PE"]
+      }
+      direction           = "%{inline_direction}"
+      file_selection_mode = "CUSTOM_FILE_TYPES"
+    }
+    wildfire_submission_rules {
+      custom_file_types {
+        file_types = ["PE"]
+      }
+      direction           = "%{submission_direction}"
+      file_selection_mode = "CUSTOM_FILE_TYPES"
+    }
+  }
+}
+
+resource "google_network_security_authz_policy" "default" {
+  provider = google-beta
+
+  name        = "%{policy_name}"
+  project     = "%{project}"
+  location    = "us-west1"
+  description = "SWP authz policy"
+
+  target {
+    load_balancing_scheme = "INTERNAL_MANAGED"
+
+    resources = [
+      google_network_services_gateway.default.id
+    ]
+  }
+
+  action = "CUSTOM"
+
+  custom_provider {
+    authz_extension {
+      resources = [
+        google_network_services_authz_extension.default.id
+      ]
+    }
+  }
+
+  depends_on = [
+    google_network_services_gateway.default,
+    google_network_services_authz_extension.default,
+    google_network_security_security_profile.default
+  ]
 }
 `, context)
 }

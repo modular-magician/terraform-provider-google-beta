@@ -208,6 +208,171 @@ resource "google_network_security_security_profile" "default" {
   }
 }
 ```
+## Example Usage - Network Security Profile Wildfire Basic
+
+
+```hcl
+resource "google_compute_network" "default" {
+  provider                = google-beta
+  name                    = "wildfire-network"
+  project                 = "my-project-name"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "backend" {
+  provider      = google-beta
+  name          = "wildfire-subnet"
+  project       = "my-project-name"
+  region        = "us-west1"
+  ip_cidr_range = "10.1.2.0/24"
+
+  network = google_compute_network.default.id
+}
+
+resource "google_compute_subnetwork" "proxy_only" {
+  provider      = google-beta
+  name          = "wildfire-proxy-subnet"
+  project       = "my-project-name"
+  region        = "us-west1"
+  ip_cidr_range = "10.129.0.0/23"
+
+  purpose = "REGIONAL_MANAGED_PROXY"
+  role    = "ACTIVE"
+
+  network = google_compute_network.default.id
+}
+
+resource "google_compute_address" "swp_ip" {
+  provider = google-beta
+
+  name         = "wildfire-gateway"
+  project      = "my-project-name"
+  region       = "us-west1"
+
+  subnetwork   = google_compute_subnetwork.backend.id
+  address_type = "INTERNAL"
+  purpose      = "GCE_ENDPOINT"
+}
+
+resource "google_network_security_gateway_security_policy" "default" {
+  provider = google-beta
+
+  name     = "wildfire-gateway"
+  project  = "my-project-name"
+  location = "us-west1"
+}
+
+resource "google_network_services_gateway" "default" {
+  provider = google-beta
+
+  name     = "wildfire-gateway"
+  project  = "my-project-name"
+  location = "us-west1"
+
+  type = "SECURE_WEB_GATEWAY"
+
+  delete_swg_autogen_router_on_destroy = true
+
+  addresses = [
+    google_compute_address.swp_ip.address
+  ]
+
+  ports = [443]
+
+  scope      = "swp-scope"
+  network    = google_compute_network.default.id
+  subnetwork = google_compute_subnetwork.backend.id
+
+  gateway_security_policy = google_network_security_gateway_security_policy.default.id
+
+  depends_on = [
+    google_compute_subnetwork.proxy_only
+  ]
+}
+
+resource "google_network_services_authz_extension" "default" {
+  provider = google-beta
+
+  name     = "wildfire-authz-ext"
+  project  = "my-project-name"
+  location = "us-west1"
+
+  description           = "my description"
+  load_balancing_scheme = "INTERNAL_MANAGED"
+
+  authority = "ext11.com"
+  service   = "authz-server.internal.net" 
+
+  timeout   = "0.1s"
+  fail_open = false
+
+  forward_headers = [
+    "Authorization"
+  ]
+}
+
+resource "google_network_security_security_profile" "default" {
+  provider = google-beta
+
+  name        = "wildfire-security-profile"
+  parent      = "organizations/123456789"
+  description = "Initial SWP security profile description"
+  location    = "global"
+  type        = "WILDFIRE_ANALYSIS"
+
+  wildfire_analysis_profile {
+    wildfire_realtime_lookup = false
+    wildfire_inline_cloud_analysis_rules {
+      action = "ALERT"
+      custom_file_types {
+        file_types = ["PE"]
+      }
+      direction           = "DOWNLOAD"
+      file_selection_mode = "CUSTOM_FILE_TYPES"
+    }
+    wildfire_submission_rules {
+      custom_file_types {
+        file_types = ["PE"]
+      }
+      direction           = "UPLOAD"
+      file_selection_mode = "CUSTOM_FILE_TYPES"
+    }
+  }
+}
+
+resource "google_network_security_authz_policy" "default" {
+  provider = google-beta
+
+  name        = "wildfire-authz-policy"
+  project     = "my-project-name"
+  location    = "us-west1"
+  description = "SWP authz policy"
+
+  target {
+    load_balancing_scheme = "INTERNAL_MANAGED"
+
+    resources = [
+      google_network_services_gateway.default.id
+    ]
+  }
+
+  action = "CUSTOM"
+
+  custom_provider {
+    authz_extension {
+      resources = [
+        google_network_services_authz_extension.default.id
+      ]
+    }
+  }
+
+  depends_on = [
+    google_network_services_gateway.default,
+    google_network_services_authz_extension.default,
+    google_network_security_security_profile.default
+  ]
+}
+```
 
 ## Argument Reference
 
@@ -217,7 +382,7 @@ The following arguments are supported:
 * `type` -
   (Required)
   The type of security profile.
-  Possible values are: `THREAT_PREVENTION`, `URL_FILTERING`, `CUSTOM_MIRRORING`, `CUSTOM_INTERCEPT`.
+  Possible values are: `THREAT_PREVENTION`, `URL_FILTERING`, `CUSTOM_MIRRORING`, `CUSTOM_INTERCEPT`, `WILDFIRE_ANALYSIS`.
 
 * `name` -
   (Required)
@@ -256,6 +421,11 @@ The following arguments are supported:
   The configuration for defining the Intercept Endpoint Group used to
   intercept traffic to third-party firewall appliances.
   Structure is [documented below](#nested_custom_intercept_profile).
+
+* `wildfire_analysis_profile` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  WildFire malware analysis configuration.
+  Structure is [documented below](#nested_wildfire_analysis_profile).
 
 * `location` -
   (Optional)
@@ -391,6 +561,66 @@ The following arguments are supported:
   (Required)
   The Intercept Endpoint Group to which matching traffic should be intercepted.
   Format: projects/{project_id}/locations/global/interceptEndpointGroups/{endpoint_group_id}
+
+<a name="nested_wildfire_analysis_profile"></a>The `wildfire_analysis_profile` block supports:
+
+* `wildfire_realtime_lookup` -
+  (Optional)
+
+* `wildfire_submission_rules` -
+  (Optional)
+  Structure is [documented below](#nested_wildfire_analysis_profile_wildfire_submission_rules).
+
+* `wildfire_inline_cloud_analysis_rules` -
+  (Optional)
+  Structure is [documented below](#nested_wildfire_analysis_profile_wildfire_inline_cloud_analysis_rules).
+
+
+<a name="nested_wildfire_analysis_profile_wildfire_submission_rules"></a>The `wildfire_submission_rules` block supports:
+
+* `file_selection_mode` -
+  (Required)
+  Possible values are: `ALL_FILE_TYPES`, `CUSTOM_FILE_TYPES`.
+
+* `direction` -
+  (Required)
+  Possible values are: `UPLOAD`, `DOWNLOAD`, `BOTH`.
+
+* `custom_file_types` -
+  (Optional)
+  A nested object resource.
+  Structure is [documented below](#nested_wildfire_analysis_profile_wildfire_submission_rules_custom_file_types).
+
+
+<a name="nested_wildfire_analysis_profile_wildfire_submission_rules_custom_file_types"></a>The `custom_file_types` block supports:
+
+* `file_types` -
+  (Optional)
+
+<a name="nested_wildfire_analysis_profile_wildfire_inline_cloud_analysis_rules"></a>The `wildfire_inline_cloud_analysis_rules` block supports:
+
+* `file_selection_mode` -
+  (Required)
+  Possible values are: `ALL_FILE_TYPES`, `CUSTOM_FILE_TYPES`.
+
+* `direction` -
+  (Required)
+  Possible values are: `UPLOAD`, `DOWNLOAD`, `BOTH`.
+
+* `action` -
+  (Required)
+  Possible values are: `ALLOW`, `DENY`, `ALERT`.
+
+* `custom_file_types` -
+  (Optional)
+  A nested object resource.
+  Structure is [documented below](#nested_wildfire_analysis_profile_wildfire_inline_cloud_analysis_rules_custom_file_types).
+
+
+<a name="nested_wildfire_analysis_profile_wildfire_inline_cloud_analysis_rules_custom_file_types"></a>The `custom_file_types` block supports:
+
+* `file_types` -
+  (Optional)
 
 ## Attributes Reference
 

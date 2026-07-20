@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -341,6 +342,127 @@ resource "google_network_security_security_profile" "security_profile" {
     }
   }
   parent = "organizations/%{org_id}"
+}
+`, context)
+}
+
+func TestAccNetworkSecuritySecurityProfileGroup_securityProfileGroupWildfireBasicExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"org_id":              envvar.GetTestOrgFromEnv(t),
+		"group_description":   "Initial profile group description",
+		"profile_group_name":  "tf-test-profile-group" + randomSuffix,
+		"profile_name":        "tf-test-wildfire-profile" + randomSuffix,
+		"threat_profile_name": "tf-test-threat-profile" + randomSuffix,
+		"wildfire_profile":    "google_network_security_security_profile.wildfire.id",
+		"random_suffix":       randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"org_id":              envvar.GetTestOrgFromEnv(t),
+		"group_description":   "Updated profile group description",
+		"profile_group_name":  "tf-test-profile-group" + randomSuffix,
+		"profile_name":        "tf-test-wildfire-profile" + randomSuffix,
+		"threat_profile_name": "tf-test-threat-profile" + randomSuffix,
+		"wildfire_profile":    "google_network_security_security_profile.wildfire2.id",
+		"random_suffix":       randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckNetworkSecuritySecurityProfileGroupDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkSecuritySecurityProfileGroup_securityProfileGroupWildfireBasicExample(context),
+			},
+			{
+				ResourceName:            "google_network_security_security_profile_group.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "parent", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_security_security_profile_group.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccNetworkSecuritySecurityProfileGroup_securityProfileGroupWildfireBasicExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_network_security_security_profile_group.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_network_security_security_profile_group.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "parent", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_security_security_profile_group.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccNetworkSecuritySecurityProfileGroup_securityProfileGroupWildfireBasicExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_network_security_security_profile" "threat" {
+  provider = google-beta
+
+  name     = "%{threat_profile_name}"
+  parent   = "organizations/%{org_id}"
+  location = "global"
+
+  type = "THREAT_PREVENTION"
+}
+
+resource "google_network_security_security_profile" "wildfire" {
+  provider = google-beta
+
+  name     = "%{profile_name}"
+  parent   = "organizations/%{org_id}"
+  location = "global"
+
+  type = "WILDFIRE_ANALYSIS"
+  wildfire_analysis_profile {
+    wildfire_realtime_lookup = false
+  }
+}
+
+resource "google_network_security_security_profile" "wildfire2" {
+  provider = google-beta
+
+  name     = "%{profile_name}-2"
+  parent   = "organizations/%{org_id}"
+  location = "global"
+
+  type = "WILDFIRE_ANALYSIS"
+  wildfire_analysis_profile {
+    wildfire_realtime_lookup = true
+  }
+}
+
+resource "google_network_security_security_profile_group" "default" {
+  provider = google-beta
+
+  name        = "%{profile_group_name}"
+  parent      = "organizations/%{org_id}"
+  location    = "global"
+  description = "%{group_description}"
+
+  threat_prevention_profile = google_network_security_security_profile.threat.id
+  wildfire_analysis_profile = %{wildfire_profile}
 }
 `, context)
 }

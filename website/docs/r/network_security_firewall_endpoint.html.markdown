@@ -70,6 +70,53 @@ resource "google_network_security_firewall_endpoint" "default" {
   }
 }
 ```
+## Example Usage - Network Security Firewall Endpoint Wildfire Basic
+
+
+```hcl
+resource "google_compute_network" "default" {
+  provider = google-beta
+
+  name                    = "fw-network"
+  project                 = "my-project-name"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "default" {
+  provider = google-beta
+
+  name          = "fw-subnet"
+  project       = "my-project-name"
+  region        = "us-central1"
+  ip_cidr_range = "10.0.0.0/24"
+
+  network = google_compute_network.default.id
+}
+
+resource "google_network_security_firewall_endpoint" "default" {
+  provider = google-beta
+
+  name     = "fw-endpoint"
+  location = "us-central1-a"
+
+  parent = "organizations/123456789"
+
+  billing_project_id = "my-project-name"
+
+  wildfire_settings {
+    enabled = true
+    wildfire_region = "UNITED_STATES"
+
+    wildfire_realtime_lookup_duration = "3s"
+    wildfire_realtime_lookup_timeout_action = "ALLOW"
+
+    wildfire_inline_cloud_analysis_settings {
+      max_analysis_duration = "10s"
+      timeout_action        = "ALLOW"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -109,6 +156,11 @@ The following arguments are supported:
   Settings for the endpoint.
   Structure is [documented below](#nested_endpoint_settings).
 
+* `wildfire_settings` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Settings for WildFire analysis.
+  Structure is [documented below](#nested_wildfire_settings).
+
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
 	the command will fail if this field is set to "PREVENT" in Terraform state.
@@ -122,6 +174,43 @@ The following arguments are supported:
 * `jumbo_frames_enabled` -
   (Optional)
   Indicates whether Jumbo Frames are enabled for the firewall endpoint.
+
+<a name="nested_wildfire_settings"></a>The `wildfire_settings` block supports:
+
+* `enabled` -
+  (Optional)
+  Indicates whether WildFire analysis is enabled. Default value is false.
+
+* `wildfire_region` -
+  (Optional)
+  The region where WildFire analysis will be performed.
+  Possible values are: `CANADA`, `UNITED_STATES`, `JAPAN`, `SINGAPORE`, `UNITED_KINGDOM`, `AUSTRALIA`, `GERMANY`, `INDIA`, `SWITZERLAND`, `POLAND`, `INDONESIA`, `TAIWAN`, `FRANCE`, `QATAR`, `SOUTH_KOREA`, `ISRAEL`, `SAUDI_ARABIA`, `SPAIN`.
+
+* `wildfire_realtime_lookup_duration` -
+  (Optional)
+  Duration on a file being held while the WildFire real time signature cloud performs a signature lookup.
+
+* `wildfire_realtime_lookup_timeout_action` -
+  (Optional)
+  Action to take on WildFire real time signature lookup timeout. Default value is ALLOW.
+  Possible values are: `ALLOW`, `DENY`.
+
+* `wildfire_inline_cloud_analysis_settings` -
+  (Optional)
+  Settings for WildFire inline cloud analysis.
+  Structure is [documented below](#nested_wildfire_settings_wildfire_inline_cloud_analysis_settings).
+
+
+<a name="nested_wildfire_settings_wildfire_inline_cloud_analysis_settings"></a>The `wildfire_inline_cloud_analysis_settings` block supports:
+
+* `max_analysis_duration` -
+  (Optional)
+  The maximum duration for inline analysis.
+
+* `timeout_action` -
+  (Optional)
+  Action to take on timeout.
+  Possible values are: `ALLOW`, `DENY`.
 
 ## Attributes Reference
 
