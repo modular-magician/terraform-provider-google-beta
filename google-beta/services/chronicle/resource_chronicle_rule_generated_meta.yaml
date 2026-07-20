@@ -23,6 +23,7 @@ fields:
     - api_field: dataTables
     - api_field: displayName
     - api_field: etag
+    - api_field: hasNonexistenceChecks
     - field: instance
       provider_only: true
     - field: location
@@ -37,6 +38,7 @@ fields:
     - api_field: scope
     - api_field: severity.displayName
     - api_field: text
+    - api_field: timeWindowDuration
     - api_field: type
     - field: deletion_policy
       provider_only: true

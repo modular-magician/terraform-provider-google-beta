@@ -217,6 +217,12 @@ In addition to the arguments listed above, the following computed attributes are
 * `data_tables` -
   Output only. Resource names of the data tables used in this rule.
 
+* `has_nonexistence_checks` -
+  Output only. Indicates whether the rule has non-existence checks.
+
+* `time_window_duration` -
+  Output only. The time window of the rule. For rules that do not specify a time window, this will be zero.
+
 
 <a name="nested_severity"></a>The `severity` block contains:
 

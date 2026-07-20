@@ -301,6 +301,11 @@ Populated in FULL view.`,
 				Description: `Output only. Display name of the rule.
 Populated in BASIC view and FULL view.`,
 			},
+			"has_nonexistence_checks": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: `Output only. Indicates whether the rule has non-existence checks.`,
+			},
 			"metadata": {
 				Type:     schema.TypeMap,
 				Computed: true,
@@ -365,6 +370,11 @@ the rule text.`,
 						},
 					},
 				},
+			},
+			"time_window_duration": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Output only. The time window of the rule. For rules that do not specify a time window, this will be zero.`,
 			},
 			"type": {
 				Type:     schema.TypeString,
@@ -1006,6 +1016,14 @@ func flattenChronicleRuleDataTables(v interface{}, d *schema.ResourceData, confi
 	return v
 }
 
+func flattenChronicleRuleHasNonexistenceChecks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenChronicleRuleTimeWindowDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandChronicleRuleText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1088,6 +1106,12 @@ func ResourceChronicleRuleFlatten(d *schema.ResourceData, meta interface{}, res 
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
 	if err = d.Set("data_tables", flattenChronicleRuleDataTables(res["dataTables"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Rule: %s", err)
+	}
+	if err = d.Set("has_nonexistence_checks", flattenChronicleRuleHasNonexistenceChecks(res["hasNonexistenceChecks"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Rule: %s", err)
+	}
+	if err = d.Set("time_window_duration", flattenChronicleRuleTimeWindowDuration(res["timeWindowDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
 
