@@ -96,6 +96,10 @@ The following arguments are supported:
   The revision of the API proxy to be deployed.
 
 
+* `service_account` -
+  (Optional)
+  The service account to be used by the API deployment.
+
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
 	the command will fail if this field is set to "PREVENT" in Terraform state.
