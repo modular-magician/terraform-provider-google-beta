@@ -189,7 +189,8 @@ This value is subject to the following restrictions:
 				ForceNew: true,
 				Description: `Optional. Immutable. Authorization mode of the instance. Possible values:
  AUTH_DISABLED
-IAM_AUTH`,
+IAM_AUTH
+TOKEN_AUTH`,
 			},
 			"automated_backup_config": {
 				Type:        schema.TypeList,

@@ -531,6 +531,7 @@ The following arguments are supported:
   Optional. Immutable. Authorization mode of the instance. Possible values:
    AUTH_DISABLED
   IAM_AUTH
+  TOKEN_AUTH
 
 * `transit_encryption_mode` -
   (Optional)
