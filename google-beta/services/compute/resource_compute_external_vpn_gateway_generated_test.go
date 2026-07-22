@@ -61,12 +61,20 @@ func TestAccComputeExternalVpnGateway_externalVpnGatewayExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"external_gateway_name": "tf-test-external-gateway" + randomSuffix,
-		"global_address_name":   "tf-test-global-address" + randomSuffix,
-		"ha_vpn_gateway_name":   "tf-test-ha-vpn" + randomSuffix,
-		"network_name":          "tf-test-network-1" + randomSuffix,
-		"router_name":           "tf-test-ha-vpn-router1" + randomSuffix,
-		"random_suffix":         randomSuffix,
+		"external_gateway_name":   "tf-test-external-gateway" + randomSuffix,
+		"global_address_name":     "tf-test-global-address" + randomSuffix,
+		"ha_vpn_gateway_name":     "tf-test-ha-vpn" + randomSuffix,
+		"network_name":            "tf-test-network-1" + randomSuffix,
+		"network_subnet1_name":    "tf-test-ha-vpn-subnet-1" + randomSuffix,
+		"network_subnet2_name":    "tf-test-ha-vpn-subnet-2" + randomSuffix,
+		"router1_interface1_name": "tf-test-router1-interface1" + randomSuffix,
+		"router1_interface2_name": "tf-test-router1-interface2" + randomSuffix,
+		"router1_peer1_name":      "tf-test-router1-peer1" + randomSuffix,
+		"router1_peer2_name":      "tf-test-router1-peer2" + randomSuffix,
+		"router_name":             "tf-test-ha-vpn-router1" + randomSuffix,
+		"tunnel1_name":            "tf-test-ha-vpn-tunnel1" + randomSuffix,
+		"tunnel2_name":            "tf-test-ha-vpn-tunnel2" + randomSuffix,
+		"random_suffix":           randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -118,14 +126,14 @@ resource "google_compute_network" "network" {
 }
 
 resource "google_compute_subnetwork" "network_subnet1" {
-  name          = "ha-vpn-subnet-1"
+  name          = "%{network_subnet1_name}"
   ip_cidr_range = "10.0.1.0/24"
   region        = "us-central1"
   network       = google_compute_network.network.id
 }
 
 resource "google_compute_subnetwork" "network_subnet2" {
-  name          = "ha-vpn-subnet-2"
+  name          = "%{network_subnet2_name}"
   ip_cidr_range = "10.0.2.0/24"
   region        = "us-west1"
   network       = google_compute_network.network.id
@@ -140,7 +148,7 @@ resource "google_compute_router" "router1" {
 }
 
 resource "google_compute_vpn_tunnel" "tunnel1" {
-  name                            = "ha-vpn-tunnel1"
+  name                            = "%{tunnel1_name}"
   region                          = "us-central1"
   vpn_gateway                     = google_compute_ha_vpn_gateway.ha_gateway.id
   peer_external_gateway           = google_compute_external_vpn_gateway.external_gateway.id
@@ -151,7 +159,7 @@ resource "google_compute_vpn_tunnel" "tunnel1" {
 }
 
 resource "google_compute_vpn_tunnel" "tunnel2" {
-  name                            = "ha-vpn-tunnel2"
+  name                            = "%{tunnel2_name}"
   region                          = "us-central1"
   vpn_gateway                     = google_compute_ha_vpn_gateway.ha_gateway.id
   peer_external_gateway           = google_compute_external_vpn_gateway.external_gateway.id
@@ -162,7 +170,7 @@ resource "google_compute_vpn_tunnel" "tunnel2" {
 }
 
 resource "google_compute_router_interface" "router1_interface1" {
-  name       = "router1-interface1"
+  name       = "%{router1_interface1_name}"
   router     = google_compute_router.router1.name
   region     = "us-central1"
   ip_range   = "169.254.0.1/30"
@@ -170,7 +178,7 @@ resource "google_compute_router_interface" "router1_interface1" {
 }
 
 resource "google_compute_router_peer" "router1_peer1" {
-  name                      = "router1-peer1"
+  name                      = "%{router1_peer1_name}"
   router                    = google_compute_router.router1.name
   region                    = "us-central1"
   peer_ip_address           = "169.254.0.2"
@@ -180,7 +188,7 @@ resource "google_compute_router_peer" "router1_peer1" {
 }
 
 resource "google_compute_router_interface" "router1_interface2" {
-  name       = "router1-interface2"
+  name       = "%{router1_interface2_name}"
   router     = google_compute_router.router1.name
   region     = "us-central1"
   ip_range   = "169.254.1.1/30"
@@ -188,7 +196,7 @@ resource "google_compute_router_interface" "router1_interface2" {
 }
 
 resource "google_compute_router_peer" "router1_peer2" {
-  name                      = "router1-peer2"
+  name                      = "%{router1_peer2_name}"
   router                    = google_compute_router.router1.name
   region                    = "us-central1"
   peer_ip_address           = "169.254.1.2"

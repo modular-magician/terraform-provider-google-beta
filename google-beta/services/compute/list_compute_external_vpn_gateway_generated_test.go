@@ -41,13 +41,21 @@ func TestAccComputeExternalVpnGatewayListQuery_generated(t *testing.T) {
 
 	randomSuffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
-		"external_gateway_name": "tf-test-external-gateway" + randomSuffix,
-		"global_address_name":   "tf-test-global-address" + randomSuffix,
-		"ha_vpn_gateway_name":   "tf-test-ha-vpn" + randomSuffix,
-		"network_name":          "tf-test-network-1" + randomSuffix,
-		"router_name":           "tf-test-ha-vpn-router1" + randomSuffix,
-		"project":               envvar.GetTestProjectFromEnv(),
-		"random_suffix":         randomSuffix,
+		"external_gateway_name":   "tf-test-external-gateway" + randomSuffix,
+		"global_address_name":     "tf-test-global-address" + randomSuffix,
+		"ha_vpn_gateway_name":     "tf-test-ha-vpn" + randomSuffix,
+		"network_name":            "tf-test-network-1" + randomSuffix,
+		"network_subnet1_name":    "tf-test-ha-vpn-subnet-1" + randomSuffix,
+		"network_subnet2_name":    "tf-test-ha-vpn-subnet-2" + randomSuffix,
+		"router1_interface1_name": "tf-test-router1-interface1" + randomSuffix,
+		"router1_interface2_name": "tf-test-router1-interface2" + randomSuffix,
+		"router1_peer1_name":      "tf-test-router1-peer1" + randomSuffix,
+		"router1_peer2_name":      "tf-test-router1-peer2" + randomSuffix,
+		"router_name":             "tf-test-ha-vpn-router1" + randomSuffix,
+		"tunnel1_name":            "tf-test-ha-vpn-tunnel1" + randomSuffix,
+		"tunnel2_name":            "tf-test-ha-vpn-tunnel2" + randomSuffix,
+		"project":                 envvar.GetTestProjectFromEnv(),
+		"random_suffix":           randomSuffix,
 	}
 
 	var listDisplayName acctest.ListDisplayName
