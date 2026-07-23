@@ -712,7 +712,7 @@ resource "google_cloud_security_compliance_framework" "example" {
   description  = "A Terraform description for the framework"
   
   cloud_control_details {
-    name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
+    name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
     major_revision_id = "2"
     
     parameters {
@@ -744,7 +744,7 @@ resource "google_cloud_security_compliance_framework_deployment" "example" {
     enforcement_mode = "DETECTIVE"
     
     cloud_control_details {
-      name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
+      name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
       major_revision_id = "2"
       
       parameters {
@@ -817,7 +817,7 @@ resource "google_cloud_security_compliance_framework" "example" {
   description  = "A Terraform description for the framework"
   
   cloud_control_details {
-    name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
+    name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
     major_revision_id = "2"
     
     parameters {
@@ -850,7 +850,7 @@ resource "google_cloud_security_compliance_framework_deployment" "example" {
     enforcement_mode = "DETECTIVE"
     
     cloud_control_details {
-      name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
+      name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
       major_revision_id = "2"
       
       parameters {

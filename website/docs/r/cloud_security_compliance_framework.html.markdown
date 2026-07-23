@@ -41,8 +41,8 @@ resource "google_cloud_security_compliance_framework" "example" {
   description  = "An Terraform description for the framework"
   
   cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-assess-resource-availability"
-		major_revision_id = "2"
+    name              = "organizations/123456789/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
+    major_revision_id = "2"
     
     parameters {
       name = "location"
@@ -50,47 +50,53 @@ resource "google_cloud_security_compliance_framework" "example" {
         string_value = "us-central1"
       }
     }
-  }
-
-    cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-cmek-key-in-use-for-bigquery-table"
-		major_revision_id = "1"
-    
     parameters {
-      name = "location"
+      name = "oneof-parameter"
       parameter_value {
-        string_list_value {
-          values = ["us-central1", "us-west1"]
+        oneof_value {
+          name = "test-oneof"
+          parameter_value {
+            string_value = "test-value"
+          }
+        }
+      }
+    }
+    parameters {
+      name = "bool-parameter"
+      parameter_value {
+        oneof_value {
+          name = "bool-oneof"
+          parameter_value {
+            bool_value = true
+          }
+        }
+      }
+    }
+    parameters {
+      name = "number-parameter"
+      parameter_value {
+        oneof_value {
+          name = "number-oneof"
+          parameter_value {
+            number_value = 123.45
+          }
+        }
+      }
+    }
+    parameters {
+      name = "string-list-parameter"
+      parameter_value {
+        oneof_value {
+          name = "string-list-oneof"
+          parameter_value {
+            string_list_value {
+              values = ["value1", "value2"]
+            }
+          }
         }
       }
     }
   }
-
-  cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-enable-automatic-backups-cloud-sql"
-		major_revision_id = "3"
-    
-    parameters {
-      name = "location"
-      parameter_value {
-        bool_value = true
-      }
-    }
-  }
-
-  cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
-		major_revision_id = "2"
-    
-    parameters {
-      name = "location"
-      parameter_value {
-        number_value = 1
-      }
-    }
-  }
-
-  
 }
 ```
 ## Example Usage - Cloudsecuritycompliance Framework Project Basic
@@ -107,8 +113,8 @@ resource "google_cloud_security_compliance_framework" "example" {
   description  = "An Terraform description for the framework"
   
   cloud_control_details {
-		name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-assess-resource-availability"
-		major_revision_id = "2"
+    name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
+    major_revision_id = "2"
     
     parameters {
       name = "location"
@@ -116,47 +122,53 @@ resource "google_cloud_security_compliance_framework" "example" {
         string_value = "us-central1"
       }
     }
-  }
-
-    cloud_control_details {
-		name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-cmek-key-in-use-for-bigquery-table"
-		major_revision_id = "1"
-    
     parameters {
-      name = "location"
+      name = "oneof-parameter"
       parameter_value {
-        string_list_value {
-          values = ["us-central1", "us-west1"]
+        oneof_value {
+          name = "test-oneof"
+          parameter_value {
+            string_value = "test-value"
+          }
+        }
+      }
+    }
+    parameters {
+      name = "bool-parameter"
+      parameter_value {
+        oneof_value {
+          name = "bool-oneof"
+          parameter_value {
+            bool_value = true
+          }
+        }
+      }
+    }
+    parameters {
+      name = "number-parameter"
+      parameter_value {
+        oneof_value {
+          name = "number-oneof"
+          parameter_value {
+            number_value = 123.45
+          }
+        }
+      }
+    }
+    parameters {
+      name = "string-list-parameter"
+      parameter_value {
+        oneof_value {
+          name = "string-list-oneof"
+          parameter_value {
+            string_list_value {
+              values = ["value1", "value2"]
+            }
+          }
         }
       }
     }
   }
-
-  cloud_control_details {
-		name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-enable-automatic-backups-cloud-sql"
-		major_revision_id = "3"
-    
-    parameters {
-      name = "location"
-      parameter_value {
-        bool_value = true
-      }
-    }
-  }
-
-  cloud_control_details {
-		name              = "projects/${data.google_project.project.number}/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
-		major_revision_id = "2"
-    
-    parameters {
-      name = "location"
-      parameter_value {
-        number_value = 1
-      }
-    }
-  }
-
-  
 }
 ```
 ## Example Usage - Cloudsecuritycompliance Framework Org Basic Backward
@@ -172,8 +184,8 @@ resource "google_cloud_security_compliance_framework" "example" {
   description  = "An Terraform description for the framework"
   
   cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-assess-resource-availability"
-		major_revision_id = "2"
+    name              = "organizations/123456789/locations/global/cloudControls/builtin-detective-policy-for-vertex-ai-runtime-template-idle-shutdown"
+    major_revision_id = "2"
     
     parameters {
       name = "location"
@@ -181,47 +193,53 @@ resource "google_cloud_security_compliance_framework" "example" {
         string_value = "us-central1"
       }
     }
-  }
-
-    cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-cmek-key-in-use-for-bigquery-table"
-		major_revision_id = "1"
-    
     parameters {
-      name = "location"
+      name = "oneof-parameter"
       parameter_value {
-        string_list_value {
-          values = ["us-central1", "us-west1"]
+        oneof_value {
+          name = "test-oneof"
+          parameter_value {
+            string_value = "test-value"
+          }
+        }
+      }
+    }
+    parameters {
+      name = "bool-parameter"
+      parameter_value {
+        oneof_value {
+          name = "bool-oneof"
+          parameter_value {
+            bool_value = true
+          }
+        }
+      }
+    }
+    parameters {
+      name = "number-parameter"
+      parameter_value {
+        oneof_value {
+          name = "number-oneof"
+          parameter_value {
+            number_value = 123.45
+          }
+        }
+      }
+    }
+    parameters {
+      name = "string-list-parameter"
+      parameter_value {
+        oneof_value {
+          name = "string-list-oneof"
+          parameter_value {
+            string_list_value {
+              values = ["value1", "value2"]
+            }
+          }
         }
       }
     }
   }
-
-  cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-enable-automatic-backups-cloud-sql"
-		major_revision_id = "3"
-    
-    parameters {
-      name = "location"
-      parameter_value {
-        bool_value = true
-      }
-    }
-  }
-
-  cloud_control_details {
-		name              = "organizations/123456789/locations/global/cloudControls/builtin-require-cmek-on-bigquery-datasets"
-		major_revision_id = "2"
-    
-    parameters {
-      name = "location"
-      parameter_value {
-        number_value = 1
-      }
-    }
-  }
-
-  
 }
 ```
 
