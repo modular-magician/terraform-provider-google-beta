@@ -828,15 +828,19 @@ func resourceComputeRegionResizeRequestDelete(d *schema.ResourceData, meta inter
 		})
 
 		if err != nil {
-			return transport_tpg.HandleNotFoundError(err, d, "ResizeRequest")
-		}
+			if !strings.Contains(err.Error(), "has reached a final state") {
+				return transport_tpg.HandleNotFoundError(err, d, "ResizeRequest")
+			}
+		} else {
+			err = ComputeOperationWaitTime(
+				config, res, project, "Cancelling the resize request", userAgent,
+				d.Timeout(schema.TimeoutDelete))
 
-		err = ComputeOperationWaitTime(
-			config, res, project, "Cancelling the resize request", userAgent,
-			d.Timeout(schema.TimeoutDelete))
-
-		if err != nil {
-			return err
+			if err != nil {
+				if !strings.Contains(err.Error(), "has reached a final state") {
+					return err
+				}
+			}
 		}
 	}
 
