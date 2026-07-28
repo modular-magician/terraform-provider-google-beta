@@ -169,6 +169,24 @@ func (instanceGroupManagerCache *instanceGroupManagerCache) needsRefresh(fullyQu
 	return time.Since(igm.updateTime) > instanceGroupManagerCache.ttl
 }
 
+func (instanceGroupManagerCache *instanceGroupManagerCache) remove(igmUrl string) {
+	instanceGroupManagerCache.mutex.Lock()
+	defer instanceGroupManagerCache.mutex.Unlock()
+
+	matches := instanceGroupManagerURL.FindStringSubmatch(igmUrl)
+	if len(matches) < 4 {
+		return
+	}
+	delete(instanceGroupManagerCache.instanceGroupManagers, matches[0])
+}
+
+func (instanceGroupManagerCache *instanceGroupManagerCache) clear() {
+	instanceGroupManagerCache.mutex.Lock()
+	defer instanceGroupManagerCache.mutex.Unlock()
+
+	instanceGroupManagerCache.instanceGroupManagers = make(map[string]*instanceGroupManagerWithUpdateTime)
+}
+
 // We need to set ttl to 0 to disable caching in VCR testing.
 // This ensure all NP/MIG LIST requests are made consistently,
 // preventing non-deterministic behavior that would break VCR.
@@ -1045,6 +1063,12 @@ func resourceContainerNodePoolUpdate(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
+	if np, err := npCache.get(nodePoolInfo.fullyQualifiedName(name)); err == nil {
+		for _, url := range np.InstanceGroupUrls {
+			igmCache.remove(url)
+		}
+	}
+	igmCache.clear()
 	npCache.remove(nodePoolInfo.fullyQualifiedName(name))
 
 	return resourceContainerNodePoolRead(d, meta)
@@ -1134,6 +1158,12 @@ func resourceContainerNodePoolDelete(d *schema.ResourceData, meta interface{}) e
 
 	d.SetId("")
 
+	if np, err := npCache.get(nodePoolInfo.fullyQualifiedName(name)); err == nil {
+		for _, url := range np.InstanceGroupUrls {
+			igmCache.remove(url)
+		}
+	}
+	igmCache.clear()
 	npCache.remove(nodePoolInfo.fullyQualifiedName(name))
 
 	return nil
