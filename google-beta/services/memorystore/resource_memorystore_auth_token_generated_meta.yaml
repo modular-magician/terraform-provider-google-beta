@@ -1,0 +1,18 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_memorystore_auth_token
+generation_type: mmv1
+source_file: products/memorystore/AuthToken.yaml
+api_service_name: memorystore.googleapis.com
+api_version: v1beta
+api_resource_type_kind: AuthToken
+fields:
+    - api_field: createTime
+    - api_field: name
+    - api_field: state
+    - api_field: token
+    - field: token_auth_user
+      provider_only: true
+    - api_field: tokenId
+    - field: deletion_policy
+      provider_only: true
