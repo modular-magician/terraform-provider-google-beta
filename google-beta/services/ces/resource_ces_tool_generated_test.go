@@ -80,7 +80,7 @@ func TestAccCESTool_cesToolClientFunctionBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_client_function_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_client_function_basic",
@@ -230,7 +230,7 @@ func TestAccCESTool_cesToolDataStoreToolEngineSourceBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_data_store_tool_engine_source_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_data_store_tool_engine_source_basic",
@@ -320,6 +320,9 @@ resource "google_ces_tool" "ces_tool_data_store_tool_engine_source_basic" {
                 grounding_level = 3
                 disabled = false
             }
+            snippets_config {
+                enable_snippets = true
+            }
         }
 
         engine_source {
@@ -362,7 +365,7 @@ func TestAccCESTool_cesToolGoogleSearchToolBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_google_search_tool_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_google_search_tool_basic",
@@ -425,7 +428,7 @@ func TestAccCESTool_cesToolPythonFunctionBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_python_function_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_python_function_basic",
@@ -485,7 +488,7 @@ func TestAccCESTool_cesToolAgentBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_agent_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_agent_basic",
@@ -556,7 +559,7 @@ func TestAccCESTool_cesToolFileSearchBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_file_search_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_file_search_basic",
@@ -619,7 +622,7 @@ func TestAccCESTool_cesToolWidgetBasicExample(t *testing.T) {
 				ResourceName:            "google_ces_tool.ces_tool_widget_basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+				ImportStateVerifyIgnore: []string{"app", "data_store_tool.0.modality_configs.0.snippets_config", "location", "tool_id"},
 			},
 			{
 				ResourceName:       "google_ces_tool.ces_tool_widget_basic",

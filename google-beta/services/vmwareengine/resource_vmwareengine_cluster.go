@@ -1361,6 +1361,7 @@ func flattenVmwareengineClusterDatastoreMountConfig(v interface{}, d *schema.Res
 			"nfs_version":       flattenVmwareengineClusterDatastoreMountConfigNfsVersion(original["nfsVersion"], d, config),
 			"access_mode":       flattenVmwareengineClusterDatastoreMountConfigAccessMode(original["accessMode"], d, config),
 			"servers":           flattenVmwareengineClusterDatastoreMountConfigServers(original["servers"], d, config),
+			"ignore_colocation": d.Get(fmt.Sprintf("%s.%d.%s", "datastore_mount_config", i, "ignore_colocation")),
 		})
 	}
 	return transformed
