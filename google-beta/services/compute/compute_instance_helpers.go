@@ -1162,6 +1162,8 @@ func schedulingHasChangeRequiringReboot(d *schema.ResourceData) bool {
 
 	return hasNodeAffinitiesChanged(oScheduling, newScheduling) ||
 		hasMaxRunDurationChanged(oScheduling, newScheduling) ||
+		hasOnInstanceStopActionChanged(oScheduling, newScheduling) ||
+		hasLocalSsdRecoveryTimeoutChanged(oScheduling, newScheduling) ||
 		hasGracefulShutdownChangedWithReboot(d, oScheduling, newScheduling) ||
 		hasTerminationTimeChanged(oScheduling, newScheduling)
 }
@@ -1306,6 +1308,51 @@ func hasMaxRunDurationChanged(oScheduling, nScheduling map[string]interface{}) b
 		return true
 	}
 	if oldMrd["nanos"] != newMrd["nanos"] {
+		return true
+	}
+
+	return false
+}
+
+func hasLocalSsdRecoveryTimeoutChanged(oScheduling, nScheduling map[string]interface{}) bool {
+	oLsrt := oScheduling["local_ssd_recovery_timeout"].([]interface{})
+	nLsrt := nScheduling["local_ssd_recovery_timeout"].([]interface{})
+
+	if (len(oLsrt) == 0 || oLsrt[0] == nil) && (len(nLsrt) == 0 || nLsrt[0] == nil) {
+		return false
+	}
+	if (len(oLsrt) == 0 || oLsrt[0] == nil) || (len(nLsrt) == 0 || nLsrt[0] == nil) {
+		return true
+	}
+
+	oldLsrt := oLsrt[0].(map[string]interface{})
+	newLsrt := nLsrt[0].(map[string]interface{})
+
+	if oldLsrt["seconds"] != newLsrt["seconds"] {
+		return true
+	}
+	if oldLsrt["nanos"] != newLsrt["nanos"] {
+		return true
+	}
+
+	return false
+}
+
+func hasOnInstanceStopActionChanged(oScheduling, nScheduling map[string]interface{}) bool {
+	oOisa := oScheduling["on_instance_stop_action"].([]interface{})
+	nOisa := nScheduling["on_instance_stop_action"].([]interface{})
+
+	if (len(oOisa) == 0 || oOisa[0] == nil) && (len(nOisa) == 0 || nOisa[0] == nil) {
+		return false
+	}
+	if (len(oOisa) == 0 || oOisa[0] == nil) || (len(nOisa) == 0 || nOisa[0] == nil) {
+		return true
+	}
+
+	oldOisa := oOisa[0].(map[string]interface{})
+	newOisa := nOisa[0].(map[string]interface{})
+
+	if oldOisa["discard_local_ssd"] != newOisa["discard_local_ssd"] {
 		return true
 	}
 

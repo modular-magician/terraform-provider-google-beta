@@ -4297,7 +4297,7 @@ func TestAccComputeInstance_localSsdRecoveryTimeout(t *testing.T) {
 					testAccCheckComputeInstanceLocalSsdRecoveryTimeout(&instance, expectedLocalSsdRecoveryTimeout),
 				),
 			},
-			computeInstanceImportStep("us-central1-a", instanceName, []string{}),
+			computeInstanceImportStep("us-central1-a", instanceName, []string{"allow_stopping_for_update"}),
 		},
 	})
 }
@@ -4333,7 +4333,7 @@ func TestAccComputeInstance_localSsdRecoveryTimeout_update(t *testing.T) {
 					testAccCheckComputeInstanceLocalSsdRecoveryTimeout(&instance, expectedLocalSsdRecoveryTimeout),
 				),
 			},
-			computeInstanceImportStep("us-central1-a", instanceName, []string{}),
+			computeInstanceImportStep("us-central1-a", instanceName, []string{"allow_stopping_for_update"}),
 		},
 	})
 }
@@ -12247,6 +12247,7 @@ resource "google_compute_instance" "foobar" {
   name         = "%s"
   machine_type = "e2-medium"
   zone         = "us-central1-a"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -12282,6 +12283,7 @@ resource "google_compute_instance" "foobar" {
   name         = "%s"
   machine_type = "e2-medium"
   zone         = "us-central1-a"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -12394,6 +12396,7 @@ resource "google_compute_instance" "foobar" {
   name         = "%s"
   machine_type = "e2-medium"
   zone         = "us-central1-a"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
