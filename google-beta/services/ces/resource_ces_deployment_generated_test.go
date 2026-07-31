@@ -60,10 +60,12 @@ func TestAccCESDeployment_cesDeploymentBasicExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"app_display_name":        "tf-test-my-app" + randomSuffix,
-		"app_id":                  "tf-test-app-id" + randomSuffix,
-		"deployment_display_name": "tf-test-my-deployment" + randomSuffix,
-		"random_suffix":           randomSuffix,
+		"app_display_name":         "tf-test-my-app" + randomSuffix,
+		"app_id":                   "tf-test-app-id" + randomSuffix,
+		"app_version_display_name": "tf-test-my-version" + randomSuffix,
+		"app_version_id":           "tf-test-version-id" + randomSuffix,
+		"deployment_display_name":  "tf-test-my-deployment" + randomSuffix,
+		"random_suffix":            randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -100,11 +102,18 @@ resource "google_ces_app" "my-app" {
         time_zone = "America/Los_Angeles"
     }
 }
+resource "google_ces_app_version" "my-version" {
+    location       = "us"
+    display_name   = "%{app_version_display_name}"
+    app            = google_ces_app.my-app.name
+    app_version_id = "%{app_version_id}"
+    description    = "example-app-version"
+}
 resource "google_ces_deployment" "my-deployment" {
     location     = "us"
     display_name = "%{deployment_display_name}"
     app          = google_ces_app.my-app.name
-    app_version  = "projects/example-project/locations/us/apps/example-app/versions/example-version"
+    app_version  = "projects/${google_ces_app.my-app.project}/locations/us/apps/${google_ces_app.my-app.app_id}/versions/${google_ces_app_version.my-version.app_version_id}"
     channel_profile {
         channel_type = "API"
         disable_barge_in_control = true
@@ -124,15 +133,18 @@ resource "google_ces_deployment" "my-deployment" {
 }
 
 func TestAccCESDeployment_cesDeploymentFullExample(t *testing.T) {
+	t.Skip("Deployment-level modality overrides are gated behind a backend allowlist in GCP")
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"app_display_name":        "tf-test-my-app" + randomSuffix,
-		"app_id":                  "tf-test-app-id" + randomSuffix,
-		"deployment_display_name": "tf-test-my-deployment" + randomSuffix,
-		"random_suffix":           randomSuffix,
+		"app_display_name":         "tf-test-my-app" + randomSuffix,
+		"app_id":                   "tf-test-app-id" + randomSuffix,
+		"app_version_display_name": "tf-test-my-version" + randomSuffix,
+		"app_version_id":           "tf-test-version-id" + randomSuffix,
+		"deployment_display_name":  "tf-test-my-deployment" + randomSuffix,
+		"random_suffix":            randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -169,11 +181,19 @@ resource "google_ces_app" "my-app" {
         time_zone = "America/Los_Angeles"
     }
 }
+resource "google_ces_app_version" "my-version" {
+    location       = "us"
+    display_name   = "%{app_version_display_name}"
+    app            = google_ces_app.my-app.name
+    app_version_id = "%{app_version_id}"
+    description    = "example-app-version"
+}
 resource "google_ces_deployment" "my-deployment" {
     location     = "us"
     display_name = "%{deployment_display_name}"
     app          = google_ces_app.my-app.name
-    app_version  = "projects/example-project/locations/us/apps/example-app/versions/example-version"
+    app_version  = "projects/${google_ces_app.my-app.project}/locations/us/apps/${google_ces_app.my-app.app_id}/versions/${google_ces_app_version.my-version.app_version_id}"
+    modality     = "MODALITY_TEXT"
     channel_profile {
         channel_type = "API"
         disable_barge_in_control = true

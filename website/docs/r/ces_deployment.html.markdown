@@ -42,11 +42,18 @@ resource "google_ces_app" "my-app" {
         time_zone = "America/Los_Angeles"
     }
 }
+resource "google_ces_app_version" "my-version" {
+    location       = "us"
+    display_name   = "my-version"
+    app            = google_ces_app.my-app.name
+    app_version_id = "version-id"
+    description    = "example-app-version"
+}
 resource "google_ces_deployment" "my-deployment" {
     location     = "us"
     display_name = "my-deployment"
     app          = google_ces_app.my-app.name
-    app_version  = "projects/example-project/locations/us/apps/example-app/versions/example-version"
+    app_version  = "projects/${google_ces_app.my-app.project}/locations/us/apps/${google_ces_app.my-app.app_id}/versions/${google_ces_app_version.my-version.app_version_id}"
     channel_profile {
         channel_type = "API"
         disable_barge_in_control = true
@@ -80,11 +87,19 @@ resource "google_ces_app" "my-app" {
         time_zone = "America/Los_Angeles"
     }
 }
+resource "google_ces_app_version" "my-version" {
+    location       = "us"
+    display_name   = "my-version"
+    app            = google_ces_app.my-app.name
+    app_version_id = "version-id"
+    description    = "example-app-version"
+}
 resource "google_ces_deployment" "my-deployment" {
     location     = "us"
     display_name = "my-deployment"
     app          = google_ces_app.my-app.name
-    app_version  = "projects/example-project/locations/us/apps/example-app/versions/example-version"
+    app_version  = "projects/${google_ces_app.my-app.project}/locations/us/apps/${google_ces_app.my-app.app_id}/versions/${google_ces_app_version.my-version.app_version_id}"
+    modality     = "MODALITY_TEXT"
     channel_profile {
         channel_type = "API"
         disable_barge_in_control = true
@@ -137,6 +152,14 @@ The following arguments are supported:
   (Required)
   Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
+
+* `modality` -
+  (Optional)
+  The modality of the deployment.
+  Possible values:
+  MODALITY_TEXT
+  MODALITY_VOICE
+  MODALITY_VIDEO
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

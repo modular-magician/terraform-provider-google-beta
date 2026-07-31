@@ -299,6 +299,15 @@ DARK`,
 				ForceNew:    true,
 				Description: `Resource ID segment making up resource 'name'. It identifies the resource within its parent collection as described in https://google.aip.dev/122.`,
 			},
+			"modality": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The modality of the deployment.
+Possible values:
+MODALITY_TEXT
+MODALITY_VOICE
+MODALITY_VIDEO`,
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -371,6 +380,12 @@ func resourceCESDeploymentCreate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	modalityProp, err := expandCESDeploymentModality(d.Get("modality"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("modality"); !tpgresource.IsEmptyValue(reflect.ValueOf(modalityProp)) && (ok || !reflect.DeepEqual(v, modalityProp)) {
+		obj["modality"] = modalityProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/deployments")
@@ -618,6 +633,12 @@ func resourceCESDeploymentUpdate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	modalityProp, err := expandCESDeploymentModality(d.Get("modality"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("modality"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, modalityProp)) {
+		obj["modality"] = modalityProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/apps/{{app}}/deployments/{{name}}")
 	if err != nil {
@@ -638,6 +659,10 @@ func resourceCESDeploymentUpdate(d *schema.ResourceData, meta interface{}) error
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("modality") {
+		updateMask = append(updateMask, "modality")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -883,6 +908,10 @@ func flattenCESDeploymentEtag(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
+func flattenCESDeploymentModality(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESDeploymentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1115,6 +1144,10 @@ func expandCESDeploymentDisplayName(v interface{}, d tpgresource.TerraformResour
 	return v, nil
 }
 
+func expandCESDeploymentModality(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourceCESDeploymentPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	if err := d.Set("name", flattenCESDeploymentName(res["name"], d, config)); err != nil {
@@ -1136,6 +1169,9 @@ func ResourceCESDeploymentFlatten(d *schema.ResourceData, meta interface{}, res 
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
 	if err = d.Set("etag", flattenCESDeploymentEtag(res["etag"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Deployment: %s", err)
+	}
+	if err = d.Set("modality", flattenCESDeploymentModality(res["modality"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
 	if err = d.Set("name", flattenCESDeploymentName(res["name"], d, config)); err != nil {
