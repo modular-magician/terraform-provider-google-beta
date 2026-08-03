@@ -54,6 +54,27 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+var discoveryEngineSearchEngineGoogleProvidedFeatures = []string{
+	"enable-end-user-sharing-with-groups",
+}
+
+func DiscoveryEngineSearchEngineFeaturesDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	// Suppress diffs for the features provided by API when not set in config
+	for _, feature := range discoveryEngineSearchEngineGoogleProvidedFeatures {
+		if strings.Contains(k, feature) && new == "" {
+			return true
+		}
+	}
+
+	// Let diff be determined by features (above)
+	if strings.Contains(k, "features.%") {
+		return true
+	}
+
+	// For other keys, don't suppress diff.
+	return false
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -243,11 +264,12 @@ The supported values: 'APP_TYPE_UNSPECIFIED', 'APP_TYPE_INTRANET'.`,
 				Description: `Whether to disable analytics for searches performed on this engine.`,
 			},
 			"features": {
-				Type:        schema.TypeMap,
-				Computed:    true,
-				Optional:    true,
-				Description: `A map of the feature config for the engine to opt in or opt out of features.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:             schema.TypeMap,
+				Computed:         true,
+				Optional:         true,
+				DiffSuppressFunc: DiscoveryEngineSearchEngineFeaturesDiffSuppress,
+				Description:      `A map of the feature config for the engine to opt in or opt out of features.`,
+				Elem:             &schema.Schema{Type: schema.TypeString},
 			},
 			"industry_vertical": {
 				Type:         schema.TypeString,
