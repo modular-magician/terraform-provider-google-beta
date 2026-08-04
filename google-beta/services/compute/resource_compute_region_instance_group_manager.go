@@ -975,6 +975,13 @@ func ResourceComputeRegionInstanceGroupManager() *schema.Resource {
 					},
 				},
 			},
+
+			"no_graceful_shutdown_on_destroy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `When set to true, graceful shutdown is skipped for instance deletion even if it's configured for the instances. Otherwise, if graceful shutdown is configured, the MIG deletion waits for all instances to shut down gracefully before deletion.`,
+			},
+
 			//UDP schema start
 			"deletion_policy": tpgresource.DeletionPolicySchemaEntry("DELETE"),
 			//UDP schema end
@@ -1559,6 +1566,13 @@ func resourceComputeRegionInstanceGroupManagerDelete(d *schema.ResourceData, met
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{name}}")
 	if err != nil {
 		return err
+	}
+
+	if v, ok := d.GetOk("no_graceful_shutdown_on_destroy"); ok && v.(bool) {
+		url, err = transport_tpg.AddQueryParams(url, map[string]string{"noGracefulShutdown": "true"})
+		if err != nil {
+			return err
+		}
 	}
 
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
