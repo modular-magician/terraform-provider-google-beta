@@ -1109,7 +1109,7 @@ func resourcePrivatecaCertificateTemplateImport(d *schema.ResourceData, meta int
 
 func flattenPrivatecaCertificateTemplatePredefinedValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
-		v = make(map[string]interface{})
+		return nil
 	}
 	original := v.(map[string]interface{})
 	transformed := make(map[string]interface{})
