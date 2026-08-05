@@ -56,6 +56,49 @@ var (
 	_ = eventarc.Product
 )
 
+func TestAccEventarcChannel_eventarcChannelExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"channel_name":  "tf-test-some-channel" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckEventarcChannelDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEventarcChannel_eventarcChannelExample(context),
+			},
+			{
+				ResourceName:            "google_eventarc_channel.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_eventarc_channel.primary",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccEventarcChannel_eventarcChannelExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_eventarc_channel" "primary" {
+  location = "us-central1"
+  name     = "%{channel_name}"
+}
+`, context)
+}
+
 func TestAccEventarcChannel_eventarcChannelWithCmekExample(t *testing.T) {
 	t.Parallel()
 	resourcemanager.BootstrapIamMembers(t, []resourcemanager.IamMember{
@@ -106,49 +149,6 @@ resource "google_eventarc_channel" "primary" {
   name                 = "%{channel_name}"
   crypto_key_name      = "%{key_name}"
   third_party_provider = "projects/%{project}/locations/us-central1/providers/datadog"
-}
-`, context)
-}
-
-func TestAccEventarcChannel_eventarcChannelExample(t *testing.T) {
-	t.Parallel()
-
-	randomSuffix := acctest.RandString(t, 10)
-
-	context := map[string]interface{}{
-		"channel_name":  "tf-test-some-channel" + randomSuffix,
-		"random_suffix": randomSuffix,
-	}
-
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckEventarcChannelDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccEventarcChannel_eventarcChannelExample(context),
-			},
-			{
-				ResourceName:            "google_eventarc_channel.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
-			},
-			{
-				ResourceName:       "google_eventarc_channel.primary",
-				RefreshState:       true,
-				ExpectNonEmptyPlan: true,
-				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
-			},
-		},
-	})
-}
-
-func testAccEventarcChannel_eventarcChannelExample(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_eventarc_channel" "primary" {
-  location = "us-central1"
-  name     = "%{channel_name}"
 }
 `, context)
 }
