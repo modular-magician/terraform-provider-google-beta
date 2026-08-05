@@ -620,6 +620,7 @@ func resourceChronicleRuleDeploymentUpdate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
+
 	// removeRunFrequencyFromUpdateMask removes 'runFrequency' from the updateMask in a URL.
 	removeRunFrequencyFromUpdateMask := func(url string) string {
 		// Remove "runFrequency" and handle commas.

@@ -456,6 +456,7 @@ func resourceBiglakeIcebergIcebergNamespaceUpdate(d *schema.ResourceData, meta i
 
 	log.Printf("[DEBUG] Updating IcebergNamespace %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
+
 	if parts := regexp.MustCompile(`projects\/([^\/]+)\/`).FindStringSubmatch(url); parts != nil {
 		billingProject = parts[1]
 	}
