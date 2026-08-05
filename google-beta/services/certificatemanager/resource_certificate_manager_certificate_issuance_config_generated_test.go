@@ -79,7 +79,7 @@ func TestAccCertificateManagerCertificateIssuanceConfig_certificateManagerCertif
 				ResourceName:            "google_certificate_manager_certificate_issuance_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate_issuance_config.default",

@@ -109,6 +109,12 @@ The following arguments are supported:
   projects.
   Possible values are: `FIXED_RECORD`, `PER_PROJECT_RECORD`.
 
+* `tags` -
+  (Optional)
+  A map of resource manager tags.
+  Resource manager tag keys and values have the same definition as resource manager tags.
+  Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.
+
 * `location` -
   (Optional)
   The Certificate Manager location. If not specified, "global" is used.

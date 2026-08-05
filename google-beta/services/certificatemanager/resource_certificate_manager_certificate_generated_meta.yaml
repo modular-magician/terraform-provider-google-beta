@@ -31,6 +31,7 @@ fields:
     - api_field: selfManaged.pemCertificate
     - api_field: selfManaged.pemPrivateKey
     - api_field: selfManaged.privateKeyPem
+    - api_field: tags
     - field: terraform_labels
       provider_only: true
     - field: deletion_policy
