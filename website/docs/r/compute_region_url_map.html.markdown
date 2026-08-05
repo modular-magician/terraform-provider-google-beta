@@ -1217,7 +1217,6 @@ resource "google_compute_region_health_check" "default" {
 
 ```hcl
 resource "google_compute_region_url_map" "regionurlmap" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "regionurlmap"
   description = "Test for default route action mirror percent"
@@ -1243,7 +1242,6 @@ resource "google_compute_region_url_map" "regionurlmap" {
 }
 
 resource "google_compute_region_backend_service" "home" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "home"
   port_name   = "http"
@@ -1255,7 +1253,6 @@ resource "google_compute_region_backend_service" "home" {
 }
 
 resource "google_compute_region_backend_service" "mirror" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "mirror"
   port_name   = "http"
@@ -1267,7 +1264,6 @@ resource "google_compute_region_backend_service" "mirror" {
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider = google-beta
   region   = "us-central1"
   name     = "health-check"
   http_health_check {
@@ -1285,7 +1281,6 @@ resource "google_compute_region_health_check" "default" {
 
 ```hcl
 resource "google_compute_region_url_map" "regionurlmap" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "regionurlmap"
   description = "Test for default route action mirror percent"
@@ -1311,7 +1306,6 @@ resource "google_compute_region_url_map" "regionurlmap" {
 }
 
 resource "google_compute_region_backend_service" "home" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "home"
   port_name   = "http"
@@ -1323,7 +1317,6 @@ resource "google_compute_region_backend_service" "home" {
 }
 
 resource "google_compute_region_backend_service" "mirror" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "mirror"
   port_name   = "http"
@@ -1335,7 +1328,6 @@ resource "google_compute_region_backend_service" "mirror" {
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider = google-beta
   region   = "us-central1"
   name     = "health-check"
   http_health_check {
@@ -1353,7 +1345,6 @@ resource "google_compute_region_health_check" "default" {
 
 ```hcl
 resource "google_compute_region_url_map" "regionurlmap" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "regionurlmap"
   description = "Test for path matcher default route action mirror percent"
@@ -1379,7 +1370,6 @@ resource "google_compute_region_url_map" "regionurlmap" {
 }
 
 resource "google_compute_region_backend_service" "home" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "home"
   port_name   = "http"
@@ -1391,7 +1381,6 @@ resource "google_compute_region_backend_service" "home" {
 }
 
 resource "google_compute_region_backend_service" "mirror" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "mirror"
   port_name   = "http"
@@ -1403,7 +1392,6 @@ resource "google_compute_region_backend_service" "mirror" {
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider = google-beta 
   region   = "us-central1"
   name     = "health-check"
   http_health_check {
@@ -1421,7 +1409,6 @@ resource "google_compute_region_health_check" "default" {
 
 ```hcl
 resource "google_compute_region_url_map" "regionurlmap" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "regionurlmap"
   description = "Test for path rule route action mirror percent"
@@ -1451,7 +1438,6 @@ resource "google_compute_region_url_map" "regionurlmap" {
 }
 
 resource "google_compute_region_backend_service" "home" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "home"
   port_name   = "http"
@@ -1463,7 +1449,6 @@ resource "google_compute_region_backend_service" "home" {
 }
 
 resource "google_compute_region_backend_service" "mirror" {
-  provider    = google-beta
   region      = "us-central1"
   name        = "mirror"
   port_name   = "http"
@@ -1475,7 +1460,6 @@ resource "google_compute_region_backend_service" "mirror" {
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider = google-beta
   region   = "us-central1"
   name     = "health-check"
   http_health_check {
@@ -2176,7 +2160,7 @@ The following arguments are supported:
   The RegionBackendService resource being mirrored to.
 
 * `mirror_percent` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   The percentage of requests to be mirrored to backendService.
   The value must be between 0.0 and 100.0 inclusive.
 
@@ -2599,7 +2583,7 @@ The following arguments are supported:
   The RegionBackendService resource being mirrored to.
 
 * `mirror_percent` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   The percentage of requests to be mirrored to backendService.
   The value must be between 0.0 and 100.0 inclusive.
 
@@ -3102,7 +3086,7 @@ The following arguments are supported:
   The full or partial URL to the BackendService resource being mirrored to.
 
 * `mirror_percent` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   The percentage of requests to be mirrored to backendService.
   The value must be between 0.0 and 100.0 inclusive.
 
@@ -3455,7 +3439,7 @@ The following arguments are supported:
   Serverless NEG backends are not currently supported as a mirrored backend service.
 
 * `mirror_percent` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   The percentage of requests to be mirrored to backendService.
   The value must be between 0.0 and 100.0 inclusive.
 

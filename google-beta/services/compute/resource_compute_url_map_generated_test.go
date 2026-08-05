@@ -901,7 +901,7 @@ func TestAccComputeUrlMap_urlMapDefaultMirrorPercentExample(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeUrlMapDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -926,7 +926,6 @@ func TestAccComputeUrlMap_urlMapDefaultMirrorPercentExample(t *testing.T) {
 func testAccComputeUrlMap_urlMapDefaultMirrorPercentExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_url_map" "urlmap" {
-  provider    = google-beta
   name        = "%{url_map_name}"
   description = "Test for default route action mirror percent"
   
@@ -951,7 +950,6 @@ resource "google_compute_url_map" "urlmap" {
 }
 
 resource "google_compute_backend_service" "home" {
-  provider    = google-beta
   name        = "%{home_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -962,7 +960,6 @@ resource "google_compute_backend_service" "home" {
 }
 
 resource "google_compute_backend_service" "mirror" {
-  provider    = google-beta
   name        = "%{mirror_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -973,7 +970,6 @@ resource "google_compute_backend_service" "mirror" {
 }
 
 resource "google_compute_health_check" "default" {
-  provider    = google-beta
   name               = "%{health_check_name}"
   http_health_check {
     port = 80
@@ -997,7 +993,7 @@ func TestAccComputeUrlMap_urlMapPathMatcherDefaultMirrorPercentExample(t *testin
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeUrlMapDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -1022,7 +1018,6 @@ func TestAccComputeUrlMap_urlMapPathMatcherDefaultMirrorPercentExample(t *testin
 func testAccComputeUrlMap_urlMapPathMatcherDefaultMirrorPercentExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_url_map" "urlmap" {
-  provider    = google-beta
   name        = "%{url_map_name}"
   description = "Test for default route action mirror percent"
   
@@ -1047,7 +1042,6 @@ resource "google_compute_url_map" "urlmap" {
 }
 
 resource "google_compute_backend_service" "home" {
-  provider    = google-beta
   name        = "%{home_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -1058,7 +1052,6 @@ resource "google_compute_backend_service" "home" {
 }
 
 resource "google_compute_backend_service" "mirror" {
-  provider    = google-beta
   name        = "%{mirror_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -1069,7 +1062,6 @@ resource "google_compute_backend_service" "mirror" {
 }
 
 resource "google_compute_health_check" "default" {
-  provider = google-beta
   name               = "%{health_check_name}"
   http_health_check {
     port = 80
@@ -1362,7 +1354,7 @@ func TestAccComputeUrlMap_urlMapPathRuleMirrorPercentExample(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeUrlMapDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -1387,7 +1379,6 @@ func TestAccComputeUrlMap_urlMapPathRuleMirrorPercentExample(t *testing.T) {
 func testAccComputeUrlMap_urlMapPathRuleMirrorPercentExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_url_map" "urlmap" {
-  provider    = google-beta
   name        = "%{url_map_name}"
   description = "Test for path matcher default route action mirror percent"
   
@@ -1412,7 +1403,6 @@ resource "google_compute_url_map" "urlmap" {
 }
 
 resource "google_compute_backend_service" "home" {
-  provider    = google-beta
   name        = "%{home_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -1423,7 +1413,6 @@ resource "google_compute_backend_service" "home" {
 }
 
 resource "google_compute_backend_service" "mirror" {
-  provider    = google-beta
   name        = "%{mirror_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -1434,7 +1423,6 @@ resource "google_compute_backend_service" "mirror" {
 }
 
 resource "google_compute_health_check" "default" {
-  provider    = google-beta 
   name               = "%{health_check_name}"
   http_health_check {
     port = 80
@@ -1458,7 +1446,7 @@ func TestAccComputeUrlMap_urlMapRouteRuleMirrorPercentExample(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeUrlMapDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -1483,7 +1471,6 @@ func TestAccComputeUrlMap_urlMapRouteRuleMirrorPercentExample(t *testing.T) {
 func testAccComputeUrlMap_urlMapRouteRuleMirrorPercentExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_url_map" "urlmap" {
-  provider    = google-beta
   name        = "%{url_map_name}"
   description = "Test for path rule route action mirror percent"
 
@@ -1512,7 +1499,6 @@ resource "google_compute_url_map" "urlmap" {
 }
 
 resource "google_compute_backend_service" "home" {
-  provider    = google-beta
   name        = "%{home_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -1523,7 +1509,6 @@ resource "google_compute_backend_service" "home" {
 }
 
 resource "google_compute_backend_service" "mirror" {
-  provider    = google-beta
   name        = "%{mirror_backend_service_name}"
   port_name   = "http"
   protocol    = "HTTP"
@@ -1534,7 +1519,6 @@ resource "google_compute_backend_service" "mirror" {
 }
 
 resource "google_compute_health_check" "default" {
-  provider = google-beta
   name               = "%{health_check_name}"
   http_health_check {
     port = 80
