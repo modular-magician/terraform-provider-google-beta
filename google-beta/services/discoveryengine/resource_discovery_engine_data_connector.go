@@ -116,13 +116,18 @@ func ResourceDiscoveryEngineDataConnector() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
-		SchemaVersion: 1,
+		SchemaVersion: 2,
 
 		StateUpgraders: []schema.StateUpgrader{
 			{
 				Type:    resourceDiscoveryEngineDataConnectorResourceV0().CoreConfigSchema().ImpliedType(),
 				Upgrade: ResourceDiscoveryEngineDataConnectorUpgradeV0,
 				Version: 0,
+			},
+			{
+				Type:    resourceDiscoveryEngineDataConnectorResourceV1().CoreConfigSchema().ImpliedType(),
+				Upgrade: ResourceDiscoveryEngineDataConnectorUpgradeV1,
+				Version: 1,
 			},
 		},
 		CustomizeDiff: customdiff.All(
@@ -457,11 +462,13 @@ If this field is set and processed successfully, the DataStores created by
 this connector will be protected by the KMS key.`,
 			},
 			"params": {
-				Type:         schema.TypeMap,
-				Optional:     true,
-				Description:  `Params needed to access the source in the format of String-to-String (Key, Value) pairs.`,
-				Elem:         &schema.Schema{Type: schema.TypeString},
-				ExactlyOneOf: []string{"json_params", "params"},
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     validation.StringIsJSON,
+				DiffSuppressFunc: DataConnectorJsonStructFieldsDiffSuppress,
+				StateFunc:        func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+				Description:      `Params needed to access the source in structured json format.`,
+				ExactlyOneOf:     []string{"json_params", "params"},
 			},
 			"static_ip_enabled": {
 				Type:        schema.TypeBool,
@@ -1496,13 +1503,14 @@ func expandDiscoveryEngineDataConnectorDataSourceVersion(v interface{}, d tpgres
 	return v, nil
 }
 
-func expandDiscoveryEngineDataConnectorParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
-	if v == nil {
-		return map[string]string{}, nil
+func expandDiscoveryEngineDataConnectorParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
 	}
-	m := make(map[string]string)
-	for k, val := range v.(map[string]interface{}) {
-		m[k] = val.(string)
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
 	}
 	return m, nil
 }
@@ -1830,6 +1838,26 @@ func ResourceDiscoveryEngineDataConnectorUpgradeV0(_ context.Context, rawState m
 	}
 	log.Printf("[DEBUG] Attributes after migration: %#v", rawState)
 	return rawState, nil
+}
+
+func ResourceDiscoveryEngineDataConnectorUpgradeV1(_ context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+	log.Printf("[DEBUG] Attributes before migration: %#v", rawState)
+	// Version 1 had params as KeyValuePairs; Version 2 makes it a json string.
+	if p, ok := rawState["params"]; ok && p != nil {
+		if _, isString := p.(string); !isString {
+			b, err := json.Marshal(p)
+			if err != nil {
+				b = []byte(fmt.Sprintf("%v", p))
+			}
+			rawState["params"] = string(b)
+		}
+	}
+	log.Printf("[DEBUG] Attributes after migration: %#v", rawState)
+	return rawState, nil
+}
+
+func resourceDiscoveryEngineDataConnectorResourceV1() *schema.Resource {
+	return resourceDiscoveryEngineDataConnectorResourceV0()
 }
 
 func resourceDiscoveryEngineDataConnectorResourceV0() *schema.Resource {

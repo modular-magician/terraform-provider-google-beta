@@ -48,14 +48,14 @@ resource "google_discovery_engine_data_connector" "servicenow-basic" {
   collection_id                = "collection-id"
   collection_display_name      = "tf-test-dataconnector-servicenow"
   data_source                  = "servicenow"
-  params = {
+  params                       = jsonencode({
     auth_type                  = "OAUTH_PASSWORD_GRANT"
     instance_uri               = "https://gcpconnector1.service-now.com/"
     client_id                  = "SECRET_MANAGER_RESOURCE_NAME"
     client_secret              = "SECRET_MANAGER_RESOURCE_NAME"
     user_account               = "connectorsuserqa@google.com"
     password                   = "SECRET_MANAGER_RESOURCE_NAME"
-  }
+  })
   refresh_interval             = "86400s"
   incremental_refresh_interval = "21600s"
   entities {
@@ -108,14 +108,14 @@ resource "google_discovery_engine_data_connector" "jira-with-actions" {
   collection_display_name      = "Jira Federated"
   data_source                  = "jira"
   data_source_version          = 3
-  params = {
+  params                       = jsonencode({
     instance_uri               = "https://example.atlassian.net"
     instance_id                = "SECRET_MANAGER_RESOURCE_NAME"
     client_id                  = "SECRET_MANAGER_RESOURCE_NAME"
     client_secret              = "SECRET_MANAGER_RESOURCE_NAME"
     refresh_token              = "SECRET_MANAGER_RESOURCE_NAME"
     auth_type                  = "OAUTH"
-  }
+  })
   refresh_interval             = "86400s"
   entities {
     entity_name                = "project"
@@ -259,7 +259,7 @@ The following arguments are supported:
 
 * `params` -
   (Optional)
-  Params needed to access the source in the format of String-to-String (Key, Value) pairs.
+  Params needed to access the source in structured json format.
 
 * `json_params` -
   (Optional)
