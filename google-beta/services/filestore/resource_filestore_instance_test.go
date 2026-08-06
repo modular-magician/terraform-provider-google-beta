@@ -216,7 +216,7 @@ func TestAccFilestoreInstance_deletionProtection_update(t *testing.T) {
 	t.Parallel()
 
 	name := fmt.Sprintf("tf-test-%d", acctest.RandInt(t))
-	location := "us-central1-a"
+	location := "us-east1-b"
 	tier := "ZONAL"
 
 	deletionProtection := true
@@ -803,7 +803,7 @@ func TestAccFilestoreInstance_psc(t *testing.T) {
 
 	context := map[string]interface{}{
 		"name":     fmt.Sprintf("tf-test-%d", acctest.RandInt(t)),
-		"location": "us-central1",
+		"location": "us-east1",
 		"tier":     "REGIONAL",
 	}
 
@@ -890,7 +890,7 @@ func TestAccFilestoreInstance_nfsExportOptionsNetwork_update(t *testing.T) {
 	t.Parallel()
 
 	name := fmt.Sprintf("tf-test-%d", acctest.RandInt(t))
-	location := "us-central1-a"
+	location := "us-east1-b"
 	tier := "ZONAL"
 
 	// Currently, we can only alternate between an empty network and the instance network of non-PSC instances.
@@ -954,7 +954,7 @@ func TestAccFilestoreInstance_psc_ipv6(t *testing.T) {
 
 	context := map[string]interface{}{
 		"name":     fmt.Sprintf("tf-test-%d", acctest.RandInt(t)),
-		"location": "us-central1",
+		"location": "us-east1",
 		"tier":     "REGIONAL",
 	}
 
