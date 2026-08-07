@@ -798,6 +798,10 @@ resource "google_cloudbuild_trigger" "dc-trigger-regular-push-branch" {
 The following arguments are supported:
 
 
+* `location` -
+  (Required)
+  The [Cloud Build location](https://cloud.google.com/build/docs/locations) for the trigger.
+
 
 * `name` -
   (Optional)
@@ -930,11 +934,6 @@ The following arguments are supported:
   (Optional)
   Configuration for triggers that respond to Developer Connect events.
   Structure is [documented below](#nested_developer_connect_event_config).
-
-* `location` -
-  (Optional)
-  The [Cloud Build location](https://cloud.google.com/build/docs/locations) for the trigger.
-  If not specified, "global" is used.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -1847,7 +1846,7 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     trigger_id = "<-optional value->"
-    location = "<-optional value->"
+    location = "<-required value->"
     project = "<-optional value->"
   }
   to = google_cloudbuild_trigger.default

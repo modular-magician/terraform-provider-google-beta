@@ -179,7 +179,7 @@ func ResourceCloudBuildTrigger() *schema.Resource {
 					},
 					"location": {
 						Type:              schema.TypeString,
-						OptionalForImport: true,
+						RequiredForImport: true,
 					},
 					"project": {
 						Type:              schema.TypeString,
@@ -193,6 +193,12 @@ func ResourceCloudBuildTrigger() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"location": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `The [Cloud Build location](https://cloud.google.com/build/docs/locations) for the trigger.`,
+			},
 			"approval_config": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -1265,14 +1271,6 @@ a build.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-			},
-			"location": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `The [Cloud Build location](https://cloud.google.com/build/docs/locations) for the trigger.
-If not specified, "global" is used.`,
-				Default: "global",
 			},
 			"name": {
 				Type:        schema.TypeString,
