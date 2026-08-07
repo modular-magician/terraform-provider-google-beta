@@ -977,6 +977,21 @@ responses that are more creative.`,
 											},
 										},
 									},
+									"snippets_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Snippets configuration.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable_snippets": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: `Whether snippets are enabled.`,
+												},
+											},
+										},
+									},
 									"summarization_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -3768,6 +3783,7 @@ func flattenCESToolDataStoreToolModalityConfigs(v interface{}, d *schema.Resourc
 			"grounding_config":     flattenCESToolDataStoreToolModalityConfigsGroundingConfig(original["groundingConfig"], d, config),
 			"modality_type":        flattenCESToolDataStoreToolModalityConfigsModalityType(original["modalityType"], d, config),
 			"rewriter_config":      flattenCESToolDataStoreToolModalityConfigsRewriterConfig(original["rewriterConfig"], d, config),
+			"snippets_config":      flattenCESToolDataStoreToolModalityConfigsSnippetsConfig(original["snippetsConfig"], d, config),
 			"summarization_config": flattenCESToolDataStoreToolModalityConfigsSummarizationConfig(original["summarizationConfig"], d, config),
 		})
 	}
@@ -3845,6 +3861,23 @@ func flattenCESToolDataStoreToolModalityConfigsRewriterConfigModelSettingsTemper
 }
 
 func flattenCESToolDataStoreToolModalityConfigsRewriterConfigPrompt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESToolDataStoreToolModalityConfigsSnippetsConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_snippets"] =
+		flattenCESToolDataStoreToolModalityConfigsSnippetsConfigEnableSnippets(original["enableSnippets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESToolDataStoreToolModalityConfigsSnippetsConfigEnableSnippets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -6454,6 +6487,13 @@ func expandCESToolDataStoreToolModalityConfigs(v interface{}, d tpgresource.Terr
 			transformed["rewriterConfig"] = transformedRewriterConfig
 		}
 
+		transformedSnippetsConfig, err := expandCESToolDataStoreToolModalityConfigsSnippetsConfig(original["snippets_config"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSnippetsConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["snippetsConfig"] = transformedSnippetsConfig
+		}
+
 		transformedSummarizationConfig, err := expandCESToolDataStoreToolModalityConfigsSummarizationConfig(original["summarization_config"], d, config)
 		if err != nil {
 			return nil, err
@@ -6585,6 +6625,32 @@ func expandCESToolDataStoreToolModalityConfigsRewriterConfigModelSettingsTempera
 }
 
 func expandCESToolDataStoreToolModalityConfigsRewriterConfigPrompt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESToolDataStoreToolModalityConfigsSnippetsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnableSnippets, err := expandCESToolDataStoreToolModalityConfigsSnippetsConfigEnableSnippets(original["enable_snippets"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableSnippets); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableSnippets"] = transformedEnableSnippets
+	}
+
+	return transformed, nil
+}
+
+func expandCESToolDataStoreToolModalityConfigsSnippetsConfigEnableSnippets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -282,6 +282,7 @@ fields:
     - api_field: snapshot.tools.dataStoreTool.modalityConfigs.rewriterConfig.modelSettings.model
     - api_field: snapshot.tools.dataStoreTool.modalityConfigs.rewriterConfig.modelSettings.temperature
     - api_field: snapshot.tools.dataStoreTool.modalityConfigs.rewriterConfig.prompt
+    - api_field: snapshot.tools.dataStoreTool.modalityConfigs.snippetsConfig.enableSnippets
     - api_field: snapshot.tools.dataStoreTool.modalityConfigs.summarizationConfig.disabled
     - api_field: snapshot.tools.dataStoreTool.modalityConfigs.summarizationConfig.modelSettings.model
     - api_field: snapshot.tools.dataStoreTool.modalityConfigs.summarizationConfig.modelSettings.temperature

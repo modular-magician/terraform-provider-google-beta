@@ -2626,6 +2626,20 @@ responses that are more creative.`,
 																	},
 																},
 															},
+															"snippets_config": {
+																Type:        schema.TypeList,
+																Computed:    true,
+																Description: `Snippets configuration.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"enable_snippets": {
+																			Type:        schema.TypeBool,
+																			Computed:    true,
+																			Description: `Whether snippets are enabled.`,
+																		},
+																	},
+																},
+															},
 															"summarization_config": {
 																Type:        schema.TypeList,
 																Computed:    true,
@@ -6364,6 +6378,7 @@ func flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigs(v interface{}
 			"grounding_config":     flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsGroundingConfig(original["groundingConfig"], d, config),
 			"modality_type":        flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsModalityType(original["modalityType"], d, config),
 			"rewriter_config":      flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsRewriterConfig(original["rewriterConfig"], d, config),
+			"snippets_config":      flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsSnippetsConfig(original["snippetsConfig"], d, config),
 			"summarization_config": flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsSummarizationConfig(original["summarizationConfig"], d, config),
 		})
 	}
@@ -6441,6 +6456,23 @@ func flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsRewriterConfig
 }
 
 func flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsRewriterConfigPrompt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsSnippetsConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_snippets"] =
+		flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsSnippetsConfigEnableSnippets(original["enableSnippets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppVersionSnapshotToolsDataStoreToolModalityConfigsSnippetsConfigEnableSnippets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

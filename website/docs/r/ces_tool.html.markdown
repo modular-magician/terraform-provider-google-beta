@@ -234,6 +234,9 @@ resource "google_ces_tool" "ces_tool_data_store_tool_engine_source_basic" {
                 grounding_level = 3
                 disabled = false
             }
+            snippets_config {
+                enable_snippets = true
+            }
         }
 
         engine_source {
@@ -1110,6 +1113,11 @@ The following arguments are supported:
   Rewriter configuration.
   Structure is [documented below](#nested_data_store_tool_modality_configs_rewriter_config).
 
+* `snippets_config` -
+  (Optional)
+  Snippets configuration.
+  Structure is [documented below](#nested_data_store_tool_modality_configs_snippets_config).
+
 * `summarization_config` -
   (Optional)
   Summarization configuration.
@@ -1161,6 +1169,12 @@ The following arguments are supported:
   controls the randomness of the model's responses. Lower temperatures
   produce responses that are more predictable. Higher temperatures produce
   responses that are more creative.
+
+<a name="nested_data_store_tool_modality_configs_snippets_config"></a>The `snippets_config` block supports:
+
+* `enable_snippets` -
+  (Optional)
+  Whether snippets are enabled.
 
 <a name="nested_data_store_tool_modality_configs_summarization_config"></a>The `summarization_config` block supports:
 

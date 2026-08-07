@@ -2142,6 +2142,11 @@ In addition to the arguments listed above, the following computed attributes are
   Rewriter configuration.
   Structure is [documented below](#nested_snapshot_tools_data_store_tool_modality_configs_rewriter_config).
 
+* `snippets_config` -
+  (Output)
+  Snippets configuration.
+  Structure is [documented below](#nested_snapshot_tools_data_store_tool_modality_configs_snippets_config).
+
 * `summarization_config` -
   (Output)
   Summarization configuration.
@@ -2193,6 +2198,12 @@ In addition to the arguments listed above, the following computed attributes are
   controls the randomness of the model's responses. Lower temperatures
   produce responses that are more predictable. Higher temperatures produce
   responses that are more creative.
+
+<a name="nested_snapshot_tools_data_store_tool_modality_configs_snippets_config"></a>The `snippets_config` block contains:
+
+* `enable_snippets` -
+  (Output)
+  Whether snippets are enabled.
 
 <a name="nested_snapshot_tools_data_store_tool_modality_configs_summarization_config"></a>The `summarization_config` block contains:
 
