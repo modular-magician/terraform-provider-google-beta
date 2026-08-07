@@ -1,0 +1,48 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_agentic_applications_analyst_agent_persona
+generation_type: mmv1
+source_file: products/agenticapplications/AnalystAgentPersona.yaml
+api_service_name: agenticapplications.googleapis.com
+api_version: v1alpha
+api_resource_type_kind: AnalystAgentPersona
+fields:
+    - api_field: artifactsConfig.documentGenerationOptions.exportFormat
+    - api_field: artifactsConfig.slideGenerationOptions.exportFormat
+    - api_field: artifactsConfig.visualizationOptions.visualizationExamples.visualizationType
+    - api_field: displayDescription
+    - api_field: displayName
+    - field: location
+      provider_only: true
+    - api_field: mcpDataSources.apiKey
+    - api_field: mcpDataSources.apiKeyName
+    - api_field: mcpDataSources.clientId
+    - api_field: mcpDataSources.clientSecret
+    - api_field: mcpDataSources.description
+    - api_field: mcpDataSources.displayName
+    - api_field: mcpDataSources.enabled
+    - api_field: mcpDataSources.oauthTokenUrl
+    - api_field: mcpDataSources.prompt
+    - api_field: mcpDataSources.serverUrl
+    - api_field: modelDescription
+    - field: name
+      provider_only: true
+    - api_field: resources.bigqueryResource.bigqueryDataset
+    - api_field: resources.bigqueryResource.bigqueryTable
+    - api_field: resources.bigqueryResource.columnDescriptions
+    - api_field: resources.displayLabel
+    - api_field: resources.googleCloudStorageResource.fileExtensionRestrictions
+    - api_field: resources.googleCloudStorageResource.googleCloudStorageObject
+    - api_field: resources.modelDescription
+    - api_field: resources.rawFileResource.fileContent
+    - api_field: resources.rawFileResource.fileTitle
+    - api_field: resources.rawFileResource.mimeType
+    - api_field: resources.useRag
+    - api_field: role
+    - api_field: skills.content
+    - api_field: skills.description
+    - api_field: skills.references.content
+    - api_field: skills.references.referenceId
+    - api_field: skills.skillId
+    - field: deletion_policy
+      provider_only: true
