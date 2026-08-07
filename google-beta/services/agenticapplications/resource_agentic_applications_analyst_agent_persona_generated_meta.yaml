@@ -1,0 +1,29 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_agentic_applications_analyst_agent_persona
+generation_type: mmv1
+source_file: products/agenticapplications/AnalystAgentPersona.yaml
+api_service_name: agenticapplications.googleapis.com
+api_version: v1alpha
+api_resource_type_kind: AnalystAgentPersona
+autogen_status: true
+autogen_version: 2
+fields:
+    - field: analyst_agent_persona_id
+      provider_only: true
+    - api_field: createTime
+    - api_field: displayDescription
+    - api_field: displayName
+    - field: location
+      provider_only: true
+    - api_field: modelDescription
+    - api_field: name
+    - api_field: role
+    - api_field: skills.content
+    - api_field: skills.description
+    - api_field: skills.references.content
+    - api_field: skills.references.referenceId
+    - api_field: skills.skillId
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
