@@ -177,6 +177,8 @@ The following arguments are supported:
   [Volume migration](https://docs.cloud.google.com/netapp/volumes/docs/migrate/ontap/overview) and
   [external replication](https://docs.cloud.google.com/netapp/volumes/docs/protect-data/replicate-ontap/overview)
   are two types of Hybrid Replication. This parameter block specifies the parameters for a hybrid replication.
+  This field will suppress diffs that change the value from empty to non-empty. To force changing this field
+  from empty to non-empty, change another field at the same time.
   Structure is [documented below](#nested_hybrid_replication_parameters).
 
 * `throughput_mibps` -

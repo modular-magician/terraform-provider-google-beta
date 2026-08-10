@@ -97,6 +97,13 @@ func SuppressHasRootAccessDiff(k, old, new string, d *schema.ResourceData) bool 
 	return false
 }
 
+// netappVolumeHybridReplicationParametersDiffSuppress suppresses diffs for existing resources
+// when state (old) is empty. This prevents forced recreations when upgrading from provider versions
+// where hybrid_replication_parameters was omitted from state due to being CREATE-only.
+func netappVolumeHybridReplicationParametersDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	return d.Id() != "" && (old == "" || old == "0")
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -479,28 +486,35 @@ Use either squash_mode or has_root_access, but never both at the same time. Thes
 				},
 			},
 			"hybrid_replication_parameters": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:             schema.TypeList,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: netappVolumeHybridReplicationParametersDiffSuppress,
 				Description: `[Volume migration](https://docs.cloud.google.com/netapp/volumes/docs/migrate/ontap/overview) and
 [external replication](https://docs.cloud.google.com/netapp/volumes/docs/protect-data/replicate-ontap/overview)
-are two types of Hybrid Replication. This parameter block specifies the parameters for a hybrid replication.`,
+are two types of Hybrid Replication. This parameter block specifies the parameters for a hybrid replication.
+This field will suppress diffs that change the value from empty to non-empty. To force changing this field
+from empty to non-empty, change another field at the same time.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cluster_location": {
 							Type:     schema.TypeString,
 							Optional: true,
+							ForceNew: true,
 							Description: `Optional. Name of source cluster location associated with the replication. This is a free-form field
 for display purposes only.`,
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Optional. Description of the replication.`,
 						},
 						"hybrid_replication_type": {
 							Type:         schema.TypeString,
 							Optional:     true,
+							ForceNew:     true,
 							ValidateFunc: verify.ValidateEnum([]string{"MIGRATION", "CONTINUOUS_REPLICATION", "ONPREM_REPLICATION", "REVERSE_ONPREM_REPLICATION", ""}),
 							Description: `Optional. Type of the hybrid replication. Use 'MIGRATION' to create a volume migration
 and 'ONPREM_REPLICATION' to create an external replication.
@@ -510,6 +524,7 @@ replication which got reversed. Default is 'MIGRATION'. Possible values: ["MIGRA
 						"labels": {
 							Type:     schema.TypeMap,
 							Optional: true,
+							ForceNew: true,
 							Description: `Optional. Labels to be added to the replication as the key value pairs.
 An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
 							Elem: &schema.Schema{Type: schema.TypeString},
@@ -517,16 +532,19 @@ An object containing a list of "key": value pairs. Example: { "name": "wrench", 
 						"large_volume_constituent_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Optional. If the source is a FlexGroup volume, this field needs to match the number of constituents in the FlexGroup.`,
 						},
 						"peer_cluster_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Required. Name of the ONTAP source cluster to be peered with NetApp Volumes.`,
 						},
 						"peer_ip_addresses": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Required. List of all intercluster LIF IP addresses of the ONTAP source cluster.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -535,21 +553,25 @@ An object containing a list of "key": value pairs. Example: { "name": "wrench", 
 						"peer_svm_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Required. Name of the ONTAP source vserver SVM to be peered with NetApp Volumes.`,
 						},
 						"peer_volume_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Required. Name of the ONTAP source volume to be replicated to NetApp Volumes destination volume.`,
 						},
 						"replication": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Required. Desired name for the replication of this volume.`,
 						},
 						"replication_schedule": {
 							Type:         schema.TypeString,
 							Optional:     true,
+							ForceNew:     true,
 							ValidateFunc: verify.ValidateEnum([]string{"EVERY_10_MINUTES", "HOURLY", "DAILY", ""}),
 							Description:  `Optional. Replication Schedule for the replication created. Possible values: ["EVERY_10_MINUTES", "HOURLY", "DAILY"]`,
 						},
@@ -1432,12 +1454,6 @@ func resourceNetappVolumeUpdate(d *schema.ResourceData, meta interface{}) error 
 	} else if v, ok := d.GetOkExists("tiering_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tieringPolicyProp)) {
 		obj["tieringPolicy"] = tieringPolicyProp
 	}
-	hybridReplicationParametersProp, err := expandNetappVolumeHybridReplicationParameters(d.Get("hybrid_replication_parameters"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("hybrid_replication_parameters"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hybridReplicationParametersProp)) {
-		obj["hybridReplicationParameters"] = hybridReplicationParametersProp
-	}
 	throughputMibpsProp, err := expandNetappVolumeThroughputMibps(d.Get("throughput_mibps"), d, config)
 	if err != nil {
 		return err
@@ -1528,10 +1544,6 @@ func resourceNetappVolumeUpdate(d *schema.ResourceData, meta interface{}) error 
 		updateMask = append(updateMask, "tiering_policy.cooling_threshold_days",
 			"tiering_policy.tier_action",
 			"tiering_policy.hot_tier_bypass_mode_enabled")
-	}
-
-	if d.HasChange("hybrid_replication_parameters") {
-		updateMask = append(updateMask, "hybridReplicationParameters")
 	}
 
 	if d.HasChange("throughput_mibps") {
@@ -2499,96 +2511,6 @@ func flattenNetappVolumeTieringPolicyTierAction(v interface{}, d *schema.Resourc
 
 func flattenNetappVolumeTieringPolicyHotTierBypassModeEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenNetappVolumeHybridReplicationParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["replication"] =
-		flattenNetappVolumeHybridReplicationParametersReplication(original["replication"], d, config)
-	transformed["peer_volume_name"] =
-		flattenNetappVolumeHybridReplicationParametersPeerVolumeName(original["peerVolumeName"], d, config)
-	transformed["peer_cluster_name"] =
-		flattenNetappVolumeHybridReplicationParametersPeerClusterName(original["peerClusterName"], d, config)
-	transformed["peer_svm_name"] =
-		flattenNetappVolumeHybridReplicationParametersPeerSvmName(original["peerSvmName"], d, config)
-	transformed["peer_ip_addresses"] =
-		flattenNetappVolumeHybridReplicationParametersPeerIpAddresses(original["peerIpAddresses"], d, config)
-	transformed["cluster_location"] =
-		flattenNetappVolumeHybridReplicationParametersClusterLocation(original["clusterLocation"], d, config)
-	transformed["description"] =
-		flattenNetappVolumeHybridReplicationParametersDescription(original["description"], d, config)
-	transformed["labels"] =
-		flattenNetappVolumeHybridReplicationParametersLabels(original["labels"], d, config)
-	transformed["replication_schedule"] =
-		flattenNetappVolumeHybridReplicationParametersReplicationSchedule(original["replicationSchedule"], d, config)
-	transformed["hybrid_replication_type"] =
-		flattenNetappVolumeHybridReplicationParametersHybridReplicationType(original["hybridReplicationType"], d, config)
-	transformed["large_volume_constituent_count"] =
-		flattenNetappVolumeHybridReplicationParametersLargeVolumeConstituentCount(original["largeVolumeConstituentCount"], d, config)
-	return []interface{}{transformed}
-}
-func flattenNetappVolumeHybridReplicationParametersReplication(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersPeerVolumeName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersPeerClusterName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersPeerSvmName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersPeerIpAddresses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersClusterLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersReplicationSchedule(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersHybridReplicationType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetappVolumeHybridReplicationParametersLargeVolumeConstituentCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
 }
 
 func flattenNetappVolumeThroughputMibps(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3937,9 +3859,6 @@ func ResourceNetappVolumeFlatten(d *schema.ResourceData, meta interface{}, res m
 		return fmt.Errorf("Error reading Volume: %s", err)
 	}
 	if err = d.Set("tiering_policy", flattenNetappVolumeTieringPolicy(res["tieringPolicy"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Volume: %s", err)
-	}
-	if err = d.Set("hybrid_replication_parameters", flattenNetappVolumeHybridReplicationParameters(res["hybridReplicationParameters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Volume: %s", err)
 	}
 	if err = d.Set("throughput_mibps", flattenNetappVolumeThroughputMibps(res["throughputMibps"], d, config)); err != nil {
