@@ -12,6 +12,9 @@ fields:
     - field: deletion_delay_hours
       provider_only: true
     - api_field: description
+    - api_field: encryptionConfig.cryptoKeyName
+      field: encryption_config.kms_key_name
+    - api_field: encryptionConfig.type
     - api_field: expireTime
     - api_field: hcx.fqdn
     - api_field: hcx.internalIp

@@ -134,6 +134,34 @@ func pollCheckForPrivateCloudAbsence(resp map[string]interface{}, respErr error)
 	return transport_tpg.PendingStatusPollResult("found")
 }
 
+func vmwareenginePrivateCloudEncryptionConfigCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	v, ok := diff.GetOk("encryption_config")
+	if !ok || v == nil {
+		return nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil
+	}
+	original := l[0].(map[string]interface{})
+
+	// Validate kms_key_name based on type
+	if original["type"] == "GMEK" {
+		if vKey, ok := original["kms_key_name"]; ok && vKey != nil && vKey.(string) != "" {
+			return fmt.Errorf("encryption_config.kms_key_name cannot be set when encryption_config.type is GMEK")
+		}
+	}
+
+	if original["type"] == "CMEK" {
+		vKey, ok := original["kms_key_name"]
+		if !ok || vKey == nil || vKey.(string) == "" {
+			return fmt.Errorf("encryption_config.kms_key_name must be set when encryption_config.type is CMEK")
+		}
+	}
+
+	return nil
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -193,6 +221,7 @@ func ResourceVmwareenginePrivateCloud() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			vmwareenginePrivateCloudEncryptionConfigCustomizeDiff,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
 		),
@@ -478,6 +507,32 @@ the form: projects/{project_number}/locations/{location}/vmwareEngineNetworks/{v
 				Optional:    true,
 				Description: `User-provided description for this private cloud.`,
 			},
+			"encryption_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `Encryption configuration for the private cloud.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"type": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"CMEK", "GMEK"}),
+							Description: `The encryption type of the private cloud.
+Possible values:
+* CMEK: Customer-managed encryption keys.
+* GMEK: Google-managed encryption keys. Possible values: ["CMEK", "GMEK"]`,
+						},
+						"kms_key_name": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The resource name of the Customer Managed Encryption Key (CMEK) for the private cloud.
+Format: projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}`,
+						},
+					},
+				},
+			},
 			"type": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -672,6 +727,12 @@ func resourceVmwareenginePrivateCloudCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("management_cluster"); !tpgresource.IsEmptyValue(reflect.ValueOf(managementClusterProp)) && (ok || !reflect.DeepEqual(v, managementClusterProp)) {
 		obj["managementCluster"] = managementClusterProp
+	}
+	encryptionConfigProp, err := expandVmwareenginePrivateCloudEncryptionConfig(d.Get("encryption_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("encryption_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(encryptionConfigProp)) && (ok || !reflect.DeepEqual(v, encryptionConfigProp)) {
+		obj["encryptionConfig"] = encryptionConfigProp
 	}
 	typeProp, err := expandVmwareenginePrivateCloudType(d.Get("type"), d, config)
 	if err != nil {
@@ -991,6 +1052,12 @@ func resourceVmwareenginePrivateCloudUpdate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("management_cluster"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, managementClusterProp)) {
 		obj["managementCluster"] = managementClusterProp
 	}
+	encryptionConfigProp, err := expandVmwareenginePrivateCloudEncryptionConfig(d.Get("encryption_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("encryption_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, encryptionConfigProp)) {
+		obj["encryptionConfig"] = encryptionConfigProp
+	}
 
 	obj, err = resourceVmwareenginePrivateCloudUpdateEncoder(d, meta, obj)
 	if err != nil {
@@ -1012,6 +1079,10 @@ func resourceVmwareenginePrivateCloudUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("management_cluster") {
 		updateMask = append(updateMask, "managementCluster")
+	}
+
+	if d.HasChange("encryption_config") {
+		updateMask = append(updateMask, "encryptionConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1786,6 +1857,32 @@ func flattenVmwareenginePrivateCloudVcenterFqdn(v interface{}, d *schema.Resourc
 	return v
 }
 
+func flattenVmwareenginePrivateCloudEncryptionConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		// If backend has no encryption config, it means it is GMEK.
+		// We return a GMEK block to match state.
+		return []interface{}{map[string]interface{}{
+			"type": "GMEK",
+		}}
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return []interface{}{map[string]interface{}{
+			"type": "GMEK",
+		}}
+	}
+	transformed := make(map[string]interface{})
+
+	if vType, ok := original["type"]; ok && vType != nil {
+		transformed["type"] = vType.(string)
+	}
+	if vKey, ok := original["cryptoKeyName"]; ok && vKey != nil {
+		transformed["kms_key_name"] = vKey.(string)
+	}
+
+	return []interface{}{transformed}
+}
+
 func flattenVmwareenginePrivateCloudType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2215,12 +2312,56 @@ func expandVmwareenginePrivateCloudManagementClusterAutoscalingSettingsCoolDownP
 	return v, nil
 }
 
+func expandVmwareenginePrivateCloudEncryptionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+
+	// If type is GMEK, we return nil to represent GMEK (null) on the backend
+	if original["type"] == "GMEK" {
+		return nil, nil
+	}
+
+	transformed := make(map[string]interface{})
+
+	if vType, ok := original["type"]; ok && vType != nil {
+		transformed["type"] = vType.(string)
+	}
+
+	if vKey, ok := original["kms_key_name"]; ok && vKey != nil {
+		transformed["cryptoKeyName"] = vKey.(string)
+	}
+
+	return transformed, nil
+}
+
 func expandVmwareenginePrivateCloudType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func resourceVmwareenginePrivateCloudUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	delete(obj, "managementCluster")
+
+	// Force encryptionConfig to nil if it was set to GMEK
+	if d.HasChange("encryption_config") {
+		_, new := d.GetChange("encryption_config")
+		if new != nil {
+			l := new.([]interface{})
+			if len(l) > 0 && l[0] != nil {
+				original := l[0].(map[string]interface{})
+				if original["type"] == "GMEK" {
+					obj["encryptionConfig"] = nil
+				}
+			}
+		}
+	}
+
 	return obj, nil
 }
 
@@ -2318,6 +2459,9 @@ func ResourceVmwareenginePrivateCloudFlatten(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading PrivateCloud: %s", err)
 	}
 	if err = d.Set("vcenter", flattenVmwareenginePrivateCloudVcenter(res["vcenter"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PrivateCloud: %s", err)
+	}
+	if err = d.Set("encryption_config", flattenVmwareenginePrivateCloudEncryptionConfig(res["encryptionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateCloud: %s", err)
 	}
 	if err = d.Set("type", flattenVmwareenginePrivateCloudType(res["type"], d, config)); err != nil {

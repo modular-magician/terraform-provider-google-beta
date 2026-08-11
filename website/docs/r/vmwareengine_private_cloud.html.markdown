@@ -139,6 +139,11 @@ The following arguments are supported:
   (Optional)
   User-provided description for this private cloud.
 
+* `encryption_config` -
+  (Optional)
+  Encryption configuration for the private cloud.
+  Structure is [documented below](#nested_encryption_config).
+
 * `type` -
   (Optional)
   Initial type of the private cloud.
@@ -338,6 +343,21 @@ The following arguments are supported:
 * `scale_in` -
   (Required)
   The utilization triggering the scale-in operation in percent.
+
+<a name="nested_encryption_config"></a>The `encryption_config` block supports:
+
+* `type` -
+  (Required)
+  The encryption type of the private cloud.
+  Possible values:
+  * CMEK: Customer-managed encryption keys.
+  * GMEK: Google-managed encryption keys.
+  Possible values are: `CMEK`, `GMEK`.
+
+* `kms_key_name` -
+  (Optional)
+  The resource name of the Customer Managed Encryption Key (CMEK) for the private cloud.
+  Format: projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}
 
 ## Attributes Reference
 
