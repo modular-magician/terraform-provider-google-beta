@@ -437,6 +437,12 @@ These should be specified as project numbers only.`,
 								ValidateFunc: verify.ValidateRegexp(`^\d+$`),
 							},
 						},
+						"psc_auto_connection_policy_state": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"PSC_AUTO_CONNECTION_POLICY_STATE_UNSPECIFIED", "ENABLED", "DISABLED", ""}),
+							Description:  `The state of the PSC auto connection policy for the instance. Possible values: ["PSC_AUTO_CONNECTION_POLICY_STATE_UNSPECIFIED", "ENABLED", "DISABLED"]`,
+						},
 						"psc_auto_connections": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -459,6 +465,27 @@ the project ID (and not the project number)`,
 be created. The API expects the consumer project to be the project ID(
 and not the project number).`,
 									},
+									"dns_automation_infos": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Information about the DNS automation for the PSC auto connection.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"fully_qualified_domain_name": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The fully qualified domain name of the instance for DNS automation.
+Example: "<cluster-uid>.<instance-uid>.<region>.alloydb-psc-auto.goog.".`,
+												},
+												"state": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: verify.ValidateEnum([]string{"STATE_UNSPECIFIED", "PENDING_CREATE", "ACTIVE", "PENDING_DELETE", "CREATE_FAILED", "DELETE_FAILED", ""}),
+													Description:  `The state of the DNS automation for the PSC auto connection. Possible values: ["STATE_UNSPECIFIED", "PENDING_CREATE", "ACTIVE", "PENDING_DELETE", "CREATE_FAILED", "DELETE_FAILED"]`,
+												},
+											},
+										},
+									},
 									"consumer_network_status": {
 										Type:        schema.TypeString,
 										Computed:    true,
@@ -469,6 +496,16 @@ and not the project number).`,
 										Computed:    true,
 										Description: `The IP address of the PSC service automation endpoint.`,
 									},
+									"service_connection_policy": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `The PSC service connection policy name for the auto connection.`,
+									},
+									"service_connection_policy_creation_state": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `The state of the PSC service connection policy creation for the auto connection.`,
+									},
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
@@ -476,6 +513,16 @@ and not the project number).`,
 									},
 								},
 							},
+						},
+						"psc_auto_dns_state": {
+							Type:         schema.TypeString,
+							Computed:     true,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"PSC_AUTO_DNS_STATE_UNSPECIFIED", "PSC_AUTO_DNS_STATE_ENABLED", "PSC_AUTO_DNS_STATE_DISABLED", ""}),
+							Description: `The state of the PSC auto DNS.
+For new instances, the PSC auto DNS is enabled
+by default. Use 'effective_psc_auto_dns_enabled' to check the
+effective state of the PSC auto DNS. Possible values: ["PSC_AUTO_DNS_STATE_UNSPECIFIED", "PSC_AUTO_DNS_STATE_ENABLED", "PSC_AUTO_DNS_STATE_DISABLED"]`,
 						},
 						"psc_interface_configs": {
 							Type:     schema.TypeList,
@@ -591,6 +638,41 @@ networkConfig.enableOutboundPublicIp is set to true. These IP addresses are used
 for outbound connections.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
+				},
+			},
+			"psc_instance_info": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Instance-level PSC information.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"effective_psc_auto_connection_policy": {
+							Type:     schema.TypeBool,
+							Computed: true,
+							Description: `Indicates if the PSC auto connection policy is enabled for the instance.
+For older instances, this will be off by default, but for newer instances,
+this will be auto-enabled.`,
+						},
+						"effective_psc_auto_dns_enabled": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `The effective state of the PSC auto DNS for the instance.`,
+						},
+						"psc_auto_dns_names": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: `Specifies the auto DNS names for the instance.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"service_connection_policy": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The PSC service connection policy name for the instance.
+The format is "projects/<PROJECT_ID>/regions/<REGION_ID>/serviceConnectionPolicies/<alloydb-$NETWORK-$RANDOM-scp>".`,
+						},
+					},
 				},
 			},
 			"public_ip_address": {
@@ -1536,10 +1618,14 @@ func flattenAlloydbInstancePscInstanceConfig(v interface{}, d *schema.ResourceDa
 		flattenAlloydbInstancePscInstanceConfigAllowedConsumerProjects(original["allowedConsumerProjects"], d, config)
 	transformed["psc_dns_name"] =
 		flattenAlloydbInstancePscInstanceConfigPscDnsName(original["pscDnsName"], d, config)
+	transformed["psc_auto_connection_policy_state"] =
+		flattenAlloydbInstancePscInstanceConfigPscAutoConnectionPolicyState(original["pscAutoConnectionPolicyState"], d, config)
 	transformed["psc_interface_configs"] =
 		flattenAlloydbInstancePscInstanceConfigPscInterfaceConfigs(original["pscInterfaceConfigs"], d, config)
 	transformed["psc_auto_connections"] =
 		flattenAlloydbInstancePscInstanceConfigPscAutoConnections(original["pscAutoConnections"], d, config)
+	transformed["psc_auto_dns_state"] =
+		flattenAlloydbInstancePscInstanceConfigPscAutoDnsState(original["pscAutoDnsState"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAlloydbInstancePscInstanceConfigServiceAttachmentLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1551,6 +1637,10 @@ func flattenAlloydbInstancePscInstanceConfigAllowedConsumerProjects(v interface{
 }
 
 func flattenAlloydbInstancePscInstanceConfigPscDnsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionPolicyState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1591,11 +1681,14 @@ func flattenAlloydbInstancePscInstanceConfigPscAutoConnections(v interface{}, d 
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"consumer_project":        flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerProject(original["consumerProject"], d, config),
-			"consumer_network":        flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerNetwork(original["consumerNetwork"], d, config),
-			"ip_address":              flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsIpAddress(original["ipAddress"], d, config),
-			"status":                  flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsStatus(original["status"], d, config),
-			"consumer_network_status": flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerNetworkStatus(original["consumerNetworkStatus"], d, config),
+			"consumer_project":          flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerProject(original["consumerProject"], d, config),
+			"consumer_network":          flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerNetwork(original["consumerNetwork"], d, config),
+			"ip_address":                flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsIpAddress(original["ipAddress"], d, config),
+			"status":                    flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsStatus(original["status"], d, config),
+			"consumer_network_status":   flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerNetworkStatus(original["consumerNetworkStatus"], d, config),
+			"service_connection_policy": flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicy(original["serviceConnectionPolicy"], d, config),
+			"service_connection_policy_creation_state": flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicyCreationState(original["serviceConnectionPolicyCreationState"], d, config),
+			"dns_automation_infos":                     flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfos(original["dnsAutomationInfos"], d, config),
 		})
 	}
 	return transformed
@@ -1617,6 +1710,81 @@ func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsStatus(v interface
 }
 
 func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerNetworkStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicyCreationState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"state":                       flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosState(original["state"], d, config),
+			"fully_qualified_domain_name": flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosFullyQualifiedDomainName(original["fullyQualifiedDomainName"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosFullyQualifiedDomainName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscAutoDnsState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["effective_psc_auto_dns_enabled"] =
+		flattenAlloydbInstancePscInstanceInfoEffectivePscAutoDnsEnabled(original["effectivePscAutoDnsEnabled"], d, config)
+	transformed["effective_psc_auto_connection_policy"] =
+		flattenAlloydbInstancePscInstanceInfoEffectivePscAutoConnectionPolicy(original["effectivePscAutoConnectionPolicy"], d, config)
+	transformed["service_connection_policy"] =
+		flattenAlloydbInstancePscInstanceInfoServiceConnectionPolicy(original["serviceConnectionPolicy"], d, config)
+	transformed["psc_auto_dns_names"] =
+		flattenAlloydbInstancePscInstanceInfoPscAutoDnsNames(original["pscAutoDnsNames"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstancePscInstanceInfoEffectivePscAutoDnsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceInfoEffectivePscAutoConnectionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceInfoServiceConnectionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceInfoPscAutoDnsNames(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2121,6 +2289,13 @@ func expandAlloydbInstancePscInstanceConfig(v interface{}, d tpgresource.Terrafo
 		transformed["pscDnsName"] = transformedPscDnsName
 	}
 
+	transformedPscAutoConnectionPolicyState, err := expandAlloydbInstancePscInstanceConfigPscAutoConnectionPolicyState(original["psc_auto_connection_policy_state"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPscAutoConnectionPolicyState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pscAutoConnectionPolicyState"] = transformedPscAutoConnectionPolicyState
+	}
+
 	transformedPscInterfaceConfigs, err := expandAlloydbInstancePscInstanceConfigPscInterfaceConfigs(original["psc_interface_configs"], d, config)
 	if err != nil {
 		return nil, err
@@ -2135,6 +2310,13 @@ func expandAlloydbInstancePscInstanceConfig(v interface{}, d tpgresource.Terrafo
 		transformed["pscAutoConnections"] = transformedPscAutoConnections
 	}
 
+	transformedPscAutoDnsState, err := expandAlloydbInstancePscInstanceConfigPscAutoDnsState(original["psc_auto_dns_state"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPscAutoDnsState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pscAutoDnsState"] = transformedPscAutoDnsState
+	}
+
 	return transformed, nil
 }
 
@@ -2147,6 +2329,10 @@ func expandAlloydbInstancePscInstanceConfigAllowedConsumerProjects(v interface{}
 }
 
 func expandAlloydbInstancePscInstanceConfigPscDnsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoConnectionPolicyState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2227,6 +2413,27 @@ func expandAlloydbInstancePscInstanceConfigPscAutoConnections(v interface{}, d t
 			transformed["consumerNetworkStatus"] = transformedConsumerNetworkStatus
 		}
 
+		transformedServiceConnectionPolicy, err := expandAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicy(original["service_connection_policy"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceConnectionPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["serviceConnectionPolicy"] = transformedServiceConnectionPolicy
+		}
+
+		transformedServiceConnectionPolicyCreationState, err := expandAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicyCreationState(original["service_connection_policy_creation_state"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceConnectionPolicyCreationState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["serviceConnectionPolicyCreationState"] = transformedServiceConnectionPolicyCreationState
+		}
+
+		transformedDnsAutomationInfos, err := expandAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfos(original["dns_automation_infos"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDnsAutomationInfos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["dnsAutomationInfos"] = transformedDnsAutomationInfos
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -2249,6 +2456,58 @@ func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsStatus(v interface{
 }
 
 func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsConsumerNetworkStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsServiceConnectionPolicyCreationState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedState, err := expandAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosState(original["state"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["state"] = transformedState
+		}
+
+		transformedFullyQualifiedDomainName, err := expandAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosFullyQualifiedDomainName(original["fully_qualified_domain_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedFullyQualifiedDomainName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["fullyQualifiedDomainName"] = transformedFullyQualifiedDomainName
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoConnectionsDnsAutomationInfosFullyQualifiedDomainName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstancePscInstanceConfigPscAutoDnsState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2474,6 +2733,9 @@ func ResourceAlloydbInstanceFlatten(d *schema.ResourceData, meta interface{}, re
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err = d.Set("psc_instance_config", flattenAlloydbInstancePscInstanceConfig(res["pscInstanceConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err = d.Set("psc_instance_info", flattenAlloydbInstancePscInstanceInfo(res["pscInstanceInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err = d.Set("network_config", flattenAlloydbInstanceNetworkConfig(res["networkConfig"], d, config)); err != nil {
