@@ -77,7 +77,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreBasicExample(t *tes
 				ResourceName:            "google_discovery_engine_data_store.basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.basic",
@@ -127,7 +127,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreKmsKeyNameExample(t
 				ResourceName:            "google_discovery_engine_data_store.kms_key_name",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.kms_key_name",
@@ -177,7 +177,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingC
 				ResourceName:            "google_discovery_engine_data_store.document_processing_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.document_processing_config",
@@ -236,7 +236,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingC
 				ResourceName:            "google_discovery_engine_data_store.document_processing_config_ocr",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.document_processing_config_ocr",
@@ -291,7 +291,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingC
 				ResourceName:            "google_discovery_engine_data_store.document_processing_config_layout",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.document_processing_config_layout",
@@ -350,7 +350,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingC
 				ResourceName:            "google_discovery_engine_data_store.document_processing_config_layout_full",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.document_processing_config_layout_full",
@@ -427,7 +427,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreAdvancedSiteSearchC
 				ResourceName:            "google_discovery_engine_data_store.advanced_site_search_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.advanced_site_search_config",
@@ -481,7 +481,7 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreAclConfigExample(t 
 				ResourceName:            "google_discovery_engine_data_store.acl_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "document_processing_config.0.chunking_config", "document_processing_config.0.default_parsing_config", "kms_key_name", "location", "skip_default_schema_creation"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_store.acl_config",

@@ -1037,17 +1037,7 @@ func flattenDiscoveryEngineDataStoreDocumentProcessingConfigName(v interface{}, 
 }
 
 func flattenDiscoveryEngineDataStoreDocumentProcessingConfigChunkingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["layout_based_chunking_config"] =
-		flattenDiscoveryEngineDataStoreDocumentProcessingConfigChunkingConfigLayoutBasedChunkingConfig(original["layoutBasedChunkingConfig"], d, config)
-	return []interface{}{transformed}
+	return d.Get("document_processing_config.0.chunking_config")
 }
 func flattenDiscoveryEngineDataStoreDocumentProcessingConfigChunkingConfigLayoutBasedChunkingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
@@ -1083,21 +1073,7 @@ func flattenDiscoveryEngineDataStoreDocumentProcessingConfigChunkingConfigLayout
 }
 
 func flattenDiscoveryEngineDataStoreDocumentProcessingConfigDefaultParsingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["digital_parsing_config"] =
-		flattenDiscoveryEngineDataStoreDocumentProcessingConfigDefaultParsingConfigDigitalParsingConfig(original["digitalParsingConfig"], d, config)
-	transformed["ocr_parsing_config"] =
-		flattenDiscoveryEngineDataStoreDocumentProcessingConfigDefaultParsingConfigOcrParsingConfig(original["ocrParsingConfig"], d, config)
-	transformed["layout_parsing_config"] =
-		flattenDiscoveryEngineDataStoreDocumentProcessingConfigDefaultParsingConfigLayoutParsingConfig(original["layoutParsingConfig"], d, config)
-	return []interface{}{transformed}
+	return d.Get("document_processing_config.0.default_parsing_config")
 }
 func flattenDiscoveryEngineDataStoreDocumentProcessingConfigDefaultParsingConfigDigitalParsingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
