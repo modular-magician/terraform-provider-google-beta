@@ -256,6 +256,13 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 can only be used with INTERNAL type with the VPC_PEERING and
 IPSEC_INTERCONNECT purposes.`,
 			},
+			"network_attachment": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The URL of the network attachment that this interface should connect to in the following format:
+projects/{project_number}/regions/{region_name}/networkAttachments/{network_attachment_name}`,
+			},
 			"network_tier": {
 				Type:         schema.TypeString,
 				Computed:     true,
@@ -306,6 +313,13 @@ This should only be set when using an Internal address.`,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
 				Description: `The Region in which the created address should reside.
 If it is not provided, the provider region is used.`,
+			},
+			"service_class_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `Producer Service's Service class Id for the region of this network interface. Can only be used with network_attachment.
+It is not possible to use on its own; however, network_attachment can be used without service_class_id.`,
 			},
 			"subnetwork": {
 				Type:             schema.TypeString,
@@ -467,6 +481,18 @@ func resourceComputeAddressCreate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	} else if v, ok := d.GetOkExists("ip_collection"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCollectionProp)) && (ok || !reflect.DeepEqual(v, ipCollectionProp)) {
 		obj["ipCollection"] = ipCollectionProp
+	}
+	networkAttachmentProp, err := expandComputeAddressNetworkAttachment(d.Get("network_attachment"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_attachment"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkAttachmentProp)) && (ok || !reflect.DeepEqual(v, networkAttachmentProp)) {
+		obj["networkAttachment"] = networkAttachmentProp
+	}
+	serviceClassIdProp, err := expandComputeAddressServiceClassId(d.Get("service_class_id"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("service_class_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(serviceClassIdProp)) && (ok || !reflect.DeepEqual(v, serviceClassIdProp)) {
+		obj["serviceClassId"] = serviceClassIdProp
 	}
 	effectiveLabelsProp, err := expandComputeAddressEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -995,6 +1021,14 @@ func flattenComputeAddressIpCollection(v interface{}, d *schema.ResourceData, co
 	return v
 }
 
+func flattenComputeAddressNetworkAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeAddressServiceClassId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeAddressAddressId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1085,6 +1119,14 @@ func expandComputeAddressIpCollection(v interface{}, d tpgresource.TerraformReso
 	return v, nil
 }
 
+func expandComputeAddressNetworkAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeAddressServiceClassId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeAddressEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -1153,6 +1195,12 @@ func ResourceComputeAddressFlatten(d *schema.ResourceData, meta interface{}, res
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
 	if err = d.Set("ip_collection", flattenComputeAddressIpCollection(res["ipCollection"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Address: %s", err)
+	}
+	if err = d.Set("network_attachment", flattenComputeAddressNetworkAttachment(res["networkAttachment"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Address: %s", err)
+	}
+	if err = d.Set("service_class_id", flattenComputeAddressServiceClassId(res["serviceClassId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
 	if err = d.Set("address_id", flattenComputeAddressAddressId(res["id"], d, config)); err != nil {

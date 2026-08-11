@@ -10,6 +10,7 @@ fields:
     - api_field: connectionEndpoints.ipAddress
     - api_field: connectionEndpoints.projectIdOrNum
     - api_field: connectionEndpoints.secondaryIpCidrRanges
+    - api_field: connectionEndpoints.serviceClassId
     - api_field: connectionEndpoints.status
     - api_field: connectionEndpoints.subnetwork
     - api_field: connectionPreference

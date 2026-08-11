@@ -228,6 +228,10 @@ In addition to the arguments listed above, the following computed attributes are
   (Output)
   The project id or number of the interface to which the IP was assigned.
 
+* `service_class_id` -
+  (Output)
+  The service class id of the producer service to which the IP was assigned.
+
 * `subnetwork` -
   (Output)
   The subnetwork used to assign the IP to the producer instance network interface.

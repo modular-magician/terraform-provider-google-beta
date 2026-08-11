@@ -22,10 +22,12 @@ fields:
     - api_field: labels
     - api_field: name
     - api_field: network
+    - api_field: networkAttachment
     - api_field: networkTier
     - api_field: prefixLength
     - api_field: purpose
     - api_field: region
+    - api_field: serviceClassId
     - api_field: subnetwork
     - field: terraform_labels
       provider_only: true

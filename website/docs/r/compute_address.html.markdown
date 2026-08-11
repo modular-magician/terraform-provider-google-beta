@@ -285,6 +285,16 @@ The following arguments are supported:
     * `projects/{{projectId}}/regions/region/publicDelegatedPrefixes/{{pdp-name}}`
     * `regions/{{region}}/publicDelegatedPrefixes/{{pdp-name}}`
 
+* `network_attachment` -
+  (Optional)
+  The URL of the network attachment that this interface should connect to in the following format:
+  projects/{project_number}/regions/{region_name}/networkAttachments/{network_attachment_name}
+
+* `service_class_id` -
+  (Optional)
+  Producer Service's Service class Id for the region of this network interface. Can only be used with network_attachment.
+  It is not possible to use on its own; however, network_attachment can be used without service_class_id.
+
 * `region` -
   (Optional)
   The Region in which the created address should reside.

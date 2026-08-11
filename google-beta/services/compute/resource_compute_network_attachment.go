@@ -190,6 +190,11 @@ func ResourceComputeNetworkAttachment() *schema.Resource {
 							Computed:    true,
 							Description: `Alias IP ranges from the same subnetwork.`,
 						},
+						"service_class_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The service class id of the producer service to which the IP was assigned.`,
+						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -669,6 +674,7 @@ func flattenComputeNetworkAttachmentConnectionEndpoints(v interface{}, d *schema
 		transformed = append(transformed, map[string]interface{}{
 			"status":                   flattenComputeNetworkAttachmentConnectionEndpointsStatus(original["status"], d, config),
 			"project_id_or_num":        flattenComputeNetworkAttachmentConnectionEndpointsProjectIdOrNum(original["projectIdOrNum"], d, config),
+			"service_class_id":         flattenComputeNetworkAttachmentConnectionEndpointsServiceClassId(original["serviceClassId"], d, config),
 			"subnetwork":               flattenComputeNetworkAttachmentConnectionEndpointsSubnetwork(original["subnetwork"], d, config),
 			"ip_address":               flattenComputeNetworkAttachmentConnectionEndpointsIpAddress(original["ipAddress"], d, config),
 			"secondary_ip_cidr_ranges": flattenComputeNetworkAttachmentConnectionEndpointsSecondaryIpCidrRanges(original["secondaryIpCidrRanges"], d, config),
@@ -681,6 +687,10 @@ func flattenComputeNetworkAttachmentConnectionEndpointsStatus(v interface{}, d *
 }
 
 func flattenComputeNetworkAttachmentConnectionEndpointsProjectIdOrNum(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeNetworkAttachmentConnectionEndpointsServiceClassId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
