@@ -1,0 +1,39 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_dialogflow_tool
+generation_type: mmv1
+source_file: products/dialogflow/Tool.yaml
+api_service_name: dialogflow.googleapis.com
+api_version: v2beta1
+api_resource_type_kind: Tool
+fields:
+    - api_field: connectorSpec.actions.connectionActionId
+    - api_field: connectorSpec.actions.entityOperation.entityId
+    - api_field: connectorSpec.actions.entityOperation.operation
+    - api_field: connectorSpec.actions.inputFields
+    - api_field: connectorSpec.actions.outputFields
+    - api_field: connectorSpec.name
+    - api_field: dataStoreSpec.dataStoreConnections.dataStore
+    - api_field: dataStoreSpec.dataStoreConnections.dataStoreType
+    - api_field: dataStoreSpec.dataStoreConnections.documentProcessingMode
+    - api_field: description
+    - api_field: displayName
+    - api_field: functionSpec.inputSchema
+    - api_field: functionSpec.outputSchema
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: openApiSpec.authentication.apiKeyConfig.apiKey
+    - api_field: openApiSpec.authentication.apiKeyConfig.keyName
+    - api_field: openApiSpec.authentication.apiKeyConfig.requestLocation
+    - api_field: openApiSpec.authentication.bearerTokenConfig.token
+    - api_field: openApiSpec.authentication.oauthConfig.clientId
+    - api_field: openApiSpec.authentication.oauthConfig.clientSecret
+    - api_field: openApiSpec.authentication.oauthConfig.oauthGrantType
+    - api_field: openApiSpec.authentication.oauthConfig.scopes
+    - api_field: openApiSpec.authentication.oauthConfig.tokenEndpoint
+    - api_field: openApiSpec.authentication.serviceAgentAuthConfig.serviceAgentAuth
+    - api_field: openApiSpec.textSchema
+    - api_field: toolKey
+    - field: deletion_policy
+      provider_only: true

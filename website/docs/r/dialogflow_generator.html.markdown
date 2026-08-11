@@ -49,10 +49,70 @@ resource "google_dialogflow_generator" "summarization_basic_generator" {
     top_p             = 0.95
   }
   summarization_context {
-    version = "4.0"
+    version = "6.0"
     output_language_code = "en"
   }
   trigger_event = "MANUAL_CALL"
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=dialogflow_generator_agent_coaching&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Dialogflow Generator Agent Coaching
+
+
+```hcl
+resource "google_dialogflow_generator" "agent_coaching_generator" {
+  location = "global"
+  description = "An agent coaching generator."
+  agent_coaching_context {
+    version = "1.0"
+    overarching_guidance = "Be helpful."
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=dialogflow_generator_with_tools&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Dialogflow Generator With Tools
+
+
+```hcl
+resource "google_dialogflow_generator" "generator_with_tools" {
+  location = "global"
+  description = "A generator with tools."
+  tools = [google_dialogflow_tool.test_tool.name]
+  summarization_context {
+    version = "6.0"
+    output_language_code = "en"
+  }
+  trigger_event = "MANUAL_CALL"
+}
+
+resource "google_dialogflow_tool" "test_tool" {
+  location = "global"
+  display_name = "test-tool"
+  description = "A test tool"
+  open_api_spec {
+    text_schema = <<EOF
+openapi: 3.0.0
+info:
+  title: Test Tool
+  version: 1.0.0
+paths:
+  /search:
+    get:
+      summary: Search function
+      operationId: searchAction
+      responses:
+        '200':
+          description: OK
+EOF
+  }
 }
 ```
 
@@ -60,11 +120,6 @@ resource "google_dialogflow_generator" "summarization_basic_generator" {
 
 The following arguments are supported:
 
-
-* `summarization_context` -
-  (Required)
-  Input of prebuilt Summarization feature.
-  Structure is [documented below](#nested_summarization_context).
 
 * `location` -
   (Required)
@@ -75,6 +130,36 @@ The following arguments are supported:
   (Optional)
   Optional. Human readable description of the generator.
 
+* `summarization_context` -
+  (Optional)
+  Input of prebuilt Summarization feature.
+  Structure is [documented below](#nested_summarization_context).
+
+* `free_form_context` -
+  (Optional)
+  Free form text input to LLM.
+  Structure is [documented below](#nested_free_form_context).
+
+* `agent_coaching_context` -
+  (Optional)
+  Agent coaching context.
+  Structure is [documented below](#nested_agent_coaching_context).
+
+* `translation_context` -
+  (Optional)
+  Translation context.
+  Structure is [documented below](#nested_translation_context).
+
+* `agent_feedback_context` -
+  (Optional)
+  Agent feedback context.
+  Structure is [documented below](#nested_agent_feedback_context).
+
+* `customer_message_generation_context` -
+  (Optional)
+  Customer message generation context.
+  Structure is [documented below](#nested_customer_message_generation_context).
+
 * `inference_parameter` -
   (Optional)
   Optional. Inference parameters for this generator.
@@ -83,11 +168,19 @@ The following arguments are supported:
 * `trigger_event` -
   (Optional)
   Optional. The trigger event of the generator. It defines when the generator is triggered in a conversation.
-  Possible values are: `END_OF_UTTERANCE`, `MANUAL_CALL`, `CUSTOMER_MESSAGE`, `AGENT_MESSAGE`.
+  Possible values are: `END_OF_UTTERANCE`, `MANUAL_CALL`, `CUSTOMER_MESSAGE`, `AGENT_MESSAGE`, `TOOL_CALL_COMPLETION`.
 
 * `published_model` -
   (Optional)
   Optional. The published Large Language Model name. * To use the latest model version, specify the model name without version number. Example: text-bison * To use a stable model version, specify the version number as well. Example: text-bison@002.
+
+* `tuned_model` -
+  (Optional)
+  Optional. Tuned Large Language Model endpoint from Vertex. Format: `projects/<Project Id>/locations/<Location Id>/endpoints/<Endpoint Id>`.
+
+* `tools` -
+  (Optional)
+  Optional. A list of tools this generator can use. Format: `projects/<Project Id>/locations/<Location Id>/tools/<Tool Id>`.
 
 * `generator_id` -
   (Optional)
@@ -118,7 +211,7 @@ The following arguments are supported:
 
 * `version` -
   (Optional)
-  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].
+  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["5.0", "6.0"].
 
 * `output_language_code` -
   (Optional)
@@ -237,6 +330,184 @@ The following arguments are supported:
   (Optional)
   Optional. Type of the summarization section.
   Possible values are: `SITUATION`, `ACTION`, `RESOLUTION`, `REASON_FOR_CANCELLATION`, `CUSTOMER_SATISFACTION`, `ENTITIES`, `CUSTOMER_DEFINED`, `SITUATION_CONCISE`, `ACTION_CONCISE`.
+
+<a name="nested_free_form_context"></a>The `free_form_context` block supports:
+
+* `text` -
+  (Optional)
+  Optional. Free form text input to LLM.
+
+<a name="nested_agent_coaching_context"></a>The `agent_coaching_context` block supports:
+
+* `overarching_guidance` -
+  (Optional)
+  Optional. The overarching guidance for the agent coaching. This should be set only for v1.5 and later versions.
+
+* `version` -
+  (Optional)
+  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["2.5"].
+
+* `output_language_code` -
+  (Optional)
+  Optional. Output language code.
+
+* `search_config` -
+  (Optional)
+  Optional. Search configuration for agent coaching. This is used for general articles search.
+  Structure is [documented below](#nested_agent_coaching_context_search_config).
+
+* `instructions` -
+  (Optional)
+  Optional. Customized instructions for agent coaching.
+  Structure is [documented below](#nested_agent_coaching_context_instructions).
+
+
+<a name="nested_agent_coaching_context_search_config"></a>The `search_config` block supports:
+
+* `search_engine` -
+  (Optional)
+  Required. The search engine to use for the agent coaching articles/instructions. Format: `projects/{project}/locations/global/collections/default_collection/engines/{engine_id}`
+
+* `datastores` -
+  (Optional)
+  Optional. The datastore ids linked to the search engine.
+
+<a name="nested_agent_coaching_context_instructions"></a>The `instructions` block supports:
+
+* `display_name` -
+  (Optional)
+  Optional. Display name for the instruction.
+
+* `display_details` -
+  (Optional)
+  Optional. The detailed description of this instruction.
+
+* `condition` -
+  (Optional)
+  Optional. The condition of the instruction.
+
+* `agent_action` -
+  (Optional)
+  Optional. The action that human agent should take.
+
+* `system_action` -
+  (Optional)
+  Optional. The action that system should take.
+
+* `triggering_event` -
+  (Optional)
+  Optional. The trigger event of the instruction.
+  Possible values are: `END_OF_UTTERANCE`, `MANUAL_CALL`, `CUSTOMER_MESSAGE`, `AGENT_MESSAGE`.
+
+<a name="nested_translation_context"></a>The `translation_context` block supports:
+
+* `agent_language_code` -
+  (Required)
+  Required. The language code used by the agent. At least one of agent_language_code and customer_language_code must be English (en-US).
+
+* `customer_language_code` -
+  (Required)
+  Required. The language code used by the customer. At least one of agent_language_code and customer_language_code must be English (en-US).
+
+* `version` -
+  (Optional)
+  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].
+
+* `translation_customization` -
+  (Optional)
+  Optional. Customized translation for specific glossaries and sentences.
+  Structure is [documented below](#nested_translation_context_translation_customization).
+
+
+<a name="nested_translation_context_translation_customization"></a>The `translation_customization` block supports:
+
+* `glossary_terms` -
+  (Optional)
+  Optional. Translation of a specific glossary in both agent and customer languages.
+  Structure is [documented below](#nested_translation_context_translation_customization_glossary_terms).
+
+* `sentence_translations` -
+  (Optional)
+  Optional. Translation of a specific sentence in both agent and customer languages.
+  Structure is [documented below](#nested_translation_context_translation_customization_sentence_translations).
+
+
+<a name="nested_translation_context_translation_customization_glossary_terms"></a>The `glossary_terms` block supports:
+
+* `agent_language_glossary` -
+  (Required)
+  Required. The glossary in agent language.
+
+* `customer_language_glossary` -
+  (Required)
+  Required. The glossary in customer language.
+
+<a name="nested_translation_context_translation_customization_sentence_translations"></a>The `sentence_translations` block supports:
+
+* `agent_language_sentence` -
+  (Required)
+  Required. The sentence in agent language.
+
+* `customer_language_sentence` -
+  (Required)
+  Required. The sentence in customer language.
+
+<a name="nested_agent_feedback_context"></a>The `agent_feedback_context` block supports:
+
+* `version` -
+  (Optional)
+  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].
+
+* `instructions` -
+  (Optional)
+  Optional. Instructions to generate feedback from.
+  Structure is [documented below](#nested_agent_feedback_context_instructions).
+
+
+<a name="nested_agent_feedback_context_instructions"></a>The `instructions` block supports:
+
+* `display_name` -
+  (Optional)
+  Optional. Display name for the instruction.
+
+* `display_details` -
+  (Optional)
+  Optional. The detailed description of this instruction.
+
+* `condition` -
+  (Optional)
+  Optional. The condition of the instruction.
+
+* `agent_action` -
+  (Optional)
+  Optional. The action that human agent should take.
+
+* `system_action` -
+  (Optional)
+  Optional. The action that system should take.
+
+* `triggering_event` -
+  (Optional)
+  Optional. The trigger event of the instruction.
+  Possible values are: `END_OF_UTTERANCE`, `MANUAL_CALL`, `CUSTOMER_MESSAGE`, `AGENT_MESSAGE`.
+
+<a name="nested_customer_message_generation_context"></a>The `customer_message_generation_context` block supports:
+
+* `version` -
+  (Optional)
+  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].
+
+* `customization` -
+  (Optional)
+  Optional. Customizations for customer message generation.
+  Structure is [documented below](#nested_customer_message_generation_context_customization).
+
+
+<a name="nested_customer_message_generation_context_customization"></a>The `customization` block supports:
+
+* `scenario` -
+  (Optional)
+  Optional. Scenario for generating customer messages.
 
 <a name="nested_inference_parameter"></a>The `inference_parameter` block supports:
 
