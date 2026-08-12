@@ -146,9 +146,247 @@ func ResourceDialogflowGenerator() *schema.Resource {
 				Required:    true,
 				Description: `desc`,
 			},
+			"agent_coaching_context": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Agent coaching context.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instructions": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Customized instructions for agent coaching.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"agent_action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The action that human agent should take.`,
+									},
+									"condition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The condition of the instruction.`,
+									},
+									"display_details": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The detailed description of this instruction.`,
+									},
+									"display_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. Display name for the instruction.`,
+									},
+									"system_action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The action that system should take.`,
+									},
+									"triggering_event": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", ""}),
+										Description:  `Optional. The trigger event of the instruction. Possible values: ["END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE"]`,
+									},
+								},
+							},
+						},
+						"output_language_code": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Output language code.`,
+						},
+						"overarching_guidance": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. The overarching guidance for the agent coaching. This should be set only for v1.5 and later versions.`,
+						},
+						"search_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Search configuration for agent coaching. This is used for general articles search.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"datastores": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. The datastore ids linked to the search engine.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"search_engine": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Required. The search engine to use for the agent coaching articles/instructions. Format: 'projects/{project}/locations/global/collections/default_collection/engines/{engine_id}'`,
+									},
+								},
+							},
+						},
+						"version": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Version of the feature. If not set, default to latest version. Current candidates are ["2.5"].`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"agent_coaching_context", "agent_feedback_context", "customer_message_generation_context", "free_form_context", "summarization_context", "translation_context"},
+			},
+			"agent_feedback_context": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Agent feedback context.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instructions": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Instructions to generate feedback from.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"agent_action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The action that human agent should take.`,
+									},
+									"condition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The condition of the instruction.`,
+									},
+									"display_details": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The detailed description of this instruction.`,
+									},
+									"display_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. Display name for the instruction.`,
+									},
+									"system_action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The action that system should take.`,
+									},
+									"triggering_event": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", ""}),
+										Description:  `Optional. The trigger event of the instruction. Possible values: ["END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE"]`,
+									},
+								},
+							},
+						},
+						"version": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"agent_coaching_context", "agent_feedback_context", "customer_message_generation_context", "free_form_context", "summarization_context", "translation_context"},
+			},
+			"customer_message_generation_context": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Customer message generation context.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"customization": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Customizations for customer message generation.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"scenario": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. Scenario for generating customer messages.`,
+									},
+								},
+							},
+						},
+						"version": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"agent_coaching_context", "agent_feedback_context", "customer_message_generation_context", "free_form_context", "summarization_context", "translation_context"},
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `Optional. Human readable description of the generator.`,
+			},
+			"free_form_context": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Free form text input to LLM.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"text": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Free form text input to LLM.`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"agent_coaching_context", "agent_feedback_context", "customer_message_generation_context", "free_form_context", "summarization_context", "translation_context"},
+			},
+			"generator_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: `Optional. The ID to use for the generator, which will become the final component of the generator's resource name.`,
+			},
+			"inference_parameter": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Optional. Inference parameters for this generator.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"max_output_tokens": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Optional. Maximum number of the output tokens for the generator.`,
+						},
+						"temperature": {
+							Type:        schema.TypeFloat,
+							Optional:    true,
+							Description: `Optional. Controls the randomness of LLM predictions. Low temperature = less random. High temperature = more random. If unset (or 0), uses a default value of 0.`,
+						},
+						"top_k": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Optional. Top-k changes how the model selects tokens for output. A top-k of 1 means the selected token is the most probable among all tokens in the model's vocabulary (also called greedy decoding), while a top-k of 3 means that the next token is selected from among the 3 most probable tokens (using temperature). For each token selection step, the top K tokens with the highest probabilities are sampled. Then tokens are further filtered based on topP with the final token selected using temperature sampling. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [1, 40], default to 40.`,
+						},
+						"top_p": {
+							Type:        schema.TypeFloat,
+							Optional:    true,
+							Description: `Optional. Top-p changes how the model selects tokens for output. Tokens are selected from most K (see topK parameter) probable to least until the sum of their probabilities equals the top-p value. For example, if tokens A, B, and C have a probability of 0.3, 0.2, and 0.1 and the top-p value is 0.5, then the model will select either A or B as the next token (using temperature) and doesn't consider C. The default top-p value is 0.95. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [0.0, 1.0], default to 0.95.`,
+						},
+					},
+				},
+			},
+			"published_model": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `Optional. The published Large Language Model name. * To use the latest model version, specify the model name without version number. Example: text-bison * To use a stable model version, specify the version number as well. Example: text-bison@002.`,
+			},
 			"summarization_context": {
 				Type:        schema.TypeList,
-				Required:    true,
+				Optional:    true,
 				Description: `Input of prebuilt Summarization feature.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -316,62 +554,99 @@ func ResourceDialogflowGenerator() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Optional:    true,
+							Description: `Optional. Version of the feature. If not set, default to latest version. Current candidates are ["5.0", "6.0"].`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"agent_coaching_context", "agent_feedback_context", "customer_message_generation_context", "free_form_context", "summarization_context", "translation_context"},
+			},
+			"tools": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Optional. A list of tools this generator can use. Format: 'projects/<Project Id>/locations/<Location Id>/tools/<Tool Id>'.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"translation_context": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Translation context.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"agent_language_code": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Required. The language code used by the agent. At least one of agent_language_code and customer_language_code must be English (en-US).`,
+						},
+						"customer_language_code": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Required. The language code used by the customer. At least one of agent_language_code and customer_language_code must be English (en-US).`,
+						},
+						"translation_customization": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Customized translation for specific glossaries and sentences.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"glossary_terms": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. Translation of a specific glossary in both agent and customer languages.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"agent_language_glossary": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. The glossary in agent language.`,
+												},
+												"customer_language_glossary": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. The glossary in customer language.`,
+												},
+											},
+										},
+									},
+									"sentence_translations": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. Translation of a specific sentence in both agent and customer languages.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"agent_language_sentence": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. The sentence in agent language.`,
+												},
+												"customer_language_sentence": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Required. The sentence in customer language.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"version": {
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: `Optional. Version of the feature. If not set, default to latest version. Current candidates are ["1.0"].`,
 						},
 					},
 				},
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `Optional. Human readable description of the generator.`,
-			},
-			"generator_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				Description: `Optional. The ID to use for the generator, which will become the final component of the generator's resource name.`,
-			},
-			"inference_parameter": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `Optional. Inference parameters for this generator.`,
-				MaxItems:    1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"max_output_tokens": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: `Optional. Maximum number of the output tokens for the generator.`,
-						},
-						"temperature": {
-							Type:        schema.TypeFloat,
-							Optional:    true,
-							Description: `Optional. Controls the randomness of LLM predictions. Low temperature = less random. High temperature = more random. If unset (or 0), uses a default value of 0.`,
-						},
-						"top_k": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: `Optional. Top-k changes how the model selects tokens for output. A top-k of 1 means the selected token is the most probable among all tokens in the model's vocabulary (also called greedy decoding), while a top-k of 3 means that the next token is selected from among the 3 most probable tokens (using temperature). For each token selection step, the top K tokens with the highest probabilities are sampled. Then tokens are further filtered based on topP with the final token selected using temperature sampling. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [1, 40], default to 40.`,
-						},
-						"top_p": {
-							Type:        schema.TypeFloat,
-							Optional:    true,
-							Description: `Optional. Top-p changes how the model selects tokens for output. Tokens are selected from most K (see topK parameter) probable to least until the sum of their probabilities equals the top-p value. For example, if tokens A, B, and C have a probability of 0.3, 0.2, and 0.1 and the top-p value is 0.5, then the model will select either A or B as the next token (using temperature) and doesn't consider C. The default top-p value is 0.95. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [0.0, 1.0], default to 0.95.`,
-						},
-					},
-				},
-			},
-			"published_model": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `Optional. The published Large Language Model name. * To use the latest model version, specify the model name without version number. Example: text-bison * To use a stable model version, specify the version number as well. Example: text-bison@002.`,
+				ExactlyOneOf: []string{"agent_coaching_context", "agent_feedback_context", "customer_message_generation_context", "free_form_context", "summarization_context", "translation_context"},
 			},
 			"trigger_event": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", ""}),
-				Description:  `Optional. The trigger event of the generator. It defines when the generator is triggered in a conversation. Possible values: ["END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", "TOOL_CALL_COMPLETION", ""}),
+				Description:  `Optional. The trigger event of the generator. It defines when the generator is triggered in a conversation. Possible values: ["END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", "TOOL_CALL_COMPLETION"]`,
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -421,6 +696,36 @@ func resourceDialogflowGeneratorCreate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("summarization_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(summarizationContextProp)) && (ok || !reflect.DeepEqual(v, summarizationContextProp)) {
 		obj["summarizationContext"] = summarizationContextProp
 	}
+	freeFormContextProp, err := expandDialogflowGeneratorFreeFormContext(d.Get("free_form_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("free_form_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(freeFormContextProp)) && (ok || !reflect.DeepEqual(v, freeFormContextProp)) {
+		obj["freeFormContext"] = freeFormContextProp
+	}
+	agentCoachingContextProp, err := expandDialogflowGeneratorAgentCoachingContext(d.Get("agent_coaching_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("agent_coaching_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(agentCoachingContextProp)) && (ok || !reflect.DeepEqual(v, agentCoachingContextProp)) {
+		obj["agentCoachingContext"] = agentCoachingContextProp
+	}
+	translationContextProp, err := expandDialogflowGeneratorTranslationContext(d.Get("translation_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("translation_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(translationContextProp)) && (ok || !reflect.DeepEqual(v, translationContextProp)) {
+		obj["translationContext"] = translationContextProp
+	}
+	agentFeedbackContextProp, err := expandDialogflowGeneratorAgentFeedbackContext(d.Get("agent_feedback_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("agent_feedback_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(agentFeedbackContextProp)) && (ok || !reflect.DeepEqual(v, agentFeedbackContextProp)) {
+		obj["agentFeedbackContext"] = agentFeedbackContextProp
+	}
+	customerMessageGenerationContextProp, err := expandDialogflowGeneratorCustomerMessageGenerationContext(d.Get("customer_message_generation_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("customer_message_generation_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(customerMessageGenerationContextProp)) && (ok || !reflect.DeepEqual(v, customerMessageGenerationContextProp)) {
+		obj["customerMessageGenerationContext"] = customerMessageGenerationContextProp
+	}
 	inferenceParameterProp, err := expandDialogflowGeneratorInferenceParameter(d.Get("inference_parameter"), d, config)
 	if err != nil {
 		return err
@@ -438,6 +743,12 @@ func resourceDialogflowGeneratorCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("published_model"); !tpgresource.IsEmptyValue(reflect.ValueOf(publishedModelProp)) && (ok || !reflect.DeepEqual(v, publishedModelProp)) {
 		obj["publishedModel"] = publishedModelProp
+	}
+	toolsProp, err := expandDialogflowGeneratorTools(d.Get("tools"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tools"); !tpgresource.IsEmptyValue(reflect.ValueOf(toolsProp)) && (ok || !reflect.DeepEqual(v, toolsProp)) {
+		obj["tools"] = toolsProp
 	}
 	generatorIdProp, err := expandDialogflowGeneratorGeneratorId(d.Get("generator_id"), d, config)
 	if err != nil {
@@ -711,6 +1022,36 @@ func resourceDialogflowGeneratorUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("summarization_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, summarizationContextProp)) {
 		obj["summarizationContext"] = summarizationContextProp
 	}
+	freeFormContextProp, err := expandDialogflowGeneratorFreeFormContext(d.Get("free_form_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("free_form_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, freeFormContextProp)) {
+		obj["freeFormContext"] = freeFormContextProp
+	}
+	agentCoachingContextProp, err := expandDialogflowGeneratorAgentCoachingContext(d.Get("agent_coaching_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("agent_coaching_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, agentCoachingContextProp)) {
+		obj["agentCoachingContext"] = agentCoachingContextProp
+	}
+	translationContextProp, err := expandDialogflowGeneratorTranslationContext(d.Get("translation_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("translation_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, translationContextProp)) {
+		obj["translationContext"] = translationContextProp
+	}
+	agentFeedbackContextProp, err := expandDialogflowGeneratorAgentFeedbackContext(d.Get("agent_feedback_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("agent_feedback_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, agentFeedbackContextProp)) {
+		obj["agentFeedbackContext"] = agentFeedbackContextProp
+	}
+	customerMessageGenerationContextProp, err := expandDialogflowGeneratorCustomerMessageGenerationContext(d.Get("customer_message_generation_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("customer_message_generation_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, customerMessageGenerationContextProp)) {
+		obj["customerMessageGenerationContext"] = customerMessageGenerationContextProp
+	}
 	inferenceParameterProp, err := expandDialogflowGeneratorInferenceParameter(d.Get("inference_parameter"), d, config)
 	if err != nil {
 		return err
@@ -728,6 +1069,12 @@ func resourceDialogflowGeneratorUpdate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("published_model"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, publishedModelProp)) {
 		obj["publishedModel"] = publishedModelProp
+	}
+	toolsProp, err := expandDialogflowGeneratorTools(d.Get("tools"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tools"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, toolsProp)) {
+		obj["tools"] = toolsProp
 	}
 	generatorIdProp, err := expandDialogflowGeneratorGeneratorId(d.Get("generator_id"), d, config)
 	if err != nil {
@@ -753,6 +1100,26 @@ func resourceDialogflowGeneratorUpdate(d *schema.ResourceData, meta interface{})
 		updateMask = append(updateMask, "summarizationContext")
 	}
 
+	if d.HasChange("free_form_context") {
+		updateMask = append(updateMask, "freeFormContext")
+	}
+
+	if d.HasChange("agent_coaching_context") {
+		updateMask = append(updateMask, "agentCoachingContext")
+	}
+
+	if d.HasChange("translation_context") {
+		updateMask = append(updateMask, "translationContext")
+	}
+
+	if d.HasChange("agent_feedback_context") {
+		updateMask = append(updateMask, "agentFeedbackContext")
+	}
+
+	if d.HasChange("customer_message_generation_context") {
+		updateMask = append(updateMask, "customerMessageGenerationContext")
+	}
+
 	if d.HasChange("inference_parameter") {
 		updateMask = append(updateMask, "inferenceParameter")
 	}
@@ -763,6 +1130,10 @@ func resourceDialogflowGeneratorUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("published_model") {
 		updateMask = append(updateMask, "publishedModel")
+	}
+
+	if d.HasChange("tools") {
+		updateMask = append(updateMask, "tools")
 	}
 
 	if d.HasChange("generator_id") {
@@ -1166,6 +1537,332 @@ func flattenDialogflowGeneratorSummarizationContextOutputLanguageCode(v interfac
 	return v
 }
 
+func flattenDialogflowGeneratorFreeFormContext(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowGeneratorFreeFormContextText(original["text"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorFreeFormContextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContext(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["overarching_guidance"] =
+		flattenDialogflowGeneratorAgentCoachingContextOverarchingGuidance(original["overarchingGuidance"], d, config)
+	transformed["version"] =
+		flattenDialogflowGeneratorAgentCoachingContextVersion(original["version"], d, config)
+	transformed["output_language_code"] =
+		flattenDialogflowGeneratorAgentCoachingContextOutputLanguageCode(original["outputLanguageCode"], d, config)
+	transformed["search_config"] =
+		flattenDialogflowGeneratorAgentCoachingContextSearchConfig(original["searchConfig"], d, config)
+	transformed["instructions"] =
+		flattenDialogflowGeneratorAgentCoachingContextInstructions(original["instructions"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorAgentCoachingContextOverarchingGuidance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextOutputLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextSearchConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["search_engine"] =
+		flattenDialogflowGeneratorAgentCoachingContextSearchConfigSearchEngine(original["searchEngine"], d, config)
+	transformed["datastores"] =
+		flattenDialogflowGeneratorAgentCoachingContextSearchConfigDatastores(original["datastores"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorAgentCoachingContextSearchConfigSearchEngine(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextSearchConfigDatastores(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"display_name":     flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(original["displayName"], d, config),
+			"display_details":  flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(original["displayDetails"], d, config),
+			"condition":        flattenDialogflowGeneratorAgentCoachingContextInstructionsCondition(original["condition"], d, config),
+			"agent_action":     flattenDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(original["agentAction"], d, config),
+			"system_action":    flattenDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(original["systemAction"], d, config),
+			"triggering_event": flattenDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(original["triggeringEvent"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContext(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["agent_language_code"] =
+		flattenDialogflowGeneratorTranslationContextAgentLanguageCode(original["agentLanguageCode"], d, config)
+	transformed["customer_language_code"] =
+		flattenDialogflowGeneratorTranslationContextCustomerLanguageCode(original["customerLanguageCode"], d, config)
+	transformed["version"] =
+		flattenDialogflowGeneratorTranslationContextVersion(original["version"], d, config)
+	transformed["translation_customization"] =
+		flattenDialogflowGeneratorTranslationContextTranslationCustomization(original["translationCustomization"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorTranslationContextAgentLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContextCustomerLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContextVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContextTranslationCustomization(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["glossary_terms"] =
+		flattenDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTerms(original["glossaryTerms"], d, config)
+	transformed["sentence_translations"] =
+		flattenDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslations(original["sentenceTranslations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTerms(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"agent_language_glossary":    flattenDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsAgentLanguageGlossary(original["agentLanguageGlossary"], d, config),
+			"customer_language_glossary": flattenDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsCustomerLanguageGlossary(original["customerLanguageGlossary"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsAgentLanguageGlossary(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsCustomerLanguageGlossary(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"agent_language_sentence":    flattenDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsAgentLanguageSentence(original["agentLanguageSentence"], d, config),
+			"customer_language_sentence": flattenDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsCustomerLanguageSentence(original["customerLanguageSentence"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsAgentLanguageSentence(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsCustomerLanguageSentence(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContext(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["version"] =
+		flattenDialogflowGeneratorAgentFeedbackContextVersion(original["version"], d, config)
+	transformed["instructions"] =
+		flattenDialogflowGeneratorAgentFeedbackContextInstructions(original["instructions"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorAgentFeedbackContextVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContextInstructions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"display_name":     flattenDialogflowGeneratorAgentFeedbackContextInstructionsDisplayName(original["displayName"], d, config),
+			"display_details":  flattenDialogflowGeneratorAgentFeedbackContextInstructionsDisplayDetails(original["displayDetails"], d, config),
+			"condition":        flattenDialogflowGeneratorAgentFeedbackContextInstructionsCondition(original["condition"], d, config),
+			"agent_action":     flattenDialogflowGeneratorAgentFeedbackContextInstructionsAgentAction(original["agentAction"], d, config),
+			"system_action":    flattenDialogflowGeneratorAgentFeedbackContextInstructionsSystemAction(original["systemAction"], d, config),
+			"triggering_event": flattenDialogflowGeneratorAgentFeedbackContextInstructionsTriggeringEvent(original["triggeringEvent"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowGeneratorAgentFeedbackContextInstructionsDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContextInstructionsDisplayDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContextInstructionsCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContextInstructionsAgentAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContextInstructionsSystemAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentFeedbackContextInstructionsTriggeringEvent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorCustomerMessageGenerationContext(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["version"] =
+		flattenDialogflowGeneratorCustomerMessageGenerationContextVersion(original["version"], d, config)
+	transformed["customization"] =
+		flattenDialogflowGeneratorCustomerMessageGenerationContextCustomization(original["customization"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorCustomerMessageGenerationContextVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorCustomerMessageGenerationContextCustomization(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["scenario"] =
+		flattenDialogflowGeneratorCustomerMessageGenerationContextCustomizationScenario(original["scenario"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorCustomerMessageGenerationContextCustomizationScenario(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDialogflowGeneratorInferenceParameter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1232,6 +1929,10 @@ func flattenDialogflowGeneratorTriggerEvent(v interface{}, d *schema.ResourceDat
 }
 
 func flattenDialogflowGeneratorPublishedModel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorTools(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1644,6 +2345,555 @@ func expandDialogflowGeneratorSummarizationContextOutputLanguageCode(v interface
 	return v, nil
 }
 
+func expandDialogflowGeneratorFreeFormContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowGeneratorFreeFormContextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorFreeFormContextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedOverarchingGuidance, err := expandDialogflowGeneratorAgentCoachingContextOverarchingGuidance(original["overarching_guidance"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOverarchingGuidance); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["overarchingGuidance"] = transformedOverarchingGuidance
+	}
+
+	transformedVersion, err := expandDialogflowGeneratorAgentCoachingContextVersion(original["version"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["version"] = transformedVersion
+	}
+
+	transformedOutputLanguageCode, err := expandDialogflowGeneratorAgentCoachingContextOutputLanguageCode(original["output_language_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOutputLanguageCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["outputLanguageCode"] = transformedOutputLanguageCode
+	}
+
+	transformedSearchConfig, err := expandDialogflowGeneratorAgentCoachingContextSearchConfig(original["search_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSearchConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["searchConfig"] = transformedSearchConfig
+	}
+
+	transformedInstructions, err := expandDialogflowGeneratorAgentCoachingContextInstructions(original["instructions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInstructions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["instructions"] = transformedInstructions
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextOverarchingGuidance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextOutputLanguageCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextSearchConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSearchEngine, err := expandDialogflowGeneratorAgentCoachingContextSearchConfigSearchEngine(original["search_engine"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSearchEngine); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["searchEngine"] = transformedSearchEngine
+	}
+
+	transformedDatastores, err := expandDialogflowGeneratorAgentCoachingContextSearchConfigDatastores(original["datastores"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDatastores); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["datastores"] = transformedDatastores
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextSearchConfigSearchEngine(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextSearchConfigDatastores(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedDisplayName, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(original["display_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayName"] = transformedDisplayName
+		}
+
+		transformedDisplayDetails, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(original["display_details"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayDetails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayDetails"] = transformedDisplayDetails
+		}
+
+		transformedCondition, err := expandDialogflowGeneratorAgentCoachingContextInstructionsCondition(original["condition"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["condition"] = transformedCondition
+		}
+
+		transformedAgentAction, err := expandDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(original["agent_action"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAgentAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["agentAction"] = transformedAgentAction
+		}
+
+		transformedSystemAction, err := expandDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(original["system_action"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSystemAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["systemAction"] = transformedSystemAction
+		}
+
+		transformedTriggeringEvent, err := expandDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(original["triggering_event"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTriggeringEvent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["triggeringEvent"] = transformedTriggeringEvent
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAgentLanguageCode, err := expandDialogflowGeneratorTranslationContextAgentLanguageCode(original["agent_language_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAgentLanguageCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["agentLanguageCode"] = transformedAgentLanguageCode
+	}
+
+	transformedCustomerLanguageCode, err := expandDialogflowGeneratorTranslationContextCustomerLanguageCode(original["customer_language_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomerLanguageCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customerLanguageCode"] = transformedCustomerLanguageCode
+	}
+
+	transformedVersion, err := expandDialogflowGeneratorTranslationContextVersion(original["version"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["version"] = transformedVersion
+	}
+
+	transformedTranslationCustomization, err := expandDialogflowGeneratorTranslationContextTranslationCustomization(original["translation_customization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTranslationCustomization); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["translationCustomization"] = transformedTranslationCustomization
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorTranslationContextAgentLanguageCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContextCustomerLanguageCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContextVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedGlossaryTerms, err := expandDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTerms(original["glossary_terms"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedGlossaryTerms); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["glossaryTerms"] = transformedGlossaryTerms
+	}
+
+	transformedSentenceTranslations, err := expandDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslations(original["sentence_translations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSentenceTranslations); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sentenceTranslations"] = transformedSentenceTranslations
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTerms(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAgentLanguageGlossary, err := expandDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsAgentLanguageGlossary(original["agent_language_glossary"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAgentLanguageGlossary); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["agentLanguageGlossary"] = transformedAgentLanguageGlossary
+		}
+
+		transformedCustomerLanguageGlossary, err := expandDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsCustomerLanguageGlossary(original["customer_language_glossary"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCustomerLanguageGlossary); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["customerLanguageGlossary"] = transformedCustomerLanguageGlossary
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsAgentLanguageGlossary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomizationGlossaryTermsCustomerLanguageGlossary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAgentLanguageSentence, err := expandDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsAgentLanguageSentence(original["agent_language_sentence"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAgentLanguageSentence); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["agentLanguageSentence"] = transformedAgentLanguageSentence
+		}
+
+		transformedCustomerLanguageSentence, err := expandDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsCustomerLanguageSentence(original["customer_language_sentence"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCustomerLanguageSentence); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["customerLanguageSentence"] = transformedCustomerLanguageSentence
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsAgentLanguageSentence(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorTranslationContextTranslationCustomizationSentenceTranslationsCustomerLanguageSentence(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedVersion, err := expandDialogflowGeneratorAgentFeedbackContextVersion(original["version"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["version"] = transformedVersion
+	}
+
+	transformedInstructions, err := expandDialogflowGeneratorAgentFeedbackContextInstructions(original["instructions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInstructions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["instructions"] = transformedInstructions
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedDisplayName, err := expandDialogflowGeneratorAgentFeedbackContextInstructionsDisplayName(original["display_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayName"] = transformedDisplayName
+		}
+
+		transformedDisplayDetails, err := expandDialogflowGeneratorAgentFeedbackContextInstructionsDisplayDetails(original["display_details"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayDetails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayDetails"] = transformedDisplayDetails
+		}
+
+		transformedCondition, err := expandDialogflowGeneratorAgentFeedbackContextInstructionsCondition(original["condition"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["condition"] = transformedCondition
+		}
+
+		transformedAgentAction, err := expandDialogflowGeneratorAgentFeedbackContextInstructionsAgentAction(original["agent_action"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAgentAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["agentAction"] = transformedAgentAction
+		}
+
+		transformedSystemAction, err := expandDialogflowGeneratorAgentFeedbackContextInstructionsSystemAction(original["system_action"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSystemAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["systemAction"] = transformedSystemAction
+		}
+
+		transformedTriggeringEvent, err := expandDialogflowGeneratorAgentFeedbackContextInstructionsTriggeringEvent(original["triggering_event"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTriggeringEvent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["triggeringEvent"] = transformedTriggeringEvent
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructionsDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructionsDisplayDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructionsCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructionsAgentAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructionsSystemAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentFeedbackContextInstructionsTriggeringEvent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorCustomerMessageGenerationContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedVersion, err := expandDialogflowGeneratorCustomerMessageGenerationContextVersion(original["version"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["version"] = transformedVersion
+	}
+
+	transformedCustomization, err := expandDialogflowGeneratorCustomerMessageGenerationContextCustomization(original["customization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomization); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customization"] = transformedCustomization
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorCustomerMessageGenerationContextVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorCustomerMessageGenerationContextCustomization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedScenario, err := expandDialogflowGeneratorCustomerMessageGenerationContextCustomizationScenario(original["scenario"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScenario); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scenario"] = transformedScenario
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorCustomerMessageGenerationContextCustomizationScenario(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDialogflowGeneratorInferenceParameter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1711,6 +2961,10 @@ func expandDialogflowGeneratorPublishedModel(v interface{}, d tpgresource.Terraf
 	return v, nil
 }
 
+func expandDialogflowGeneratorTools(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDialogflowGeneratorGeneratorId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1735,6 +2989,21 @@ func ResourceDialogflowGeneratorFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("summarization_context", flattenDialogflowGeneratorSummarizationContext(res["summarizationContext"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
+	if err = d.Set("free_form_context", flattenDialogflowGeneratorFreeFormContext(res["freeFormContext"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
+	if err = d.Set("agent_coaching_context", flattenDialogflowGeneratorAgentCoachingContext(res["agentCoachingContext"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
+	if err = d.Set("translation_context", flattenDialogflowGeneratorTranslationContext(res["translationContext"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
+	if err = d.Set("agent_feedback_context", flattenDialogflowGeneratorAgentFeedbackContext(res["agentFeedbackContext"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
+	if err = d.Set("customer_message_generation_context", flattenDialogflowGeneratorCustomerMessageGenerationContext(res["customerMessageGenerationContext"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
 	if err = d.Set("inference_parameter", flattenDialogflowGeneratorInferenceParameter(res["inferenceParameter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
@@ -1742,6 +3011,9 @@ func ResourceDialogflowGeneratorFlatten(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
 	if err = d.Set("published_model", flattenDialogflowGeneratorPublishedModel(res["publishedModel"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
+	if err = d.Set("tools", flattenDialogflowGeneratorTools(res["tools"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
 	if err = d.Set("generator_id", flattenDialogflowGeneratorGeneratorId(res["generatorId"], d, config)); err != nil {

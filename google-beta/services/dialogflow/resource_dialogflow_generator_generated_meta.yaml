@@ -7,7 +7,28 @@ api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: Generator
 fields:
+    - api_field: agentCoachingContext.instructions.agentAction
+    - api_field: agentCoachingContext.instructions.condition
+    - api_field: agentCoachingContext.instructions.displayDetails
+    - api_field: agentCoachingContext.instructions.displayName
+    - api_field: agentCoachingContext.instructions.systemAction
+    - api_field: agentCoachingContext.instructions.triggeringEvent
+    - api_field: agentCoachingContext.outputLanguageCode
+    - api_field: agentCoachingContext.overarchingGuidance
+    - api_field: agentCoachingContext.searchConfig.datastores
+    - api_field: agentCoachingContext.searchConfig.searchEngine
+    - api_field: agentCoachingContext.version
+    - api_field: agentFeedbackContext.instructions.agentAction
+    - api_field: agentFeedbackContext.instructions.condition
+    - api_field: agentFeedbackContext.instructions.displayDetails
+    - api_field: agentFeedbackContext.instructions.displayName
+    - api_field: agentFeedbackContext.instructions.systemAction
+    - api_field: agentFeedbackContext.instructions.triggeringEvent
+    - api_field: agentFeedbackContext.version
+    - api_field: customerMessageGenerationContext.customization.scenario
+    - api_field: customerMessageGenerationContext.version
     - api_field: description
+    - api_field: freeFormContext.text
     - api_field: generatorId
     - api_field: inferenceParameter.maxOutputTokens
     - api_field: inferenceParameter.temperature
@@ -32,6 +53,14 @@ fields:
     - api_field: summarizationContext.summarizationSections.key
     - api_field: summarizationContext.summarizationSections.type
     - api_field: summarizationContext.version
+    - api_field: tools
+    - api_field: translationContext.agentLanguageCode
+    - api_field: translationContext.customerLanguageCode
+    - api_field: translationContext.translationCustomization.glossaryTerms.agentLanguageGlossary
+    - api_field: translationContext.translationCustomization.glossaryTerms.customerLanguageGlossary
+    - api_field: translationContext.translationCustomization.sentenceTranslations.agentLanguageSentence
+    - api_field: translationContext.translationCustomization.sentenceTranslations.customerLanguageSentence
+    - api_field: translationContext.version
     - api_field: triggerEvent
     - field: deletion_policy
       provider_only: true
