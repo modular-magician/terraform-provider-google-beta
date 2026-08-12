@@ -61,6 +61,7 @@ func TestAccNetworkServicesEdgeCacheOrigin_networkServicesEdgeCacheOriginBasicEx
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "global",
 		"resource_name": "tf-test-my-origin" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

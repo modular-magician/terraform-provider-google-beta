@@ -63,6 +63,7 @@ func TestAccNetworkServicesEdgeCacheService_networkServicesEdgeCacheServiceBasic
 
 	context := map[string]interface{}{
 		"bucket_name":   "tf-test-my-bucket" + randomSuffix,
+		"location":      "global",
 		"origin_name":   "tf-test-my-origin" + randomSuffix,
 		"service_name":  "tf-test-my-service" + randomSuffix,
 		"random_suffix": randomSuffix,
