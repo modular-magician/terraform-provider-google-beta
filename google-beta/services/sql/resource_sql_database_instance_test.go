@@ -7445,20 +7445,20 @@ resource "google_sql_database_instance" "instance" {
 func testAccSqlDatabaseInstance_withPSCEnabled_withAutoConnectionPolicy(instanceName string, networkName string, projectId string) string {
 	return fmt.Sprintf(`
 resource "google_project_service_identity" "gcp_sa_cloud_sql" {
-  project    = "%s"
-  service    = "sqladmin.googleapis.com"
+  project  = "%s"
+  service  = "sqladmin.googleapis.com"
 }
 
 resource "google_project_iam_member" "sa_consumer_network_admin" {
-  project = "%s"
-  role    = "roles/networkconnectivity.consumerNetworkAdmin"
-  member  = google_project_service_identity.gcp_sa_cloud_sql.member
+  project  = "%s"
+  role     = "roles/networkconnectivity.consumerNetworkAdmin"
+  member   = google_project_service_identity.gcp_sa_cloud_sql.member
 }
 
 resource "google_project_iam_member" "sa_network_viewer" {
-  project = "%s"
-  role    = "roles/compute.networkViewer"
-  member  = google_project_service_identity.gcp_sa_cloud_sql.member
+  project  = "%s"
+  role     = "roles/compute.networkViewer"
+  member   = google_project_service_identity.gcp_sa_cloud_sql.member
 }
 
 resource "google_compute_network" "default" {
@@ -7507,20 +7507,20 @@ resource "google_sql_database_instance" "instance" {
 func testAccSqlDatabaseInstance_withPSCEnabled_withAutoConnectionPolicy_deleted(networkName string, projectId string) string {
 	return fmt.Sprintf(`
 resource "google_project_service_identity" "gcp_sa_cloud_sql" {
-  project    = "%s"
-  service    = "sqladmin.googleapis.com"
+  project  = "%s"
+  service  = "sqladmin.googleapis.com"
 }
 
 resource "google_project_iam_member" "sa_consumer_network_admin" {
-  project = "%s"
-  role    = "roles/networkconnectivity.consumerNetworkAdmin"
-  member  = google_project_service_identity.gcp_sa_cloud_sql.member
+  project  = "%s"
+  role     = "roles/networkconnectivity.consumerNetworkAdmin"
+  member   = google_project_service_identity.gcp_sa_cloud_sql.member
 }
 
 resource "google_project_iam_member" "sa_network_viewer" {
-  project = "%s"
-  role    = "roles/compute.networkViewer"
-  member  = google_project_service_identity.gcp_sa_cloud_sql.member
+  project  = "%s"
+  role     = "roles/compute.networkViewer"
+  member   = google_project_service_identity.gcp_sa_cloud_sql.member
 }
 
 resource "google_compute_network" "default" {
