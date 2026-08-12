@@ -93,6 +93,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_account_auth_config" 
   location = "us"
   app      = google_ces_app.ces_app_for_toolset.app_id
   display_name = "Basic toolset display name"
+  timeout      = "30s"
 
   open_api_toolset {
     open_api_schema = <<-EOT
@@ -154,6 +155,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_account_auth_config" 
   location = "us"
   app      = google_ces_app.ces_app_for_toolset.app_id
   display_name = "Updated toolset display name"
+  timeout      = "60s"
 
   open_api_toolset {
     open_api_schema = <<-EOT
@@ -1464,6 +1466,175 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_agent_id_token_auth_confi
         service_agent_id_token_auth_config {}
     }
   }
+}
+`, context)
+}
+
+func TestAccCESToolset_cesToolsetConnectorExample_update(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCESToolsetDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCESToolset_cesToolsetConnectorExample_full(context),
+			},
+			{
+				ResourceName:            "google_ces_toolset.ces_toolset_connector",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"app_id"},
+			},
+			{
+				Config: testAccCESToolset_cesToolsetConnectorExample_update(context),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_ces_toolset.ces_toolset_connector", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_ces_toolset.ces_toolset_connector",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"app_id"},
+			},
+		},
+	})
+}
+
+func testAccCESToolset_cesToolsetConnectorExample_full(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "test_project" {
+}
+
+resource "google_project_iam_member" "ces_p4sa_connectors_admin" {
+  project = data.google_project.test_project.project_id
+  role    = "roles/connectors.admin"
+  member  = "serviceAccount:service-${data.google_project.test_project.number}@gcp-sa-ces.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "ces_p4sa_sa_user" {
+  project = data.google_project.test_project.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:service-${data.google_project.test_project.number}@gcp-sa-ces.iam.gserviceaccount.com"
+}
+
+resource "google_ces_app" "ces_app_for_toolset" {
+  app_id = "tf-test-app-id%{random_suffix}"
+  location = "us"
+  description = "App used as parent for CES Toolset example"
+  display_name = "tf-test-my-app%{random_suffix}"
+  language_settings {
+    default_language_code    = "en-US"
+    supported_language_codes = ["es-ES", "fr-FR"]
+    enable_multilingual_support = true
+    fallback_action          = "escalate"
+  }
+  time_zone_settings {
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_toolset" "ces_toolset_connector" {
+  toolset_id = "toolset1%{random_suffix}"
+  location = "us"
+  app      = google_ces_app.ces_app_for_toolset.app_id
+  display_name = "Basic toolset display name"
+  timeout      = "30s"
+
+  tool_fake_config {
+    enable_fake_mode = true
+    code_block {
+      python_code = "def fake_tool_call(tool, input, callback_context): return {'result': 'fake'}"
+    }
+  }
+
+  connector_toolset {
+    connection = "projects/${data.google_project.test_project.project_id}/locations/us-central1/connections/new-bg-connection"
+    connector_actions {
+      entity_operation {
+        entity_id = "Movies.credits"
+        operation = "LIST"
+      }
+    }
+  }
+
+  depends_on = [
+    google_project_iam_member.ces_p4sa_connectors_admin,
+    google_project_iam_member.ces_p4sa_sa_user,
+  ]
+}
+`, context)
+}
+
+func testAccCESToolset_cesToolsetConnectorExample_update(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "test_project" {
+}
+
+resource "google_project_iam_member" "ces_p4sa_connectors_admin" {
+  project = data.google_project.test_project.project_id
+  role    = "roles/connectors.admin"
+  member  = "serviceAccount:service-${data.google_project.test_project.number}@gcp-sa-ces.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "ces_p4sa_sa_user" {
+  project = data.google_project.test_project.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:service-${data.google_project.test_project.number}@gcp-sa-ces.iam.gserviceaccount.com"
+}
+
+resource "google_ces_app" "ces_app_for_toolset" {
+  app_id = "tf-test-app-id%{random_suffix}"
+  location = "us"
+  description = "App used as parent for CES Toolset example"
+  display_name = "tf-test-my-app%{random_suffix}"
+  language_settings {
+    default_language_code    = "en-US"
+    supported_language_codes = ["es-ES", "fr-FR"]
+    enable_multilingual_support = true
+    fallback_action          = "escalate"
+  }
+  time_zone_settings {
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_toolset" "ces_toolset_connector" {
+  toolset_id = "toolset1%{random_suffix}"
+  location = "us"
+  app      = google_ces_app.ces_app_for_toolset.app_id
+  display_name = "Updated toolset display name"
+  timeout      = "60s"
+
+  tool_fake_config {
+    enable_fake_mode = true
+    code_block {
+      python_code = "def fake_tool_call(tool, input, callback_context): return {'result': 'fake_updated'}"
+    }
+  }
+
+  connector_toolset {
+    connection = "projects/${data.google_project.test_project.project_id}/locations/us-central1/connections/new-bg-connection"
+    connector_actions {
+      entity_operation {
+        entity_id = "Movies.credits"
+        operation = "LIST"
+      }
+    }
+  }
+
+  depends_on = [
+    google_project_iam_member.ces_p4sa_connectors_admin,
+    google_project_iam_member.ces_p4sa_sa_user,
+  ]
 }
 `, context)
 }
