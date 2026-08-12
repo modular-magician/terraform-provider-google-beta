@@ -234,8 +234,8 @@ specified. A change to this field affects only tables created afterwards,
 and does not alter the existing tables.
 
 The following values are supported:
-- 'und:ci': undetermined locale, case insensitive.
-- '': empty string. Default to case-sensitive behavior.`,
+- 'und:ci': Undetermined locale, case-insensitive.
+- '': Empty string. Default to case-sensitive behavior.`,
 			},
 			"default_encryption_configuration": {
 				Type:     schema.TypeList,
