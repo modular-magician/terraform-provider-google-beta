@@ -294,12 +294,119 @@ resource "google_colab_notebook_execution" "notebook-execution" {
   gcs_output_uri = "gs://${google_storage_bucket.output_bucket.name}"
   notebook_runtime_template_resource_name = "projects/${google_colab_runtime_template.my_runtime_template.project}/locations/${google_colab_runtime_template.my_runtime_template.location}/notebookRuntimeTemplates/${google_colab_runtime_template.my_runtime_template.name}"
 
+  workbench_runtime {
+    vm_image {
+      project = "cloud-notebooks-managed"
+      family  = "workbench-instances-2603"
+    }
+  }
+
   depends_on = [
     google_storage_bucket_object.notebook,
     google_storage_bucket.output_bucket,
     google_colab_runtime_template.my_runtime_template,
   ]
   
+}
+```
+## Example Usage - Colab Notebook Execution Vm Image Name
+
+
+```hcl
+resource "google_colab_runtime_template" "my_runtime_template" {
+  provider = google-beta
+  name = "runtime-template-name"
+  display_name = "Runtime template"
+  location = "us-central1"
+
+  machine_spec {
+    machine_type     = "e2-standard-4"
+  }
+
+  network_spec {
+    enable_internet_access = true
+  }
+}
+
+resource "google_storage_bucket" "output_bucket" {
+  provider = google-beta
+  name          = "my_bucket"
+  location      = "US"
+  force_destroy = true
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_object" "notebook" {
+  provider = google-beta
+  name   = "hello_world.ipynb"
+  bucket = google_storage_bucket.output_bucket.name
+  content = <<EOF
+    {
+      "cells": [
+        {
+          "cell_type": "code",
+          "execution_count": null,
+          "metadata": {},
+          "outputs": [],
+          "source": [
+            "print(\"Hello, World!\")"
+          ]
+        }
+      ],
+      "metadata": {
+        "kernelspec": {
+          "display_name": "Python 3",
+          "language": "python",
+          "name": "python3"
+        },
+        "language_info": {
+          "codemirror_mode": {
+            "name": "ipython",
+            "version": 3
+          },
+          "file_extension": ".py",
+          "mimetype": "text/x-python",
+          "name": "python",
+          "nbconvert_exporter": "python",
+          "pygments_lexer": "ipython3",
+          "version": "3.8.5"
+        }
+      },
+      "nbformat": 4,
+      "nbformat_minor": 4
+    }
+    EOF
+}
+
+resource "google_colab_notebook_execution" "notebook-execution" {
+  provider = google-beta
+  notebook_execution_job_id = "colab-notebook-execution"
+  display_name = "Notebook execution vm image name"
+  location = "us-central1"
+
+  execution_timeout = "86400s"
+  gcs_notebook_source {
+    uri = "gs://${google_storage_bucket_object.notebook.bucket}/${google_storage_bucket_object.notebook.name}"
+    generation = google_storage_bucket_object.notebook.generation
+  }
+  
+  service_account = "my@service-account.com"
+
+  gcs_output_uri = "gs://${google_storage_bucket.output_bucket.name}"
+  notebook_runtime_template_resource_name = "projects/${google_colab_runtime_template.my_runtime_template.project}/locations/${google_colab_runtime_template.my_runtime_template.location}/notebookRuntimeTemplates/${google_colab_runtime_template.my_runtime_template.name}"
+
+  workbench_runtime {
+    vm_image {
+      project = "cloud-notebooks-managed"
+      name    = "workbench-2603-20260809-2130-rc0"
+    }
+  }
+
+  depends_on = [
+    google_storage_bucket_object.notebook,
+    google_storage_bucket.output_bucket,
+    google_colab_runtime_template.my_runtime_template,
+  ]
 }
 ```
 ## Example Usage - Colab Notebook Execution Dataform
@@ -451,6 +558,11 @@ The following arguments are supported:
   (Optional)
   The service account to run the execution as.
 
+* `workbench_runtime` -
+  (Optional)
+  Configuration for a Workbench Instances-based environment.
+  Structure is [documented below](#nested_workbench_runtime).
+
 * `notebook_execution_job_id` -
   (Optional)
   User specified ID for the Notebook Execution Job
@@ -548,6 +660,30 @@ The following arguments are supported:
   (Optional)
   The name of the subnetwork that this runtime is in.
 
+<a name="nested_workbench_runtime"></a>The `workbench_runtime` block supports:
+
+* `vm_image` -
+  (Optional)
+  Definition of a custom Compute Engine virtual machine image for starting
+  a notebook execution with the environment installed directly on the VM.
+  Structure is [documented below](#nested_workbench_runtime_vm_image).
+
+
+<a name="nested_workbench_runtime_vm_image"></a>The `vm_image` block supports:
+
+* `project` -
+  (Required)
+  The name of the Google Cloud project that this VM image belongs to.
+  Format: `{project_id}`
+
+* `name` -
+  (Optional)
+  Use this VM image name to find the image.
+
+* `family` -
+  (Optional)
+  Use this VM image family to find the image; the newest image in this family will be used.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -560,8 +696,8 @@ In addition to the arguments listed above, the following computed attributes are
 This resource provides the following
 [Timeouts](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/retries-and-customizable-timeouts) configuration options:
 
-- `create` - Default is 20 minutes.
-- `delete` - Default is 20 minutes.
+- `create` - Default is 60 minutes.
+- `delete` - Default is 0 minutes.
 
 ## Import
 

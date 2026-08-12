@@ -85,7 +85,7 @@ func TestAccColabNotebookExecution_colabNotebookExecutionBasicExample(t *testing
 				ResourceName:            "google_colab_notebook_execution.notebook-execution",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"direct_notebook_source", "direct_notebook_source.0.content", "location", "notebook_execution_job_id"},
+				ImportStateVerifyIgnore: []string{"direct_notebook_source", "direct_notebook_source.0.content", "location", "notebook_execution_job_id", "workbench_runtime"},
 			},
 			{
 				ResourceName:       "google_colab_notebook_execution.notebook-execution",
@@ -204,7 +204,7 @@ func TestAccColabNotebookExecution_colabNotebookExecutionCustomEnvExample(t *tes
 				ResourceName:            "google_colab_notebook_execution.notebook-execution",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"direct_notebook_source", "direct_notebook_source.0.content", "location", "notebook_execution_job_id"},
+				ImportStateVerifyIgnore: []string{"direct_notebook_source", "direct_notebook_source.0.content", "location", "notebook_execution_job_id", "workbench_runtime"},
 			},
 			{
 				ResourceName:       "google_colab_notebook_execution.notebook-execution",
@@ -338,7 +338,7 @@ func TestAccColabNotebookExecution_colabNotebookExecutionFullExample(t *testing.
 				ResourceName:            "google_colab_notebook_execution.notebook-execution",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"direct_notebook_source", "location", "notebook_execution_job_id"},
+				ImportStateVerifyIgnore: []string{"direct_notebook_source", "location", "notebook_execution_job_id", "workbench_runtime", "workbench_runtime.0.vm_image.0.family", "workbench_runtime.0.vm_image.0.name", "workbench_runtime.0.vm_image.0.project"},
 			},
 			{
 				ResourceName:       "google_colab_notebook_execution.notebook-execution",
@@ -434,12 +434,157 @@ resource "google_colab_notebook_execution" "notebook-execution" {
   gcs_output_uri = "gs://${google_storage_bucket.output_bucket.name}"
   notebook_runtime_template_resource_name = "projects/${google_colab_runtime_template.my_runtime_template.project}/locations/${google_colab_runtime_template.my_runtime_template.location}/notebookRuntimeTemplates/${google_colab_runtime_template.my_runtime_template.name}"
 
+  workbench_runtime {
+    vm_image {
+      project = "cloud-notebooks-managed"
+      family  = "workbench-instances-2603"
+    }
+  }
+
   depends_on = [
     google_storage_bucket_object.notebook,
     google_storage_bucket.output_bucket,
     google_colab_runtime_template.my_runtime_template,
   ]
   
+}
+`, context)
+}
+
+func TestAccColabNotebookExecution_colabNotebookExecutionVmImageNameExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project_id":                envvar.GetTestProjectFromEnv(),
+		"service_account":           envvar.GetTestServiceAccountFromEnv(t),
+		"bucket":                    "tf_test_my_bucket" + randomSuffix,
+		"notebook_execution_job_id": "tf-test-colab-notebook-execution" + randomSuffix,
+		"runtime_template_name":     "tf-test-runtime-template-name" + randomSuffix,
+		"random_suffix":             randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckColabNotebookExecutionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccColabNotebookExecution_colabNotebookExecutionVmImageNameExample(context),
+			},
+			{
+				ResourceName:            "google_colab_notebook_execution.notebook-execution",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"direct_notebook_source", "location", "notebook_execution_job_id", "workbench_runtime", "workbench_runtime.0.vm_image.0.family", "workbench_runtime.0.vm_image.0.name", "workbench_runtime.0.vm_image.0.project"},
+			},
+			{
+				ResourceName:       "google_colab_notebook_execution.notebook-execution",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccColabNotebookExecution_colabNotebookExecutionVmImageNameExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_colab_runtime_template" "my_runtime_template" {
+  provider = google-beta
+  name = "%{runtime_template_name}"
+  display_name = "Runtime template"
+  location = "us-central1"
+
+  machine_spec {
+    machine_type     = "e2-standard-4"
+  }
+
+  network_spec {
+    enable_internet_access = true
+  }
+}
+
+resource "google_storage_bucket" "output_bucket" {
+  provider = google-beta
+  name          = "%{bucket}"
+  location      = "US"
+  force_destroy = true
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_object" "notebook" {
+  provider = google-beta
+  name   = "hello_world.ipynb"
+  bucket = google_storage_bucket.output_bucket.name
+  content = <<EOF
+    {
+      "cells": [
+        {
+          "cell_type": "code",
+          "execution_count": null,
+          "metadata": {},
+          "outputs": [],
+          "source": [
+            "print(\"Hello, World!\")"
+          ]
+        }
+      ],
+      "metadata": {
+        "kernelspec": {
+          "display_name": "Python 3",
+          "language": "python",
+          "name": "python3"
+        },
+        "language_info": {
+          "codemirror_mode": {
+            "name": "ipython",
+            "version": 3
+          },
+          "file_extension": ".py",
+          "mimetype": "text/x-python",
+          "name": "python",
+          "nbconvert_exporter": "python",
+          "pygments_lexer": "ipython3",
+          "version": "3.8.5"
+        }
+      },
+      "nbformat": 4,
+      "nbformat_minor": 4
+    }
+    EOF
+}
+
+resource "google_colab_notebook_execution" "notebook-execution" {
+  provider = google-beta
+  notebook_execution_job_id = "%{notebook_execution_job_id}"
+  display_name = "Notebook execution vm image name"
+  location = "us-central1"
+
+  execution_timeout = "86400s"
+  gcs_notebook_source {
+    uri = "gs://${google_storage_bucket_object.notebook.bucket}/${google_storage_bucket_object.notebook.name}"
+    generation = google_storage_bucket_object.notebook.generation
+  }
+  
+  service_account = "%{service_account}"
+
+  gcs_output_uri = "gs://${google_storage_bucket.output_bucket.name}"
+  notebook_runtime_template_resource_name = "projects/${google_colab_runtime_template.my_runtime_template.project}/locations/${google_colab_runtime_template.my_runtime_template.location}/notebookRuntimeTemplates/${google_colab_runtime_template.my_runtime_template.name}"
+
+  workbench_runtime {
+    vm_image {
+      project = "cloud-notebooks-managed"
+      name    = "workbench-2603-20260809-2130-rc0"
+    }
+  }
+
+  depends_on = [
+    google_storage_bucket_object.notebook,
+    google_storage_bucket.output_bucket,
+    google_colab_runtime_template.my_runtime_template,
+  ]
 }
 `, context)
 }
@@ -478,7 +623,7 @@ func TestAccColabNotebookExecution_colabNotebookExecutionDataformExample(t *test
 				ResourceName:            "google_colab_notebook_execution.notebook-execution",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"direct_notebook_source", "location", "notebook_execution_job_id"},
+				ImportStateVerifyIgnore: []string{"direct_notebook_source", "location", "notebook_execution_job_id", "workbench_runtime"},
 			},
 			{
 				ResourceName:       "google_colab_notebook_execution.notebook-execution",

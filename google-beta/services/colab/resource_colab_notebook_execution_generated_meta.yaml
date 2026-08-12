@@ -30,5 +30,8 @@ fields:
       provider_only: true
     - api_field: notebookRuntimeTemplateResourceName
     - api_field: serviceAccount
+    - api_field: workbenchRuntime.vmImage.family
+    - api_field: workbenchRuntime.vmImage.name
+    - api_field: workbenchRuntime.vmImage.project
     - field: deletion_policy
       provider_only: true

@@ -107,8 +107,8 @@ func ResourceColabNotebookExecution() *schema.Resource {
 		},
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(20 * time.Minute),
-			Delete: schema.DefaultTimeout(20 * time.Minute),
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Delete: schema.DefaultTimeout(0 * time.Minute),
 		},
 
 		CustomizeDiff: customdiff.All(
@@ -354,6 +354,50 @@ func ResourceColabNotebookExecution() *schema.Resource {
 				Description:  `The service account to run the execution as.`,
 				ExactlyOneOf: []string{"execution_user", "service_account"},
 			},
+			"workbench_runtime": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Configuration for a Workbench Instances-based environment.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vm_image": {
+							Type:     schema.TypeList,
+							Optional: true,
+							ForceNew: true,
+							Description: `Definition of a custom Compute Engine virtual machine image for starting
+a notebook execution with the environment installed directly on the VM.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"project": {
+										Type:     schema.TypeString,
+										Required: true,
+										ForceNew: true,
+										Description: `The name of the Google Cloud project that this VM image belongs to.
+Format: '{project_id}'`,
+									},
+									"family": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ForceNew:     true,
+										Description:  `Use this VM image family to find the image; the newest image in this family will be used.`,
+										ExactlyOneOf: []string{"workbench_runtime.0.vm_image.0.family", "workbench_runtime.0.vm_image.0.name"},
+									},
+									"name": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ForceNew:     true,
+										Description:  `Use this VM image name to find the image.`,
+										ExactlyOneOf: []string{"workbench_runtime.0.vm_image.0.family", "workbench_runtime.0.vm_image.0.name"},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -444,6 +488,12 @@ func resourceColabNotebookExecutionCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("service_account"); !tpgresource.IsEmptyValue(reflect.ValueOf(serviceAccountProp)) && (ok || !reflect.DeepEqual(v, serviceAccountProp)) {
 		obj["serviceAccount"] = serviceAccountProp
+	}
+	workbenchRuntimeProp, err := expandColabNotebookExecutionWorkbenchRuntime(d.Get("workbench_runtime"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("workbench_runtime"); !tpgresource.IsEmptyValue(reflect.ValueOf(workbenchRuntimeProp)) && (ok || !reflect.DeepEqual(v, workbenchRuntimeProp)) {
+		obj["workbenchRuntime"] = workbenchRuntimeProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/notebookExecutionJobs?notebook_execution_job_id={{notebook_execution_job_id}}")
@@ -1187,6 +1237,76 @@ func expandColabNotebookExecutionExecutionUser(v interface{}, d tpgresource.Terr
 }
 
 func expandColabNotebookExecutionServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedVmImage, err := expandColabNotebookExecutionWorkbenchRuntimeVmImage(original["vm_image"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVmImage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["vmImage"] = transformedVmImage
+	}
+
+	return transformed, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeVmImage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedProject, err := expandColabNotebookExecutionWorkbenchRuntimeVmImageProject(original["project"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["project"] = transformedProject
+	}
+
+	transformedName, err := expandColabNotebookExecutionWorkbenchRuntimeVmImageName(original["name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["name"] = transformedName
+	}
+
+	transformedFamily, err := expandColabNotebookExecutionWorkbenchRuntimeVmImageFamily(original["family"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFamily); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["family"] = transformedFamily
+	}
+
+	return transformed, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeVmImageProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeVmImageName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeVmImageFamily(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
