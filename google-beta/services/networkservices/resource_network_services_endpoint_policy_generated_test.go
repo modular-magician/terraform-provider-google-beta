@@ -76,7 +76,7 @@ func TestAccNetworkServicesEndpointPolicy_networkServicesEndpointPolicyBasicExam
 				ResourceName:            "google_network_services_endpoint_policy.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "name", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_network_services_endpoint_policy.default",
@@ -136,7 +136,7 @@ func TestAccNetworkServicesEndpointPolicy_networkServicesEndpointPolicyEmptyMatc
 				ResourceName:            "google_network_services_endpoint_policy.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "name", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_network_services_endpoint_policy.default",

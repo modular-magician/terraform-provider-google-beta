@@ -141,10 +141,6 @@ The following arguments are supported:
   (Required)
   Name of the ServiceLbPolicy resource. It matches pattern `projects/{project}/locations/{location}/serviceLbPolicies/{service_lb_policy_name}`.
 
-* `location` -
-  (Required)
-  The location of the service lb policy.
-
 
 * `labels` -
   (Optional)
@@ -175,6 +171,10 @@ The following arguments are supported:
   (Optional)
   Configuration to provide isolation support for the associated Backend Service.
   Structure is [documented below](#nested_isolation_config).
+
+* `location` -
+  (Optional)
+  The location of the service lb policy.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -256,7 +256,7 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     name = "<-required value->"
-    location = "<-required value->"
+    location = "<-optional value->"
     project = "<-optional value->"
   }
   to = google_network_services_service_lb_policies.default

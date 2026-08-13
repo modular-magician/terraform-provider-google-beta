@@ -17,6 +17,8 @@ fields:
     - api_field: ipv4Addresses
     - api_field: ipv6Addresses
     - api_field: labels
+    - field: location
+      provider_only: true
     - api_field: logConfig.enable
     - api_field: logConfig.sampleRate
     - field: name

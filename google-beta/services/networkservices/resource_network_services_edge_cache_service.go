@@ -1059,6 +1059,13 @@ Note that only "global" certificates with a "scope" of "EDGE_CACHE" can be attac
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Location (region) of the EdgeCacheService resource. Only the value 'global' is currently allowed.`,
+				Default:     "global",
+			},
 			"log_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1658,6 +1665,10 @@ func resourceNetworkServicesEdgeCacheServiceImport(d *schema.ResourceData, meta 
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	if err := d.Set("location", "global"); err != nil {
+		return nil, fmt.Errorf("Error setting location: %s", err)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }

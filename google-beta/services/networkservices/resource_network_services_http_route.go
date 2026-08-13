@@ -658,6 +658,13 @@ Each gateway reference should match the pattern: projects/*/locations/global/gat
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Location (region) of the HttpRoute resource. Only the value 'global' is currently allowed.`,
+				Default:     "global",
+			},
 			"meshes": {
 				Type:     schema.TypeList,
 				Optional: true,

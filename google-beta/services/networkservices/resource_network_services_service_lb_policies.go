@@ -128,7 +128,7 @@ func ResourceNetworkServicesServiceLbPolicies() *schema.Resource {
 					},
 					"location": {
 						Type:              schema.TypeString,
-						RequiredForImport: true,
+						OptionalForImport: true,
 					},
 					"project": {
 						Type:              schema.TypeString,
@@ -142,11 +142,6 @@ func ResourceNetworkServicesServiceLbPolicies() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"location": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The location of the service lb policy.`,
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -224,6 +219,11 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"SPRAY_TO_REGION", "SPRAY_TO_WORLD", "WATERFALL_BY_REGION", "WATERFALL_BY_ZONE", ""}),
 				Description:  `The type of load balancing algorithm to be used. The default behavior is WATERFALL_BY_REGION. Possible values: ["SPRAY_TO_REGION", "SPRAY_TO_WORLD", "WATERFALL_BY_REGION", "WATERFALL_BY_ZONE"]`,
+			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The location of the service lb policy.`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,

@@ -55,7 +55,6 @@ var (
 )
 
 func TestAccOracleDatabaseOdbSubnet_oracledatabaseOdbsubnetExample(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)

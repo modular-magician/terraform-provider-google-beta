@@ -133,6 +133,10 @@ The following arguments are supported:
   You must specify `public_keys` or `validation_shared_keys` (or both). The keys in `public_keys` are checked first.
   Structure is [documented below](#nested_validation_shared_keys).
 
+* `location` -
+  (Optional)
+  Location (region) of the EdgeCacheKeyset resource. Only the value 'global' is currently allowed.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 

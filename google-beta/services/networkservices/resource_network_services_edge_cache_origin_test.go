@@ -40,7 +40,7 @@ func TestAccNetworkServicesEdgeCacheOrigin_updateAndImport(t *testing.T) {
 				ResourceName:            "google_network_services_edge_cache_origin.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels", "location"},
 			},
 			{
 				Config: testAccNetworkServicesEdgeCacheOrigin_update_1(name),
@@ -49,7 +49,7 @@ func TestAccNetworkServicesEdgeCacheOrigin_updateAndImport(t *testing.T) {
 				ResourceName:            "google_network_services_edge_cache_origin.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels", "location"},
 			},
 		},
 	})

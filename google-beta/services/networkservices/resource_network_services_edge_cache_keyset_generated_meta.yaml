@@ -11,6 +11,8 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: labels
+    - field: location
+      provider_only: true
     - field: name
       provider_only: true
     - api_field: publicKeys.id

@@ -40,9 +40,10 @@ func TestAccNetworkServicesEdgeCacheService_updateAndImport(t *testing.T) {
 				Config: testAccNetworkServicesEdgeCacheService_update_0(namebkt, nameorigin, nameservice),
 			},
 			{
-				ResourceName:      "google_network_services_edge_cache_service.served",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_network_services_edge_cache_service.served",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 			{
 				Config: testAccNetworkServicesEdgeCacheService_update_1(namebkt, nameorigin, nameservice),

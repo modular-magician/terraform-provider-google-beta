@@ -134,6 +134,10 @@ The following arguments are supported:
   Port selector for the (matched) endpoints. If no port selector is provided, the matched config is applied to all ports.
   Structure is [documented below](#nested_traffic_port_selector).
 
+* `location` -
+  (Optional)
+  Location (region) of the EndpointPolicy resource. Only the value 'global' is currently allowed.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 

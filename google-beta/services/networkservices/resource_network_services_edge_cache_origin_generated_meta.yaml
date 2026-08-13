@@ -16,6 +16,8 @@ fields:
     - api_field: failoverOrigin
     - api_field: flexShielding.flexShieldingRegions
     - api_field: labels
+    - field: location
+      provider_only: true
     - api_field: maxAttempts
     - field: name
       provider_only: true

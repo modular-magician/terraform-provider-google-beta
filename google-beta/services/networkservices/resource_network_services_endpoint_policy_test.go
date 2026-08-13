@@ -42,7 +42,7 @@ func TestAccNetworkServicesEndpointPolicy_update(t *testing.T) {
 				ResourceName:            "google_network_services_endpoint_policy.foobar",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "location"},
 			},
 			{
 				Config: testAccNetworkServicesEndpointPolicy_update(endpointPolicyName),
@@ -51,7 +51,7 @@ func TestAccNetworkServicesEndpointPolicy_update(t *testing.T) {
 				ResourceName:            "google_network_services_endpoint_policy.foobar",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "location"},
 			},
 		},
 	})

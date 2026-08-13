@@ -158,10 +158,6 @@ The following arguments are supported:
   (Required)
   Name of the AgentGateway resource.
 
-* `location` -
-  (Required)
-  The location of the agent gateway.
-
 
 * `labels` -
   (Optional)
@@ -203,6 +199,10 @@ The following arguments are supported:
   (Optional)
   Network configuration for the AgentGateway.
   Structure is [documented below](#nested_network_config).
+
+* `location` -
+  (Optional)
+  The location of the agent gateway.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -336,7 +336,7 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     name = "<-required value->"
-    location = "<-required value->"
+    location = "<-optional value->"
     project = "<-optional value->"
   }
   to = google_network_services_agent_gateway.default

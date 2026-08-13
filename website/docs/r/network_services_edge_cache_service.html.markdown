@@ -469,6 +469,10 @@ The following arguments are supported:
   (Optional)
   Resource URL that points at the Cloud Armor edge security policy that is applied on each request against the EdgeCacheService.
 
+* `location` -
+  (Optional)
+  Location (region) of the EdgeCacheService resource. Only the value 'global' is currently allowed.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 

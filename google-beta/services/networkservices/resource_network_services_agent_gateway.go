@@ -128,7 +128,7 @@ func ResourceNetworkServicesAgentGateway() *schema.Resource {
 					},
 					"location": {
 						Type:              schema.TypeString,
-						RequiredForImport: true,
+						OptionalForImport: true,
 					},
 					"project": {
 						Type:              schema.TypeString,
@@ -142,11 +142,6 @@ func ResourceNetworkServicesAgentGateway() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"location": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The location of the agent gateway.`,
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -186,6 +181,11 @@ Proxy is orchestrated and managed by GoogleCloud in a tenant project.`,
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The location of the agent gateway.`,
 			},
 			"network_config": {
 				Type:        schema.TypeList,

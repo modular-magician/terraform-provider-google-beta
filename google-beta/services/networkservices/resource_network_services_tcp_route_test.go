@@ -45,7 +45,7 @@ func TestAccNetworkServicesTcpRoute_update(t *testing.T) {
 				ResourceName:            "google_network_services_tcp_route.foobar",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "location"},
 			},
 			{
 				Config: testAccNetworkServicesTcpRoute_update(tcpServiceName, tcpHealthCheckName, tcpRouteName),
@@ -54,7 +54,7 @@ func TestAccNetworkServicesTcpRoute_update(t *testing.T) {
 				ResourceName:            "google_network_services_tcp_route.foobar",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "location"},
 			},
 		},
 	})

@@ -247,6 +247,10 @@ The following arguments are supported:
   If not set, defaults to a global caching layer in front of the origin.
   Structure is [documented below](#nested_flex_shielding).
 
+* `location` -
+  (Optional)
+  Location (region) of the EdgeCacheOrigin resource. Only the value 'global' is currently allowed.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
