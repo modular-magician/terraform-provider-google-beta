@@ -33,7 +33,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/colab"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
+	kms "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 

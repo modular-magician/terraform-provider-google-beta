@@ -34,7 +34,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/artifactregistry"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudbuild"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudfunctions2"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
+	kms "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/pubsub"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"

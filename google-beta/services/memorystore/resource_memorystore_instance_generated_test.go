@@ -32,7 +32,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
+	kms "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/memorystore"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/networkconnectivityv1"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/privateca"
