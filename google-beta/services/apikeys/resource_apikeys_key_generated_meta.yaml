@@ -1,0 +1,27 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_apikeys_key
+generation_type: mmv1
+source_file: products/apikeys/Key.yaml
+api_service_name: apikeys.googleapis.com
+api_version: v2
+api_resource_type_kind: Key
+fields:
+    - api_field: annotations
+    - api_field: displayName
+    - field: effective_annotations
+      provider_only: true
+    - api_field: keyString
+    - field: name
+      provider_only: true
+    - api_field: restrictions.androidKeyRestrictions.allowedApplications.packageName
+    - api_field: restrictions.androidKeyRestrictions.allowedApplications.sha1Fingerprint
+    - api_field: restrictions.apiTargets.methods
+    - api_field: restrictions.apiTargets.service
+    - api_field: restrictions.browserKeyRestrictions.allowedReferrers
+    - api_field: restrictions.iosKeyRestrictions.allowedBundleIds
+    - api_field: restrictions.serverKeyRestrictions.allowedIps
+    - api_field: serviceAccountEmail
+    - api_field: uid
+    - field: deletion_policy
+      provider_only: true
