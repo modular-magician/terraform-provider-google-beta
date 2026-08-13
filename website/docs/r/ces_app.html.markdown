@@ -432,6 +432,11 @@ The following arguments are supported:
   (Optional)
   Human-readable description of the app.
 
+* `error_handling_settings` -
+  (Optional)
+  Error handling settings of the app.
+  Structure is [documented below](#nested_error_handling_settings).
+
 * `evaluation_metrics_thresholds` -
   (Optional)
   Threshold settings for metrics in an Evaluation.
@@ -453,6 +458,11 @@ The following arguments are supported:
   (Optional)
   Language settings of the app.
   Structure is [documented below](#nested_language_settings).
+
+* `locked` -
+  (Optional)
+  Indicates whether the app is locked for changes. If the app is locked,
+  modifications to the app resources will be rejected.
 
 * `logging_settings` -
   (Optional)
@@ -488,6 +498,11 @@ The following arguments are supported:
   (Optional)
   The declarations of the variables.
   Structure is [documented below](#nested_variable_declarations).
+
+* `vpc_sc_settings` -
+  (Optional)
+  VPC-SC settings for the app.
+  Structure is [documented below](#nested_vpc_sc_settings).
 
 * `client_certificate_settings` -
   (Optional)
@@ -684,6 +699,44 @@ The following arguments are supported:
 * `web_widget_title` -
   (Optional)
   The title of the web widget.
+
+<a name="nested_error_handling_settings"></a>The `error_handling_settings` block supports:
+
+* `end_session_config` -
+  (Optional)
+  Configuration for ending the session in case of system errors.
+  Structure is [documented below](#nested_error_handling_settings_end_session_config).
+
+* `error_handling_strategy` -
+  (Optional)
+  The strategy to use for error handling.
+  Possible values:
+  ERROR_HANDLING_STRATEGY_UNSPECIFIED
+  NONE
+  FALLBACK_RESPONSE
+  END_SESSION
+
+* `fallback_response_config` -
+  (Optional)
+  Configuration for handling fallback responses.
+  Structure is [documented below](#nested_error_handling_settings_fallback_response_config).
+
+
+<a name="nested_error_handling_settings_end_session_config"></a>The `end_session_config` block supports:
+
+* `escalate_session` -
+  (Optional)
+  Whether to escalate the session in EndSession.
+
+<a name="nested_error_handling_settings_fallback_response_config"></a>The `fallback_response_config` block supports:
+
+* `custom_fallback_messages` -
+  (Optional)
+  The fallback messages in case of system errors, mapped by supported language code.
+
+* `max_fallback_attempts` -
+  (Optional)
+  The maximum number of fallback attempts to make before the agent emitting EndSession Signal.
 
 <a name="nested_evaluation_metrics_thresholds"></a>The `evaluation_metrics_thresholds` block supports:
 
@@ -986,6 +1039,13 @@ The following arguments are supported:
   (Optional)
   Schema of the elements of Type.ARRAY.
 
+<a name="nested_vpc_sc_settings"></a>The `vpc_sc_settings` block supports:
+
+* `allowed_origins` -
+  (Optional)
+  The allowed HTTP(s) origins that OpenAPI tools in the App are able to
+  directly call when VPC Service Controls are enabled.
+
 <a name="nested_client_certificate_settings"></a>The `client_certificate_settings` block supports:
 
 * `tls_certificate` -
@@ -1027,6 +1087,9 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `update_time` -
   Timestamp when the app was last updated.
+
+* `validation_errors` -
+  Misconfigurations or warnings in the app.
 
 
 ## Timeouts

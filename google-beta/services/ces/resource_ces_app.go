@@ -432,6 +432,62 @@ DARK`,
 				Optional:    true,
 				Description: `Human-readable description of the app.`,
 			},
+			"error_handling_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Error handling settings of the app.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"end_session_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for ending the session in case of system errors.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"escalate_session": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Whether to escalate the session in EndSession.`,
+									},
+								},
+							},
+						},
+						"error_handling_strategy": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The strategy to use for error handling.
+Possible values:
+ERROR_HANDLING_STRATEGY_UNSPECIFIED
+NONE
+FALLBACK_RESPONSE
+END_SESSION`,
+						},
+						"fallback_response_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for handling fallback responses.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"custom_fallback_messages": {
+										Type:        schema.TypeMap,
+										Optional:    true,
+										Description: `The fallback messages in case of system errors, mapped by supported language code.`,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"max_fallback_attempts": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `The maximum number of fallback attempts to make before the agent emitting EndSession Signal.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"evaluation_metrics_thresholds": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -548,6 +604,12 @@ to terminate the conversation.`,
 						},
 					},
 				},
+			},
+			"locked": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates whether the app is locked for changes. If the app is locked,
+modifications to the app resources will be rejected.`,
 			},
 			"logging_settings": {
 				Type:        schema.TypeList,
@@ -905,6 +967,25 @@ https://json-schema.org/understanding-json-schema/structuring.`,
 					},
 				},
 			},
+			"vpc_sc_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `VPC-SC settings for the app.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"allowed_origins": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `The allowed HTTP(s) origins that OpenAPI tools in the App are able to
+directly call when VPC Service Controls are enabled.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -932,6 +1013,14 @@ Format: 'projects/{project}/locations/{location}/apps/{app}'`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Timestamp when the app was last updated.`,
+			},
+			"validation_errors": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Misconfigurations or warnings in the app.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -1000,6 +1089,12 @@ func resourceCESAppCreate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	errorHandlingSettingsProp, err := expandCESAppErrorHandlingSettings(d.Get("error_handling_settings"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("error_handling_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(errorHandlingSettingsProp)) && (ok || !reflect.DeepEqual(v, errorHandlingSettingsProp)) {
+		obj["errorHandlingSettings"] = errorHandlingSettingsProp
+	}
 	evaluationMetricsThresholdsProp, err := expandCESAppEvaluationMetricsThresholds(d.Get("evaluation_metrics_thresholds"), d, config)
 	if err != nil {
 		return err
@@ -1023,6 +1118,12 @@ func resourceCESAppCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("language_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(languageSettingsProp)) && (ok || !reflect.DeepEqual(v, languageSettingsProp)) {
 		obj["languageSettings"] = languageSettingsProp
+	}
+	lockedProp, err := expandCESAppLocked(d.Get("locked"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("locked"); ok || !reflect.DeepEqual(v, lockedProp) {
+		obj["locked"] = lockedProp
 	}
 	loggingSettingsProp, err := expandCESAppLoggingSettings(d.Get("logging_settings"), d, config)
 	if err != nil {
@@ -1065,6 +1166,12 @@ func resourceCESAppCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("variable_declarations"); !tpgresource.IsEmptyValue(reflect.ValueOf(variableDeclarationsProp)) && (ok || !reflect.DeepEqual(v, variableDeclarationsProp)) {
 		obj["variableDeclarations"] = variableDeclarationsProp
+	}
+	vpcScSettingsProp, err := expandCESAppVpcScSettings(d.Get("vpc_sc_settings"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("vpc_sc_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(vpcScSettingsProp)) && (ok || !reflect.DeepEqual(v, vpcScSettingsProp)) {
+		obj["vpcScSettings"] = vpcScSettingsProp
 	}
 	clientCertificateSettingsProp, err := expandCESAppClientCertificateSettings(d.Get("client_certificate_settings"), d, config)
 	if err != nil {
@@ -1345,6 +1452,12 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	errorHandlingSettingsProp, err := expandCESAppErrorHandlingSettings(d.Get("error_handling_settings"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("error_handling_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, errorHandlingSettingsProp)) {
+		obj["errorHandlingSettings"] = errorHandlingSettingsProp
+	}
 	evaluationMetricsThresholdsProp, err := expandCESAppEvaluationMetricsThresholds(d.Get("evaluation_metrics_thresholds"), d, config)
 	if err != nil {
 		return err
@@ -1368,6 +1481,12 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("language_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, languageSettingsProp)) {
 		obj["languageSettings"] = languageSettingsProp
+	}
+	lockedProp, err := expandCESAppLocked(d.Get("locked"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("locked"); ok || !reflect.DeepEqual(v, lockedProp) {
+		obj["locked"] = lockedProp
 	}
 	loggingSettingsProp, err := expandCESAppLoggingSettings(d.Get("logging_settings"), d, config)
 	if err != nil {
@@ -1410,6 +1529,12 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("variable_declarations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, variableDeclarationsProp)) {
 		obj["variableDeclarations"] = variableDeclarationsProp
+	}
+	vpcScSettingsProp, err := expandCESAppVpcScSettings(d.Get("vpc_sc_settings"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("vpc_sc_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, vpcScSettingsProp)) {
+		obj["vpcScSettings"] = vpcScSettingsProp
 	}
 	clientCertificateSettingsProp, err := expandCESAppClientCertificateSettings(d.Get("client_certificate_settings"), d, config)
 	if err != nil {
@@ -1458,6 +1583,10 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateMask = append(updateMask, "displayName")
 	}
 
+	if d.HasChange("error_handling_settings") {
+		updateMask = append(updateMask, "errorHandlingSettings")
+	}
+
 	if d.HasChange("evaluation_metrics_thresholds") {
 		updateMask = append(updateMask, "evaluationMetricsThresholds")
 	}
@@ -1472,6 +1601,10 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("language_settings") {
 		updateMask = append(updateMask, "languageSettings")
+	}
+
+	if d.HasChange("locked") {
+		updateMask = append(updateMask, "locked")
 	}
 
 	if d.HasChange("logging_settings") {
@@ -1500,6 +1633,10 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("variable_declarations") {
 		updateMask = append(updateMask, "variableDeclarations")
+	}
+
+	if d.HasChange("vpc_sc_settings") {
+		updateMask = append(updateMask, "vpcScSettings")
 	}
 
 	if d.HasChange("client_certificate_settings") {
@@ -1882,6 +2019,80 @@ func flattenCESAppDisplayName(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
+func flattenCESAppErrorHandlingSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["end_session_config"] =
+		flattenCESAppErrorHandlingSettingsEndSessionConfig(original["endSessionConfig"], d, config)
+	transformed["error_handling_strategy"] =
+		flattenCESAppErrorHandlingSettingsErrorHandlingStrategy(original["errorHandlingStrategy"], d, config)
+	transformed["fallback_response_config"] =
+		flattenCESAppErrorHandlingSettingsFallbackResponseConfig(original["fallbackResponseConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppErrorHandlingSettingsEndSessionConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["escalate_session"] =
+		flattenCESAppErrorHandlingSettingsEndSessionConfigEscalateSession(original["escalateSession"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppErrorHandlingSettingsEndSessionConfigEscalateSession(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppErrorHandlingSettingsErrorHandlingStrategy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppErrorHandlingSettingsFallbackResponseConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["custom_fallback_messages"] =
+		flattenCESAppErrorHandlingSettingsFallbackResponseConfigCustomFallbackMessages(original["customFallbackMessages"], d, config)
+	transformed["max_fallback_attempts"] =
+		flattenCESAppErrorHandlingSettingsFallbackResponseConfigMaxFallbackAttempts(original["maxFallbackAttempts"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppErrorHandlingSettingsFallbackResponseConfigCustomFallbackMessages(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppErrorHandlingSettingsFallbackResponseConfigMaxFallbackAttempts(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
 func flattenCESAppEtag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2007,6 +2218,10 @@ func flattenCESAppLanguageSettingsFallbackAction(v interface{}, d *schema.Resour
 }
 
 func flattenCESAppLanguageSettingsSupportedLanguageCodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppLocked(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2209,6 +2424,10 @@ func flattenCESAppUpdateTime(v interface{}, d *schema.ResourceData, config *tran
 	return v
 }
 
+func flattenCESAppValidationErrors(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESAppVariableDeclarations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -2393,6 +2612,23 @@ func flattenCESAppVariableDeclarationsSchemaItems(v interface{}, d *schema.Resou
 		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
 	}
 	return string(b)
+}
+
+func flattenCESAppVpcScSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["allowed_origins"] =
+		flattenCESAppVpcScSettingsAllowedOrigins(original["allowedOrigins"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppVpcScSettingsAllowedOrigins(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenCESAppClientCertificateSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2806,6 +3042,116 @@ func expandCESAppDisplayName(v interface{}, d tpgresource.TerraformResourceData,
 	return v, nil
 }
 
+func expandCESAppErrorHandlingSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEndSessionConfig, err := expandCESAppErrorHandlingSettingsEndSessionConfig(original["end_session_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndSessionConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endSessionConfig"] = transformedEndSessionConfig
+	}
+
+	transformedErrorHandlingStrategy, err := expandCESAppErrorHandlingSettingsErrorHandlingStrategy(original["error_handling_strategy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorHandlingStrategy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorHandlingStrategy"] = transformedErrorHandlingStrategy
+	}
+
+	transformedFallbackResponseConfig, err := expandCESAppErrorHandlingSettingsFallbackResponseConfig(original["fallback_response_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFallbackResponseConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["fallbackResponseConfig"] = transformedFallbackResponseConfig
+	}
+
+	return transformed, nil
+}
+
+func expandCESAppErrorHandlingSettingsEndSessionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEscalateSession, err := expandCESAppErrorHandlingSettingsEndSessionConfigEscalateSession(original["escalate_session"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["escalateSession"] = transformedEscalateSession
+	}
+
+	return transformed, nil
+}
+
+func expandCESAppErrorHandlingSettingsEndSessionConfigEscalateSession(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppErrorHandlingSettingsErrorHandlingStrategy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppErrorHandlingSettingsFallbackResponseConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCustomFallbackMessages, err := expandCESAppErrorHandlingSettingsFallbackResponseConfigCustomFallbackMessages(original["custom_fallback_messages"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomFallbackMessages); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customFallbackMessages"] = transformedCustomFallbackMessages
+	}
+
+	transformedMaxFallbackAttempts, err := expandCESAppErrorHandlingSettingsFallbackResponseConfigMaxFallbackAttempts(original["max_fallback_attempts"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxFallbackAttempts); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxFallbackAttempts"] = transformedMaxFallbackAttempts
+	}
+
+	return transformed, nil
+}
+
+func expandCESAppErrorHandlingSettingsFallbackResponseConfigCustomFallbackMessages(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandCESAppErrorHandlingSettingsFallbackResponseConfigMaxFallbackAttempts(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCESAppEvaluationMetricsThresholds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -2984,6 +3330,10 @@ func expandCESAppLanguageSettingsFallbackAction(v interface{}, d tpgresource.Ter
 }
 
 func expandCESAppLanguageSettingsSupportedLanguageCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppLocked(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3587,6 +3937,32 @@ func expandCESAppVariableDeclarationsSchemaItems(v interface{}, d tpgresource.Te
 	return j, nil
 }
 
+func expandCESAppVpcScSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAllowedOrigins, err := expandCESAppVpcScSettingsAllowedOrigins(original["allowed_origins"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowedOrigins); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowedOrigins"] = transformedAllowedOrigins
+	}
+
+	return transformed, nil
+}
+
+func expandCESAppVpcScSettingsAllowedOrigins(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCESAppClientCertificateSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -3662,6 +4038,9 @@ func ResourceCESAppFlatten(d *schema.ResourceData, meta interface{}, res map[str
 	if err = d.Set("display_name", flattenCESAppDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+	if err = d.Set("error_handling_settings", flattenCESAppErrorHandlingSettings(res["errorHandlingSettings"], d, config)); err != nil {
+		return fmt.Errorf("Error reading App: %s", err)
+	}
 	if err = d.Set("etag", flattenCESAppEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
@@ -3675,6 +4054,9 @@ func ResourceCESAppFlatten(d *schema.ResourceData, meta interface{}, res map[str
 		return fmt.Errorf("Error reading App: %s", err)
 	}
 	if err = d.Set("language_settings", flattenCESAppLanguageSettings(res["languageSettings"], d, config)); err != nil {
+		return fmt.Errorf("Error reading App: %s", err)
+	}
+	if err = d.Set("locked", flattenCESAppLocked(res["locked"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
 	if err = d.Set("logging_settings", flattenCESAppLoggingSettings(res["loggingSettings"], d, config)); err != nil {
@@ -3701,7 +4083,13 @@ func ResourceCESAppFlatten(d *schema.ResourceData, meta interface{}, res map[str
 	if err = d.Set("update_time", flattenCESAppUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+	if err = d.Set("validation_errors", flattenCESAppValidationErrors(res["validationErrors"], d, config)); err != nil {
+		return fmt.Errorf("Error reading App: %s", err)
+	}
 	if err = d.Set("variable_declarations", flattenCESAppVariableDeclarations(res["variableDeclarations"], d, config)); err != nil {
+		return fmt.Errorf("Error reading App: %s", err)
+	}
+	if err = d.Set("vpc_sc_settings", flattenCESAppVpcScSettings(res["vpcScSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
 	if err = d.Set("client_certificate_settings", flattenCESAppClientCertificateSettings(res["clientCertificateSettings"], d, config)); err != nil {

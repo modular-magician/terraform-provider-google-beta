@@ -39,6 +39,10 @@ fields:
     - api_field: deploymentCount
     - api_field: description
     - api_field: displayName
+    - api_field: errorHandlingSettings.endSessionConfig.escalateSession
+    - api_field: errorHandlingSettings.errorHandlingStrategy
+    - api_field: errorHandlingSettings.fallbackResponseConfig.customFallbackMessages
+    - api_field: errorHandlingSettings.fallbackResponseConfig.maxFallbackAttempts
     - api_field: etag
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.expectationLevelMetricsThresholds.toolInvocationParameterCorrectnessThreshold
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.overallToolInvocationCorrectnessThreshold
@@ -51,6 +55,7 @@ fields:
     - api_field: languageSettings.supportedLanguageCodes
     - field: location
       provider_only: true
+    - api_field: locked
     - api_field: loggingSettings.audioRecordingConfig.gcsBucket
     - api_field: loggingSettings.audioRecordingConfig.gcsPathPrefix
     - api_field: loggingSettings.bigqueryExportSettings.dataset
@@ -70,6 +75,7 @@ fields:
     - api_field: timeZoneSettings.timeZone
     - api_field: toolExecutionMode
     - api_field: updateTime
+    - api_field: validationErrors
     - api_field: variableDeclarations.description
     - api_field: variableDeclarations.name
     - api_field: variableDeclarations.schema.additionalProperties
@@ -94,5 +100,6 @@ fields:
     - api_field: variableDeclarations.schema.title
     - api_field: variableDeclarations.schema.type
     - api_field: variableDeclarations.schema.uniqueItems
+    - api_field: vpcScSettings.allowedOrigins
     - field: deletion_policy
       provider_only: true
