@@ -82,7 +82,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -155,7 +155,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -272,7 +272,7 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -292,7 +292,7 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -354,7 +354,7 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -405,7 +405,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -521,7 +521,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -590,7 +590,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedRegiona
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
@@ -648,7 +648,7 @@ func TestAccCertificateManagerCertificate_certificateManagerClientAuthCertificat
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "tags", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_certificate_manager_certificate.default",
