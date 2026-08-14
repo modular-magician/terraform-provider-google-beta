@@ -1229,7 +1229,9 @@ func resourceNetworkServicesGatewayUpdateEncoder(d *schema.ResourceData, meta in
 	if d.Get("type") == "SECURE_WEB_GATEWAY" {
 		obj["name"] = d.Get("name")
 		obj["type"] = d.Get("type")
-		obj["routingMode"] = d.Get("routingMode")
+		if v := d.Get("routing_mode").(string); v != "" {
+			obj["routingMode"] = v
+		}
 	}
 	return obj, nil
 }
