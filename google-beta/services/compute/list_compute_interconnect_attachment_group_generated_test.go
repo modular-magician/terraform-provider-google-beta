@@ -29,10 +29,12 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 )
 
 var (
 	_ = envvar.TestEnvVar
+	_ = kms.BootstrapKMSKeyInLocation
 )
 
 func TestAccComputeInterconnectAttachmentGroupListQuery_generated(t *testing.T) {

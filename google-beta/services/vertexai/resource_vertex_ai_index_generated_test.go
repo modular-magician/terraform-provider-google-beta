@@ -67,6 +67,7 @@ func TestAccVertexAIIndex_vertexAiIndexExample(t *testing.T) {
 		"bucket_name":   "tf-test-vertex-ai-index-test" + randomSuffix,
 		"display_name":  "tf-test-test-index" + randomSuffix,
 		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+		"region":        "us-central1",
 		"random_suffix": randomSuffix,
 	}
 
@@ -132,7 +133,7 @@ resource "google_vertex_ai_index" "index" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   display_name = "%{display_name}"
   description = "index for test"
   metadata {
@@ -172,6 +173,7 @@ func TestAccVertexAIIndex_vertexAiIndexStreamingExample(t *testing.T) {
 		"bucket_name":   "tf-test-vertex-ai-index-test" + randomSuffix,
 		"display_name":  "tf-test-test-index" + randomSuffix,
 		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+		"region":        "us-central1",
 		"random_suffix": randomSuffix,
 	}
 

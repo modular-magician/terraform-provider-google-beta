@@ -56,6 +56,7 @@ func TestAccVertexAIFeaturestoreIamBindingGenerated(t *testing.T) {
 		"kms_key_name": kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"name":         "terraform" + randomSuffix,
 		"project":      "tf-test-appeng-flex" + randomSuffix,
+		"region":       "us-central1",
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -99,6 +100,7 @@ func TestAccVertexAIFeaturestoreIamMemberGenerated(t *testing.T) {
 		"kms_key_name": kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"name":         "terraform" + randomSuffix,
 		"project":      "tf-test-appeng-flex" + randomSuffix,
+		"region":       "us-central1",
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -140,6 +142,7 @@ func TestAccVertexAIFeaturestoreIamPolicyGenerated(t *testing.T) {
 		"kms_key_name": kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"name":         "terraform" + randomSuffix,
 		"project":      "tf-test-appeng-flex" + randomSuffix,
+		"region":       "us-central1",
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -176,7 +179,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   online_serving_config {
     fixed_node_count = 2
   }
@@ -203,7 +206,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   online_serving_config {
     fixed_node_count = 2
   }
@@ -245,7 +248,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   online_serving_config {
     fixed_node_count = 2
   }
@@ -274,7 +277,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   online_serving_config {
     fixed_node_count = 2
   }
@@ -301,7 +304,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   online_serving_config {
     fixed_node_count = 2
   }

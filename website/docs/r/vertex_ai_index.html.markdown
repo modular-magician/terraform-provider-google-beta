@@ -156,6 +156,10 @@ The following arguments are supported:
   Attempts to create an Index without this field will result in an API error.
   Structure is [documented below](#nested_metadata).
 
+* `region` -
+  (Required)
+  The region of the index. eg us-central1
+
 
 * `description` -
   (Optional)
@@ -177,10 +181,6 @@ The following arguments are supported:
   (Optional)
   Customer-managed encryption key spec for an Index. If set, this Index and all sub-resources of this Index will be secured by this key.
   Structure is [documented below](#nested_encryption_spec).
-
-* `region` -
-  (Optional)
-  The region of the index. eg us-central1
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -369,7 +369,7 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     name = "<-optional value->"
-    region = "<-optional value->"
+    region = "<-required value->"
     project = "<-optional value->"
   }
   to = google_vertex_ai_index.default

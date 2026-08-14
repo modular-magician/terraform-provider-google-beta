@@ -128,7 +128,7 @@ func ResourceVertexAIFeatureOnlineStore() *schema.Resource {
 					},
 					"region": {
 						Type:              schema.TypeString,
-						OptionalForImport: true,
+						RequiredForImport: true,
 					},
 					"project": {
 						Type:              schema.TypeString,
@@ -147,6 +147,12 @@ func ResourceVertexAIFeatureOnlineStore() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: `The resource name of the Feature Online Store. This value may be up to 60 characters, and valid characters are [a-z0-9_]. The first character cannot be a number.`,
+			},
+			"region": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `The region of feature online store. eg us-central1`,
 			},
 			"bigtable": {
 				Type:        schema.TypeList,
@@ -293,13 +299,6 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				},
 				ConflictsWith: []string{"embedding_management"},
 				ExactlyOneOf:  []string{"bigtable", "optimized"},
-			},
-			"region": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The region of feature online store. eg us-central1`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,

@@ -66,6 +66,7 @@ func TestAccVertexAIFeaturestore_vertexAiFeaturestoreExample(t *testing.T) {
 		"kms_key_name":    kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"name":            "terraform" + randomSuffix,
 		"project":         "tf-test-appeng-flex" + randomSuffix,
+		"region":          "us-central1",
 		"random_suffix":   randomSuffix,
 	}
 
@@ -100,7 +101,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   labels = {
     foo = "bar"
   }
-  region   = "us-central1"
+  region   = "%{region}"
   online_serving_config {
     fixed_node_count = 2
   }
@@ -123,6 +124,7 @@ func TestAccVertexAIFeaturestore_vertexAiFeaturestoreWithBetaFieldsExample(t *te
 		"kms_key_name":    kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"name":            "terraform2" + randomSuffix,
 		"project":         "tf-test-appeng-flex" + randomSuffix,
+		"region":          "us-central1",
 		"random_suffix":   randomSuffix,
 	}
 
@@ -182,6 +184,7 @@ func TestAccVertexAIFeaturestore_vertexAiFeaturestoreScalingExample(t *testing.T
 		"kms_key_name":    kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"name":            "terraform3" + randomSuffix,
 		"project":         "tf-test-appeng-flex" + randomSuffix,
+		"region":          "us-central1",
 		"random_suffix":   randomSuffix,
 	}
 

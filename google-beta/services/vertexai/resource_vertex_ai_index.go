@@ -128,7 +128,7 @@ func ResourceVertexAIIndex() *schema.Resource {
 					},
 					"region": {
 						Type:              schema.TypeString,
-						OptionalForImport: true,
+						RequiredForImport: true,
 					},
 					"project": {
 						Type:              schema.TypeString,
@@ -275,6 +275,12 @@ then existing content of the Index will be replaced by the data from the content
 					},
 				},
 			},
+			"region": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `The region of the index. eg us-central1`,
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -314,12 +320,6 @@ then existing content of the Index will be replaced by the data from the content
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
-			},
-			"region": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The region of the index. eg us-central1`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,

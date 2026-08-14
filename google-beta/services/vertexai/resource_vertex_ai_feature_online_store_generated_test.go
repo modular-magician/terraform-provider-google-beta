@@ -62,6 +62,7 @@ func TestAccVertexAIFeatureOnlineStore_vertexAiFeatureOnlineStoreExample(t *test
 
 	context := map[string]interface{}{
 		"name":          "tf_test_example_feature_online_store" + randomSuffix,
+		"region":        "us-central1",
 		"random_suffix": randomSuffix,
 	}
 
@@ -96,7 +97,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   labels = {
     foo = "bar"
   }
-  region = "us-central1"
+  region = "%{region}"
   bigtable {
     auto_scaling {
       min_node_count         = 1

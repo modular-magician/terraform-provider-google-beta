@@ -50,6 +50,7 @@ func TestAccVertexAIFeatureOnlineStoreIamBindingGenerated(t *testing.T) {
 		"random_suffix": randomSuffix,
 		"role":          "roles/viewer",
 		"name":          "tf_test_example_feature_online_store" + randomSuffix,
+		"region":        "us-central1",
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -88,6 +89,7 @@ func TestAccVertexAIFeatureOnlineStoreIamMemberGenerated(t *testing.T) {
 		"random_suffix": randomSuffix,
 		"role":          "roles/viewer",
 		"name":          "tf_test_example_feature_online_store" + randomSuffix,
+		"region":        "us-central1",
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -124,6 +126,7 @@ func TestAccVertexAIFeatureOnlineStoreIamPolicyGenerated(t *testing.T) {
 		"random_suffix": randomSuffix,
 		"role":          "roles/viewer",
 		"name":          "tf_test_example_feature_online_store" + randomSuffix,
+		"region":        "us-central1",
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -160,7 +163,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   labels = {
     foo = "bar"
   }
-  region = "us-central1"
+  region = "%{region}"
   bigtable {
     auto_scaling {
       min_node_count         = 1
@@ -186,7 +189,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   labels = {
     foo = "bar"
   }
-  region = "us-central1"
+  region = "%{region}"
   bigtable {
     auto_scaling {
       min_node_count         = 1
@@ -226,7 +229,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   labels = {
     foo = "bar"
   }
-  region = "us-central1"
+  region = "%{region}"
   bigtable {
     auto_scaling {
       min_node_count         = 1
@@ -254,7 +257,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   labels = {
     foo = "bar"
   }
-  region = "us-central1"
+  region = "%{region}"
   bigtable {
     auto_scaling {
       min_node_count         = 1
@@ -280,7 +283,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   labels = {
     foo = "bar"
   }
-  region = "us-central1"
+  region = "%{region}"
   bigtable {
     auto_scaling {
       min_node_count         = 1

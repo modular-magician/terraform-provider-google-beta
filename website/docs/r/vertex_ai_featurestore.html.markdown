@@ -98,6 +98,10 @@ resource "google_vertex_ai_featurestore" "featurestore" {
 The following arguments are supported:
 
 
+* `region` -
+  (Required)
+  The region of the dataset. eg us-central1
+
 
 * `name` -
   (Optional)
@@ -123,10 +127,6 @@ The following arguments are supported:
   (Optional)
   If set, both of the online and offline data storage will be secured by this key.
   Structure is [documented below](#nested_encryption_spec).
-
-* `region` -
-  (Optional)
-  The region of the dataset. eg us-central1
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -216,7 +216,7 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 import {
   identity = {
     name = "<-optional value->"
-    region = "<-optional value->"
+    region = "<-required value->"
     project = "<-optional value->"
   }
   to = google_vertex_ai_featurestore.default

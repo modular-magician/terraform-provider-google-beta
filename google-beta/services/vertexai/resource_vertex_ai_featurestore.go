@@ -128,7 +128,7 @@ func ResourceVertexAIFeaturestore() *schema.Resource {
 					},
 					"region": {
 						Type:              schema.TypeString,
-						OptionalForImport: true,
+						RequiredForImport: true,
 					},
 					"project": {
 						Type:              schema.TypeString,
@@ -142,6 +142,12 @@ func ResourceVertexAIFeaturestore() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"region": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `The region of the dataset. eg us-central1`,
+			},
 			"encryption_spec": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -215,13 +221,6 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Optional:    true,
 				Description: `TTL in days for feature values that will be stored in online serving storage. The Feature Store online storage periodically removes obsolete feature values older than onlineStorageTtlDays since the feature generation time. Note that onlineStorageTtlDays should be less than or equal to offlineStorageTtlDays for each EntityType under a featurestore. If not set, default to 4000 days`,
 				Default:     4000,
-			},
-			"region": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The region of the dataset. eg us-central1`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,
