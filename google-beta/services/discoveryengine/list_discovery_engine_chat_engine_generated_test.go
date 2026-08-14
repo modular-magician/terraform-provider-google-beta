@@ -41,7 +41,7 @@ func TestAccDiscoveryEngineChatEngineListQuery_generated(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
 		"data_store_2_id": "tf-test-data-store-2" + randomSuffix,
-		"data_store_id":   "tf-test-data-store" + randomSuffix,
+		"data_store_id":   "tf-test-data-store-3" + randomSuffix,
 		"engine_id":       "tf-test-chat-engine-id" + randomSuffix,
 		"location":        envvar.GetTestRegionFromEnv(),
 		"project":         envvar.GetTestProjectFromEnv(),
