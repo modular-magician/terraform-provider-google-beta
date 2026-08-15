@@ -5121,7 +5121,7 @@ func flattenChronicleFeedDetailsAmazonS3SettingsAuthenticationClientSecret(v int
 }
 
 func flattenChronicleFeedDetailsAmazonS3SettingsAuthenticationRefreshUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.amazon_s3_settings.0.authentication.0.refresh_uri")
 }
 
 func flattenChronicleFeedDetailsAmazonS3SettingsAuthenticationRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5200,7 +5200,7 @@ func flattenChronicleFeedDetailsAmazonS3V2SettingsAuthenticationAccessKeySecretA
 }
 
 func flattenChronicleFeedDetailsAmazonS3V2SettingsAuthenticationAccessKeySecretAuthSecretAccessKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.amazon_s3_v2_settings.0.authentication.0.access_key_secret_auth.0.secret_access_key")
 }
 
 func flattenChronicleFeedDetailsAmazonS3V2SettingsAuthenticationAwsIamRoleAuth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5315,7 +5315,7 @@ func flattenChronicleFeedDetailsAmazonSqsSettingsAuthenticationAdditionalS3Acces
 }
 
 func flattenChronicleFeedDetailsAmazonSqsSettingsAuthenticationAdditionalS3AccessKeySecretAuthSecretAccessKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.amazon_sqs_settings.0.authentication.0.additional_s3_access_key_secret_auth.0.secret_access_key")
 }
 
 func flattenChronicleFeedDetailsAmazonSqsSettingsAuthenticationSqsAccessKeySecretAuth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5338,7 +5338,7 @@ func flattenChronicleFeedDetailsAmazonSqsSettingsAuthenticationSqsAccessKeySecre
 }
 
 func flattenChronicleFeedDetailsAmazonSqsSettingsAuthenticationSqsAccessKeySecretAuthSecretAccessKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.amazon_sqs_settings.0.authentication.0.sqs_access_key_secret_auth.0.secret_access_key")
 }
 
 func flattenChronicleFeedDetailsAmazonSqsSettingsQueue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5434,7 +5434,7 @@ func flattenChronicleFeedDetailsAmazonSqsV2SettingsAuthenticationSqsV2AccessKeyS
 }
 
 func flattenChronicleFeedDetailsAmazonSqsV2SettingsAuthenticationSqsV2AccessKeySecretAuthSecretAccessKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.amazon_sqs_v2_settings.0.authentication.0.sqs_v2_access_key_secret_auth.0.secret_access_key")
 }
 
 func flattenChronicleFeedDetailsAmazonSqsV2SettingsChronicleServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5499,7 +5499,7 @@ func flattenChronicleFeedDetailsAnomaliSettingsAuthentication(v interface{}, d *
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAnomaliSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.anomali_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsAnomaliSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5539,7 +5539,7 @@ func flattenChronicleFeedDetailsAwsEc2HostsSettingsAuthentication(v interface{},
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAwsEc2HostsSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.aws_ec2_hosts_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsAwsEc2HostsSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5575,7 +5575,7 @@ func flattenChronicleFeedDetailsAwsEc2InstancesSettingsAuthentication(v interfac
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAwsEc2InstancesSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.aws_ec2_instances_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsAwsEc2InstancesSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5611,7 +5611,7 @@ func flattenChronicleFeedDetailsAwsEc2VpcsSettingsAuthentication(v interface{}, 
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAwsEc2VpcsSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.aws_ec2_vpcs_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsAwsEc2VpcsSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5653,7 +5653,7 @@ func flattenChronicleFeedDetailsAwsIamSettingsAuthentication(v interface{}, d *s
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAwsIamSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.aws_iam_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsAwsIamSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5703,7 +5703,7 @@ func flattenChronicleFeedDetailsAzureAdAuditSettingsAuthenticationClientId(v int
 }
 
 func flattenChronicleFeedDetailsAzureAdAuditSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_ad_audit_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsAzureAdAuditSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5761,7 +5761,7 @@ func flattenChronicleFeedDetailsAzureAdContextSettingsAuthenticationClientId(v i
 }
 
 func flattenChronicleFeedDetailsAzureAdContextSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_ad_context_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsAzureAdContextSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5823,7 +5823,7 @@ func flattenChronicleFeedDetailsAzureAdSettingsAuthenticationClientId(v interfac
 }
 
 func flattenChronicleFeedDetailsAzureAdSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_ad_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsAzureAdSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5869,11 +5869,11 @@ func flattenChronicleFeedDetailsAzureBlobStoreSettingsAuthentication(v interface
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAzureBlobStoreSettingsAuthenticationSasToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_blob_store_settings.0.authentication.0.sas_token")
 }
 
 func flattenChronicleFeedDetailsAzureBlobStoreSettingsAuthenticationSharedKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_blob_store_settings.0.authentication.0.shared_key")
 }
 
 func flattenChronicleFeedDetailsAzureBlobStoreSettingsAzureUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5927,7 +5927,7 @@ func flattenChronicleFeedDetailsAzureBlobStoreV2SettingsAuthentication(v interfa
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAzureBlobStoreV2SettingsAuthenticationAccessKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_blob_store_v2_settings.0.authentication.0.access_key")
 }
 
 func flattenChronicleFeedDetailsAzureBlobStoreV2SettingsAuthenticationAzureV2WorkloadIdentityFederation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5960,7 +5960,7 @@ func flattenChronicleFeedDetailsAzureBlobStoreV2SettingsAuthenticationAzureV2Wor
 }
 
 func flattenChronicleFeedDetailsAzureBlobStoreV2SettingsAuthenticationSasToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_blob_store_v2_settings.0.authentication.0.sas_token")
 }
 
 func flattenChronicleFeedDetailsAzureBlobStoreV2SettingsAzureUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6018,7 +6018,7 @@ func flattenChronicleFeedDetailsAzureEventHubSettings(v interface{}, d *schema.R
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsAzureEventHubSettingsAzureSasToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_event_hub_settings.0.azure_sas_token")
 }
 
 func flattenChronicleFeedDetailsAzureEventHubSettingsAzureStorageConnectionString(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6088,7 +6088,7 @@ func flattenChronicleFeedDetailsAzureMdmIntuneSettingsAuthenticationClientId(v i
 }
 
 func flattenChronicleFeedDetailsAzureMdmIntuneSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.azure_mdm_intune_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsAzureMdmIntuneSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6130,7 +6130,7 @@ func flattenChronicleFeedDetailsCloudPassageSettingsAuthentication(v interface{}
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsCloudPassageSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.cloud_passage_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsCloudPassageSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6185,8 +6185,7 @@ func flattenChronicleFeedDetailsCortexXdrSettingsAuthenticationHeaderKeyValues(v
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsCortexXdrSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsCortexXdrSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsCortexXdrSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -6196,7 +6195,7 @@ func flattenChronicleFeedDetailsCortexXdrSettingsAuthenticationHeaderKeyValuesKe
 }
 
 func flattenChronicleFeedDetailsCortexXdrSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.cortex_xdr_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsCortexXdrSettingsEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6246,7 +6245,7 @@ func flattenChronicleFeedDetailsCrowdstrikeAlertsSettingsAuthenticationClientId(
 }
 
 func flattenChronicleFeedDetailsCrowdstrikeAlertsSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.crowdstrike_alerts_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsCrowdstrikeAlertsSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6300,7 +6299,7 @@ func flattenChronicleFeedDetailsCrowdstrikeDetectsSettingsAuthenticationClientId
 }
 
 func flattenChronicleFeedDetailsCrowdstrikeDetectsSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.crowdstrike_detects_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsCrowdstrikeDetectsSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6361,8 +6360,7 @@ func flattenChronicleFeedDetailsDummyLogTypeSettingsAuthenticationHeaderKeyValue
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsDummyLogTypeSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsDummyLogTypeSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsDummyLogTypeSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -6372,7 +6370,7 @@ func flattenChronicleFeedDetailsDummyLogTypeSettingsAuthenticationHeaderKeyValue
 }
 
 func flattenChronicleFeedDetailsDummyLogTypeSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.dummy_log_type_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsDuoAuthSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6406,7 +6404,7 @@ func flattenChronicleFeedDetailsDuoAuthSettingsAuthentication(v interface{}, d *
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsDuoAuthSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.duo_auth_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsDuoAuthSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6448,7 +6446,7 @@ func flattenChronicleFeedDetailsDuoUserContextSettingsAuthentication(v interface
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsDuoUserContextSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.duo_user_context_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsDuoUserContextSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6498,7 +6496,7 @@ func flattenChronicleFeedDetailsFoxItStixSettingsAuthentication(v interface{}, d
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsFoxItStixSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.fox_it_stix_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsFoxItStixSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6529,11 +6527,11 @@ func flattenChronicleFeedDetailsFoxItStixSettingsSsl(v interface{}, d *schema.Re
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsFoxItStixSettingsSslEncodedPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.fox_it_stix_settings.0.ssl.0.encoded_private_key")
 }
 
 func flattenChronicleFeedDetailsFoxItStixSettingsSslSslCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.fox_it_stix_settings.0.ssl.0.ssl_certificate")
 }
 
 func flattenChronicleFeedDetailsGcsSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6692,7 +6690,7 @@ func flattenChronicleFeedDetailsGoogleCloudIdentityDeviceUsersSettingsAuthentica
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsGoogleCloudIdentityDeviceUsersSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.google_cloud_identity_device_users_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsGoogleCloudIdentityDeviceUsersSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6778,7 +6776,7 @@ func flattenChronicleFeedDetailsGoogleCloudIdentityDevicesSettingsAuthentication
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsGoogleCloudIdentityDevicesSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.google_cloud_identity_devices_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsGoogleCloudIdentityDevicesSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6959,8 +6957,7 @@ func flattenChronicleFeedDetailsImpervaWafSettingsAuthenticationHeaderKeyValues(
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsImpervaWafSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsImpervaWafSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsImpervaWafSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -6970,7 +6967,7 @@ func flattenChronicleFeedDetailsImpervaWafSettingsAuthenticationHeaderKeyValuesK
 }
 
 func flattenChronicleFeedDetailsImpervaWafSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.imperva_waf_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7023,8 +7020,7 @@ func flattenChronicleFeedDetailsMandiantIocSettingsAuthenticationHeaderKeyValues
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsMandiantIocSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsMandiantIocSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsMandiantIocSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7034,7 +7030,7 @@ func flattenChronicleFeedDetailsMandiantIocSettingsAuthenticationHeaderKeyValues
 }
 
 func flattenChronicleFeedDetailsMandiantIocSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.mandiant_ioc_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsMandiantIocSettingsStartTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7084,7 +7080,7 @@ func flattenChronicleFeedDetailsMicrosoftGraphAlertSettingsAuthenticationClientI
 }
 
 func flattenChronicleFeedDetailsMicrosoftGraphAlertSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.microsoft_graph_alert_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsMicrosoftGraphAlertSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7140,7 +7136,7 @@ func flattenChronicleFeedDetailsMicrosoftSecurityCenterAlertSettingsAuthenticati
 }
 
 func flattenChronicleFeedDetailsMicrosoftSecurityCenterAlertSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.microsoft_security_center_alert_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsMicrosoftSecurityCenterAlertSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7197,8 +7193,7 @@ func flattenChronicleFeedDetailsMimecastMailSettingsAuthenticationHeaderKeyValue
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsMimecastMailSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsMimecastMailSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsMimecastMailSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7208,7 +7203,7 @@ func flattenChronicleFeedDetailsMimecastMailSettingsAuthenticationHeaderKeyValue
 }
 
 func flattenChronicleFeedDetailsMimecastMailSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.mimecast_mail_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsMimecastMailSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7248,7 +7243,7 @@ func flattenChronicleFeedDetailsMimecastMailV2SettingsAuthCredentialsClientId(v 
 }
 
 func flattenChronicleFeedDetailsMimecastMailV2SettingsAuthCredentialsClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.mimecast_mail_v2_settings.0.auth_credentials.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsNetskopeAlertSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7297,8 +7292,7 @@ func flattenChronicleFeedDetailsNetskopeAlertSettingsAuthenticationHeaderKeyValu
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsNetskopeAlertSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsNetskopeAlertSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsNetskopeAlertSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7308,7 +7302,7 @@ func flattenChronicleFeedDetailsNetskopeAlertSettingsAuthenticationHeaderKeyValu
 }
 
 func flattenChronicleFeedDetailsNetskopeAlertSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.netskope_alert_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsNetskopeAlertSettingsContentType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7369,8 +7363,7 @@ func flattenChronicleFeedDetailsNetskopeAlertV2SettingsAuthenticationHeaderKeyVa
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsNetskopeAlertV2SettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsNetskopeAlertV2SettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsNetskopeAlertV2SettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7380,7 +7373,7 @@ func flattenChronicleFeedDetailsNetskopeAlertV2SettingsAuthenticationHeaderKeyVa
 }
 
 func flattenChronicleFeedDetailsNetskopeAlertV2SettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.netskope_alert_v2_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsNetskopeAlertV2SettingsContentCategory(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7440,7 +7433,7 @@ func flattenChronicleFeedDetailsOffice365SettingsAuthenticationClientId(v interf
 }
 
 func flattenChronicleFeedDetailsOffice365SettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.office365_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsOffice365SettingsContentType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7497,8 +7490,7 @@ func flattenChronicleFeedDetailsOktaSettingsAuthenticationHeaderKeyValues(v inte
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsOktaSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsOktaSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsOktaSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7508,7 +7500,7 @@ func flattenChronicleFeedDetailsOktaSettingsAuthenticationHeaderKeyValuesKey(v i
 }
 
 func flattenChronicleFeedDetailsOktaSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.okta_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsOktaSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7559,8 +7551,7 @@ func flattenChronicleFeedDetailsOktaUserContextSettingsAuthenticationHeaderKeyVa
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsOktaUserContextSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsOktaUserContextSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsOktaUserContextSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7570,7 +7561,7 @@ func flattenChronicleFeedDetailsOktaUserContextSettingsAuthenticationHeaderKeyVa
 }
 
 func flattenChronicleFeedDetailsOktaUserContextSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.okta_user_context_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsOktaUserContextSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7625,8 +7616,7 @@ func flattenChronicleFeedDetailsPanIocSettingsAuthenticationHeaderKeyValues(v in
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsPanIocSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsPanIocSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsPanIocSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7636,7 +7626,7 @@ func flattenChronicleFeedDetailsPanIocSettingsAuthenticationHeaderKeyValuesKey(v
 }
 
 func flattenChronicleFeedDetailsPanIocSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.pan_ioc_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsPanIocSettingsFeed(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7678,7 +7668,7 @@ func flattenChronicleFeedDetailsPanPrismaCloudSettingsAuthentication(v interface
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsPanPrismaCloudSettingsAuthenticationPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.pan_prisma_cloud_settings.0.authentication.0.password")
 }
 
 func flattenChronicleFeedDetailsPanPrismaCloudSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7718,7 +7708,7 @@ func flattenChronicleFeedDetailsProofpointMailSettingsAuthentication(v interface
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsProofpointMailSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.proofpoint_mail_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsProofpointMailSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7767,8 +7757,7 @@ func flattenChronicleFeedDetailsProofpointOnDemandSettingsAuthenticationHeaderKe
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsProofpointOnDemandSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsProofpointOnDemandSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsProofpointOnDemandSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7778,7 +7767,7 @@ func flattenChronicleFeedDetailsProofpointOnDemandSettingsAuthenticationHeaderKe
 }
 
 func flattenChronicleFeedDetailsProofpointOnDemandSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.proofpoint_on_demand_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsProofpointOnDemandSettingsClusterId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7839,7 +7828,7 @@ func flattenChronicleFeedDetailsQualysScanSettingsAuthentication(v interface{}, 
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsQualysScanSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.qualys_scan_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsQualysScanSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7881,7 +7870,7 @@ func flattenChronicleFeedDetailsQualysVmSettingsAuthentication(v interface{}, d 
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsQualysVmSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.qualys_vm_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsQualysVmSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7936,8 +7925,7 @@ func flattenChronicleFeedDetailsRapid7InsightSettingsAuthenticationHeaderKeyValu
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsRapid7InsightSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsRapid7InsightSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsRapid7InsightSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -7947,7 +7935,7 @@ func flattenChronicleFeedDetailsRapid7InsightSettingsAuthenticationHeaderKeyValu
 }
 
 func flattenChronicleFeedDetailsRapid7InsightSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.rapid7_insight_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsRapid7InsightSettingsEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7998,8 +7986,7 @@ func flattenChronicleFeedDetailsRecordedFutureIocSettingsAuthenticationHeaderKey
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsRecordedFutureIocSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsRecordedFutureIocSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsRecordedFutureIocSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -8009,7 +7996,7 @@ func flattenChronicleFeedDetailsRecordedFutureIocSettingsAuthenticationHeaderKey
 }
 
 func flattenChronicleFeedDetailsRecordedFutureIocSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.recorded_future_ioc_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsRhIsacIocSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8047,7 +8034,7 @@ func flattenChronicleFeedDetailsRhIsacIocSettingsAuthenticationClientId(v interf
 }
 
 func flattenChronicleFeedDetailsRhIsacIocSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.rh_isac_ioc_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsRhIsacIocSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8135,7 +8122,7 @@ func flattenChronicleFeedDetailsSalesforceSettingsOauthJwtCredentialsRsCredentia
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsSalesforceSettingsOauthJwtCredentialsRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.salesforce_settings.0.oauth_jwt_credentials.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsSalesforceSettingsOauthJwtCredentialsTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8229,8 +8216,7 @@ func flattenChronicleFeedDetailsSentineloneAlertSettingsAuthenticationHeaderKeyV
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsSentineloneAlertSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsSentineloneAlertSettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsSentineloneAlertSettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -8240,7 +8226,7 @@ func flattenChronicleFeedDetailsSentineloneAlertSettingsAuthenticationHeaderKeyV
 }
 
 func flattenChronicleFeedDetailsSentineloneAlertSettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.sentinelone_alert_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsSentineloneAlertSettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8288,7 +8274,7 @@ func flattenChronicleFeedDetailsServiceNowCmdbSettingsAuthentication(v interface
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsServiceNowCmdbSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.service_now_cmdb_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsServiceNowCmdbSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8342,11 +8328,11 @@ func flattenChronicleFeedDetailsSftpSettingsAuthentication(v interface{}, d *sch
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsSftpSettingsAuthenticationPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.sftp_settings.0.authentication.0.password")
 }
 
 func flattenChronicleFeedDetailsSftpSettingsAuthenticationPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.sftp_settings.0.authentication.0.private_key")
 }
 
 func flattenChronicleFeedDetailsSftpSettingsAuthenticationPrivateKeyPassphrase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8410,7 +8396,7 @@ func flattenChronicleFeedDetailsSymantecEventExportSettingsAuthenticationClientI
 }
 
 func flattenChronicleFeedDetailsSymantecEventExportSettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.symantec_event_export_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsSymantecEventExportSettingsAuthenticationRefreshToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8463,8 +8449,7 @@ func flattenChronicleFeedDetailsThinkstCanarySettingsAuthenticationHeaderKeyValu
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"key":   flattenChronicleFeedDetailsThinkstCanarySettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
-			"value": flattenChronicleFeedDetailsThinkstCanarySettingsAuthenticationHeaderKeyValuesValue(original["value"], d, config),
+			"key": flattenChronicleFeedDetailsThinkstCanarySettingsAuthenticationHeaderKeyValuesKey(original["key"], d, config),
 		})
 	}
 	return transformed
@@ -8474,7 +8459,7 @@ func flattenChronicleFeedDetailsThinkstCanarySettingsAuthenticationHeaderKeyValu
 }
 
 func flattenChronicleFeedDetailsThinkstCanarySettingsAuthenticationHeaderKeyValuesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.thinkst_canary_settings.0.authentication.0.header_key_values.0.value")
 }
 
 func flattenChronicleFeedDetailsThinkstCanarySettingsHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8514,7 +8499,7 @@ func flattenChronicleFeedDetailsThreatConnectIocSettingsAuthentication(v interfa
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsThreatConnectIocSettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.threat_connect_ioc_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsThreatConnectIocSettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8568,7 +8553,7 @@ func flattenChronicleFeedDetailsThreatConnectIocV3SettingsAuthentication(v inter
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsThreatConnectIocV3SettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.threat_connect_ioc_v3_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsThreatConnectIocV3SettingsAuthenticationUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8660,7 +8645,7 @@ func flattenChronicleFeedDetailsTrellixHxAlertsSettingsAuthenticationMssoApiEndp
 }
 
 func flattenChronicleFeedDetailsTrellixHxAlertsSettingsAuthenticationMssoPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.trellix_hx_alerts_settings.0.authentication.0.msso.0.password")
 }
 
 func flattenChronicleFeedDetailsTrellixHxAlertsSettingsAuthenticationMssoUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8689,7 +8674,7 @@ func flattenChronicleFeedDetailsTrellixHxAlertsSettingsAuthenticationTrellixIamC
 }
 
 func flattenChronicleFeedDetailsTrellixHxAlertsSettingsAuthenticationTrellixIamClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.trellix_hx_alerts_settings.0.authentication.0.trellix_iam.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsTrellixHxAlertsSettingsAuthenticationTrellixIamScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8752,7 +8737,7 @@ func flattenChronicleFeedDetailsTrellixHxBulkAcqsSettingsAuthenticationMssoApiEn
 }
 
 func flattenChronicleFeedDetailsTrellixHxBulkAcqsSettingsAuthenticationMssoPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.trellix_hx_bulk_acqs_settings.0.authentication.0.msso.0.password")
 }
 
 func flattenChronicleFeedDetailsTrellixHxBulkAcqsSettingsAuthenticationMssoUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8781,7 +8766,7 @@ func flattenChronicleFeedDetailsTrellixHxBulkAcqsSettingsAuthenticationTrellixIa
 }
 
 func flattenChronicleFeedDetailsTrellixHxBulkAcqsSettingsAuthenticationTrellixIamClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.trellix_hx_bulk_acqs_settings.0.authentication.0.trellix_iam.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsTrellixHxBulkAcqsSettingsAuthenticationTrellixIamScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8844,7 +8829,7 @@ func flattenChronicleFeedDetailsTrellixHxHostsSettingsAuthenticationMssoApiEndpo
 }
 
 func flattenChronicleFeedDetailsTrellixHxHostsSettingsAuthenticationMssoPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.trellix_hx_hosts_settings.0.authentication.0.msso.0.password")
 }
 
 func flattenChronicleFeedDetailsTrellixHxHostsSettingsAuthenticationMssoUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8873,7 +8858,7 @@ func flattenChronicleFeedDetailsTrellixHxHostsSettingsAuthenticationTrellixIamCl
 }
 
 func flattenChronicleFeedDetailsTrellixHxHostsSettingsAuthenticationTrellixIamClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.trellix_hx_hosts_settings.0.authentication.0.trellix_iam.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsTrellixHxHostsSettingsAuthenticationTrellixIamScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8941,7 +8926,7 @@ func flattenChronicleFeedDetailsWorkdaySettingsAuthenticationClientId(v interfac
 }
 
 func flattenChronicleFeedDetailsWorkdaySettingsAuthenticationClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workday_settings.0.authentication.0.client_secret")
 }
 
 func flattenChronicleFeedDetailsWorkdaySettingsAuthenticationRefreshToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8949,7 +8934,7 @@ func flattenChronicleFeedDetailsWorkdaySettingsAuthenticationRefreshToken(v inte
 }
 
 func flattenChronicleFeedDetailsWorkdaySettingsAuthenticationSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workday_settings.0.authentication.0.secret")
 }
 
 func flattenChronicleFeedDetailsWorkdaySettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9049,7 +9034,7 @@ func flattenChronicleFeedDetailsWorkspaceActivitySettingsAuthenticationRsCredent
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspaceActivitySettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_activity_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspaceActivitySettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9135,7 +9120,7 @@ func flattenChronicleFeedDetailsWorkspaceAlertsSettingsAuthenticationRsCredentia
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspaceAlertsSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_alerts_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspaceAlertsSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9221,7 +9206,7 @@ func flattenChronicleFeedDetailsWorkspaceChromeOsSettingsAuthenticationRsCredent
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspaceChromeOsSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_chrome_os_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspaceChromeOsSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9307,7 +9292,7 @@ func flattenChronicleFeedDetailsWorkspaceGroupsSettingsAuthenticationRsCredentia
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspaceGroupsSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_groups_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspaceGroupsSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9393,7 +9378,7 @@ func flattenChronicleFeedDetailsWorkspaceMobileSettingsAuthenticationRsCredentia
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspaceMobileSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_mobile_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspaceMobileSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9479,7 +9464,7 @@ func flattenChronicleFeedDetailsWorkspacePrivilegesSettingsAuthenticationRsCrede
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspacePrivilegesSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_privileges_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspacePrivilegesSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9567,7 +9552,7 @@ func flattenChronicleFeedDetailsWorkspaceUsersSettingsAuthenticationRsCredential
 	return []interface{}{transformed}
 }
 func flattenChronicleFeedDetailsWorkspaceUsersSettingsAuthenticationRsCredentialsPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("details.0.workspace_users_settings.0.authentication.0.rs_credentials.0.private_key")
 }
 
 func flattenChronicleFeedDetailsWorkspaceUsersSettingsAuthenticationTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
