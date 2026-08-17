@@ -78,6 +78,35 @@ func TestAccStorageObject_basic(t *testing.T) {
 	})
 }
 
+func TestAccStorageObject_checksumEndToEnd(t *testing.T) {
+	t.Parallel()
+
+	bucketName := acctest.TestBucketName(t)
+	payload := []byte("Strict End-to-End Upload Integrity Verification: Pre-computation, Stream Rewind, and Post-flight API Metadata Assertion.")
+
+	expectedCrc32c := calculateCrc32cHash(payload)
+
+	testFile := getNewTmpTestFile(t, "tf-test-checksum-e2e")
+	if err := ioutil.WriteFile(testFile.Name(), payload, 0644); err != nil {
+		t.Fatalf("Failed to write temporary test payload file for checksum end-to-e2nd validation: %s", err)
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccStorageObjectDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testGoogleStorageBucketsObjectBasic(bucketName, testFile.Name()),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("google_storage_bucket_object.object", "md5hexhash"),
+					testAccCheckGoogleStorageObjectCrc32cHash(t, bucketName, objectName, expectedCrc32c),
+				),
+			},
+		},
+	})
+}
+
 func TestAccStorageObject_recreate(t *testing.T) {
 	t.Parallel()
 
@@ -567,7 +596,7 @@ func TestAccStorageObject_knownAfterApply(t *testing.T) {
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccStorageObjectDestroyProducer(t),
 		ExternalProviders: map[string]resource.ExternalProvider{
-			"local": resource.ExternalProvider{
+			"local": {
 				VersionConstraint: "> 2.5.0",
 			},
 		},
