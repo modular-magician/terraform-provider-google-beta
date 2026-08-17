@@ -386,12 +386,6 @@ func resourceNetworkServicesAgentGatewayCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	etagProp, err := expandNetworkServicesAgentGatewayEtag(d.Get("etag"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(etagProp)) && (ok || !reflect.DeepEqual(v, etagProp)) {
-		obj["etag"] = etagProp
-	}
 	protocolsProp, err := expandNetworkServicesAgentGatewayProtocols(d.Get("protocols"), d, config)
 	if err != nil {
 		return err
@@ -656,12 +650,6 @@ func resourceNetworkServicesAgentGatewayUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	etagProp, err := expandNetworkServicesAgentGatewayEtag(d.Get("etag"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, etagProp)) {
-		obj["etag"] = etagProp
-	}
 	protocolsProp, err := expandNetworkServicesAgentGatewayProtocols(d.Get("protocols"), d, config)
 	if err != nil {
 		return err
@@ -704,10 +692,6 @@ func resourceNetworkServicesAgentGatewayUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("description") {
 		updateMask = append(updateMask, "description")
-	}
-
-	if d.HasChange("etag") {
-		updateMask = append(updateMask, "etag")
 	}
 
 	if d.HasChange("protocols") {
@@ -1037,10 +1021,6 @@ func flattenNetworkServicesAgentGatewayEffectiveLabels(v interface{}, d *schema.
 }
 
 func expandNetworkServicesAgentGatewayDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNetworkServicesAgentGatewayEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
