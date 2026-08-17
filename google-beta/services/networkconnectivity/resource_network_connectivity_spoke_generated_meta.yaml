@@ -7,6 +7,8 @@ api_service_name: networkconnectivity.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Spoke
 fields:
+    - field: auto_accept_hub
+      provider_only: true
     - api_field: createTime
     - api_field: description
     - field: effective_labels

@@ -74,6 +74,36 @@ resource "google_network_connectivity_spoke" "primary"  {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_connectivity_spoke_accept&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Network Connectivity Spoke Accept
+
+
+```hcl
+resource "google_compute_network" "network" {
+  name                    = "net"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "basic_hub" {
+  name        = "hub1"
+  description = "A sample hub"
+}
+
+resource "google_network_connectivity_spoke" "primary" {
+  name     = "spoke-accept"
+  location = "global"
+  hub      = google_network_connectivity_hub.basic_hub.id
+  auto_accept_hub = true
+
+  linked_vpc_network {
+    uri = google_compute_network.network.self_link
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_connectivity_spoke_linked_vpc_network_group&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -650,6 +680,12 @@ The following arguments are supported:
 	When set to "ABANDON", the command will remove the resource from Terraform
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
+* `autoAcceptHub` - (Optional) If true, after this spoke is created the provider calls `hubs.acceptSpoke` when the spoke
+is still `INACTIVE`. After an update that needs hub approval, it calls `hubs.acceptSpokeUpdate`.
+Requires `networkconnectivity.groups.acceptSpoke` on the hub. Same-project spokes are
+accepted by the API already. Use this for a cross-project spoke when these credentials
+can accept on the hub. Otherwise leave unset and accept from the hub project.
+
 
 
 <a name="nested_linked_vpn_tunnels"></a>The `linked_vpn_tunnels` block supports:

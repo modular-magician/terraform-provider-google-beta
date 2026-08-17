@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -124,6 +125,120 @@ resource "google_network_connectivity_spoke" "primary"  {
       "198.51.100.0/23", 
       "10.0.0.0/8"
     ]
+    uri = google_compute_network.network.self_link
+  }
+}
+`, context)
+}
+
+func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeAcceptExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"hub_name":      "tf-test-hub1" + randomSuffix,
+		"network_name":  "tf-test-net" + randomSuffix,
+		"spoke_name":    "tf-test-spoke-accept" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"hub_name":      "tf-test-hub1" + randomSuffix,
+		"network_name":  "tf-test-net" + randomSuffix,
+		"spoke_name":    "tf-test-spoke-accept" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkConnectivitySpokeDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkConnectivitySpoke_networkConnectivitySpokeAcceptExample(context),
+			},
+			{
+				ResourceName:            "google_network_connectivity_spoke.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"auto_accept_hub", "hub", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_connectivity_spoke.primary",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccNetworkConnectivitySpoke_networkConnectivitySpokeAcceptUpdateExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_network_connectivity_spoke.primary", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_network_connectivity_spoke.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"auto_accept_hub", "hub", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_connectivity_spoke.primary",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccNetworkConnectivitySpoke_networkConnectivitySpokeAcceptExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "network" {
+  name                    = "%{network_name}"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "basic_hub" {
+  name        = "%{hub_name}"
+  description = "A sample hub"
+}
+
+resource "google_network_connectivity_spoke" "primary" {
+  name     = "%{spoke_name}"
+  location = "global"
+  hub      = google_network_connectivity_hub.basic_hub.id
+  auto_accept_hub = true
+
+  linked_vpc_network {
+    uri = google_compute_network.network.self_link
+  }
+}
+`, context)
+}
+
+func testAccNetworkConnectivitySpoke_networkConnectivitySpokeAcceptUpdateExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "network" {
+  name                    = "%{network_name}"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "basic_hub" {
+  name        = "%{hub_name}"
+  description = "A sample hub"
+}
+
+resource "google_network_connectivity_spoke" "primary" {
+  name        = "%{spoke_name}"
+  location    = "global"
+  description = "Updated spoke"
+  hub         = google_network_connectivity_hub.basic_hub.id
+  auto_accept_hub = true
+
+  linked_vpc_network {
     uri = google_compute_network.network.self_link
   }
 }

@@ -54,6 +54,105 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+var networkConnectivityHubPathRe = regexp.MustCompile(`projects/([^/]+)/locations/global/hubs/([^/]+)$`)
+
+func networkConnectivityParseHub(hub, defaultProject string) (string, string) {
+	if m := networkConnectivityHubPathRe.FindStringSubmatch(hub); len(m) == 3 {
+		return m[1], m[2]
+	}
+	return tpgresource.GetResourceNameFromSelfLink(strings.TrimPrefix(defaultProject, "projects/")), tpgresource.GetResourceNameFromSelfLink(hub)
+}
+
+func networkConnectivitySpokeUpdatePending(spoke map[string]interface{}) bool {
+	if spoke == nil {
+		return false
+	}
+	if paths, ok := spoke["fieldPathsPendingUpdate"].([]interface{}); ok && len(paths) > 0 {
+		return true
+	}
+	reasons, _ := spoke["reasons"].([]interface{})
+	for _, raw := range reasons {
+		reason, ok := raw.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		if code, _ := reason["code"].(string); code == "UPDATE_PENDING_REVIEW" {
+			return true
+		}
+	}
+	return false
+}
+
+func networkConnectivitySpokeAcceptIfNeeded(d *schema.ResourceData, config *transport_tpg.Config, userAgent string, timeout time.Duration) error {
+	if !d.Get("auto_accept_hub").(bool) {
+		return nil
+	}
+
+	project, err := tpgresource.GetProject(d, config)
+	if err != nil {
+		return err
+	}
+	billingProject := strings.TrimPrefix(project, "projects/")
+	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		billingProject = bp
+	}
+
+	getURL, err := tpgresource.ReplaceVarsForId(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/spokes/{{name}}")
+	if err != nil {
+		return err
+	}
+
+	spoke, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   billingProject,
+		RawURL:    getURL,
+		UserAgent: userAgent,
+	})
+	if err != nil {
+		return fmt.Errorf("Error reading Spoke before accept: %s", err)
+	}
+
+	state, _ := spoke["state"].(string)
+	spokeURI, _ := spoke["name"].(string)
+	if spokeURI == "" {
+		spokeURI = d.Id()
+	}
+
+	hubProject, hubName := networkConnectivityParseHub(d.Get("hub").(string), project)
+	acceptBase := transport_tpg.BaseUrl(Product, config) + "projects/" + hubProject + "/locations/global/hubs/" + hubName
+
+	obj := map[string]interface{}{
+		"spokeUri": spokeURI,
+	}
+	var url string
+	if state == "INACTIVE" {
+		url = acceptBase + ":acceptSpoke"
+	} else if networkConnectivitySpokeUpdatePending(spoke) {
+		url = acceptBase + ":acceptSpokeUpdate"
+		if etag, ok := spoke["etag"].(string); ok && etag != "" {
+			obj["spokeEtag"] = etag
+		}
+	} else {
+		return nil
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "POST",
+		Project:   hubProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      obj,
+		Timeout:   timeout,
+	})
+	if err != nil {
+		return fmt.Errorf("Error accepting Spoke %q: %s", d.Id(), err)
+	}
+
+	return NetworkConnectivityOperationWaitTime(config, res, hubProject, "Accepting Spoke", userAgent, timeout)
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -552,6 +651,16 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Computed:    true,
 				Description: `Output only. The time the spoke was last updated.`,
 			},
+			"auto_accept_hub": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If true, after this spoke is created the provider calls 'hubs.acceptSpoke' when the spoke
+is still 'INACTIVE'. After an update that needs hub approval, it calls 'hubs.acceptSpokeUpdate'.
+Requires 'networkconnectivity.groups.acceptSpoke' on the hub. Same-project spokes are
+accepted by the API already. Use this for a cross-project spoke when these credentials
+can accept on the hub. Otherwise leave unset and accept from the hub project.`,
+				Default: false,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -701,6 +810,10 @@ func resourceNetworkConnectivitySpokeCreate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("Error waiting to create Spoke: %s", err)
 	}
 
+	if err := networkConnectivitySpokeAcceptIfNeeded(d, config, userAgent, d.Timeout(schema.TimeoutCreate)); err != nil {
+		return err
+	}
+
 	log.Printf("[DEBUG] Finished creating Spoke %q: %#v", d.Id(), res)
 
 	identity, err := d.Identity()
@@ -768,6 +881,11 @@ func resourceNetworkConnectivitySpokeRead(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Finished reading NetworkConnectivitySpoke %q: %#v", d.Id(), res)
 
 	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("autoAcceptHub"); !ok {
+		if err := d.Set("autoAcceptHub", false); err != nil {
+			return fmt.Errorf("Error setting autoAcceptHub: %s", err)
+		}
+	}
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
 		if config.DeletionPolicy != "" {
@@ -985,6 +1103,9 @@ func resourceNetworkConnectivitySpokeUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
+	if err := networkConnectivitySpokeAcceptIfNeeded(d, config, userAgent, d.Timeout(schema.TimeoutUpdate)); err != nil {
+		return err
+	}
 	return resourceNetworkConnectivitySpokeRead(d, meta)
 }
 
@@ -1066,6 +1187,11 @@ func resourceNetworkConnectivitySpokeImport(d *schema.ResourceData, meta interfa
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
+	if err := d.Set("autoAcceptHub", false); err != nil {
+		return nil, fmt.Errorf("Error setting autoAcceptHub: %s", err)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
