@@ -18,11 +18,14 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: gcpConfig.accessConfig.networkConfigs.subnet
+    - api_field: gcpConfig.accessConfig.publicClusterConfig.allowedSourceIpRanges
     - api_field: gcpConfig.kmsKey
     - api_field: labels
     - field: location
       provider_only: true
     - api_field: name
+    - api_field: publicClusterDetails.discoveryDnsRecords
+    - api_field: publicClusterDetails.externalIpAddresses
     - api_field: rebalanceConfig.mode
     - api_field: state
     - field: terraform_labels
