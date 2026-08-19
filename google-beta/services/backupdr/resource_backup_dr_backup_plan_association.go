@@ -155,11 +155,13 @@ Note:
 			"backup_plan_association_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: `The id of backupplan association`,
 			},
 			"location": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: `The location for the backupplan association`,
 			},
 			"resource": {
