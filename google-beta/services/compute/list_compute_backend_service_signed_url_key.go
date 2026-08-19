@@ -165,11 +165,17 @@ func ListComputeBackendServiceSignedUrlKeys(config *transport_tpg.Config,
 				return fmt.Errorf("error matching nested ComputeBackendServiceSignedUrlKey from list response")
 			}
 			if v, ok := res["keyName"]; ok && v != nil {
+				if s, ok := v.(string); ok {
+					v = tpgresource.GetResourceNameFromSelfLink(s)
+				}
 				if err := d.Set("name", v); err != nil {
 					return fmt.Errorf("error setting name: %w", err)
 				}
 			}
 			if v, ok := res["backendService"]; ok && v != nil {
+				if s, ok := v.(string); ok {
+					v = tpgresource.GetResourceNameFromSelfLink(s)
+				}
 				if err := d.Set("backend_service", v); err != nil {
 					return fmt.Errorf("error setting backend_service: %w", err)
 				}

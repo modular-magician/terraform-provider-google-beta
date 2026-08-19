@@ -213,6 +213,9 @@ func ListDiscoveryEngineSitemaps(config *transport_tpg.Config,
 				res = sitemapData
 			}
 			if v, ok := res["name"]; ok && v != nil {
+				if s, ok := v.(string); ok {
+					v = tpgresource.GetResourceNameFromSelfLink(s)
+				}
 				if err := d.Set("name", v); err != nil {
 					return fmt.Errorf("error setting name: %w", err)
 				}

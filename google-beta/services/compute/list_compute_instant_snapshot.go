@@ -158,11 +158,17 @@ func ListComputeInstantSnapshots(config *transport_tpg.Config,
 			headers := make(http.Header)
 			var err error
 			if v, ok := res["name"]; ok && v != nil {
+				if s, ok := v.(string); ok {
+					v = tpgresource.GetResourceNameFromSelfLink(s)
+				}
 				if err := d.Set("name", v); err != nil {
 					return fmt.Errorf("error setting name: %w", err)
 				}
 			}
 			if v, ok := res["zone"]; ok && v != nil {
+				if s, ok := v.(string); ok {
+					v = tpgresource.GetResourceNameFromSelfLink(s)
+				}
 				if err := d.Set("zone", v); err != nil {
 					return fmt.Errorf("error setting zone: %w", err)
 				}
