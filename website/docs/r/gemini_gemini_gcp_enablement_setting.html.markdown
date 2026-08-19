@@ -80,6 +80,14 @@ The following arguments are supported:
   GROUNDING_WITH_GOOGLE_SEARCH
   WEB_GROUNDING_FOR_ENTERPRISE
 
+* `gcs_bucket` -
+  (Optional)
+  The Cloud Storage bucket name allocated for this setting.
+  Note: Please make sure the cloudaicompanion service agent
+  `service-<PROJECT-NUMBER>@gcp-sa-cloudaicompanion.iam.gserviceaccount.com`
+  has `storage.objects.get` and `storage.objects.create` permission to the
+  Cloud Storage bucket.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
