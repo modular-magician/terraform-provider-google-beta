@@ -72,6 +72,7 @@ func TestAccDiscoveryEngineAssistantListQuery_generated(t *testing.T) {
 						"location":      "google_discovery_engine_assistant.basic",
 						"collection_id": "google_discovery_engine_assistant.basic",
 						"engine_id":     "google_discovery_engine_assistant.basic",
+						"project":       "google_discovery_engine_assistant.basic",
 					}),
 				),
 			},
@@ -97,6 +98,7 @@ func testAccDiscoveryEngineAssistant_discoveryengineAssistantBasicExampleListQue
 variable "location" { type = string }
 variable "collection_id" { type = string }
 variable "engine_id" { type = string }
+variable "project" { type = string }
 list "google_discovery_engine_assistant" "list_query" {
     provider = google
 	limit = 10000
@@ -104,6 +106,7 @@ list "google_discovery_engine_assistant" "list_query" {
         location = var.location
         collection_id = var.collection_id
         engine_id = var.engine_id
+        project = var.project
     }
 }
 `, context)

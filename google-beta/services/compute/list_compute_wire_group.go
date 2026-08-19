@@ -136,7 +136,8 @@ func ListComputeWireGroups(config *transport_tpg.Config,
 	if err != nil {
 		return err
 	}
-	billingProject := project
+
+	billingProject := ""
 	if bp, err := tpgresource.GetBillingProject(resourceData, config); err == nil {
 		billingProject = bp
 	}
@@ -166,6 +167,10 @@ func ListComputeWireGroups(config *transport_tpg.Config,
 				if err := d.Set("cross_site_network", v); err != nil {
 					return fmt.Errorf("error setting cross_site_network: %w", err)
 				}
+			}
+			project := ""
+			if p, err := tpgresource.GetProject(d, config); err == nil {
+				project = p
 			}
 			if err = ResourceComputeWireGroupFlatten(d, config, res, config, project, userAgent, billingProject, url, headers); err != nil {
 				return err

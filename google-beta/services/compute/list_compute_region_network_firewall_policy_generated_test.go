@@ -65,7 +65,10 @@ func TestAccComputeRegionNetworkFirewallPolicyListQuery_generated(t *testing.T) 
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_region_network_firewall_policy.policy",
+						"project": "google_compute_region_network_firewall_policy.policy",
+					}),
 				),
 			},
 			{
@@ -87,10 +90,14 @@ func TestAccComputeRegionNetworkFirewallPolicyListQuery_generated(t *testing.T) 
 
 func testAccComputeRegionNetworkFirewallPolicy_regionNetworkFirewallPolicyFullExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_network_firewall_policy" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

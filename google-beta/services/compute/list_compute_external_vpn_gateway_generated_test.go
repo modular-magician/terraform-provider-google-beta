@@ -69,7 +69,9 @@ func TestAccComputeExternalVpnGatewayListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_compute_external_vpn_gateway.external_gateway",
+					}),
 				),
 			},
 			{
@@ -91,10 +93,12 @@ func TestAccComputeExternalVpnGatewayListQuery_generated(t *testing.T) {
 
 func testAccComputeExternalVpnGateway_externalVpnGatewayExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_compute_external_vpn_gateway" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)

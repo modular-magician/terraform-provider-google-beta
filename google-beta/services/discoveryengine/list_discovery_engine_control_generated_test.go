@@ -71,6 +71,7 @@ func TestAccDiscoveryEngineControlListQuery_generated(t *testing.T) {
 					listScope.Capture(map[string]string{
 						"location":  "google_discovery_engine_control.basic",
 						"engine_id": "google_discovery_engine_control.basic",
+						"project":   "google_discovery_engine_control.basic",
 					}),
 				),
 			},
@@ -95,12 +96,14 @@ func testAccDiscoveryEngineControl_discoveryengineControlBasicExampleListQuery(c
 	return acctest.Nprintf(`
 variable "location" { type = string }
 variable "engine_id" { type = string }
+variable "project" { type = string }
 list "google_discovery_engine_control" "list_query" {
     provider = google
 	limit = 10000
     config {
         location = var.location
         engine_id = var.engine_id
+        project = var.project
     }
 }
 `, context)

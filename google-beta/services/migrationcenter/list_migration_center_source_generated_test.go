@@ -68,6 +68,7 @@ func TestAccMigrationCenterSourceListQuery_generated(t *testing.T) {
 					),
 					listScope.Capture(map[string]string{
 						"location": "google_migration_center_source.default",
+						"project":  "google_migration_center_source.default",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccMigrationCenterSourceListQuery_generated(t *testing.T) {
 func testAccMigrationCenterSource_migrationCenterSourceBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "location" { type = string }
+variable "project" { type = string }
 list "google_migration_center_source" "list_query" {
     provider = google
 	limit = 10000
     config {
         location = var.location
+        project = var.project
     }
 }
 `, context)

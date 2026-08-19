@@ -65,7 +65,9 @@ func TestAccComputeImageListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_compute_image.example",
+					}),
 				),
 			},
 			{
@@ -87,10 +89,12 @@ func TestAccComputeImageListQuery_generated(t *testing.T) {
 
 func testAccComputeImage_imageBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_compute_image" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)

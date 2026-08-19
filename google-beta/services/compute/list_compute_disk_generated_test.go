@@ -65,7 +65,10 @@ func TestAccComputeDiskListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"zone":    "google_compute_disk.default",
+						"project": "google_compute_disk.default",
+					}),
 				),
 			},
 			{
@@ -87,10 +90,14 @@ func TestAccComputeDiskListQuery_generated(t *testing.T) {
 
 func testAccComputeDisk_diskBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "zone" { type = string }
+variable "project" { type = string }
 list "google_compute_disk" "list_query" {
     provider = google
 	limit = 10000
     config {
+        zone = var.zone
+        project = var.project
     }
 }
 `, context)

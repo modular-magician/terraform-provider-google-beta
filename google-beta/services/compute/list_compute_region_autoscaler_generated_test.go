@@ -68,7 +68,10 @@ func TestAccComputeRegionAutoscalerListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_region_autoscaler.foobar",
+						"project": "google_compute_region_autoscaler.foobar",
+					}),
 				),
 			},
 			{
@@ -90,10 +93,14 @@ func TestAccComputeRegionAutoscalerListQuery_generated(t *testing.T) {
 
 func testAccComputeRegionAutoscaler_regionAutoscalerBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_autoscaler" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

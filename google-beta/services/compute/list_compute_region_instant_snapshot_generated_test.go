@@ -66,7 +66,10 @@ func TestAccComputeRegionInstantSnapshotListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_region_instant_snapshot.default",
+						"project": "google_compute_region_instant_snapshot.default",
+					}),
 				),
 			},
 			{
@@ -88,10 +91,14 @@ func TestAccComputeRegionInstantSnapshotListQuery_generated(t *testing.T) {
 
 func testAccComputeRegionInstantSnapshot_regionInstantSnapshotBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_instant_snapshot" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

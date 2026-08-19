@@ -67,7 +67,8 @@ func TestAccComputeRegionHealthSourceListQuery_generated(t *testing.T) {
 						},
 					),
 					listScope.Capture(map[string]string{
-						"region": "google_compute_region_health_source.example_test_health_source",
+						"region":  "google_compute_region_health_source.example_test_health_source",
+						"project": "google_compute_region_health_source.example_test_health_source",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccComputeRegionHealthSourceListQuery_generated(t *testing.T) {
 func testAccComputeRegionHealthSource_computeRegionHealthSourceBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_health_source" "list_query" {
     provider = google
 	limit = 10000
     config {
         region = var.region
+        project = var.project
     }
 }
 `, context)

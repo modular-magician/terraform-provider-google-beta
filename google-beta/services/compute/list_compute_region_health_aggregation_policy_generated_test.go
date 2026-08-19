@@ -67,7 +67,8 @@ func TestAccComputeRegionHealthAggregationPolicyListQuery_generated(t *testing.T
 						},
 					),
 					listScope.Capture(map[string]string{
-						"region": "google_compute_region_health_aggregation_policy.example_test_health_aggregation_policy",
+						"region":  "google_compute_region_health_aggregation_policy.example_test_health_aggregation_policy",
+						"project": "google_compute_region_health_aggregation_policy.example_test_health_aggregation_policy",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccComputeRegionHealthAggregationPolicyListQuery_generated(t *testing.T
 func testAccComputeRegionHealthAggregationPolicy_computeRegionHealthAggregationPolicyBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_health_aggregation_policy" "list_query" {
     provider = google
 	limit = 10000
     config {
         region = var.region
+        project = var.project
     }
 }
 `, context)

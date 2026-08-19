@@ -67,6 +67,7 @@ func TestAccCloudRunServiceListQuery_generated(t *testing.T) {
 					),
 					listScope.Capture(map[string]string{
 						"location": "google_cloud_run_service.default",
+						"project":  "google_cloud_run_service.default",
 					}),
 				),
 			},
@@ -90,11 +91,13 @@ func TestAccCloudRunServiceListQuery_generated(t *testing.T) {
 func testAccCloudRunService_cloudRunServiceBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "location" { type = string }
+variable "project" { type = string }
 list "google_cloud_run_service" "list_query" {
     provider = google
 	limit = 10000
     config {
         location = var.location
+        project = var.project
     }
 }
 `, context)

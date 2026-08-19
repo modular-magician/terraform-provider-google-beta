@@ -69,6 +69,7 @@ func TestAccDiscoveryEngineRecommendationEngineListQuery_generated(t *testing.T)
 					),
 					listScope.Capture(map[string]string{
 						"location": "google_discovery_engine_recommendation_engine.generic",
+						"project":  "google_discovery_engine_recommendation_engine.generic",
 					}),
 				),
 			},
@@ -92,11 +93,13 @@ func TestAccDiscoveryEngineRecommendationEngineListQuery_generated(t *testing.T)
 func testAccDiscoveryEngineRecommendationEngine_discoveryengineRecommendationengineGenericExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "location" { type = string }
+variable "project" { type = string }
 list "google_discovery_engine_recommendation_engine" "list_query" {
     provider = google
 	limit = 10000
     config {
         location = var.location
+        project = var.project
     }
 }
 `, context)

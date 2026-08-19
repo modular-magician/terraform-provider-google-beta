@@ -66,7 +66,10 @@ func TestAccComputeHaVpnGatewayListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_ha_vpn_gateway.ha_gateway1",
+						"project": "google_compute_ha_vpn_gateway.ha_gateway1",
+					}),
 				),
 			},
 			{
@@ -88,10 +91,14 @@ func TestAccComputeHaVpnGatewayListQuery_generated(t *testing.T) {
 
 func testAccComputeHaVpnGateway_haVpnGatewayBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_ha_vpn_gateway" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

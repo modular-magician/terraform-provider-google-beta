@@ -69,7 +69,8 @@ func TestAccComputeRegionNetworkEndpointGroupListQuery_generated(t *testing.T) {
 						},
 					),
 					listScope.Capture(map[string]string{
-						"region": "google_compute_region_network_endpoint_group.function_neg",
+						"region":  "google_compute_region_network_endpoint_group.function_neg",
+						"project": "google_compute_region_network_endpoint_group.function_neg",
 					}),
 				),
 			},
@@ -93,11 +94,13 @@ func TestAccComputeRegionNetworkEndpointGroupListQuery_generated(t *testing.T) {
 func testAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupFunctionsExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_network_endpoint_group" "list_query" {
     provider = google
 	limit = 10000
     config {
         region = var.region
+        project = var.project
     }
 }
 `, context)

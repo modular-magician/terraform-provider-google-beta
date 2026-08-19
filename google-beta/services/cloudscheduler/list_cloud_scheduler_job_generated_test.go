@@ -66,7 +66,10 @@ func TestAccCloudSchedulerJobListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_cloud_scheduler_job.job",
+						"project": "google_cloud_scheduler_job.job",
+					}),
 				),
 			},
 			{
@@ -88,10 +91,14 @@ func TestAccCloudSchedulerJobListQuery_generated(t *testing.T) {
 
 func testAccCloudSchedulerJob_schedulerJobPubsubExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_cloud_scheduler_job" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

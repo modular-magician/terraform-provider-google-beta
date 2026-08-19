@@ -68,6 +68,7 @@ func TestAccDiscoveryEngineTargetSiteListQuery_generated(t *testing.T) {
 					listScope.Capture(map[string]string{
 						"location":      "google_discovery_engine_target_site.basic",
 						"data_store_id": "google_discovery_engine_target_site.basic",
+						"project":       "google_discovery_engine_target_site.basic",
 					}),
 				),
 			},
@@ -92,12 +93,14 @@ func testAccDiscoveryEngineTargetSite_discoveryengineTargetsiteBasicExampleListQ
 	return acctest.Nprintf(`
 variable "location" { type = string }
 variable "data_store_id" { type = string }
+variable "project" { type = string }
 list "google_discovery_engine_target_site" "list_query" {
     provider = google
 	limit = 10000
     config {
         location = var.location
         data_store_id = var.data_store_id
+        project = var.project
     }
 }
 `, context)

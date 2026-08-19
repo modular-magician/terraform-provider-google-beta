@@ -65,7 +65,9 @@ func TestAccSecretManagerSecretListQuery_generated(t *testing.T) {
 							"secret_id",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_secret_manager_secret.secret-basic",
+					}),
 				),
 			},
 			{
@@ -87,10 +89,12 @@ func TestAccSecretManagerSecretListQuery_generated(t *testing.T) {
 
 func testAccSecretManagerSecret_secretConfigBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_secret_manager_secret" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)

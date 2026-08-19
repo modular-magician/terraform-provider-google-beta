@@ -64,7 +64,9 @@ func TestAccStorageHmacKeyListQuery_generated(t *testing.T) {
 							"access_id",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_storage_hmac_key.key",
+					}),
 				),
 			},
 			{
@@ -86,10 +88,12 @@ func TestAccStorageHmacKeyListQuery_generated(t *testing.T) {
 
 func testAccStorageHmacKey_storageHmacKeyExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_storage_hmac_key" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)

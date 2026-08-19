@@ -65,7 +65,10 @@ func TestAccComputeNodeTemplateListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_node_template.template",
+						"project": "google_compute_node_template.template",
+					}),
 				),
 			},
 			{
@@ -87,10 +90,14 @@ func TestAccComputeNodeTemplateListQuery_generated(t *testing.T) {
 
 func testAccComputeNodeTemplate_nodeTemplateBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_node_template" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

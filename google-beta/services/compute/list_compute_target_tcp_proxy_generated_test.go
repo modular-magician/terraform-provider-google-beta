@@ -66,7 +66,9 @@ func TestAccComputeTargetTcpProxyListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_compute_target_tcp_proxy.default",
+					}),
 				),
 			},
 			{
@@ -88,10 +90,12 @@ func TestAccComputeTargetTcpProxyListQuery_generated(t *testing.T) {
 
 func testAccComputeTargetTcpProxy_targetTcpProxyBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_compute_target_tcp_proxy" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)

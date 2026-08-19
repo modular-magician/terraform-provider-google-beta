@@ -136,7 +136,8 @@ func ListComputeInstantSnapshots(config *transport_tpg.Config,
 	if err != nil {
 		return err
 	}
-	billingProject := project
+
+	billingProject := ""
 	if bp, err := tpgresource.GetBillingProject(resourceData, config); err == nil {
 		billingProject = bp
 	}
@@ -166,6 +167,10 @@ func ListComputeInstantSnapshots(config *transport_tpg.Config,
 				if err := d.Set("zone", v); err != nil {
 					return fmt.Errorf("error setting zone: %w", err)
 				}
+			}
+			project := ""
+			if p, err := tpgresource.GetProject(d, config); err == nil {
+				project = p
 			}
 			if err = ResourceComputeInstantSnapshotFlatten(d, config, res, config, project, userAgent, billingProject, url, headers); err != nil {
 				return err

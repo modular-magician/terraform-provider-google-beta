@@ -67,7 +67,8 @@ func TestAccComputeRegionBackendBucketListQuery_generated(t *testing.T) {
 						},
 					),
 					listScope.Capture(map[string]string{
-						"region": "google_compute_region_backend_bucket.image_backend",
+						"region":  "google_compute_region_backend_bucket.image_backend",
+						"project": "google_compute_region_backend_bucket.image_backend",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccComputeRegionBackendBucketListQuery_generated(t *testing.T) {
 func testAccComputeRegionBackendBucket_regionBackendBucketBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_backend_bucket" "list_query" {
     provider = google-beta
 	limit = 10000
     config {
         region = var.region
+        project = var.project
     }
 }
 `, context)

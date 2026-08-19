@@ -71,6 +71,7 @@ func TestAccDiscoveryEngineChatEngineListQuery_generated(t *testing.T) {
 					listScope.Capture(map[string]string{
 						"collection_id": "google_discovery_engine_chat_engine.primary",
 						"location":      "google_discovery_engine_chat_engine.primary",
+						"project":       "google_discovery_engine_chat_engine.primary",
 					}),
 				),
 			},
@@ -95,12 +96,14 @@ func testAccDiscoveryEngineChatEngine_discoveryengineChatEngineBasicExampleListQ
 	return acctest.Nprintf(`
 variable "collection_id" { type = string }
 variable "location" { type = string }
+variable "project" { type = string }
 list "google_discovery_engine_chat_engine" "list_query" {
     provider = google
 	limit = 10000
     config {
         collection_id = var.collection_id
         location = var.location
+        project = var.project
     }
 }
 `, context)

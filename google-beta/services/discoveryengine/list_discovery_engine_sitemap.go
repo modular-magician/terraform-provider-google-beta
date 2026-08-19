@@ -146,7 +146,8 @@ func ListDiscoveryEngineSitemaps(config *transport_tpg.Config,
 	if err != nil {
 		return err
 	}
-	billingProject := project
+
+	billingProject := ""
 	if bp, err := tpgresource.GetBillingProject(resourceData, config); err == nil {
 		billingProject = bp
 	}
@@ -216,6 +217,10 @@ func ListDiscoveryEngineSitemaps(config *transport_tpg.Config,
 				if err := d.Set("name", v); err != nil {
 					return fmt.Errorf("error setting name: %w", err)
 				}
+			}
+			project := ""
+			if p, err := tpgresource.GetProject(d, config); err == nil {
+				project = p
 			}
 			if err = ResourceDiscoveryEngineSitemapFlatten(d, config, res, config, project, userAgent, billingProject, url, headers); err != nil {
 				return err

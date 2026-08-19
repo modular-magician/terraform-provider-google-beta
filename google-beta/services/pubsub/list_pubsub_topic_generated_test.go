@@ -64,7 +64,9 @@ func TestAccPubsubTopicListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_pubsub_topic.example",
+					}),
 				),
 			},
 			{
@@ -86,10 +88,12 @@ func TestAccPubsubTopicListQuery_generated(t *testing.T) {
 
 func testAccPubsubTopic_pubsubTopicBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_pubsub_topic" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)

@@ -68,6 +68,7 @@ func TestAccComputeWireGroupListQuery_generated(t *testing.T) {
 					),
 					listScope.Capture(map[string]string{
 						"cross_site_network": "google_compute_wire_group.example-test-wire-group",
+						"project":            "google_compute_wire_group.example-test-wire-group",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccComputeWireGroupListQuery_generated(t *testing.T) {
 func testAccComputeWireGroup_computeWireGroupBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "cross_site_network" { type = string }
+variable "project" { type = string }
 list "google_compute_wire_group" "list_query" {
     provider = google
 	limit = 10000
     config {
         cross_site_network = var.cross_site_network
+        project = var.project
     }
 }
 `, context)

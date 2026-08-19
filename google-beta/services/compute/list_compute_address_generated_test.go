@@ -65,7 +65,10 @@ func TestAccComputeAddressListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_address.ip_address",
+						"project": "google_compute_address.ip_address",
+					}),
 				),
 			},
 			{
@@ -87,10 +90,14 @@ func TestAccComputeAddressListQuery_generated(t *testing.T) {
 
 func testAccComputeAddress_addressBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_address" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

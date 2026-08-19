@@ -126,6 +126,7 @@ func ListKMSCryptoKeyVersions(config *transport_tpg.Config,
 	if err != nil {
 		return err
 	}
+
 	billingProject := ""
 	if bp, err := tpgresource.GetBillingProject(resourceData, config); err == nil {
 		billingProject = bp

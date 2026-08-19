@@ -69,6 +69,7 @@ func TestAccComputeNetworkFirewallPolicyAssociationListQuery_generated(t *testin
 					),
 					listScope.Capture(map[string]string{
 						"firewall_policy": "google_compute_network_firewall_policy_association.default",
+						"project":         "google_compute_network_firewall_policy_association.default",
 					}),
 				),
 			},
@@ -92,11 +93,13 @@ func TestAccComputeNetworkFirewallPolicyAssociationListQuery_generated(t *testin
 func testAccComputeNetworkFirewallPolicyAssociation_networkFirewallPolicyAssociationExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "firewall_policy" { type = string }
+variable "project" { type = string }
 list "google_compute_network_firewall_policy_association" "list_query" {
     provider = google
 	limit = 10000
     config {
         firewall_policy = var.firewall_policy
+        project = var.project
     }
 }
 `, context)

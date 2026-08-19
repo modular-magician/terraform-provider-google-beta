@@ -67,7 +67,8 @@ func TestAccComputeRegionCompositeHealthCheckListQuery_generated(t *testing.T) {
 						},
 					),
 					listScope.Capture(map[string]string{
-						"region": "google_compute_region_composite_health_check.example_test_composite_health_check",
+						"region":  "google_compute_region_composite_health_check.example_test_composite_health_check",
+						"project": "google_compute_region_composite_health_check.example_test_composite_health_check",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccComputeRegionCompositeHealthCheckListQuery_generated(t *testing.T) {
 func testAccComputeRegionCompositeHealthCheck_computeRegionCompositeHealthCheckBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_composite_health_check" "list_query" {
     provider = google
 	limit = 10000
     config {
         region = var.region
+        project = var.project
     }
 }
 `, context)

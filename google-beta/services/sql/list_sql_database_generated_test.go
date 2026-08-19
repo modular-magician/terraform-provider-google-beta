@@ -68,6 +68,7 @@ func TestAccSQLDatabaseListQuery_generated(t *testing.T) {
 					),
 					listScope.Capture(map[string]string{
 						"instance": "google_sql_database.database",
+						"project":  "google_sql_database.database",
 					}),
 				),
 			},
@@ -91,11 +92,13 @@ func TestAccSQLDatabaseListQuery_generated(t *testing.T) {
 func testAccSQLDatabase_sqlDatabaseBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "instance" { type = string }
+variable "project" { type = string }
 list "google_sql_database" "list_query" {
     provider = google
 	limit = 10000
     config {
         instance = var.instance
+        project = var.project
     }
 }
 `, context)

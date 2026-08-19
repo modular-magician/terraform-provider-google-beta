@@ -75,6 +75,7 @@ func TestAccComputeNetworkFirewallPolicyPacketMirroringRuleListQuery_generated(t
 					),
 					listScope.Capture(map[string]string{
 						"firewall_policy": "google_compute_network_firewall_policy_packet_mirroring_rule.primary",
+						"project":         "google_compute_network_firewall_policy_packet_mirroring_rule.primary",
 					}),
 				),
 			},
@@ -98,11 +99,13 @@ func TestAccComputeNetworkFirewallPolicyPacketMirroringRuleListQuery_generated(t
 func testAccComputeNetworkFirewallPolicyPacketMirroringRule_computeNetworkFirewallPolicyPacketMirroringRuleExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 variable "firewall_policy" { type = string }
+variable "project" { type = string }
 list "google_compute_network_firewall_policy_packet_mirroring_rule" "list_query" {
     provider = google-beta
 	limit = 10000
     config {
         firewall_policy = var.firewall_policy
+        project = var.project
     }
 }
 `, context)

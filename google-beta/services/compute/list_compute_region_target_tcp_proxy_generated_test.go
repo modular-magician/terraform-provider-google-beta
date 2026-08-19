@@ -67,7 +67,10 @@ func TestAccComputeRegionTargetTcpProxyListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"region":  "google_compute_region_target_tcp_proxy.default",
+						"project": "google_compute_region_target_tcp_proxy.default",
+					}),
 				),
 			},
 			{
@@ -89,10 +92,14 @@ func TestAccComputeRegionTargetTcpProxyListQuery_generated(t *testing.T) {
 
 func testAccComputeRegionTargetTcpProxy_regionTargetTcpProxyBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "region" { type = string }
+variable "project" { type = string }
 list "google_compute_region_target_tcp_proxy" "list_query" {
     provider = google
 	limit = 10000
     config {
+        region = var.region
+        project = var.project
     }
 }
 `, context)

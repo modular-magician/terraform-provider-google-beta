@@ -65,7 +65,9 @@ func TestAccComputeInterconnectGroupListQuery_generated(t *testing.T) {
 							"name",
 						},
 					),
-					listScope.Capture(map[string]string{}),
+					listScope.Capture(map[string]string{
+						"project": "google_compute_interconnect_group.example-interconnect-group",
+					}),
 				),
 			},
 			{
@@ -87,10 +89,12 @@ func TestAccComputeInterconnectGroupListQuery_generated(t *testing.T) {
 
 func testAccComputeInterconnectGroup_interconnectGroupBasicExampleListQuery(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+variable "project" { type = string }
 list "google_compute_interconnect_group" "list_query" {
     provider = google
 	limit = 10000
     config {
+        project = var.project
     }
 }
 `, context)
