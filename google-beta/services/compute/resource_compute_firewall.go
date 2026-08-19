@@ -557,6 +557,7 @@ Example inputs include: [22], [80, 443], and
 }
 
 func resourceComputeFirewallCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

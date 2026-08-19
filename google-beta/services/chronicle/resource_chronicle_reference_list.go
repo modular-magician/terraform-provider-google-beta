@@ -273,6 +273,7 @@ This is returned only when the view is REFERENCE_LIST_VIEW_FULL.`,
 }
 
 func resourceChronicleReferenceListCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

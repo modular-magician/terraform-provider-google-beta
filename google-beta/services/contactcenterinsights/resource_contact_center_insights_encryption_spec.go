@@ -161,6 +161,7 @@ Format: projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{k
 }
 
 func resourceContactCenterInsightsEncryptionSpecCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

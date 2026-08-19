@@ -273,6 +273,7 @@ Note: These values are supported as input, but considered a legacy format:
 }
 
 func resourceAccessApprovalFolderSettingsCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

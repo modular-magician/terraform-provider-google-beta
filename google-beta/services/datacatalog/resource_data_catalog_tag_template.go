@@ -346,6 +346,7 @@ func datacatalogTagTemplateFieldsTypeEnumTypeAllowedValuesSchema() *schema.Resou
 }
 
 func resourceDataCatalogTagTemplateCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

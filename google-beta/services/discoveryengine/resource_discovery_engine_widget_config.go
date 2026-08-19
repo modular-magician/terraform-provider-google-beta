@@ -524,6 +524,7 @@ Default to no result if unspecified. Possible values: ["SNIPPET", "EXTRACTIVE_AN
 }
 
 func resourceDiscoveryEngineWidgetConfigCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

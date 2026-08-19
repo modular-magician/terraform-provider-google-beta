@@ -993,6 +993,7 @@ Format for SMB volumes: '\\\\netbios_prefix-four_random_hex_letters.domain_name\
 }
 
 func resourceNetappVolumeCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

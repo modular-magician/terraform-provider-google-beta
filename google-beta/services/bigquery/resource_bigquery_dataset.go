@@ -678,6 +678,7 @@ is 1,024 characters.`,
 }
 
 func resourceBigQueryDatasetCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

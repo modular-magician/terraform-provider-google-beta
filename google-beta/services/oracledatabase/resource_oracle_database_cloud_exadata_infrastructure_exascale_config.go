@@ -183,6 +183,7 @@ When set to "DELETE", deleting the resource is allowed.
 }
 
 func resourceOracleDatabaseCloudExadataInfrastructureExascaleConfigCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

@@ -154,6 +154,7 @@ Format: ''projects/{{project}}/locations/{{location}}/keyRings/{{keyRing}}/crypt
 }
 
 func resourceKMSSecretCiphertextCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

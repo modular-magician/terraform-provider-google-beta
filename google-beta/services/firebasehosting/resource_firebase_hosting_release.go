@@ -194,6 +194,7 @@ sites/SITE_ID/channels/CHANNEL_ID/releases/RELEASE_ID`,
 }
 
 func resourceFirebaseHostingReleaseCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

@@ -146,6 +146,7 @@ Apply 'lifecycle.ignore_changes' to the 'version' field to suppress this diff.`,
 }
 
 func resourceDocumentAIProcessorDefaultVersionCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

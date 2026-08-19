@@ -176,6 +176,7 @@ A duration in seconds with up to nine fractional digits, ending with 's'. Exampl
 }
 
 func resourceFirebaseAppCheckRecaptchaEnterpriseConfigCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {

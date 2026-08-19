@@ -198,6 +198,7 @@ the default subscription.`,
 }
 
 func resourceDiscoveryEngineUserStoreCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
