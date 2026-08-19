@@ -116,6 +116,7 @@ fields:
     - api_field: dataStoreTool.modalityConfigs.rewriterConfig.modelSettings.temperature
     - api_field: dataStoreTool.modalityConfigs.rewriterConfig.prompt
     - api_field: dataStoreTool.modalityConfigs.snippetsConfig.enableSnippets
+    - api_field: dataStoreTool.modalityConfigs.snippetsConfig.maxSnippets
     - api_field: dataStoreTool.modalityConfigs.summarizationConfig.disabled
     - api_field: dataStoreTool.modalityConfigs.summarizationConfig.modelSettings.model
     - api_field: dataStoreTool.modalityConfigs.summarizationConfig.modelSettings.temperature
