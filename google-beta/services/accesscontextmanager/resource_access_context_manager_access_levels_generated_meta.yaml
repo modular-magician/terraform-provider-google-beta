@@ -12,6 +12,7 @@ fields:
     - api_field: accessLevels.basic.conditions.devicePolicy.allowedEncryptionStatuses
     - api_field: accessLevels.basic.conditions.devicePolicy.osConstraints.minimumVersion
     - api_field: accessLevels.basic.conditions.devicePolicy.osConstraints.osType
+    - api_field: accessLevels.basic.conditions.devicePolicy.osConstraints.requireVerifiedChromeOs
     - api_field: accessLevels.basic.conditions.devicePolicy.requireAdminApproval
     - api_field: accessLevels.basic.conditions.devicePolicy.requireCorpOwned
     - api_field: accessLevels.basic.conditions.devicePolicy.requireScreenlock

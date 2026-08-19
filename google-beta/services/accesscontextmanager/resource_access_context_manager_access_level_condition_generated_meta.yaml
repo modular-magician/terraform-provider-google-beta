@@ -19,6 +19,8 @@ fields:
       field: device_policy.os_constraints.minimum_version
     - api_field: basic.conditions.devicePolicy.osConstraints.osType
       field: device_policy.os_constraints.os_type
+    - api_field: basic.conditions.devicePolicy.osConstraints.requireVerifiedChromeOs
+      field: device_policy.os_constraints.require_verified_chrome_os
     - api_field: basic.conditions.devicePolicy.requireAdminApproval
       field: device_policy.require_admin_approval
     - api_field: basic.conditions.devicePolicy.requireCorpOwned
