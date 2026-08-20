@@ -228,6 +228,9 @@ func testAccCheckBigqueryReservationReservationAssignmentDestroyProducer(t *test
 			}
 
 			config := acctest.GoogleProviderConfig(t)
+			if reservation, ok := rs.Primary.Attributes["reservation"]; ok {
+				rs.Primary.Attributes["reservation"] = tpgresource.GetResourceNameFromSelfLink(reservation)
+			}
 			url, err := tpgresource.ReplaceVarsForTest(config, rs, transport_tpg.BaseUrl(bigqueryreservation.Product, config)+"projects/{{project}}/locations/{{location}}/reservations/{{reservation}}/assignments")
 			if err != nil {
 				return err
@@ -239,15 +242,55 @@ func testAccCheckBigqueryReservationReservationAssignmentDestroyProducer(t *test
 				billingProject = config.BillingProject
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 				Config:    config,
 				Method:    "GET",
 				Project:   billingProject,
 				RawURL:    url,
 				UserAgent: config.UserAgent,
 			})
-			if err == nil {
-				return fmt.Errorf("BigqueryReservationReservationAssignment still exists at %s", url)
+			if err != nil {
+				if transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
+					continue
+				}
+				return err
+			}
+
+			v, ok := res["assignments"]
+			if !ok || v == nil {
+				continue
+			}
+
+			var items []interface{}
+			switch list := v.(type) {
+			case []interface{}:
+				items = list
+			case map[string]interface{}:
+				items = []interface{}{list}
+			default:
+				return fmt.Errorf("expected list or map for assignments in CheckDestroy")
+			}
+
+			expectedName := tpgresource.GetResourceNameFromSelfLink(rs.Primary.ID)
+			found := false
+			for _, itemRaw := range items {
+				if itemRaw == nil {
+					continue
+				}
+				item := itemRaw.(map[string]interface{})
+				nameRaw, ok := item["name"].(string)
+				if !ok {
+					continue
+				}
+				itemName := tpgresource.GetResourceNameFromSelfLink(nameRaw)
+				if itemName == expectedName {
+					found = true
+					break
+				}
+			}
+
+			if found {
+				return fmt.Errorf("BigqueryReservationReservationAssignment %q still exists at %s", expectedName, url)
 			}
 		}
 
