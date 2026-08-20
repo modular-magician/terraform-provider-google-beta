@@ -575,26 +575,6 @@ func expandNestedComputeInstanceGroupNamedPortPort(v interface{}, d tpgresource.
 	return v, nil
 }
 
-func resourceComputeInstanceGroupNamedPortEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	ig, err := tpgresource.ParseInstanceGroupFieldValue(d.Get("group").(string), d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := d.Set("group", ig.Name); err != nil {
-		return nil, fmt.Errorf("Error setting group: %s", err)
-	}
-	if err := d.Set("zone", ig.Zone); err != nil {
-		return nil, fmt.Errorf("Error setting zone: %s", err)
-	}
-	if err := d.Set("project", ig.Project); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-
-	return obj, nil
-}
-
 func flattenNestedComputeInstanceGroupNamedPort(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	var v interface{}
 	var ok bool

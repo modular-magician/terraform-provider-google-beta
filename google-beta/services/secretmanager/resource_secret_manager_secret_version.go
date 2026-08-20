@@ -432,14 +432,7 @@ func resourceSecretManagerSecretVersionUpdate(d *schema.ResourceData, meta inter
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceSecretManagerSecretVersionRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	err := setEnabled(d.Get("enabled"), d, config)
-	if err != nil {
-		return err
-	}
-
-	return resourceSecretManagerSecretVersionRead(d, meta)
+	return resourceSecretManagerSecretVersionCustomUpdate(d, meta)
 }
 
 func resourceSecretManagerSecretVersionDelete(d *schema.ResourceData, meta interface{}) error {
@@ -499,61 +492,11 @@ func resourceSecretManagerSecretVersionDelete(d *schema.ResourceData, meta inter
 }
 
 func resourceSecretManagerSecretVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	secretRegex := regexp.MustCompile("(projects/.+/secrets/.+)/versions/.+$")
-	versionRegex := regexp.MustCompile("projects/(.+)/secrets/(.+)/versions/(.+)$")
-
-	parts := secretRegex.FindStringSubmatch(name)
-	if len(parts) != 2 {
-		return nil, fmt.Errorf("Version name does not fit the format `projects/{{project}}/secrets/{{secret}}/versions/{{version}}`")
-	}
-	if err := d.Set("secret", parts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting secret: %s", err)
-	}
-
-	parts = versionRegex.FindStringSubmatch(name)
-
-	if err := d.Set("version", parts[3]); err != nil {
-		return nil, fmt.Errorf("Error setting version: %s", err)
-	}
-
-	// Explicitly set virtual fields to default values on import
-	if err := d.Set("deletion_policy", "DELETE"); err != nil {
-		return nil, fmt.Errorf("Error setting version: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenSecretManagerSecretVersionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v.(string) == "ENABLED" {
-		return true
-	}
-
-	return false
+	return resourceSecretManagerSecretVersionCustomImport(d, meta)
 }
 
 func flattenSecretManagerSecretVersionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenSecretManagerSecretVersionVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	name := d.Get("name").(string)
-	secretRegex := regexp.MustCompile("projects/(.+)/secrets/(.+)/versions/(.+)$")
-
-	parts := secretRegex.FindStringSubmatch(name)
-	if len(parts) != 4 {
-		panic(fmt.Sprintf("Version name does not fit the format `projects/{{project}}/secrets/{{secret}}/versions/{{version}}`"))
-	}
-
-	return parts[3]
 }
 
 func flattenSecretManagerSecretVersionCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -564,143 +507,6 @@ func flattenSecretManagerSecretVersionDestroyTime(v interface{}, d *schema.Resou
 	return v
 }
 
-func flattenSecretManagerSecretVersionPayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// helper: always return []interface{}{map} with the safest value
-	safeTransformed := func(val interface{}) []interface{} {
-		m := make(map[string]interface{})
-		if val != nil {
-			m["secret_data"] = val
-		}
-		return []interface{}{m}
-	}
-
-	// write-only: during read, resolve diff with empty object
-	if _, ok := d.GetOkExists("secret_data_wo_version"); ok {
-		return safeTransformed(nil)
-	}
-
-	// if "enabled" does not exist or is false, preserve what we already have in the state
-	enabledVal, exists := d.GetOk("enabled")
-	if !exists {
-		return safeTransformed(d.Get("secret_data"))
-	}
-	if enabled, _ := enabledVal.(bool); !enabled {
-		return safeTransformed(d.Get("secret_data"))
-	}
-
-	// build access URL; if it fails, preserve state
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerBasePath}}{{name}}:access")
-	if err != nil {
-		log.Printf("[ERROR] Failed to build secret access URL: %v", err)
-		return safeTransformed(d.Get("secret_data"))
-	}
-
-	// safely extract project
-	nameStr, _ := d.Get("name").(string)
-	parts := strings.Split(nameStr, "/")
-	if len(parts) < 2 {
-		log.Printf("[WARN] Unexpected secret name format %q, preserving state", nameStr)
-		return safeTransformed(d.Get("secret_data"))
-	}
-	project := parts[1]
-
-	ua, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		log.Printf("[ERROR] Failed to generate user agent string: %v", err)
-		return safeTransformed(d.Get("secret_data"))
-	}
-
-	accessRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: ua,
-	})
-	if err != nil {
-		// per review: add explicit log to diagnose underlying url/transport error
-		log.Printf("[ERROR] Failed to access secret version at %q: %v", url, err)
-		return safeTransformed(d.Get("secret_data"))
-	}
-
-	// safely fetch payload.data
-	var dataB64 string
-	if payloadAny, ok := accessRes["payload"]; ok {
-		if payloadMap, ok := payloadAny.(map[string]interface{}); ok {
-			if s, ok := payloadMap["data"].(string); ok {
-				dataB64 = s
-			}
-		}
-	}
-	if dataB64 == "" {
-		log.Printf("[WARN] No payload.data found in secret access response for %q, preserving state", nameStr)
-		return safeTransformed(d.Get("secret_data"))
-	}
-
-	// decide whether to keep pure base64 or decode it
-	isB64, _ := d.Get("is_secret_data_base64").(bool)
-	if isB64 {
-		return safeTransformed(dataB64)
-	}
-
-	decoded, decErr := base64.StdEncoding.DecodeString(dataB64)
-	if decErr != nil {
-		log.Printf("[ERROR] Failed to decode base64 secret payload for %q: %v", nameStr, decErr)
-		return safeTransformed(d.Get("secret_data"))
-	}
-	return safeTransformed(string(decoded))
-}
-
-func expandSecretManagerSecretVersionEnabled(_ interface{}, _ tpgresource.TerraformResourceData, _ *transport_tpg.Config) (interface{}, error) {
-	return nil, nil
-}
-
-func expandSecretManagerSecretVersionPayload(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	transformed := make(map[string]interface{})
-	transformedSecretData, err := expandSecretManagerSecretVersionPayloadSecretData(d.Get("secret_data"), d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSecretData); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["data"] = transformedSecretData
-	}
-	transformedSecretDataWo, err := expandSecretManagerSecretVersionPayloadSecretDataWo(d.Get("secret_data_wo"), d.(*schema.ResourceData), config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSecretDataWo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["data"] = transformedSecretDataWo
-	}
-	return transformed, nil
-}
-
-func expandSecretManagerSecretVersionPayloadSecretData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	if d.Get("is_secret_data_base64").(bool) {
-		return v, nil
-	}
-	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
-}
-func expandSecretManagerSecretVersionPayloadSecretDataWo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (interface{}, error) {
-	path := cty.GetAttrPath("secret_data_wo")
-	woVal, _ := d.GetRawConfigAt(path)
-	if !woVal.Type().Equals(cty.String) || woVal.IsNull() {
-		return nil, nil
-	}
-	if d.Get("is_secret_data_base64").(bool) {
-		return woVal.AsString(), nil
-	}
-	return base64.StdEncoding.EncodeToString([]byte(woVal.AsString())), nil
-}
-
-func resourceSecretManagerSecretVersionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DESTROYED" {
-		return nil, nil
-	}
-
-	return res, nil
-}
 func resourceSecretManagerSecretVersionPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceSecretManagerSecretVersionDecoder(d, meta, res)

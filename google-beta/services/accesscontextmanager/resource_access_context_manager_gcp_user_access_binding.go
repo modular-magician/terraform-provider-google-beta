@@ -762,20 +762,7 @@ func resourceAccessContextManagerGcpUserAccessBindingDelete(d *schema.ResourceDa
 }
 
 func resourceAccessContextManagerGcpUserAccessBindingImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-
-	if err := d.Set("name", name); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-	d.SetId(name)
-	return []*schema.ResourceData{d}, nil
+	return resourceAccessContextManagerGcpUserAccessBindingCustomImport(d, meta)
 }
 
 func flattenAccessContextManagerGcpUserAccessBindingName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

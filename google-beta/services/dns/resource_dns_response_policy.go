@@ -687,19 +687,6 @@ func expandDNSResponsePolicyNetworks(v interface{}, d tpgresource.TerraformResou
 	return req, nil
 }
 
-func expandDNSResponsePolicyNetworksNetworkUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil || v.(string) == "" {
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		return v, nil
-	}
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-	if err != nil {
-		return "", err
-	}
-	return tpgresource.ConvertSelfLinkToV1(url), nil
-}
-
 func expandDNSResponsePolicyGkeClusters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil

@@ -9683,38 +9683,6 @@ func flattenComputeUrlMapDefaultRouteActionCachePolicyCacheKeyPolicyIncludedCook
 	return v
 }
 
-func expandComputeUrlMapDefaultService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
-}
-
 func expandComputeUrlMapDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -10014,38 +9982,6 @@ func expandComputeUrlMapPathMatcher(v interface{}, d tpgresource.TerraformResour
 	return req, nil
 }
 
-func expandComputeUrlMapPathMatcherDefaultService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
-}
-
 func expandComputeUrlMapPathMatcherDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -10342,38 +10278,6 @@ func expandComputeUrlMapPathMatcherPathRule(v interface{}, d tpgresource.Terrafo
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandComputeUrlMapPathMatcherPathRuleService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapPathMatcherPathRulePaths(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -10811,38 +10715,6 @@ func expandComputeUrlMapPathMatcherPathRuleRouteActionRequestMirrorPolicy(v inte
 	return transformed, nil
 }
 
-func expandComputeUrlMapPathMatcherPathRuleRouteActionRequestMirrorPolicyBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
-}
-
 func expandComputeUrlMapPathMatcherPathRuleRouteActionRequestMirrorPolicyMirrorPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -11076,38 +10948,6 @@ func expandComputeUrlMapPathMatcherPathRuleRouteActionWeightedBackendServices(v 
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandComputeUrlMapPathMatcherPathRuleRouteActionWeightedBackendServicesBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapPathMatcherPathRuleRouteActionWeightedBackendServicesHeaderAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -11845,38 +11685,6 @@ func expandComputeUrlMapPathMatcherRouteRules(v interface{}, d tpgresource.Terra
 
 func expandComputeUrlMapPathMatcherRouteRulesPriority(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeUrlMapPathMatcherRouteRulesService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapPathMatcherRouteRulesHeaderAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -12749,38 +12557,6 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteActionRequestMirrorPolicy(v in
 	return transformed, nil
 }
 
-func expandComputeUrlMapPathMatcherRouteRulesRouteActionRequestMirrorPolicyBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
-}
-
 func expandComputeUrlMapPathMatcherRouteRulesRouteActionRequestMirrorPolicyMirrorPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -13025,38 +12801,6 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServices(
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServicesBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServicesHeaderAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -14095,38 +13839,6 @@ func expandComputeUrlMapPathMatcherDefaultRouteActionWeightedBackendServices(v i
 	return req, nil
 }
 
-func expandComputeUrlMapPathMatcherDefaultRouteActionWeightedBackendServicesBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
-}
-
 func expandComputeUrlMapPathMatcherDefaultRouteActionWeightedBackendServicesWeight(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -14503,38 +14215,6 @@ func expandComputeUrlMapPathMatcherDefaultRouteActionRequestMirrorPolicy(v inter
 	}
 
 	return transformed, nil
-}
-
-func expandComputeUrlMapPathMatcherDefaultRouteActionRequestMirrorPolicyBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapPathMatcherDefaultRouteActionRequestMirrorPolicyMirrorPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -15397,38 +15077,6 @@ func expandComputeUrlMapTestHeadersValue(v interface{}, d tpgresource.TerraformR
 	return v, nil
 }
 
-func expandComputeUrlMapTestService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
-}
-
 func expandComputeUrlMapTestExpectedOutputUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -15633,38 +15281,6 @@ func expandComputeUrlMapDefaultRouteActionWeightedBackendServices(v interface{},
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandComputeUrlMapDefaultRouteActionWeightedBackendServicesBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapDefaultRouteActionWeightedBackendServicesWeight(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -16043,38 +15659,6 @@ func expandComputeUrlMapDefaultRouteActionRequestMirrorPolicy(v interface{}, d t
 	}
 
 	return transformed, nil
-}
-
-func expandComputeUrlMapDefaultRouteActionRequestMirrorPolicyBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from whatever the input is.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a reference to a global backend service.
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return "", err
-	}
-
-	return f.RelativeLink(), nil
 }
 
 func expandComputeUrlMapDefaultRouteActionRequestMirrorPolicyMirrorPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -605,24 +605,7 @@ func resourceApigeeKeystoresAliasesSelfSignedCertDelete(d *schema.ResourceData, 
 }
 
 func resourceApigeeKeystoresAliasesSelfSignedCertImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"organizations/(?P<org_id>[^/]+)/environments/(?P<environment>[^/]+)/keystores/(?P<keystore>[^/]+)/aliases/(?P<alias>[^/]+)",
-		"(?P<org_id>[^/]+)/(?P<environment>[^/]+)/(?P<keystore>[^/]+)/(?P<alias>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{org_id}}/environments/{{environment}}/keystores/{{keystore}}/aliases/{{alias}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeKeystoresAliasesSelfSignedCertCustomImport(d, meta)
 }
 
 func flattenApigeeKeystoresAliasesSelfSignedCertCertsInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

@@ -531,23 +531,7 @@ func resourceDataCatalogTaxonomyDelete(d *schema.ResourceData, meta interface{})
 }
 
 func resourceDataCatalogTaxonomyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	d.SetId(name)
-
-	re := regexp.MustCompile("projects/(.+)/(?:locations|regions)/(.+)/taxonomies/(.+)")
-	if matches := re.FindStringSubmatch(name); matches != nil {
-		d.Set("project", matches[1])
-		d.Set("region", matches[2])
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceDataCatalogTaxonomyCustomImport(d, meta)
 }
 
 func flattenDataCatalogTaxonomyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

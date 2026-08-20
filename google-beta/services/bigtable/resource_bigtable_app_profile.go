@@ -54,8 +54,6 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-import "google.golang.org/api/bigtableadmin/v2"
-
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -742,29 +740,6 @@ func flattenBigtableAppProfileDescription(v interface{}, d *schema.ResourceData,
 	return v
 }
 
-func flattenBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	d.Set("row_affinity", nil)
-	if v == nil {
-		return false
-	}
-
-	if v.(map[string]interface{})["rowAffinity"] != nil {
-		d.Set("row_affinity", true)
-	}
-
-	if v.(map[string]interface{})["clusterIds"] == nil {
-		return true
-	}
-
-	if len(v.(map[string]interface{})["clusterIds"].([]interface{})) > 0 {
-		if err := d.Set("multi_cluster_routing_cluster_ids", v.(map[string]interface{})["clusterIds"]); err != nil {
-			return true
-		}
-	}
-
-	return true
-}
-
 func flattenBigtableAppProfileSingleClusterRouting(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -824,29 +799,6 @@ func flattenBigtableAppProfileDataBoostIsolationReadOnlyComputeBillingOwner(v in
 
 func expandBigtableAppProfileDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil || !v.(bool) {
-		return nil, nil
-	}
-
-	obj := bigtableadmin.MultiClusterRoutingUseAny{}
-
-	clusterIds := d.Get("multi_cluster_routing_cluster_ids").([]interface{})
-
-	for _, id := range clusterIds {
-		obj.ClusterIds = append(obj.ClusterIds, id.(string))
-	}
-
-	affinity, _ := d.GetOkExists("row_affinity")
-	if affinity != nil && affinity == true {
-		obj.RowAffinity = &bigtableadmin.RowAffinity{}
-	} else {
-		obj.RowAffinity = nil
-	}
-
-	return obj, nil
 }
 
 func expandBigtableAppProfileSingleClusterRouting(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -936,14 +888,6 @@ func expandBigtableAppProfileDataBoostIsolationReadOnly(v interface{}, d tpgreso
 
 func expandBigtableAppProfileDataBoostIsolationReadOnlyComputeBillingOwner(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceBigtableAppProfileEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Instance is a URL parameter only, so replace self-link/path with resource name only.
-	if err := d.Set("instance", tpgresource.GetResourceNameFromSelfLink(d.Get("instance").(string))); err != nil {
-		return nil, fmt.Errorf("Error setting instance: %s", err)
-	}
-	return obj, nil
 }
 
 func ResourceBigtableAppProfileFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

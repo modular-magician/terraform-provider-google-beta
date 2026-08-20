@@ -37,7 +37,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cty/cty"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/id"
@@ -800,26 +799,7 @@ func resourceCloudSecurityComplianceFrameworkDelete(d *schema.ResourceData, meta
 }
 
 func resourceCloudSecurityComplianceFrameworkImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^(?P<parent>.*)/locations/(?P<location>[^/]+)/frameworks/(?P<framework_id>[^/]+)$",
-		"^organizations/(?P<organization>[^/]+)/locations/(?P<location>[^/]+)/frameworks/(?P<framework_id>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	if d.Get("organization").(string) == "" && d.Get("parent").(string) != "" {
-		if strings.HasPrefix(d.Get("parent").(string), "organizations/") {
-			d.Set("organization", strings.TrimPrefix(d.Get("parent").(string), "organizations/"))
-		}
-	} else if d.Get("parent").(string) == "" && d.Get("organization").(string) != "" {
-		d.Set("parent", "organizations/"+d.Get("organization").(string))
-	}
-
-	id := fmt.Sprintf("%s/locations/%s/frameworks/%s", d.Get("parent").(string), d.Get("location").(string), d.Get("framework_id").(string))
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceCloudSecurityComplianceFrameworkCustomImport(d, meta)
 }
 
 func flattenCloudSecurityComplianceFrameworkCategory(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1322,51 +1302,6 @@ func expandCloudSecurityComplianceFrameworkDescription(v interface{}, d tpgresou
 
 func expandCloudSecurityComplianceFrameworkDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceCloudSecurityComplianceFrameworkEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Build the fullname for the Framework resource from the provided
-	// parent, location and framework_id fields and set it on the
-	// API object that will be sent in the request.
-	// Extract the parent scope, falling back to organization for backward compatibility
-	var parentStr string
-	if parent, ok := d.GetOk("parent"); ok && parent.(string) != "" {
-		parentStr = parent.(string)
-	} else if org, ok := d.GetOk("organization"); ok && org.(string) != "" {
-		parentStr = fmt.Sprintf("organizations/%s", org.(string))
-	} else {
-		return nil, fmt.Errorf("either parent or organization must be provided")
-	}
-	loc, ok := d.Get("location").(string)
-	if !ok || loc == "" {
-		return nil, fmt.Errorf("location is required and must be a non-empty string")
-	}
-	fw, ok := d.Get("framework_id").(string)
-	if !ok || fw == "" {
-		return nil, fmt.Errorf("framework_id is required and must be a non-empty string")
-	}
-	// Compose the resource name in the expected API format.
-	name := fmt.Sprintf("%s/locations/%s/frameworks/%s", parentStr, loc, fw)
-	obj["name"] = name
-	return obj, nil
-}
-
-func identityCloudSecurityComplianceFrameworkResourceV1() tftypes.Type {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"organization": tftypes.String,
-			"location":     tftypes.String,
-			"framework_id": tftypes.String,
-		},
-	}
-}
-
-func IdentityCloudSecurityComplianceFrameworkUpgradeV1(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
-	if org, ok := rawState["organization"].(string); ok && org != "" {
-		rawState["parent"] = "organizations/" + org
-		delete(rawState, "organization")
-	}
-	return rawState, nil
 }
 
 func ResourceCloudSecurityComplianceFrameworkFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

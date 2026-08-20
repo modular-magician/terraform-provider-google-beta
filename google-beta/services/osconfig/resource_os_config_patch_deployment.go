@@ -1350,15 +1350,7 @@ func resourceOSConfigPatchDeploymentDelete(d *schema.ResourceData, meta interfac
 }
 
 func resourceOSConfigPatchDeploymentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceOSConfigPatchDeploymentCustomImport(d, meta)
 }
 
 func flattenOSConfigPatchDeploymentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1988,91 +1980,6 @@ func flattenOSConfigPatchDeploymentRecurringScheduleStartTime(v interface{}, d *
 
 func flattenOSConfigPatchDeploymentRecurringScheduleEndTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDay(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-	transformed["hours"] =
-		flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDayHours(original["hours"], d, config)
-	transformed["minutes"] =
-		flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDayMinutes(original["minutes"], d, config)
-	transformed["seconds"] =
-		flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDaySeconds(original["seconds"], d, config)
-	transformed["nanos"] =
-		flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDayNanos(original["nanos"], d, config)
-	return []interface{}{transformed}
-}
-
-func flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDayHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDayMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDaySeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenOSConfigPatchDeploymentRecurringScheduleTimeOfDayNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
 }
 
 func flattenOSConfigPatchDeploymentRecurringScheduleLastExecuteTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3580,56 +3487,6 @@ func expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(v interface{
 	return v, nil
 }
 
-func resourceOSConfigPatchDeploymentEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if obj["recurringSchedule"] != nil {
-		schedule := obj["recurringSchedule"].(map[string]interface{})
-		if schedule["monthly"] != nil {
-			obj["recurringSchedule"].(map[string]interface{})["frequency"] = "MONTHLY"
-		} else if schedule["weekly"] != nil {
-			obj["recurringSchedule"].(map[string]interface{})["frequency"] = "WEEKLY"
-		} else {
-			obj["recurringSchedule"].(map[string]interface{})["frequency"] = "DAILY"
-		}
-	}
-
-	if obj["patchConfig"] != nil {
-		patchConfig := obj["patchConfig"].(map[string]interface{})
-		if patchConfig["goo"] != nil {
-			goo := patchConfig["goo"].(map[string]interface{})
-
-			if goo["enabled"] == true {
-				delete(goo, "enabled")
-				patchConfig["goo"] = goo
-			} else {
-				delete(patchConfig, "goo")
-			}
-
-			obj["patchConfig"] = patchConfig
-		}
-	}
-
-	return obj, nil
-}
-
-func resourceOSConfigPatchDeploymentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if res["patchConfig"] != nil {
-		patchConfig := res["patchConfig"].(map[string]interface{})
-		if patchConfig["goo"] != nil {
-			patchConfig["goo"].(map[string]interface{})["enabled"] = true
-			res["patchConfig"] = patchConfig
-		}
-
-		if patchConfig["yum"] != nil {
-			patchConfigYum := patchConfig["yum"].(map[string]interface{})
-			if _, ok := patchConfigYum["minimal"]; !ok {
-				patchConfigYum["minimal"] = false
-			}
-			patchConfig["yum"] = patchConfigYum
-		}
-	}
-
-	return res, nil
-}
 func resourceOSConfigPatchDeploymentPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceOSConfigPatchDeploymentDecoder(d, meta, res)

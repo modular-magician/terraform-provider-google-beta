@@ -924,26 +924,7 @@ func resourceBigqueryDataTransferConfigDelete(d *schema.ResourceData, meta inter
 }
 
 func resourceBigqueryDataTransferConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	// import location if the name format follows: projects/{{project}}/locations/{{location}}/transferConfigs/{{config_id}}
-	name := d.Get("name").(string)
-	stringParts := strings.Split(name, "/")
-	if len(stringParts) == 6 {
-		if err := d.Set("location", stringParts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting location: %s", err)
-		}
-	} else {
-		log.Printf("[INFO] Transfer config location not imported as it is not included in the name: %s", name)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceBigqueryDataTransferConfigCustomImport(d, meta)
 }
 
 func flattenBigqueryDataTransferConfigDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1052,20 +1033,6 @@ func flattenBigqueryDataTransferConfigEncryptionConfigurationKmsKeyName(v interf
 
 func flattenBigqueryDataTransferConfigDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenBigqueryDataTransferConfigParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-
-	kv := v.(map[string]interface{})
-
-	res := make(map[string]string)
-	for key, value := range kv {
-		res[key] = fmt.Sprintf("%v", value)
-	}
-	return res
 }
 
 func expandBigqueryDataTransferConfigDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1207,79 +1174,6 @@ func expandBigqueryDataTransferConfigParams(v interface{}, d tpgresource.Terrafo
 	return m, nil
 }
 
-func resourceBigqueryDataTransferConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	paramMap, ok := obj["params"]
-	if !ok {
-		paramMap = make(map[string]string)
-	}
-
-	params := map[string]interface{}{}
-
-	for k, v := range paramMap.(map[string]string) {
-		var value interface{}
-		if err := json.Unmarshal([]byte(v), &value); err != nil {
-			// If the value is a string, don't convert it to anything.
-			params[k] = v
-		} else {
-			switch value.(type) {
-			case float64:
-				// If the value is a number, keep the string representation.
-				params[k] = v
-			default:
-				// If the value is another JSON type, keep the unmarshalled type as is.
-				params[k] = value
-			}
-		}
-	}
-
-	for _, sp := range sensitiveParams {
-		if auth, _ := d.GetOkExists("sensitive_params.0." + sp); auth != "" {
-			params[sp] = auth.(string)
-		}
-	}
-	for _, sp := range sensitiveWoParams {
-		if auth, _ := d.GetRawConfigAt(cty.GetAttrPath("sensitive_params").IndexInt(0).GetAttr(sp)); !auth.IsNull() && auth.Type().Equals(cty.String) {
-			sp = sp[:len(sp)-3] // _wo is convention for write-only params and are removed here
-			params[sp] = auth.AsString()
-		}
-	}
-
-	obj["params"] = params
-
-	return obj, nil
-}
-
-func resourceBigqueryDataTransferConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if paramMap, ok := res["params"]; ok {
-		params := paramMap.(map[string]interface{})
-		for _, sp := range sensitiveParams {
-			if _, apiOk := params[sp]; apiOk {
-				if _, exists := d.GetOkExists("sensitive_params.0." + sp); exists {
-					delete(params, sp)
-				} else if _, exists := d.GetOkExists("sensitive_params.0.secret_access_key_wo_version"); exists {
-					delete(params, sp)
-				} else {
-					params[sp] = d.Get("params." + sp)
-				}
-			}
-		}
-		for k, v := range params {
-			switch v.(type) {
-			case []interface{}, map[string]interface{}:
-				value, err := json.Marshal(v)
-				if err != nil {
-					return nil, err
-				}
-				params[k] = string(value)
-			default:
-				params[k] = v
-			}
-		}
-		res["params"] = params
-	}
-
-	return res, nil
-}
 func resourceBigqueryDataTransferConfigPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceBigqueryDataTransferConfigDecoder(d, meta, res)

@@ -609,31 +609,6 @@ func expandLoggingLogViewFilter(v interface{}, d tpgresource.TerraformResourceDa
 	return v, nil
 }
 
-func resourceLoggingLogViewEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Extract any empty fields from the bucket field.
-	parent := d.Get("parent").(string)
-	bucket := d.Get("bucket").(string)
-	parent, err := tpgresource.ExtractFieldByPattern("parent", parent, bucket, "((projects|folders|organizations|billingAccounts)/[a-z0-9A-Z-]*)/locations/.*")
-	if err != nil {
-		return nil, fmt.Errorf("error extracting parent field: %s", err)
-	}
-	location := d.Get("location").(string)
-	location, err = tpgresource.ExtractFieldByPattern("location", location, bucket, "[a-zA-Z]*/[a-z0-9A-Z-]*/locations/([a-z0-9-]*)/buckets/.*")
-	if err != nil {
-		return nil, fmt.Errorf("error extracting location field: %s", err)
-	}
-	// Set parent to the extracted value.
-	d.Set("parent", parent)
-	// Set all the other fields to their short forms before forming url and setting ID.
-	bucket = tpgresource.GetResourceNameFromSelfLink(bucket)
-	name := d.Get("name").(string)
-	name = tpgresource.GetResourceNameFromSelfLink(name)
-	d.Set("location", location)
-	d.Set("bucket", bucket)
-	d.Set("name", name)
-	return obj, nil
-}
-
 func ResourceLoggingLogViewFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

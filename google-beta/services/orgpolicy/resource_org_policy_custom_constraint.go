@@ -562,13 +562,6 @@ func resourceOrgPolicyCustomConstraintImport(d *schema.ResourceData, meta interf
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenOrgPolicyCustomConstraintName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenOrgPolicyCustomConstraintDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -597,10 +590,6 @@ func flattenOrgPolicyCustomConstraintUpdateTime(v interface{}, d *schema.Resourc
 	return v
 }
 
-func expandOrgPolicyCustomConstraintName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
-}
-
 func expandOrgPolicyCustomConstraintDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -623,16 +612,6 @@ func expandOrgPolicyCustomConstraintMethodTypes(v interface{}, d tpgresource.Ter
 
 func expandOrgPolicyCustomConstraintResourceTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceOrgPolicyCustomConstraintUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// need to send resource_types in all PATCH requests
-	resourceTypesProp := d.Get("resource_types")
-	if v, ok := d.GetOkExists("resource_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, resourceTypesProp)) {
-		obj["resourceTypes"] = resourceTypesProp
-	}
-
-	return obj, nil
 }
 
 func ResourceOrgPolicyCustomConstraintFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

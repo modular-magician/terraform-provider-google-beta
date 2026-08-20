@@ -903,19 +903,6 @@ func flattenConfigDeploymentTerraformBlueprintInputValues(v interface{}, d *sche
 	}
 	return transformed
 }
-func flattenConfigDeploymentTerraformBlueprintInputValuesInputValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-
-	b, err := json.Marshal(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to marshal InputValue to JSON: %s", err)
-		return ""
-	}
-
-	return string(b)
-}
 
 func flattenConfigDeploymentLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
@@ -1113,27 +1100,6 @@ func expandConfigDeploymentTerraformBlueprintInputValues(v interface{}, d tpgres
 		m[transformedVariableName] = transformed
 	}
 	return m, nil
-}
-
-func expandConfigDeploymentTerraformBlueprintInputValuesInputValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	s, ok := v.(string)
-	if !ok {
-		return nil, fmt.Errorf("expected InputValue to be a string")
-	}
-	if s == "" {
-		return nil, nil
-	}
-
-	var out interface{}
-	if err := json.Unmarshal([]byte(s), &out); err != nil {
-		return nil, fmt.Errorf("InputValue must be valid JSON: %w", err)
-	}
-
-	return out, nil
 }
 
 func expandConfigDeploymentTfVersionConstraint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

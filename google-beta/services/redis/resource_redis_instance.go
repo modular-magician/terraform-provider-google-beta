@@ -1431,13 +1431,6 @@ func flattenRedisInstanceLocationId(v interface{}, d *schema.ResourceData, confi
 	return v
 }
 
-func flattenRedisInstanceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenRedisInstancePersistenceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1852,14 +1845,6 @@ func expandRedisInstanceAuthEnabled(v interface{}, d tpgresource.TerraformResour
 	return v, nil
 }
 
-func expandRedisInstanceAuthorizedNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	fv, err := tpgresource.ParseNetworkFieldValue(v.(string), d, config)
-	if err != nil {
-		return nil, err
-	}
-	return fv.RelativeLink(), nil
-}
-
 func expandRedisInstanceConnectMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1881,10 +1866,6 @@ func expandRedisInstanceRedisConfigs(v interface{}, d tpgresource.TerraformResou
 
 func expandRedisInstanceLocationId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandRedisInstanceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/instances/{{name}}")
 }
 
 func expandRedisInstancePersistenceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2161,71 +2142,6 @@ func expandRedisInstanceEffectiveLabels(v interface{}, d tpgresource.TerraformRe
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceRedisInstanceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	region, err := tpgresource.GetRegionFromSchema("region", "location_id", d, config)
-	if err != nil {
-		return nil, err
-	}
-	if err := d.Set("region", region); err != nil {
-		return nil, fmt.Errorf("Error setting region: %s", err)
-	}
-	return obj, nil
-}
-
-func resourceRedisInstanceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-
-	if v, ok := res["authEnabled"].(bool); ok {
-		if v {
-			url, err := tpgresource.ReplaceVars(d, config, "{{RedisBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}/authString")
-			if err != nil {
-				return nil, err
-			}
-
-			billingProject := ""
-
-			project, err := tpgresource.GetProject(d, config)
-			if err != nil {
-				return nil, fmt.Errorf("Error fetching project for Instance: %s", err)
-			}
-
-			billingProject = project
-
-			// err == nil indicates that the billing_project value was found
-			if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-				billingProject = bp
-			}
-
-			res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: userAgent,
-			})
-			if err != nil {
-				return nil, fmt.Errorf("Error reading AuthString: %s", err)
-			}
-
-			if err := d.Set("auth_string", res["authString"]); err != nil {
-				return nil, fmt.Errorf("Error reading Instance: %s", err)
-			}
-		}
-	} else {
-		if err := d.Set("auth_string", ""); err != nil {
-			return nil, fmt.Errorf("Error reading Instance: %s", err)
-		}
-	}
-
-	return res, nil
 }
 
 func ResourceRedisInstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

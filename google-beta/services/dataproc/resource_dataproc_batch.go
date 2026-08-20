@@ -2289,37 +2289,6 @@ func expandDataprocBatchEffectiveLabels(v interface{}, d tpgresource.TerraformRe
 	return m, nil
 }
 
-func resourceDataprocBatchDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if obj1, ok := res["runtimeConfig"]; ok {
-		if rconfig, ok := obj1.(map[string]interface{}); ok {
-			if obj2, ok := rconfig["properties"]; ok {
-				if properties, ok := obj2.(map[string]interface{}); ok {
-					// Update effective_properties to include both server set and client set properties
-					propertiesCopy := make(map[string]interface{})
-					for k, v := range properties {
-						propertiesCopy[k] = v
-					}
-					rconfig["effectiveProperties"] = propertiesCopy
-
-					// Update properties back to original client set properties
-					originalPropertiesCopy := make(map[string]interface{})
-					properties := d.Get("runtime_config.0.properties")
-					if properties != nil {
-						originalProperties := properties.(interface{}).(map[string]interface{})
-						for k, v := range originalProperties {
-							originalPropertiesCopy[k] = v
-						}
-						rconfig["properties"] = originalPropertiesCopy
-					}
-					return res, nil
-				}
-			}
-		}
-	}
-
-	return res, nil
-}
-
 func ResourceDataprocBatchFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

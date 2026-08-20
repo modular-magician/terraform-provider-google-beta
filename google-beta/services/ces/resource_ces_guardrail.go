@@ -1715,13 +1715,6 @@ func flattenCESGuardrailModelSafetySafetySettingsThreshold(v interface{}, d *sch
 	return v
 }
 
-func flattenCESGuardrailName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenCESGuardrailUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

@@ -456,61 +456,7 @@ func resourceComputeInstanceSettingsDelete(d *schema.ResourceData, meta interfac
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing InstanceSettings %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceSettings")
-	if err != nil {
-		return err
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for InstanceSettings: %s", err)
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
-
-	if err != nil {
-		return err
-	}
-
-	obj := map[string]interface{}{"fingerprint": res["fingerprint"], "metadata": map[string]interface{}{"items": map[string]string{}}}
-	log.Printf("[DEBUG] Emptying InstanceSettings %#v", obj)
-
-	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": "*"})
-	if err != nil {
-		return err
-	}
-
-	res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
-
-	if err != nil {
-		return fmt.Errorf("Error emptying InstanceSettings %s", err)
-	} else {
-		log.Printf("[DEBUG] Finished emptying InstanceSettings %#v", res)
-	}
-
-	time.Sleep(1 * time.Minute)
-
-	return nil
+	return resourceComputeInstanceSettingsCustomDelete(d, meta)
 }
 
 func resourceComputeInstanceSettingsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -596,14 +542,6 @@ func expandComputeInstanceSettingsMetadataItems(v interface{}, d tpgresource.Ter
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandComputeInstanceSettingsZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeInstanceSettingsFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

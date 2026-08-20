@@ -388,15 +388,7 @@ func resourceOracleDatabaseCloudExadataInfrastructureExascaleConfigDelete(d *sch
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing CloudExadataInfrastructureExascaleConfig %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[WARNING] Resource [%s] will be only removed from Terraform state, but will be left intact on GCP. %s", d.Id(), userAgent)
-
-	return schema.RemoveFromState(d, meta)
+	return resourceOracleDatabaseCloudExadataInfrastructureExascaleConfigCustomDelete(d, meta)
 }
 
 func resourceOracleDatabaseCloudExadataInfrastructureExascaleConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -438,22 +430,6 @@ func flattenOracleDatabaseCloudExadataInfrastructureExascaleConfigTotalStorageSi
 
 func expandOracleDatabaseCloudExadataInfrastructureExascaleConfigTotalStorageSizeGb(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceOracleDatabaseCloudExadataInfrastructureExascaleConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	properties, ok := res["properties"].(map[string]interface{})
-	if !ok || properties == nil {
-		return nil, fmt.Errorf("properties not found in response")
-	}
-
-	exascaleConfig, ok := properties["exascaleConfig"].(map[string]interface{})
-	if !ok || exascaleConfig == nil {
-		return nil, nil
-	}
-
-	res["totalStorageSizeGb"] = exascaleConfig["totalStorageSizeGb"]
-
-	return res, nil
 }
 
 func ResourceOracleDatabaseCloudExadataInfrastructureExascaleConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

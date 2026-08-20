@@ -1961,18 +1961,6 @@ func flattenComputeSubnetworkIpCidrRange(v interface{}, d *schema.ResourceData, 
 	return v
 }
 
-func flattenComputeSubnetworkReservedInternalRange(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	// Normalize the URL to the prefixed format: networkconnectivity.googleapis.com/projects/...
-	path, err := tpgresource.GetRelativePath(v.(string))
-	if err != nil {
-		return v
-	}
-	return "networkconnectivity.googleapis.com/" + path
-}
-
 func flattenComputeSubnetworkName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2023,18 +2011,6 @@ func flattenComputeSubnetworkSecondaryIpRangeIpCidrRange(v interface{}, d *schem
 	return v
 }
 
-func flattenComputeSubnetworkSecondaryIpRangeReservedInternalRange(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	// Normalize the URL to the prefixed format: networkconnectivity.googleapis.com/projects/...
-	path, err := tpgresource.GetRelativePath(v.(string))
-	if err != nil {
-		return v
-	}
-	return "networkconnectivity.googleapis.com/" + path
-}
-
 func flattenComputeSubnetworkSecondaryIpRangeIpVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2052,46 +2028,6 @@ func flattenComputeSubnetworkPrivateIpGoogleAccess(v interface{}, d *schema.Reso
 
 func flattenComputeSubnetworkPrivateIpv6GoogleAccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenComputeSubnetworkRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
-func flattenComputeSubnetworkLogConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-
-	v, ok := original["enable"]
-	if ok && !v.(bool) {
-		return nil
-	}
-
-	transformed := make(map[string]interface{})
-	transformed["flow_sampling"] = original["flowSampling"]
-	transformed["aggregation_interval"] = original["aggregationInterval"]
-	transformed["metadata"] = original["metadata"]
-	if original["metadata"].(string) == "CUSTOM_METADATA" {
-		transformed["metadata_fields"] = original["metadataFields"]
-	} else {
-		// MetadataFields can only be set when metadata is CUSTOM_METADATA. However, when updating
-		// from custom to include/exclude, the API will return the previous values of the metadata fields,
-		// despite not actually having any custom fields at the moment. The API team has confirmed
-		// this as WAI (b/162771344), so we work around it by clearing the response if metadata is
-		// not custom.
-		transformed["metadata_fields"] = nil
-	}
-	transformed["filter_expr"] = original["filterExpr"]
-
-	return []interface{}{transformed}
 }
 
 func flattenComputeSubnetworkStackType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2148,14 +2084,6 @@ func expandComputeSubnetworkReservedInternalRange(v interface{}, d tpgresource.T
 
 func expandComputeSubnetworkName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeSubnetworkNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("networks", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for network: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandComputeSubnetworkPurpose(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2245,46 +2173,6 @@ func expandComputeSubnetworkPrivateIpGoogleAccess(v interface{}, d tpgresource.T
 
 func expandComputeSubnetworkPrivateIpv6GoogleAccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeSubnetworkRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func expandComputeSubnetworkLogConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	transformed := make(map[string]interface{})
-	if len(l) == 0 || l[0] == nil {
-		purpose, ok := d.GetOkExists("purpose")
-
-		if ok && (purpose.(string) == "REGIONAL_MANAGED_PROXY" || purpose.(string) == "GLOBAL_MANAGED_PROXY" || purpose.(string) == "INTERNAL_HTTPS_LOAD_BALANCER") {
-			// Subnetworks for regional L7 ILB/XLB or cross-regional L7 ILB do not accept any values for logConfig
-			return nil, nil
-		}
-
-		// send enable = false to ensure logging is disabled if there is no config
-		transformed["enable"] = false
-		return transformed, nil
-	}
-
-	raw := l[0]
-	original := raw.(map[string]interface{})
-
-	// The log_config block is specified, so logging should be enabled
-	transformed["enable"] = true
-	transformed["aggregationInterval"] = original["aggregation_interval"]
-	transformed["flowSampling"] = original["flow_sampling"]
-	transformed["metadata"] = original["metadata"]
-	transformed["filterExpr"] = original["filter_expr"]
-
-	// make it JSON marshallable
-	transformed["metadataFields"] = original["metadata_fields"].(*schema.Set).List()
-
-	return transformed, nil
 }
 
 func expandComputeSubnetworkStackType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -676,13 +676,6 @@ func resourceVertexAIFeatureGroupImport(d *schema.ResourceData, meta interface{}
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenVertexAIFeatureGroupName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenVertexAIFeatureGroupCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -704,10 +697,6 @@ func flattenVertexAIFeatureGroupLabels(v interface{}, d *schema.ResourceData, co
 	}
 
 	return transformed
-}
-
-func flattenVertexAIFeatureGroupDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("description")
 }
 
 func flattenVertexAIFeatureGroupBigQuery(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

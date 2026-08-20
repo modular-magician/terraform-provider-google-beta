@@ -876,45 +876,6 @@ func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressFr
 	return v
 }
 
-func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressFromIdentities(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	rawConfigValue := d.Get("egress_from.0.identities")
-	// Convert config value to []string
-	configValue, err := tpgresource.InterfaceSliceToStringSlice(rawConfigValue)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert egress from identities config value: %s", err)
-		return v
-	}
-
-	// Normalize IAM principal casing
-	for i, val := range configValue {
-		configValue[i] = tpgresource.NormalizeIamPrincipalCasing(val)
-	}
-
-	sortedConfigValue := append([]string{}, configValue...)
-	sort.Strings(sortedConfigValue)
-
-	// Convert v to []string
-	apiValue, err := tpgresource.InterfaceSliceToStringSlice(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert egress from identities API value: %s", err)
-		return v
-	}
-
-	// Normalize IAM principal casing
-	for i, val := range apiValue {
-		apiValue[i] = tpgresource.NormalizeIamPrincipalCasing(val)
-	}
-
-	sortedApiValue := append([]string{}, apiValue...)
-	sort.Strings(sortedApiValue)
-
-	if slices.Equal(sortedApiValue, sortedConfigValue) {
-		return configValue
-	}
-
-	return apiValue
-}
-
 func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressFromSources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -983,32 +944,6 @@ func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressTo
 	transformed["operations"] =
 		flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressToOperations(original["operations"], d, config)
 	return []interface{}{transformed}
-}
-func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressToResources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	rawConfigValue := d.Get("egress_to.0.resources")
-	// Convert config value to []string
-	configValue, err := tpgresource.InterfaceSliceToStringSlice(rawConfigValue)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert config value: %s", err)
-		return v
-	}
-	sortedConfigValue := append([]string{}, configValue...)
-	sort.Strings(sortedConfigValue)
-
-	// Convert v to []string
-	apiValue, err := tpgresource.InterfaceSliceToStringSlice(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert API value: %s", err)
-		return v
-	}
-	sortedApiValue := append([]string{}, apiValue...)
-	sort.Strings(sortedApiValue)
-
-	if slices.Equal(sortedApiValue, sortedConfigValue) {
-		return configValue
-	}
-
-	return apiValue
 }
 
 func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressToExternalResources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1340,17 +1275,6 @@ func expandNestedAccessContextManagerServicePerimeterDryRunEgressPolicyEgressToO
 
 func expandNestedAccessContextManagerServicePerimeterDryRunEgressPolicyTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceAccessContextManagerServicePerimeterDryRunEgressPolicyEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Set the access_policy_id field from part of the perimeter parameter.
-
-	// The is logic is inside the encoder since the access_policy_id field is part of
-	// the mutex lock and encoders run before the lock is set.
-	parts := strings.Split(d.Get("perimeter").(string), "/")
-	d.Set("access_policy_id", fmt.Sprintf("accessPolicies/%s", parts[1]))
-
-	return obj, nil
 }
 
 func flattenNestedAccessContextManagerServicePerimeterDryRunEgressPolicy(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

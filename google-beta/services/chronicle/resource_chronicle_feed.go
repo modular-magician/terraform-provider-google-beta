@@ -9658,11 +9658,6 @@ func flattenChronicleFeedUid(v interface{}, d *schema.ResourceData, config *tran
 	return v
 }
 
-func flattenChronicleFeedFeed(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleFeedEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -17743,15 +17738,6 @@ func expandChronicleFeedFeed(v interface{}, d tpgresource.TerraformResourceData,
 	return v, nil
 }
 
-func resourceChronicleFeedUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// The Chronicle API rejects update requests if an existing displayName is sent in the body.
-	// Therefore, we must explicitly strip it out of the JSON payload if the user didn't modify it.
-	if !d.HasChange("display_name") {
-		delete(obj, "displayName")
-	}
-
-	return obj, nil
-}
 func resourceChronicleFeedPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	// Setting `name` field so that `id_from_name` flattener will work properly.

@@ -1146,13 +1146,6 @@ func resourceDialogflowCXTestCaseImport(d *schema.ResourceData, meta interface{}
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenDialogflowCXTestCaseName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenDialogflowCXTestCaseTags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1313,18 +1306,6 @@ func flattenDialogflowCXTestCaseTestCaseConversationTurnsUserInputInputDtmfFinis
 	return v
 }
 
-func flattenDialogflowCXTestCaseTestCaseConversationTurnsUserInputInjectedParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenDialogflowCXTestCaseTestCaseConversationTurnsUserInputIsWebhookEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1351,17 +1332,6 @@ func flattenDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutput(v in
 	transformed["text_responses"] =
 		flattenDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTextResponses(original["textResponses"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputSessionParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTriggeredIntent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1585,18 +1555,6 @@ func flattenDialogflowCXTestCaseLastTestResultConversationTurnsUserInputInputDtm
 	return v
 }
 
-func flattenDialogflowCXTestCaseLastTestResultConversationTurnsUserInputInjectedParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenDialogflowCXTestCaseLastTestResultConversationTurnsUserInputIsWebhookEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1627,17 +1585,6 @@ func flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutpu
 	transformed["status"] =
 		flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutputStatus(original["status"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutputSessionParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutputDifferences(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1773,18 +1720,6 @@ func flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutpu
 
 func flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutputStatusMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDialogflowCXTestCaseLastTestResultConversationTurnsVirtualAgentOutputStatusDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXTestCaseLastTestResultTestResult(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2066,18 +2001,6 @@ func expandDialogflowCXTestCaseTestCaseConversationTurnsUserInputInputDtmfFinish
 	return v, nil
 }
 
-func expandDialogflowCXTestCaseTestCaseConversationTurnsUserInputInjectedParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandDialogflowCXTestCaseTestCaseConversationTurnsUserInputIsWebhookEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2127,18 +2050,6 @@ func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutput(v int
 	}
 
 	return transformed, nil
-}
-
-func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputSessionParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTriggeredIntent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

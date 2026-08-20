@@ -1542,28 +1542,6 @@ func expandComputeFirewallPolicyRuleDisabled(v interface{}, d tpgresource.Terraf
 	return v, nil
 }
 
-func expandComputeFirewallPolicyRuleFirewallPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	firewallPolicyId := tpgresource.GetResourceNameFromSelfLink(v.(string))
-	if err := d.Set("firewall_policy", firewallPolicyId); err != nil {
-		return nil, fmt.Errorf("Error setting firewall_policy: %s", err)
-	}
-	return firewallPolicyId, nil
-}
-
-func resourceComputeFirewallPolicyRuleUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if !d.HasChange("match") {
-		return obj, nil
-	}
-	oldMatch, newMatch := d.GetChange("match")
-
-	err := adjustFirewallPolicyRuleNetworkContextFields(obj, oldMatch, newMatch)
-	if err != nil {
-		return obj, err
-	}
-
-	return obj, nil
-}
-
 func ResourceComputeFirewallPolicyRuleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

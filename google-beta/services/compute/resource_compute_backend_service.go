@@ -2858,13 +2858,6 @@ func flattenComputeBackendServiceBackendDescription(v interface{}, d *schema.Res
 	return v
 }
 
-func flattenComputeBackendServiceBackendGroup(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
-}
-
 func flattenComputeBackendServiceBackendMaxConnections(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -3630,13 +3623,6 @@ func flattenComputeBackendServiceDescription(v interface{}, d *schema.ResourceDa
 
 func flattenComputeBackendServiceEnableCDN(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenComputeBackendServiceHealthChecks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.ConvertAndMapStringArr(v.([]interface{}), tpgresource.ConvertSelfLinkToV1)
 }
 
 func flattenComputeBackendServiceGeneratedId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6399,81 +6385,6 @@ func expandComputeBackendServiceParamsResourceManagerTags(v interface{}, d tpgre
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceComputeBackendServiceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	backendsRaw, ok := obj["backends"]
-	if !ok {
-		return obj, nil
-	}
-	backends := backendsRaw.([]interface{})
-	for _, backendRaw := range backends {
-		backend := backendRaw.(map[string]interface{})
-
-		if isNegBackend(backend) {
-			// Remove `max_utilization` from any backend that belongs to an NEG. This field
-			// has a default value and causes API validation errors
-			backend["maxUtilization"] = nil
-		}
-	}
-
-	// This custom encoding helps prevent sending 0 for clientTtl, defaultTtl and
-	// maxTtl in API calls to update these values  when unset in the provider
-	// (doing so results in an API level error)
-	c, cdnPolicyOk := d.GetOk("cdn_policy")
-
-	// Only apply during updates
-	if !cdnPolicyOk || obj["cdnPolicy"] == nil {
-		return obj, nil
-	}
-
-	currentCdnPolicies := c.([]interface{})
-
-	// state does not contain cdnPolicy, so we can return early here as well
-	if len(currentCdnPolicies) == 0 {
-		return obj, nil
-	}
-
-	futureCdnPolicy := obj["cdnPolicy"].(map[string]interface{})
-	currentCdnPolicy := currentCdnPolicies[0].(map[string]interface{})
-
-	cacheMode, ok := futureCdnPolicy["cache_mode"].(string)
-	// Fallback to state if doesn't exist in object
-	if !ok {
-		cacheMode = currentCdnPolicy["cache_mode"].(string)
-	}
-
-	switch cacheMode {
-	case "USE_ORIGIN_HEADERS":
-		if _, ok := futureCdnPolicy["clientTtl"]; ok {
-			delete(futureCdnPolicy, "clientTtl")
-		}
-		if _, ok := futureCdnPolicy["defaultTtl"]; ok {
-			delete(futureCdnPolicy, "defaultTtl")
-		}
-		if _, ok := futureCdnPolicy["maxTtl"]; ok {
-			delete(futureCdnPolicy, "maxTtl")
-		}
-	}
-
-	return obj, nil
-}
-
-func resourceComputeBackendServiceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Requests with consistentHash will error for specific values of
-	// localityLbPolicy. However, the API will not remove it if the backend
-	// service is updated to from supporting to non-supporting localityLbPolicy
-	// (e.g. RING_HASH to RANDOM), which causes an error on subsequent update.
-	// In order to prevent errors, we ignore any consistentHash returned
-	// from the API when the localityLbPolicy doesn't support it.
-	if v, ok := res["localityLbPolicy"]; ok {
-		lbPolicy := v.(string)
-		if lbPolicy != "MAGLEV" && lbPolicy != "RING_HASH" {
-			delete(res, "consistentHash")
-		}
-	}
-
-	return res, nil
 }
 
 func ResourceComputeBackendServiceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

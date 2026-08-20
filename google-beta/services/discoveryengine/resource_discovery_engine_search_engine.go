@@ -1248,12 +1248,6 @@ func expandDiscoveryEngineSearchEngineKnowledgeGraphConfigFeatureConfigDisablePr
 	return v, nil
 }
 
-func resourceDiscoveryEngineSearchEngineEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// hard code solutionType to "SOLUTION_TYPE_SEARCH" for search engine resource
-	obj["solutionType"] = "SOLUTION_TYPE_SEARCH"
-	return obj, nil
-}
-
 func ResourceDiscoveryEngineSearchEngineFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

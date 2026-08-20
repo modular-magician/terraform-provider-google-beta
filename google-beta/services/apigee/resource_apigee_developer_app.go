@@ -825,97 +825,7 @@ func resourceApigeeDeveloperAppUpdate(d *schema.ResourceData, meta interface{}) 
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceApigeeDeveloperAppRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	// Build the app PUT body, intentionally EXCLUDING apiProducts and scopes.
-	// Sending apiProducts on the app object causes Apigee to create a brand new
-	// credential (consumer key) instead of updating the existing one, orphaning the
-	// previous key. apiProducts and scopes are reconciled on the existing key via
-	// the keys API below.
-	obj := make(map[string]interface{})
-	nameProp, err := expandApigeeDeveloperAppName(d.Get("name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
-	}
-	appFamilyProp, err := expandApigeeDeveloperAppAppFamily(d.Get("app_family"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("app_family"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, appFamilyProp)) {
-		obj["appFamily"] = appFamilyProp
-	}
-	callbackUrlProp, err := expandApigeeDeveloperAppCallbackUrl(d.Get("callback_url"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("callback_url"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, callbackUrlProp)) {
-		obj["callbackUrl"] = callbackUrlProp
-	}
-	keyExpiresInProp, err := expandApigeeDeveloperAppKeyExpiresIn(d.Get("key_expires_in"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("key_expires_in"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, keyExpiresInProp)) {
-		obj["keyExpiresIn"] = keyExpiresInProp
-	}
-	statusProp, err := expandApigeeDeveloperAppStatus(d.Get("status"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, statusProp)) {
-		obj["status"] = statusProp
-	}
-	attributesProp, err := expandApigeeDeveloperAppAttributes(d.Get("attributes"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("attributes"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, attributesProp)) {
-		obj["attributes"] = attributesProp
-	}
-
-	// Only issue the app PUT if a non-key field actually changed.
-	appFieldChanged := d.HasChange("name") || d.HasChange("app_family") || d.HasChange("callback_url") ||
-		d.HasChange("key_expires_in") || d.HasChange("status") || d.HasChange("attributes")
-
-	if appFieldChanged {
-		url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}{{org_id}}/developers/{{developer_email}}/apps/{{name}}")
-		if err != nil {
-			return err
-		}
-		log.Printf("[DEBUG] Updating DeveloperApp %q: %#v", d.Id(), obj)
-		headers := make(http.Header)
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "PUT",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-			Headers:   headers,
-		})
-		if err != nil {
-			return fmt.Errorf("Error updating DeveloperApp %q: %s", d.Id(), err)
-		}
-		log.Printf("[DEBUG] Finished updating DeveloperApp %q: %#v", d.Id(), res)
-	}
-
-	// Reconcile api_products and scopes on the existing credential (keys API),
-	// avoiding creation of a new credential.
-	if d.HasChange("api_products") || d.HasChange("scopes") {
-		if err := updateDeveloperAppKeyProductsAndScopes(config, d, billingProject, userAgent); err != nil {
-			return err
-		}
-	}
-
-	return resourceApigeeDeveloperAppRead(d, meta)
+	return resourceApigeeDeveloperAppCustomUpdate(d, meta)
 }
 
 func resourceApigeeDeveloperAppDelete(d *schema.ResourceData, meta interface{}) error {
@@ -968,21 +878,7 @@ func resourceApigeeDeveloperAppDelete(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceApigeeDeveloperAppImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	importFormat := "(?P<org_id>organizations/[^/]+)/developers/(?P<developer_email>[^/]+)/apps/(?P<name>.+)"
-
-	if err := tpgresource.ParseImportId([]string{importFormat}, d, config); err != nil {
-		return nil, err
-	}
-
-	id, err := tpgresource.ReplaceVars(d, config, "{{org_id}}/developers/{{developer_email}}/apps/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeDeveloperAppCustomImport(d, meta)
 }
 
 func flattenApigeeDeveloperAppName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1233,73 +1129,6 @@ func expandApigeeDeveloperAppAttributesName(v interface{}, d tpgresource.Terrafo
 
 func expandApigeeDeveloperAppAttributesValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceApigeeDeveloperAppDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if obj, ok := res["credentials"]; ok {
-		credList, ok := obj.([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("Unable to decode credentials block from API response: unexpected type %T.", obj)
-		}
-		if len(credList) == 0 {
-			// Apigee may return an empty credentials array immediately after resource
-			// creation before the auto-generated key has fully propagated (eventual
-			// consistency). Return without setting derived fields so the caller can
-			// retry if needed.
-			log.Printf("[DEBUG] DeveloperApp credentials array is empty; skipping credential-derived field population.")
-			return res, nil
-		}
-
-		// Use the first credential for keyExpiresIn (expiry is set at creation and shared)
-		if cred, ok := credList[0].(map[string]interface{}); ok {
-			res["keyExpiresIn"] = cred["expiresAt"]
-		} else {
-			return nil, fmt.Errorf("Unable to decode the first element of the credentials array.")
-		}
-
-		// Aggregate api_products and scopes across ALL credentials.
-		// When an app is updated to add API products, Apigee may create additional
-		// credentials (one per API product or one per update operation). Reading only
-		// the first credential would miss products stored in subsequent credentials,
-		// causing a perpetual diff between config and state.
-		productSeen := make(map[string]bool)
-		scopeSeen := make(map[string]bool)
-		var allProducts []interface{}
-		var allScopes []interface{}
-
-		for _, credRaw := range credList {
-			if cred, ok := credRaw.(map[string]interface{}); ok {
-				// Collect scopes from this credential
-				if scopesObj, ok := cred["scopes"]; ok {
-					if scopesList, ok := scopesObj.([]interface{}); ok {
-						for _, scope := range scopesList {
-							if s, ok := scope.(string); ok && !scopeSeen[s] {
-								scopeSeen[s] = true
-								allScopes = append(allScopes, s)
-							}
-						}
-					}
-				}
-				// Collect api_products from this credential
-				if apiProductsObj, ok := cred["apiProducts"]; ok {
-					if apiProductList, ok := apiProductsObj.([]interface{}); ok {
-						for _, productObj := range apiProductList {
-							if productMap, ok := productObj.(map[string]interface{}); ok {
-								if productName, ok := productMap["apiproduct"].(string); ok && !productSeen[productName] {
-									productSeen[productName] = true
-									allProducts = append(allProducts, productName)
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		res["apiProducts"] = allProducts
-		res["scopes"] = allScopes
-	}
-	return res, nil
 }
 
 func ResourceApigeeDeveloperAppFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

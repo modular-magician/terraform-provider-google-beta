@@ -1107,13 +1107,6 @@ func resourceContainerAttachedClusterImport(d *schema.ResourceData, meta interfa
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenContainerAttachedClusterName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenContainerAttachedClusterDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1289,59 +1282,6 @@ func flattenContainerAttachedClusterErrors(v interface{}, d *schema.ResourceData
 }
 func flattenContainerAttachedClusterErrorsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-// The custom expander transforms input into something like this:
-//
-//	authorization {
-//		admin_users [
-//			{ username = "user1" },
-//			{ username = "user2" }
-//		]
-//		admin_groups [
-//			{ group = "group1" },
-//			{ group = "group2" },
-//		]
-//	}
-//
-// The custom flattener transforms input back into something like this:
-//
-//	authorization {
-//		admin_users = [
-//			"user1",
-//			"user2"
-//		]
-//		admin_groups = [
-//			"group1",
-//			"group2"
-//		],
-//	}
-func flattenContainerAttachedClusterAuthorization(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || len(v.(map[string]interface{})) == 0 {
-		return nil
-	}
-
-	transformed := make(map[string][]string)
-	if v.(map[string]interface{})["adminUsers"] != nil {
-		orig := v.(map[string]interface{})["adminUsers"].([]interface{})
-		transformed["admin_users"] = make([]string, len(orig))
-		for i, u := range orig {
-			if u != nil {
-				transformed["admin_users"][i] = u.(map[string]interface{})["username"].(string)
-			}
-		}
-	}
-	if v.(map[string]interface{})["adminGroups"] != nil {
-		orig := v.(map[string]interface{})["adminGroups"].([]interface{})
-		transformed["admin_groups"] = make([]string, len(orig))
-		for i, u := range orig {
-			if u != nil {
-				transformed["admin_groups"][i] = u.(map[string]interface{})["group"].(string)
-			}
-		}
-	}
-
-	return []interface{}{transformed}
 }
 
 func flattenContainerAttachedClusterMonitoringConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1527,111 +1467,6 @@ func expandContainerAttachedClusterFleetMembership(v interface{}, d tpgresource.
 
 func expandContainerAttachedClusterFleetProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandContainerAttachedClusterLoggingConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		transformed := make(map[string]interface{})
-		return transformed, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedComponentConfig, err := expandContainerAttachedClusterLoggingConfigComponentConfig(original["component_config"], d, config)
-	if err != nil {
-		return nil, err
-	} else {
-		transformed["componentConfig"] = transformedComponentConfig
-	}
-
-	return transformed, nil
-}
-
-func expandContainerAttachedClusterLoggingConfigComponentConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 {
-		return nil, nil
-	}
-
-	if l[0] == nil {
-		transformed := make(map[string]interface{})
-		return transformed, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedEnableComponents, err := expandContainerAttachedClusterLoggingConfigComponentConfigEnableComponents(original["enable_components"], d, config)
-	if err != nil {
-		return nil, err
-	} else {
-		transformed["enableComponents"] = transformedEnableComponents
-	}
-
-	return transformed, nil
-}
-
-func expandContainerAttachedClusterLoggingConfigComponentConfigEnableComponents(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-type attachedClusterUser struct {
-	Username string `json:"username"`
-}
-
-type attachedClusterGroup struct {
-	Group string `json:"group"`
-}
-
-// The custom expander transforms input into something like this:
-//
-//	authorization {
-//		admin_users [
-//			{ username = "user1" },
-//			{ username = "user2" }
-//		]
-//		admin_groups [
-//			{ group = "group1" },
-//			{ group = "group2" },
-//		]
-//	}
-//
-// The custom flattener transforms input back into something like this:
-//
-//	authorization {
-//		admin_users = [
-//			"user1",
-//			"user2"
-//		]
-//		admin_groups = [
-//			"group1",
-//			"group2"
-//		],
-//	}
-func expandContainerAttachedClusterAuthorization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	orig := raw.(map[string]interface{})["admin_users"].([]interface{})
-	transformed := make(map[string][]interface{})
-	transformed["admin_users"] = make([]interface{}, len(orig))
-	for i, u := range orig {
-		if u != nil {
-			transformed["admin_users"][i] = attachedClusterUser{Username: u.(string)}
-		}
-	}
-	orig = raw.(map[string]interface{})["admin_groups"].([]interface{})
-	transformed["admin_groups"] = make([]interface{}, len(orig))
-	for i, u := range orig {
-		if u != nil {
-			transformed["admin_groups"][i] = attachedClusterGroup{Group: u.(string)}
-		}
-	}
-	return transformed, nil
 }
 
 func expandContainerAttachedClusterMonitoringConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

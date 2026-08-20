@@ -1227,14 +1227,6 @@ func flattenBigQueryDatasetAccessDomain(v interface{}, d *schema.ResourceData, c
 	return v
 }
 
-func flattenBigQueryDatasetAccessGroupByEmail(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	return strings.ToLower(v.(string))
-}
-
 func flattenBigQueryDatasetAccessRole(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1245,14 +1237,6 @@ func flattenBigQueryDatasetAccessSpecialGroup(v interface{}, d *schema.ResourceD
 
 func flattenBigQueryDatasetAccessIamMember(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenBigQueryDatasetAccessUserByEmail(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	return strings.ToLower(v.(string))
 }
 
 func flattenBigQueryDatasetAccessView(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1525,16 +1509,6 @@ func flattenBigQueryDatasetLastModifiedTime(v interface{}, d *schema.ResourceDat
 	return v // let terraform core handle it otherwise
 }
 
-// Older Datasets in BigQuery have no Location set in the API response. This may be an issue when importing
-// datasets created before BigQuery was available in multiple zones. We can safely assume that these datasets
-// are in the US, as this was the default at the time.
-func flattenBigQueryDatasetLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return "US"
-	}
-	return v
-}
-
 func flattenBigQueryDatasetDefaultEncryptionConfiguration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1707,14 +1681,6 @@ func expandBigQueryDatasetAccessDomain(v interface{}, d tpgresource.TerraformRes
 	return v, nil
 }
 
-func expandBigQueryDatasetAccessGroupByEmail(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return strings.ToLower(v.(string)), nil
-}
-
 func expandBigQueryDatasetAccessRole(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1725,14 +1691,6 @@ func expandBigQueryDatasetAccessSpecialGroup(v interface{}, d tpgresource.Terraf
 
 func expandBigQueryDatasetAccessIamMember(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandBigQueryDatasetAccessUserByEmail(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return strings.ToLower(v.(string)), nil
 }
 
 func expandBigQueryDatasetAccessView(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2063,16 +2021,6 @@ func expandBigQueryDatasetIsCaseInsensitive(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func expandBigQueryDatasetDefaultCollation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if rd, ok := d.(*schema.ResourceData); ok {
-		conf := rd.GetRawConfig()
-		if !conf.IsNull() && conf.GetAttr("default_collation").IsKnown() && !conf.GetAttr("default_collation").IsNull() {
-			return conf.GetAttr("default_collation").AsString(), nil
-		}
-	}
-	return v, nil
-}
-
 func expandBigQueryDatasetStorageBillingModel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2141,13 +2089,6 @@ func expandBigQueryDatasetEffectiveLabels(v interface{}, d tpgresource.Terraform
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceBigQueryDatasetUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if !d.HasChange("access") {
-		delete(obj, "access")
-	}
-	return obj, nil
 }
 
 func ResourceBigQueryDatasetFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

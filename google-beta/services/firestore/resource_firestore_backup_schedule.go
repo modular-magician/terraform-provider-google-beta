@@ -581,13 +581,6 @@ func resourceFirestoreBackupScheduleImport(d *schema.ResourceData, meta interfac
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenFirestoreBackupScheduleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenFirestoreBackupScheduleRetention(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

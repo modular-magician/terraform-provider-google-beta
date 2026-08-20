@@ -1917,11 +1917,6 @@ func flattenChronicleDashboardChartName(v interface{}, d *schema.ResourceData, c
 	return v
 }
 
-func flattenChronicleDashboardChartChartId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenChronicleDashboardChartDashboardChart(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -6333,74 +6328,6 @@ func expandChronicleDashboardChartDashboardChartEtag(v interface{}, d tpgresourc
 	return v, nil
 }
 
-func resourceChronicleDashboardChartUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	fieldMasks := map[string]string{
-		"dashboard_query.0.query":                           "dashboard_query.query",
-		"dashboard_query.0.input":                           "dashboard_query.input",
-		"dashboard_chart.0.display_name":                    "dashboard_chart.display_name",
-		"dashboard_chart.0.description":                     "dashboard_chart.description",
-		"dashboard_chart.0.chart_datasource.0.data_sources": "dashboard_chart.chart_datasource.data_sources",
-		"dashboard_chart.0.visualization":                   "dashboard_chart.visualization",
-		"dashboard_chart.0.drill_down_config":               "dashboard_chart.drill_down_config",
-	}
-
-	var changedMasks []string
-	for tfPath, apiPath := range fieldMasks {
-		if d.HasChange(tfPath) {
-			changedMasks = append(changedMasks, apiPath)
-		}
-	}
-
-	if len(changedMasks) > 0 {
-		// Sort the slice to ensure a deterministic VCR recording
-		sort.Strings(changedMasks)
-		obj["editMask"] = strings.Join(changedMasks, ",")
-	}
-
-	// chartLayout is handled via its parent resource "NativeDashboard" and it is not
-	// part of the EditChart request body in this API version.
-	delete(obj, "chartLayout")
-
-	return obj, nil
-}
-
-func resourceChronicleDashboardChartDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// 1. Normalize response: check for wrapper, otherwise use root
-	chartData := res
-	if wrapper, ok := res["dashboardChart"].(map[string]interface{}); ok {
-		chartData = wrapper
-	}
-
-	name, ok := chartData["name"].(string)
-	if !ok {
-		return nil, fmt.Errorf("response missing valid 'name' field")
-	}
-
-	// 2. Persist query name if it exists in the config to prevent state loss
-	if val, ok := d.GetOk("dashboard_chart.0.chart_datasource.0.dashboard_query"); ok {
-		queryMap := make(map[string]interface{})
-
-		// Safely extract existing query if present
-		if rawList := d.Get("dashboard_query").([]interface{}); len(rawList) > 0 {
-			if m, ok := rawList[0].(map[string]interface{}); ok {
-				for k, v := range m {
-					queryMap[k] = v
-				}
-			}
-		}
-
-		queryMap["name"] = val
-		if err := d.Set("dashboard_query", []interface{}{queryMap}); err != nil {
-			return nil, fmt.Errorf("failed to set dashboard_query: %w", err)
-		}
-	}
-
-	// 3. Return consistent map
-	return map[string]interface{}{
-		"name":           name,
-		"dashboardChart": chartData,
-	}, nil
-}
 func resourceChronicleDashboardChartPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceChronicleDashboardChartDecoder(d, meta, res)

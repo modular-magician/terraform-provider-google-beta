@@ -1031,13 +1031,6 @@ func resourceDataPipelinePipelineImport(d *schema.ResourceData, meta interface{}
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenDataPipelinePipelineName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenDataPipelinePipelineDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1545,10 +1538,6 @@ func flattenDataPipelinePipelineSchedulerServiceAccountEmail(v interface{}, d *s
 
 func flattenDataPipelinePipelinePipelineSources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandDataPipelinePipelineName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/pipelines/{{name}}")
 }
 
 func expandDataPipelinePipelineDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

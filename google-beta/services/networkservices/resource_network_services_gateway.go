@@ -1223,17 +1223,6 @@ func expandNetworkServicesGatewayEffectiveLabels(v interface{}, d tpgresource.Te
 	return m, nil
 }
 
-func resourceNetworkServicesGatewayUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Always force-send some attributes even if they were not modified. This works around extra API-side requirements.
-	obj["scope"] = d.Get("scope")
-	if d.Get("type") == "SECURE_WEB_GATEWAY" {
-		obj["name"] = d.Get("name")
-		obj["type"] = d.Get("type")
-		obj["routingMode"] = d.Get("routingMode")
-	}
-	return obj, nil
-}
-
 func ResourceNetworkServicesGatewayFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

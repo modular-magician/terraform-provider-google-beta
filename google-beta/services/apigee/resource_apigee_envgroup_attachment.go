@@ -399,24 +399,7 @@ func resourceApigeeEnvgroupAttachmentDelete(d *schema.ResourceData, meta interfa
 }
 
 func resourceApigeeEnvgroupAttachmentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<envgroup_id>.+)/attachments/(?P<name>.+)",
-		"(?P<envgroup_id>.+)/(?P<name>.+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{envgroup_id}}/attachments/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeEnvgroupAttachmentCustomImport(d, meta)
 }
 
 func flattenApigeeEnvgroupAttachmentEnvironment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

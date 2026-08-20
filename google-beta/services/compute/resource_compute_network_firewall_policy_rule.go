@@ -1167,58 +1167,6 @@ func flattenComputeNetworkFirewallPolicyRuleMatchSrcSecureTagsState(v interface{
 	return v
 }
 
-func flattenComputeNetworkFirewallPolicyRuleMatchDestAddressGroups(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	rawConfigValue := d.Get("match.0.dest_address_groups")
-
-	// Convert config value to []string
-	configValue, err := tpgresource.InterfaceSliceToStringSlice(rawConfigValue)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert config value: %s", err)
-		return v
-	}
-
-	// Convert v to []string
-	apiStringValue, err := tpgresource.InterfaceSliceToStringSlice(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert API value: %s", err)
-		return v
-	}
-
-	sortedStrings, err := tpgresource.SortStringsByConfigOrder(configValue, apiStringValue)
-	if err != nil {
-		log.Printf("[ERROR] Could not sort API response value: %s", err)
-		return v
-	}
-
-	return sortedStrings
-}
-
-func flattenComputeNetworkFirewallPolicyRuleMatchSrcAddressGroups(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	rawConfigValue := d.Get("match.0.src_address_groups")
-
-	// Convert config value to []string
-	configValue, err := tpgresource.InterfaceSliceToStringSlice(rawConfigValue)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert config value: %s", err)
-		return v
-	}
-
-	// Convert v to []string
-	apiStringValue, err := tpgresource.InterfaceSliceToStringSlice(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert API value: %s", err)
-		return v
-	}
-
-	sortedStrings, err := tpgresource.SortStringsByConfigOrder(configValue, apiStringValue)
-	if err != nil {
-		log.Printf("[ERROR] Could not sort API response value: %s", err)
-		return v
-	}
-
-	return sortedStrings
-}
-
 func flattenComputeNetworkFirewallPolicyRuleMatchSrcFqdns(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1684,20 +1632,6 @@ func expandComputeNetworkFirewallPolicyRuleTargetType(v interface{}, d tpgresour
 
 func expandComputeNetworkFirewallPolicyRuleTargetForwardingRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeNetworkFirewallPolicyRuleUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if !d.HasChange("match") {
-		return obj, nil
-	}
-	oldMatch, newMatch := d.GetChange("match")
-
-	err := adjustFirewallPolicyRuleNetworkContextFields(obj, oldMatch, newMatch)
-	if err != nil {
-		return obj, err
-	}
-
-	return obj, nil
 }
 
 func ResourceComputeNetworkFirewallPolicyRuleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

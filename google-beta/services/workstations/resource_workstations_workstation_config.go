@@ -1657,50 +1657,6 @@ func flattenWorkstationsWorkstationConfigHostGceInstanceEnableNestedVirtualizati
 	return v
 }
 
-func flattenWorkstationsWorkstationConfigHostGceInstanceShieldedInstanceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	// Defaults for when no value is provided by API.
-	transformed["enable_secure_boot"] = false
-	transformed["enable_vtpm"] = false
-	transformed["enable_integrity_monitoring"] = false
-
-	if v == nil {
-		return []interface{}{transformed}
-	}
-
-	original := v.(map[string]interface{})
-	if original["enableSecureBoot"] != nil {
-		transformed["enable_secure_boot"] = original["enableSecureBoot"]
-	}
-	if original["enableVtpm"] != nil {
-		transformed["enable_vtpm"] = original["enableVtpm"]
-	}
-	if original["enableIntegrityMonitoring"] != nil {
-		transformed["enable_integrity_monitoring"] = original["enableIntegrityMonitoring"]
-	}
-
-	return []interface{}{transformed}
-}
-
-func flattenWorkstationsWorkstationConfigHostGceInstanceConfidentialInstanceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	// Defaults for when no value is provided by API.
-	transformed["enable_confidential_compute"] = false
-
-	if v == nil {
-		return []interface{}{transformed}
-	}
-
-	original := v.(map[string]interface{})
-	if original["enableConfidentialCompute"] != nil {
-		transformed["enable_confidential_compute"] = original["enableConfidentialCompute"]
-	}
-
-	return []interface{}{transformed}
-}
-
 func flattenWorkstationsWorkstationConfigHostGceInstanceAccelerators(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v

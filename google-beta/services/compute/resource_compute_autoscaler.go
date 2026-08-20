@@ -1263,14 +1263,6 @@ func flattenComputeAutoscalerAutoscalingPolicyCpuUtilizationTarget(v interface{}
 	return v
 }
 
-func flattenComputeAutoscalerAutoscalingPolicyCpuUtilizationPredictiveMethod(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "NONE"
-	}
-
-	return v
-}
-
 func flattenComputeAutoscalerAutoscalingPolicyMetric(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1886,31 +1878,6 @@ func expandComputeAutoscalerAutoscalingPolicyScalingSchedulesDisabled(v interfac
 
 func expandComputeAutoscalerAutoscalingPolicyScalingSchedulesDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeAutoscalerTarget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil || v.(string) == "" {
-		return "", nil
-	}
-	f, err := tpgresource.ParseZonalFieldValue("instanceGroupManagers", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for target: %s", err)
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+f.RelativeLink())
-	if err != nil {
-		return nil, err
-	}
-
-	return url, nil
-}
-
-func expandComputeAutoscalerZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeAutoscalerFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

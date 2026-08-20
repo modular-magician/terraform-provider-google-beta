@@ -187,73 +187,7 @@ When set to "DELETE", deleting the resource is allowed.
 }
 
 func resourceCESAppRootAgentAssociationCreate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	appId := d.Get("app_id").(string)
-	agentId := d.Get("agent_id").(string)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-	location := d.Get("location").(string)
-
-	parsedAppId := appId
-	if !strings.Contains(appId, "/") {
-		parsedAppId = fmt.Sprintf("projects/%s/locations/%s/apps/%s", project, location, appId)
-	}
-	parsedAgentId := agentId
-	if !strings.Contains(agentId, "/") {
-		parsedAgentId = fmt.Sprintf("%s/agents/%s", parsedAppId, agentId)
-	}
-
-	lockName := parsedAppId
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{CESBasePath}}"+parsedAppId+"?updateMask=rootAgent")
-	if err != nil {
-		return err
-	}
-
-	obj := map[string]interface{}{
-		"rootAgent": parsedAgentId,
-	}
-
-	log.Printf("[DEBUG] Creating CESAppRootAgentAssociation: updating app %s with rootAgent %s", parsedAppId, parsedAgentId)
-
-	billingProject := project
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
-	if err != nil {
-		return fmt.Errorf("Error creating CESAppRootAgentAssociation: %s", err)
-	}
-
-	// ID uses short IDs to match import_format
-	agentIdShort := agentId
-	if strings.Contains(agentId, "/") {
-		parts := strings.Split(agentId, "/")
-		agentIdShort = parts[len(parts)-1]
-	}
-	d.SetId(fmt.Sprintf("%s/agents/%s", parsedAppId, agentIdShort))
-
-	log.Printf("[DEBUG] Finished creating CESAppRootAgentAssociation %q", d.Id())
-
-	return resourceCESAppRootAgentAssociationRead(d, meta)
+	return resourceCESAppRootAgentAssociationCustomCreate(d, meta)
 }
 
 func resourceCESAppRootAgentAssociationRead(d *schema.ResourceData, meta interface{}) error {
@@ -390,74 +324,7 @@ func resourceCESAppRootAgentAssociationUpdate(d *schema.ResourceData, meta inter
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceCESAppRootAgentAssociationRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	appId := d.Get("app_id").(string)
-	agentId := d.Get("agent_id").(string)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-	location := d.Get("location").(string)
-
-	parsedAppId := appId
-	if !strings.Contains(appId, "/") {
-		parsedAppId = fmt.Sprintf("projects/%s/locations/%s/apps/%s", project, location, appId)
-	}
-	parsedAgentId := agentId
-	if !strings.Contains(agentId, "/") {
-		parsedAgentId = fmt.Sprintf("%s/agents/%s", parsedAppId, agentId)
-	}
-
-	lockName := parsedAppId
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{CESBasePath}}"+parsedAppId+"?updateMask=rootAgent")
-	if err != nil {
-		return err
-	}
-
-	obj := map[string]interface{}{
-		"rootAgent": parsedAgentId,
-	}
-
-	log.Printf("[DEBUG] Updating CESAppRootAgentAssociation: updating app %s with rootAgent %s", parsedAppId, parsedAgentId)
-
-	billingProject := project
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
-	if err != nil {
-		return fmt.Errorf("Error updating CESAppRootAgentAssociation: %s", err)
-	}
-
-	// Update ID to reflect the new agent
-	agentIdShort := agentId
-	if strings.Contains(agentId, "/") {
-		parts := strings.Split(agentId, "/")
-		agentIdShort = parts[len(parts)-1]
-	}
-	d.SetId(fmt.Sprintf("%s/agents/%s", parsedAppId, agentIdShort))
-
-	log.Printf("[DEBUG] Finished updating CESAppRootAgentAssociation %q", d.Id())
-
-	return resourceCESAppRootAgentAssociationRead(d, meta)
+	return resourceCESAppRootAgentAssociationCustomUpdate(d, meta)
 }
 
 func resourceCESAppRootAgentAssociationDelete(d *schema.ResourceData, meta interface{}) error {
@@ -468,83 +335,11 @@ func resourceCESAppRootAgentAssociationDelete(d *schema.ResourceData, meta inter
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing AppRootAgentAssociation %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	appId := d.Get("app_id").(string)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-	location := d.Get("location").(string)
-
-	parsedAppId := appId
-	if !strings.Contains(appId, "/") {
-		parsedAppId = fmt.Sprintf("projects/%s/locations/%s/apps/%s", project, location, appId)
-	}
-
-	lockName := parsedAppId
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{CESBasePath}}"+parsedAppId+"?updateMask=rootAgent")
-	if err != nil {
-		return err
-	}
-
-	// Clear the rootAgent by sending null - the API accepts null to unset the field.
-	obj := map[string]interface{}{
-		"rootAgent": nil,
-	}
-
-	log.Printf("[DEBUG] Deleting CESAppRootAgentAssociation: clearing rootAgent for app %s", parsedAppId)
-
-	billingProject := project
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
-	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("CESAppRootAgentAssociation (app: %q)", parsedAppId))
-	}
-
-	log.Printf("[DEBUG] Finished deleting CESAppRootAgentAssociation %q", d.Id())
-	return nil
+	return resourceCESAppRootAgentAssociationCustomDelete(d, meta)
 }
 
 func resourceCESAppRootAgentAssociationImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	// Import format: projects/{project}/locations/{location}/apps/{app_id}/agents/{agent_id}
-	parts := strings.Split(d.Id(), "/")
-	if len(parts) != 8 || parts[0] != "projects" || parts[2] != "locations" || parts[4] != "apps" || parts[6] != "agents" {
-		return nil, fmt.Errorf("invalid import format for CESAppRootAgentAssociation, expected projects/{{project}}/locations/{{location}}/apps/{{app_id}}/agents/{{agent_id}}, got %q", d.Id())
-	}
-
-	if err := d.Set("project", parts[1]); err != nil {
-		return nil, err
-	}
-	if err := d.Set("location", parts[3]); err != nil {
-		return nil, err
-	}
-	if err := d.Set("app_id", parts[5]); err != nil {
-		return nil, err
-	}
-	if err := d.Set("agent_id", parts[7]); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceCESAppRootAgentAssociationCustomImport(d, meta)
 }
 
 func expandCESAppRootAgentAssociationAgentId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

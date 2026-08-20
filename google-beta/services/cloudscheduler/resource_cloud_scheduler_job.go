@@ -1094,13 +1094,6 @@ func resourceCloudSchedulerJobImport(d *schema.ResourceData, meta interface{}) (
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenCloudSchedulerJobName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenCloudSchedulerJobDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1115,17 +1108,6 @@ func flattenCloudSchedulerJobTimeZone(v interface{}, d *schema.ResourceData, con
 
 func flattenCloudSchedulerJobState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSchedulerJobPaused(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	state := d.Get("state")
-	if state == "PAUSED" {
-		return true
-	}
-	if state == "ENABLED" {
-		return false
-	}
-	return false // Job has an error state that's not paused or enabled
 }
 
 func flattenCloudSchedulerJobAttemptDeadline(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1253,90 +1235,12 @@ func flattenCloudSchedulerJobAppEngineHttpTargetHttpMethod(v interface{}, d *sch
 	return v
 }
 
-// An `appEngineRouting` in API response is useless, so we set config values rather than api response to state.
-func flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRouting(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	if stateV, ok := d.GetOk("app_engine_http_target"); ok && len(stateV.([]interface{})) > 0 {
-		return d.Get("app_engine_http_target.0.app_engine_routing")
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["service"] = original["service"]
-	transformed["version"] = original["version"]
-	transformed["instance"] = original["instance"]
-	return []interface{}{transformed}
-}
-
 func flattenCloudSchedulerJobAppEngineHttpTargetRelativeUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
 func flattenCloudSchedulerJobAppEngineHttpTargetBody(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSchedulerJobAppEngineHttpTargetHeaders(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	headers, ok := v.(map[string]interface{})
-	if !ok {
-		return nil
-	}
-	if v, ok := headers["User-Agent"]; ok {
-		if userAgent, ok := v.(string); ok {
-			if userAgent == "AppEngine-Google; (+http://code.google.com/appengine)" {
-				delete(headers, "User-Agent")
-			} else if userAgent == "Google-Cloud-Scheduler" {
-				delete(headers, "User-Agent")
-			} else {
-				headers["User-Agent"] = strings.TrimSpace(strings.Replace(userAgent, "AppEngine-Google; (+http://code.google.com/appengine)", "", -1))
-			}
-		}
-	}
-	if v, ok := headers["Content-Type"]; ok {
-		if contentType, ok := v.(string); ok {
-			if contentType == "application/octet-stream" {
-				delete(headers, "Content-Type")
-			}
-		}
-	}
-	r := regexp.MustCompile(`(X-Google-|X-AppEngine-|Content-Length).*`)
-	for key := range headers {
-		if r.MatchString(key) {
-			delete(headers, key)
-		}
-	}
-	// The Cloud Scheduler API injects an `Authorization` header on read whenever
-	// `oidc_token` or `oauth_token` is configured on the http_target, even though
-	// it is not part of the user-supplied `headers` map. Leaving it in state
-	// causes perpetual drift against the configuration. Strip it only when one
-	// of the token blocks is set, so users who legitimately send a literal
-	// `Authorization` header (without token auth) are not affected.
-	//
-	// Note: this template is also used for `app_engine_http_target.headers`,
-	// which has no `oidc_token` / `oauth_token` siblings — the d.Get() lookups
-	// below return zero-valued counts in that case, so the Authorization key is
-	// preserved as-is for App Engine targets.
-	if d != nil {
-		oidcSet := false
-		oauthSet := false
-		if v, ok := d.Get("http_target.0.oidc_token.#").(int); ok && v > 0 {
-			oidcSet = true
-		}
-		if v, ok := d.Get("http_target.0.oauth_token.#").(int); ok && v > 0 {
-			oauthSet = true
-		}
-		if oidcSet || oauthSet {
-			delete(headers, "Authorization")
-		}
-	}
-	return headers
 }
 
 func flattenCloudSchedulerJobHttpTarget(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1372,65 +1276,6 @@ func flattenCloudSchedulerJobHttpTargetHttpMethod(v interface{}, d *schema.Resou
 
 func flattenCloudSchedulerJobHttpTargetBody(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSchedulerJobHttpTargetHeaders(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	headers, ok := v.(map[string]interface{})
-	if !ok {
-		return nil
-	}
-	if v, ok := headers["User-Agent"]; ok {
-		if userAgent, ok := v.(string); ok {
-			if userAgent == "AppEngine-Google; (+http://code.google.com/appengine)" {
-				delete(headers, "User-Agent")
-			} else if userAgent == "Google-Cloud-Scheduler" {
-				delete(headers, "User-Agent")
-			} else {
-				headers["User-Agent"] = strings.TrimSpace(strings.Replace(userAgent, "AppEngine-Google; (+http://code.google.com/appengine)", "", -1))
-			}
-		}
-	}
-	if v, ok := headers["Content-Type"]; ok {
-		if contentType, ok := v.(string); ok {
-			if contentType == "application/octet-stream" {
-				delete(headers, "Content-Type")
-			}
-		}
-	}
-	r := regexp.MustCompile(`(X-Google-|X-AppEngine-|Content-Length).*`)
-	for key := range headers {
-		if r.MatchString(key) {
-			delete(headers, key)
-		}
-	}
-	// The Cloud Scheduler API injects an `Authorization` header on read whenever
-	// `oidc_token` or `oauth_token` is configured on the http_target, even though
-	// it is not part of the user-supplied `headers` map. Leaving it in state
-	// causes perpetual drift against the configuration. Strip it only when one
-	// of the token blocks is set, so users who legitimately send a literal
-	// `Authorization` header (without token auth) are not affected.
-	//
-	// Note: this template is also used for `app_engine_http_target.headers`,
-	// which has no `oidc_token` / `oauth_token` siblings — the d.Get() lookups
-	// below return zero-valued counts in that case, so the Authorization key is
-	// preserved as-is for App Engine targets.
-	if d != nil {
-		oidcSet := false
-		oauthSet := false
-		if v, ok := d.Get("http_target.0.oidc_token.#").(int); ok && v > 0 {
-			oidcSet = true
-		}
-		if v, ok := d.Get("http_target.0.oauth_token.#").(int); ok && v > 0 {
-			oauthSet = true
-		}
-		if oidcSet || oauthSet {
-			delete(headers, "Authorization")
-		}
-	}
-	return headers
 }
 
 func flattenCloudSchedulerJobHttpTargetOauthToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1477,10 +1322,6 @@ func flattenCloudSchedulerJobHttpTargetOidcTokenServiceAccountEmail(v interface{
 
 func flattenCloudSchedulerJobHttpTargetOidcTokenAudience(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandCloudSchedulerJobName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/jobs/{{name}}")
 }
 
 func expandCloudSchedulerJobDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1901,16 +1742,6 @@ func expandCloudSchedulerJobHttpTargetOidcTokenServiceAccountEmail(v interface{}
 
 func expandCloudSchedulerJobHttpTargetOidcTokenAudience(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceCloudSchedulerJobEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "paused") // Field doesn't exist in API
-	return obj, nil
-}
-
-func resourceCloudSchedulerJobUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "paused") // Field doesn't exist in API
-	return obj, nil
 }
 
 func ResourceCloudSchedulerJobFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

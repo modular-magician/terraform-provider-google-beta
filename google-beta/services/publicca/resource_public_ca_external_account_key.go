@@ -295,32 +295,6 @@ func flattenPublicCAExternalAccountKeyB64MacKey(v interface{}, d *schema.Resourc
 	return v
 }
 
-func flattenPublicCAExternalAccountKeyB64urlMacKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-
-	dec, err := base64.URLEncoding.DecodeString(v.(string))
-	if err != nil {
-		return ""
-	}
-
-	return base64.RawURLEncoding.EncodeToString(dec)
-}
-
-func flattenPublicCAExternalAccountKeyMacKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-
-	dec, err := base64.URLEncoding.DecodeString(v.(string))
-	if err != nil {
-		return ""
-	}
-
-	return string(dec)
-}
-
 func resourcePublicCAExternalAccountKeyPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	if err := d.Set("name", flattenPublicCAExternalAccountKeyName(res["name"], d, config)); err != nil {

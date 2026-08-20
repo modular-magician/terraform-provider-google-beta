@@ -885,14 +885,6 @@ func flattenComputeNetworkEndpointsNetworkEndpointsInstance(v interface{}, d *sc
 	return tpgresource.ConvertSelfLinkToV1(v.(string))
 }
 
-func flattenComputeNetworkEndpointsNetworkEndpointsPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles int given in float64 format
-	if floatVal, ok := v.(float64); ok {
-		return int(floatVal)
-	}
-	return v
-}
-
 func flattenComputeNetworkEndpointsNetworkEndpointsIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -937,73 +929,12 @@ func expandComputeNetworkEndpointsNetworkEndpoints(v interface{}, d tpgresource.
 	return req, nil
 }
 
-func expandComputeNetworkEndpointsNetworkEndpointsInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if tpgresource.IsEmptyValue(reflect.ValueOf(v.(string))) {
-		return nil, nil
-	}
-
-	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
-}
-
 func expandComputeNetworkEndpointsNetworkEndpointsPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandComputeNetworkEndpointsNetworkEndpointsIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeNetworkEndpointsEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Network Endpoint Group is a URL parameter only, so replace self-link/path with resource name only.
-	if err := d.Set("network_endpoint_group", tpgresource.GetResourceNameFromSelfLink(d.Get("network_endpoint_group").(string))); err != nil {
-		return nil, fmt.Errorf("Error setting network_endpoint_group: %s", err)
-	}
-
-	return obj, nil
-}
-
-func resourceComputeNetworkEndpointsDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/networkEndpointGroups/{{network_endpoint_group}}/listNetworkEndpoints")
-	if err != nil {
-		return nil, err
-	}
-
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, fmt.Errorf("Error fetching project for NetworkEndpoint: %s", err)
-	}
-	billingProject = project
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	allEndpoints, err := networkEndpointsPaginatedRead(d, config, userAgent, url, project, billingProject, res)
-	if err != nil {
-		return nil, err
-	}
-
-	// listNetworkEndpoints returns data in a different structure, so we need to
-	// convert to the Terraform schema.
-	var transformed []interface{}
-	for _, e := range allEndpoints {
-		if item, ok := e.(map[string]interface{}); ok {
-			if t, ok := item["networkEndpoint"]; ok {
-				transformed = append(transformed, t)
-			}
-		}
-	}
-
-	return map[string]interface{}{"networkEndpoints": transformed}, nil
 }
 
 func ResourceComputeNetworkEndpointsFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

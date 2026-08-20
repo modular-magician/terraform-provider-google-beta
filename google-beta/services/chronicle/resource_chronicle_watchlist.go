@@ -843,11 +843,6 @@ func flattenChronicleWatchlistWatchlistUserPreferencesPinned(v interface{}, d *s
 	return v
 }
 
-func flattenChronicleWatchlistWatchlistId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleWatchlistMultiplyingFactor(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -928,12 +923,6 @@ func expandChronicleWatchlistWatchlistUserPreferencesPinned(v interface{}, d tpg
 
 func expandChronicleWatchlistWatchlistId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceChronicleWatchlistEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// watchlist_id is needed to qualify the URL but cannot be sent in the body
-	delete(obj, "watchlistId")
-	return obj, nil
 }
 
 func resourceChronicleWatchlistPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

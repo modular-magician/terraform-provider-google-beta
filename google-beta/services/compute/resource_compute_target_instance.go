@@ -627,53 +627,12 @@ func expandComputeTargetInstanceDescription(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func expandComputeTargetInstanceInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from a partial self link.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a regional resource, with a partial link that begins with the resource name.
-	// This isn't very likely - it's a last-ditch effort to extract something useful here.  We can do a better job
-	// as soon as MultiResourceRefs are working since we'll know the types that this field is supposed to point to.
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/")
-	if err != nil {
-		return nil, err
-	}
-	return url + v.(string), nil
-}
-
 func expandComputeTargetInstanceNatPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandComputeTargetInstanceSecurityPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeTargetInstanceZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeTargetInstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

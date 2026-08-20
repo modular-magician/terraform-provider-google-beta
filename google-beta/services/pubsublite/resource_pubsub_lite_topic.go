@@ -904,38 +904,6 @@ func expandPubsubLiteTopicReservationConfig(v interface{}, d tpgresource.Terrafo
 	return transformed, nil
 }
 
-func expandPubsubLiteTopicReservationConfigThroughputReservation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("reservations", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for throughput_reservation: %s", err)
-	}
-	// Custom due to "locations" rather than "regions".
-	return fmt.Sprintf("projects/%s/locations/%s/reservations/%s", f.Project, f.Region, f.Name), nil
-}
-
-func resourcePubsubLiteTopicEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	zone, err := tpgresource.GetZone(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	if zone == "" {
-		return nil, fmt.Errorf("zone must be non-empty - set in resource or at provider-level")
-	}
-
-	// API Endpoint requires region in the URL. We infer it from the zone.
-
-	region := tpgresource.GetRegionFromZone(zone)
-
-	if region == "" {
-		return nil, fmt.Errorf("invalid zone %q, unable to infer region from zone", zone)
-	}
-
-	return obj, nil
-}
-
 func ResourcePubsubLiteTopicFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

@@ -772,13 +772,6 @@ func flattenLicenseManagerConfigurationLabels(v interface{}, d *schema.ResourceD
 	return transformed
 }
 
-func flattenLicenseManagerConfigurationProduct(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenLicenseManagerConfigurationTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -819,58 +812,6 @@ func expandLicenseManagerConfigurationEffectiveLabels(v interface{}, d tpgresour
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceLicenseManagerConfigurationEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Reference design doc: go/lima-terraform
-	var product string
-	if val, ok := obj["product"]; ok && val != nil {
-		product = val.(string)
-	} else {
-		product = d.Get("product").(string)
-	}
-
-	// License type mapping is currently static based on known SPLA product offerings.
-	// If License Manager expands its catalog or introduces API-based product discovery, replace this hardcoded logic with dynamic metadata lookup.
-	licenseType := "LICENSE_TYPE_PER_MONTH_PER_USER"
-	if product == "MicrosoftSQLServer2022Enterprise" || strings.HasSuffix(product, "MicrosoftSQLServer2022Enterprise") {
-		licenseType = "LICENSE_TYPE_PER_MONTH_PER_PACK"
-	}
-
-	configurationId := d.Get("configuration_id").(string)
-	project := d.Get("project").(string)
-	region := d.Get("location").(string)
-
-	// Always populate name and displayName to satisfy backend validation during CREATE and UPDATE
-	obj["name"] = configurationId
-	if _, ok := obj["displayName"]; !ok {
-		obj["displayName"] = configurationId + "-terraform"
-	}
-
-	if val, ok := obj["product"]; ok && val != nil {
-		obj["product"] = fmt.Sprintf("projects/%s/locations/%s/products/%s", project, region, val.(string))
-	}
-
-	if val, ok := obj["licenseCount"]; ok && val != nil {
-		count := val.(int)
-		billingInfo := map[string]interface{}{}
-		if licenseType == "LICENSE_TYPE_PER_MONTH_PER_USER" {
-			billingInfo["userCountBilling"] = map[string]interface{}{
-				"userCount": count,
-			}
-		} else if licenseType == "LICENSE_TYPE_PER_MONTH_PER_PACK" {
-			billingInfo["packCountBilling"] = map[string]interface{}{
-				"packCount": count,
-			}
-		}
-		obj["currentBillingInfo"] = billingInfo
-		obj["nextBillingInfo"] = billingInfo
-		obj["licenseType"] = licenseType
-		delete(obj, "licenseCount")
-	}
-
-	delete(obj, "active")
-	return obj, nil
 }
 
 func ResourceLicenseManagerConfigurationFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

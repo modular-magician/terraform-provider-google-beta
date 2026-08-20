@@ -709,14 +709,6 @@ func expandComputeTargetTcpProxyProxyHeader(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func expandComputeTargetTcpProxyBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for backend_service: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeTargetTcpProxyProxyBind(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

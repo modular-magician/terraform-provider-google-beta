@@ -1003,17 +1003,6 @@ func flattenCESExampleMessagesChunksToolCall(v interface{}, d *schema.ResourceDa
 		flattenCESExampleMessagesChunksToolCallToolsetTool(original["toolsetTool"], d, config)
 	return []interface{}{transformed}
 }
-func flattenCESExampleMessagesChunksToolCallArgs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
 
 func flattenCESExampleMessagesChunksToolCallDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -1079,18 +1068,6 @@ func flattenCESExampleMessagesChunksToolResponseId(v interface{}, d *schema.Reso
 	return v
 }
 
-func flattenCESExampleMessagesChunksToolResponseResponse(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenCESExampleMessagesChunksToolResponseTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1118,27 +1095,8 @@ func flattenCESExampleMessagesChunksToolResponseToolsetToolToolId(v interface{},
 	return v
 }
 
-func flattenCESExampleMessagesChunksUpdatedVariables(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenCESExampleMessagesRole(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCESExampleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func flattenCESExampleUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1381,18 +1339,6 @@ func expandCESExampleMessagesChunksToolCall(v interface{}, d tpgresource.Terrafo
 	return transformed, nil
 }
 
-func expandCESExampleMessagesChunksToolCallArgs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandCESExampleMessagesChunksToolCallDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1500,18 +1446,6 @@ func expandCESExampleMessagesChunksToolResponseId(v interface{}, d tpgresource.T
 	return v, nil
 }
 
-func expandCESExampleMessagesChunksToolResponseResponse(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandCESExampleMessagesChunksToolResponseTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1551,18 +1485,6 @@ func expandCESExampleMessagesChunksToolResponseToolsetToolToolset(v interface{},
 
 func expandCESExampleMessagesChunksToolResponseToolsetToolToolId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandCESExampleMessagesChunksUpdatedVariables(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandCESExampleMessagesRole(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

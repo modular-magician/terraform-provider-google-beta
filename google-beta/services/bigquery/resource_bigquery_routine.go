@@ -1073,18 +1073,6 @@ func flattenBigQueryRoutineArgumentsMode(v interface{}, d *schema.ResourceData, 
 	return v
 }
 
-func flattenBigQueryRoutineArgumentsDataType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenBigQueryRoutineArgumentsTableType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1120,42 +1108,6 @@ func flattenBigQueryRoutineArgumentsTableTypeColumns(v interface{}, d *schema.Re
 }
 func flattenBigQueryRoutineArgumentsTableTypeColumnsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenBigQueryRoutineArgumentsTableTypeColumnsType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
-func flattenBigQueryRoutineReturnType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
-func flattenBigQueryRoutineReturnTableType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenBigQueryRoutineImportedLibraries(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1358,17 +1310,6 @@ func flattenBigQueryRoutineExternalRuntimeOptionsContainerRequestConcurrency(v i
 	return v
 }
 
-func expandBigQueryRoutineRoutineReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-
-	transformed := make(map[string]interface{})
-	transformed["datasetId"] = d.Get("dataset_id")
-	project, _ := tpgresource.GetProject(d, config)
-	transformed["projectId"] = project
-	transformed["routineId"] = d.Get("routine_id")
-
-	return transformed, nil
-}
-
 func expandBigQueryRoutineRoutineType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1442,18 +1383,6 @@ func expandBigQueryRoutineArgumentsMode(v interface{}, d tpgresource.TerraformRe
 	return v, nil
 }
 
-func expandBigQueryRoutineArgumentsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandBigQueryRoutineArgumentsTableType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1510,42 +1439,6 @@ func expandBigQueryRoutineArgumentsTableTypeColumns(v interface{}, d tpgresource
 
 func expandBigQueryRoutineArgumentsTableTypeColumnsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandBigQueryRoutineArgumentsTableTypeColumnsType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func expandBigQueryRoutineReturnType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func expandBigQueryRoutineReturnTableType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandBigQueryRoutineImportedLibraries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

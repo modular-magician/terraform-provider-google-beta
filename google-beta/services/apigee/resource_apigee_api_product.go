@@ -1067,48 +1067,7 @@ func resourceApigeeApiProductDelete(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceApigeeApiProductImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	nameParts := strings.Split(d.Get("name").(string), "/")
-	if len(nameParts) == 4 {
-		// `organizations/{{org_name}}/apiproducts/{{name}}`
-		orgId := fmt.Sprintf("organizations/%s", nameParts[1])
-		if err := d.Set("org_id", orgId); err != nil {
-			return nil, fmt.Errorf("Error setting org_id: %s", err)
-		}
-		if err := d.Set("name", nameParts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(nameParts) == 3 {
-		// `organizations/{{org_name}}/{{name}}`
-		orgId := fmt.Sprintf("organizations/%s", nameParts[1])
-		if err := d.Set("org_id", orgId); err != nil {
-			return nil, fmt.Errorf("Error setting org_id: %s", err)
-		}
-		if err := d.Set("name", nameParts[2]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s or %s",
-			d.Get("name"),
-			"organizations/{{org_name}}/apiproducts/{{name}}",
-			"organizations/{{org_name}}/{{name}}")
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{org_id}}/apiproducts/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeApiProductCustomImport(d, meta)
 }
 
 func flattenApigeeApiProductName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1174,33 +1133,6 @@ func flattenApigeeApiProductProxies(v interface{}, d *schema.ResourceData, confi
 		return v
 	}
 	return schema.NewSet(schema.HashString, v.([]interface{}))
-}
-
-func flattenApigeeApiProductScopes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	rawConfigValue := d.Get("scopes")
-	// Convert config value to []string
-	configValue, err := tpgresource.InterfaceSliceToStringSlice(rawConfigValue)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert config value: %s", err)
-		return v
-	}
-	sortedConfigValue := append([]string{}, configValue...)
-	sort.Strings(sortedConfigValue)
-
-	// Convert v to []string
-	apiValue, err := tpgresource.InterfaceSliceToStringSlice(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert API value: %s", err)
-		return v
-	}
-	sortedApiValue := append([]string{}, apiValue...)
-	sort.Strings(sortedApiValue)
-
-	if slices.Equal(sortedApiValue, sortedConfigValue) {
-		return configValue
-	}
-
-	return apiValue
 }
 
 func flattenApigeeApiProductQuota(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

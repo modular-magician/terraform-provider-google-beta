@@ -592,90 +592,7 @@ func resourceActiveDirectoryDomainTrustDelete(d *schema.ResourceData, meta inter
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing DomainTrust %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{ActiveDirectoryBasePath}}projects/{{project}}/locations/global/domains/{{domain}}:detachTrust")
-	if err != nil {
-		return err
-	}
-
-	obj := make(map[string]interface{})
-	targetDomainNameProp, err := expandNestedActiveDirectoryDomainTrustTargetDomainName(d.Get("target_domain_name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("target_domain_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetDomainNameProp)) {
-		obj["targetDomainName"] = targetDomainNameProp
-	}
-	trustTypeProp, err := expandNestedActiveDirectoryDomainTrustTrustType(d.Get("trust_type"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("trust_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, trustTypeProp)) {
-		obj["trustType"] = trustTypeProp
-	}
-	trustDirectionProp, err := expandNestedActiveDirectoryDomainTrustTrustDirection(d.Get("trust_direction"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("trust_direction"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, trustDirectionProp)) {
-		obj["trustDirection"] = trustDirectionProp
-	}
-	selectiveAuthenticationProp, err := expandNestedActiveDirectoryDomainTrustSelectiveAuthentication(d.Get("selective_authentication"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("selective_authentication"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, selectiveAuthenticationProp)) {
-		obj["selectiveAuthentication"] = selectiveAuthenticationProp
-	}
-	targetDnsIpAddressesProp, err := expandNestedActiveDirectoryDomainTrustTargetDnsIpAddresses(d.Get("target_dns_ip_addresses"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("target_dns_ip_addresses"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetDnsIpAddressesProp)) {
-		obj["targetDnsIpAddresses"] = targetDnsIpAddressesProp
-	}
-	trustHandshakeSecretProp, err := expandNestedActiveDirectoryDomainTrustTrustHandshakeSecret(d.Get("trust_handshake_secret"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("trust_handshake_secret"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, trustHandshakeSecretProp)) {
-		obj["trustHandshakeSecret"] = trustHandshakeSecretProp
-	}
-
-	obj, err = resourceActiveDirectoryDomainTrustEncoder(d, meta, obj)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Deleting DomainTrust %q", d.Id())
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
-	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, "DomainTrust")
-	}
-
-	err = ActiveDirectoryOperationWaitTime(
-		config, res, project, "Deleting DomainTrust", userAgent,
-		d.Timeout(schema.TimeoutDelete))
-
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Finished deleting DomainTrust %q: %#v", d.Id(), res)
-	return nil
+	return resourceActiveDirectoryDomainTrustCustomDelete(d, meta)
 }
 
 func resourceActiveDirectoryDomainTrustImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -746,21 +663,6 @@ func expandNestedActiveDirectoryDomainTrustTrustHandshakeSecret(v interface{}, d
 	return v, nil
 }
 
-func resourceActiveDirectoryDomainTrustEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	wrappedReq := map[string]interface{}{
-		"trust": obj,
-	}
-	return wrappedReq, nil
-}
-
-func resourceActiveDirectoryDomainTrustUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	wrappedReq := map[string]interface{}{
-		"targetDomainName":     obj["targetDomainName"],
-		"targetDnsIpAddresses": obj["targetDnsIpAddresses"],
-	}
-	return wrappedReq, nil
-}
-
 func flattenNestedActiveDirectoryDomainTrust(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	var v interface{}
 	var ok bool
@@ -817,14 +719,6 @@ func resourceActiveDirectoryDomainTrustFindNestedObjectInList(d *schema.Resource
 		return idx, item, nil
 	}
 	return -1, nil, nil
-}
-func resourceActiveDirectoryDomainTrustDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	v, ok := res["domainTrust"]
-	if !ok || v == nil {
-		return res, nil
-	}
-
-	return v.(map[string]interface{}), nil
 }
 
 func ResourceActiveDirectoryDomainTrustFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

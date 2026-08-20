@@ -1136,53 +1136,6 @@ func expandComputeNetworkParamsResourceManagerTags(v interface{}, d tpgresource.
 	return m, nil
 }
 
-func resourceComputeNetworkEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	//  BGP always-compare-med
-	_, ok := obj["routingConfig"].(map[string]interface{})
-	if ok {
-		obj["routingConfig"].(map[string]interface{})["deleteBgpAlwaysCompareMed"] = d.Get("delete_bgp_always_compare_med").(bool)
-
-		bgpAlwaysCompareMed := d.Get("bgp_always_compare_med").(bool)
-		if d.Get("delete_bgp_always_compare_med").(bool) {
-			if bgpAlwaysCompareMed {
-				return nil, fmt.Errorf("Cannot set BgpAlwaysCompareMed to true while DeleteBgpAlwaysCompareMed is also true")
-			}
-			obj["routingConfig"].(map[string]interface{})["bgpAlwaysCompareMed"] = nil
-		} else if _, present := d.GetOkExists("bgp_always_compare_med"); present {
-			obj["routingConfig"].(map[string]interface{})["bgpAlwaysCompareMed"] = d.Get("bgp_always_compare_med").(bool)
-		}
-	}
-	// now clean up the rest
-	delete(obj, "numeric_id")
-	return obj, nil
-}
-
-func resourceComputeNetworkUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	//  BGP always-compare-med
-	_, ok := obj["routingConfig"].(map[string]interface{})
-	if ok {
-		obj["routingConfig"].(map[string]interface{})["deleteBgpAlwaysCompareMed"] = d.Get("delete_bgp_always_compare_med").(bool)
-
-		bgpAlwaysCompareMed := d.Get("bgp_always_compare_med").(bool)
-		if d.Get("delete_bgp_always_compare_med").(bool) {
-			if bgpAlwaysCompareMed {
-				return nil, fmt.Errorf("Cannot set BgpAlwaysCompareMed to true while DeleteBgpAlwaysCompareMed is also true")
-			}
-			obj["routingConfig"].(map[string]interface{})["bgpAlwaysCompareMed"] = nil
-		} else if d.HasChange("bgp_always_compare_med") {
-			obj["routingConfig"].(map[string]interface{})["bgpAlwaysCompareMed"] = d.Get("bgp_always_compare_med").(bool)
-		}
-	}
-	// now clean up the rest
-	delete(obj, "numeric_id")
-	return obj, nil
-}
-
-func resourceComputeNetworkDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	res["numericId"] = res["id"] // stores unique id into numericId attribute before it's changed to path format
-	return res, nil
-}
-
 func ResourceComputeNetworkFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

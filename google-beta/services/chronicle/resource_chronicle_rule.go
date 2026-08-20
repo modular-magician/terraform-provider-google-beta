@@ -804,11 +804,6 @@ func flattenChronicleRuleName(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
-func flattenChronicleRuleRuleId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenChronicleRuleText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

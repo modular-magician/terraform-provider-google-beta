@@ -1662,20 +1662,6 @@ func expandComputeRegionNetworkFirewallPolicyRuleTargetForwardingRules(v interfa
 	return v, nil
 }
 
-func resourceComputeRegionNetworkFirewallPolicyRuleUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if !d.HasChange("match") {
-		return obj, nil
-	}
-	oldMatch, newMatch := d.GetChange("match")
-
-	err := adjustFirewallPolicyRuleNetworkContextFields(obj, oldMatch, newMatch)
-	if err != nil {
-		return obj, err
-	}
-
-	return obj, nil
-}
-
 func ResourceComputeRegionNetworkFirewallPolicyRuleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

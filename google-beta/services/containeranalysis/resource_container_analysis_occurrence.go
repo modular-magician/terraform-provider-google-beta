@@ -680,13 +680,6 @@ func resourceContainerAnalysisOccurrenceImport(d *schema.ResourceData, meta inte
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenContainerAnalysisOccurrenceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenContainerAnalysisOccurrenceResourceUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -844,72 +837,6 @@ func expandContainerAnalysisOccurrenceAttestationSignaturesPublicKeyId(v interfa
 	return v, nil
 }
 
-func resourceContainerAnalysisOccurrenceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Resource object was flattened in GA API
-	if resourceuri, ok := obj["resourceUri"]; ok {
-		obj["resource"] = map[string]interface{}{
-			"uri": resourceuri,
-		}
-		delete(obj, "resourceUri")
-	}
-
-	// Beta `attestation.genericSignedAttestation` was flattened to just
-	// `attestation` (no contentType) in GA
-	if v, ok := obj["attestation"]; ok && v != nil {
-		gaAtt := v.(map[string]interface{})
-		obj["attestation"] = map[string]interface{}{
-			"attestation": map[string]interface{}{
-				"genericSignedAttestation": map[string]interface{}{
-					"contentType":       "SIMPLE_SIGNING_JSON",
-					"serializedPayload": gaAtt["serializedPayload"],
-					"signatures":        gaAtt["signatures"],
-				},
-			},
-		}
-	}
-
-	return obj, nil
-}
-
-func resourceContainerAnalysisOccurrenceUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Note is required, even for PATCH
-	noteNameProp, err := expandContainerAnalysisOccurrenceNoteName(d.Get("note_name"), d, meta.(*transport_tpg.Config))
-	if err != nil {
-		return nil, err
-	} else if v, ok := d.GetOkExists("note_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(noteNameProp)) && (ok || !reflect.DeepEqual(v, noteNameProp)) {
-		obj["noteName"] = noteNameProp
-	}
-
-	return resourceContainerAnalysisOccurrenceEncoder(d, meta, obj)
-}
-
-func resourceContainerAnalysisOccurrenceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Resource object was flattened in GA API
-	if nestedResource, ok := res["resource"]; ok {
-		if resObj, ok := nestedResource.(map[string]interface{}); ok {
-			res["resourceUri"] = resObj["uri"]
-			delete(res, "resource")
-		}
-	}
-
-	// Beta attestation.attestation.genericSignedAttestation
-	// => GA attestation
-	if attV, ok := res["attestation"]; ok && attV != nil {
-		att := attV.(map[string]interface{})
-		if nestedAttV, ok := att["attestation"]; ok && nestedAttV != nil {
-			nestedAtt := nestedAttV.(map[string]interface{})
-			if genericV, ok := nestedAtt["genericSignedAttestation"]; ok {
-				genericAtt := genericV.(map[string]interface{})
-				res["attestation"] = map[string]interface{}{
-					"serializedPayload": genericAtt["serializedPayload"],
-					"signatures":        genericAtt["signatures"],
-				}
-			}
-		}
-	}
-
-	return res, nil
-}
 func resourceContainerAnalysisOccurrencePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceContainerAnalysisOccurrenceDecoder(d, meta, res)

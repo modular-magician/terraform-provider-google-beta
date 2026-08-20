@@ -1096,12 +1096,6 @@ func expandAlloydbBackupEffectiveAnnotations(v interface{}, d tpgresource.Terraf
 	return m, nil
 }
 
-func resourceAlloydbBackupEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// The only other available type is AUTOMATED which cannot be set manually
-	obj["type"] = "ON_DEMAND"
-	return obj, nil
-}
-
 func ResourceAlloydbBackupFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

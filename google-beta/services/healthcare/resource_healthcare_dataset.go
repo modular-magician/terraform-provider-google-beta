@@ -646,19 +646,6 @@ func expandHealthcareDatasetEncryptionSpecKmsKeyName(v interface{}, d tpgresourc
 	return v, nil
 }
 
-func resourceHealthcareDatasetDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Take the returned long form of the name and use it as `self_link`.
-	// Then modify the name to be the user specified form.
-	// We can't just ignore_read on `name` as the linter will
-	// complain that the returned `res` is never used afterwards.
-	// Some field needs to be actually set, and we chose `name`.
-	if err := d.Set("self_link", res["name"].(string)); err != nil {
-		return nil, fmt.Errorf("Error setting self_link: %s", err)
-	}
-	res["name"] = d.Get("name").(string)
-	return res, nil
-}
-
 func ResourceHealthcareDatasetFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

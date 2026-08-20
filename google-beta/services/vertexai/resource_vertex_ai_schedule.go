@@ -1807,18 +1807,6 @@ func flattenVertexAIScheduleCreatePipelineJobRequestPipelineJobNetwork(v interfa
 	return v
 }
 
-func flattenVertexAIScheduleCreatePipelineJobRequestPipelineJobPipelineSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenVertexAIScheduleCreatePipelineJobRequestPipelineJobPreflightValidations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2016,13 +2004,6 @@ func flattenVertexAIScheduleMaxConcurrentRunCount(v interface{}, d *schema.Resou
 
 func flattenVertexAIScheduleMaxRunCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenVertexAIScheduleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func flattenVertexAIScheduleNextRunTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2948,18 +2929,6 @@ func expandVertexAIScheduleCreatePipelineJobRequestPipelineJobName(v interface{}
 
 func expandVertexAIScheduleCreatePipelineJobRequestPipelineJobNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandVertexAIScheduleCreatePipelineJobRequestPipelineJobPipelineSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandVertexAIScheduleCreatePipelineJobRequestPipelineJobPreflightValidations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -721,13 +721,6 @@ func resourceSecurityCenterManagementFolderSecurityHealthAnalyticsCustomModuleIm
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenSecurityCenterManagementFolderSecurityHealthAnalyticsCustomModuleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenSecurityCenterManagementFolderSecurityHealthAnalyticsCustomModuleDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

@@ -580,15 +580,7 @@ func resourceMonitoringServiceDelete(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceMonitoringServiceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceMonitoringServiceCustomImport(d, meta)
 }
 
 func flattenMonitoringServiceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -618,13 +610,6 @@ func flattenMonitoringServiceTelemetry(v interface{}, d *schema.ResourceData, co
 }
 func flattenMonitoringServiceTelemetryResourceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenMonitoringServiceServiceId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func expandMonitoringServiceDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -670,19 +655,6 @@ func expandMonitoringServiceTelemetryResourceName(v interface{}, d tpgresource.T
 
 func expandMonitoringServiceServiceId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceMonitoringServiceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Currently only CUSTOM service types can be created, but the
-	// custom identifier block does not actually have fields right now.
-	// Set to empty to indicate manually-created service type is CUSTOM.
-	if _, ok := obj["custom"]; !ok {
-		obj["custom"] = map[string]interface{}{}
-	}
-	// Name/Service ID is a query parameter only
-	delete(obj, "name")
-
-	return obj, nil
 }
 
 func resourceMonitoringServicePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

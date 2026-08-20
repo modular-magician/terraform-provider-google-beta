@@ -402,42 +402,7 @@ func resourceApigeeNatAddressUpdate(d *schema.ResourceData, meta interface{}) er
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceApigeeNatAddressRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-
-	obj := make(map[string]interface{})
-	nameProp, err := expandApigeeNatAddressName(d.Get("name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
-	}
-
-	log.Printf("[DEBUG] Updating NatAddress %q: %#v", d.Id(), obj)
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	if d.HasChange("activate") {
-		if !d.Get("activate").(bool) {
-			return fmt.Errorf("NatAddress %q allows only the activation action", d.Id())
-		} else if d.Get("state").(string) == "RESERVED" {
-			log.Printf("[DEBUG] Activating for NatAddress %q to become ACTIVE", d.Id())
-			if err := resourceApigeeNatAddressActivate(config, d, billingProject, userAgent); err != nil {
-				return fmt.Errorf("Error activating NatAddress: %s", err)
-			}
-		}
-	}
-
-	return resourceApigeeNatAddressRead(d, meta)
+	return resourceApigeeNatAddressCustomUpdate(d, meta)
 }
 
 func resourceApigeeNatAddressDelete(d *schema.ResourceData, meta interface{}) error {
@@ -498,24 +463,7 @@ func resourceApigeeNatAddressDelete(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceApigeeNatAddressImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<instance_id>.+)/natAddresses/(?P<name>.+)",
-		"(?P<instance_id>.+)/(?P<name>.+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeNatAddressCustomImport(d, meta)
 }
 
 func flattenApigeeNatAddressName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -540,17 +488,6 @@ func expandApigeeNatAddressName(v interface{}, d tpgresource.TerraformResourceDa
 
 func expandApigeeNatAddressActivate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceApigeeNatAddressEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// cannot include activate prop in the body
-	delete(obj, "activate")
-	return obj, nil
-}
-
-func resourceApigeeNatAddressDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	res["activate"] = res["state"].(string) == "ACTIVE"
-	return res, nil
 }
 
 func ResourceApigeeNatAddressFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

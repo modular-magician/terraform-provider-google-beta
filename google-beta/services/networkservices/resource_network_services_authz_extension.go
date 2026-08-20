@@ -907,13 +907,6 @@ func flattenNetworkServicesAuthzExtensionEffectiveLabels(v interface{}, d *schem
 	return v
 }
 
-func flattenNetworkServicesAuthzExtensionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandNetworkServicesAuthzExtensionDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -966,10 +959,6 @@ func expandNetworkServicesAuthzExtensionEffectiveLabels(v interface{}, d tpgreso
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandNetworkServicesAuthzExtensionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return fmt.Sprintf("projects/%s/locations/%s/authzExtensions/%s", d.Get("project"), d.Get("location"), v), nil
 }
 
 func ResourceNetworkServicesAuthzExtensionFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

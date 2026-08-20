@@ -603,13 +603,6 @@ func resourceFirebaseAppCheckResourcePolicyImport(d *schema.ResourceData, meta i
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenFirebaseAppCheckResourcePolicyResourcePolicyId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenFirebaseAppCheckResourcePolicyTargetResource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

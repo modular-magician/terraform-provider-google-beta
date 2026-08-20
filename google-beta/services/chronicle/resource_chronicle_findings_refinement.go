@@ -593,13 +593,6 @@ func flattenChronicleFindingsRefinementDisplayName(v interface{}, d *schema.Reso
 	return v
 }
 
-func flattenChronicleFindingsRefinementName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenChronicleFindingsRefinementOutcomeFilters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v

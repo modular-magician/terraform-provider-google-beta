@@ -675,62 +675,11 @@ func resourceKMSCryptoKeyDelete(d *schema.ResourceData, meta interface{}) error 
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing CryptoKey %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	cryptoKeyId, err := ParseKmsCryptoKeyId(d.Id(), config)
-	if err != nil {
-		return err
-	}
-
-	log.Printf(`
-[WARNING] KMS CryptoKey resources cannot be deleted from GCP. The CryptoKey %s will be removed from Terraform state,
-and all its CryptoKeyVersions will be destroyed, but it will still be present in the project.`, cryptoKeyId.CryptoKeyId())
-
-	// Delete all versions of the key
-	if err := clearCryptoKeyVersions(cryptoKeyId, userAgent, config); err != nil {
-		return err
-	}
-
-	// Make sure automatic key rotation is disabled if set
-	if d.Get("rotation_period") != "" {
-		if err := disableCryptoKeyRotation(cryptoKeyId, userAgent, config); err != nil {
-			return fmt.Errorf(
-				"While cryptoKeyVersions were cleared, Terraform was unable to disable automatic rotation of key due to an error: %s."+
-					"Please retry or manually disable automatic rotation to prevent creation of a new version of this key.", err)
-		}
-	}
-
-	d.SetId("")
-	return nil
+	return resourceKMSCryptoKeyCustomDelete(d, meta)
 }
 
 func resourceKMSCryptoKeyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	cryptoKeyId, err := ParseKmsCryptoKeyId(d.Id(), config)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := d.Set("key_ring", cryptoKeyId.KeyRingId.KeyRingId()); err != nil {
-		return nil, fmt.Errorf("Error setting key_ring: %s", err)
-	}
-	if err := d.Set("name", cryptoKeyId.Name); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	id, err := tpgresource.ReplaceVars(d, config, "{{key_ring}}/cryptoKeys/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceKMSCryptoKeyCustomImport(d, meta)
 }
 
 func flattenKMSCryptoKeyLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -942,98 +891,6 @@ func expandKMSCryptoKeyEffectiveLabels(v interface{}, d tpgresource.TerraformRes
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceKMSCryptoKeyEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// if rotationPeriod is set, nextRotationTime must also be set.
-	if d.Get("rotation_period") != "" {
-		rotationPeriod := d.Get("rotation_period").(string)
-		nextRotation, err := kmsCryptoKeyNextRotation(time.Now(), rotationPeriod)
-
-		if err != nil {
-			return nil, fmt.Errorf("Error setting CryptoKey rotation period: %s", err.Error())
-		}
-
-		obj["nextRotationTime"] = nextRotation
-	}
-
-	// set to false if it is not true explicitly
-	if !(d.Get("skip_initial_version_creation").(bool)) {
-		if err := d.Set("skip_initial_version_creation", false); err != nil {
-			return nil, fmt.Errorf("Error setting skip_initial_version_creation: %s", err)
-		}
-	}
-
-	return obj, nil
-}
-
-func resourceKMSCryptoKeyUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// if rotationPeriod is changed, nextRotationTime must also be set.
-	if d.HasChange("rotation_period") && d.Get("rotation_period") != "" {
-		rotationPeriod := d.Get("rotation_period").(string)
-		nextRotation, err := kmsCryptoKeyNextRotation(time.Now(), rotationPeriod)
-
-		if err != nil {
-			return nil, fmt.Errorf("Error setting CryptoKey rotation period: %s", err.Error())
-		}
-
-		obj["nextRotationTime"] = nextRotation
-	}
-
-	return obj, nil
-}
-
-func resourceKMSCryptoKeyDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Modify the name to be the user specified form.
-	// We can't just ignore_read on `name` as the linter will
-	// complain that the returned `res` is never used afterwards.
-	// Some field needs to be actually set, and we chose `name`.
-	v := d.Get("name")
-	if v != nil {
-		res["name"] = v.(string)
-	}
-	return res, nil
-}
-
-func resourceKMSCryptoKeyResourceV0() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"key_ring": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"rotation_period": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"version_template": {
-				Type:     schema.TypeList,
-				Optional: true,
-			},
-			"self_link": {
-				Type: schema.TypeString,
-			},
-		},
-	}
-}
-
-func ResourceKMSCryptoKeyUpgradeV0(_ context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
-	log.Printf("[DEBUG] Attributes before migration: %#v", rawState)
-
-	config := meta.(*transport_tpg.Config)
-	keyRingId := rawState["key_ring"].(string)
-	parsed, err := parseKmsKeyRingId(keyRingId, config)
-	if err != nil {
-		return nil, err
-	}
-	rawState["key_ring"] = parsed.KeyRingId()
-
-	log.Printf("[DEBUG] Attributes after migration: %#v", rawState)
-	return rawState, nil
 }
 
 func ResourceKMSCryptoKeyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -1352,13 +1352,6 @@ func expandAgentIdentityAuthProviderEffectiveLabels(v interface{}, d tpgresource
 	return m, nil
 }
 
-func resourceAgentIdentityAuthProviderDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if deleted, ok := res["deleted"].(bool); ok && deleted {
-		return nil, nil
-	}
-	return res, nil
-}
-
 func ResourceAgentIdentityAuthProviderFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

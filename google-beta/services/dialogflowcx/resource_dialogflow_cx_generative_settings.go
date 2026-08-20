@@ -594,31 +594,7 @@ func resourceDialogflowCXGenerativeSettingsDelete(d *schema.ResourceData, meta i
 }
 
 func resourceDialogflowCXGenerativeSettingsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value and parent contains slashes
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<parent>.+)/generativeSettings\\?languageCode=(?P<language_code>[a-zA-Z-]+)",
-		"(?P<parent>.+)/generativeSettings",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/generativeSettings?languageCode={{language_code}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDialogflowCXGenerativeSettingsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDialogflowCXGenerativeSettingsCustomImport(d, meta)
 }
 
 func flattenDialogflowCXGenerativeSettingsFallbackSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

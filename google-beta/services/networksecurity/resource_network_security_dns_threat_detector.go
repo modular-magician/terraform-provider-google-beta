@@ -658,13 +658,6 @@ func flattenNetworkSecurityDnsThreatDetectorEffectiveLabels(v interface{}, d *sc
 	return v
 }
 
-func flattenNetworkSecurityDnsThreatDetectorName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandNetworkSecurityDnsThreatDetectorThreatDetectorProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

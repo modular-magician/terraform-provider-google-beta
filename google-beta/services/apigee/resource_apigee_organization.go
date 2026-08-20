@@ -714,46 +714,7 @@ func resourceApigeeOrganizationDelete(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceApigeeOrganizationImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	parts := strings.Split(d.Get("name").(string), "/")
-
-	var projectId string
-	switch len(parts) {
-	case 1:
-		projectId = parts[0]
-	case 2:
-		projectId = parts[1]
-	default:
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s or %s",
-			d.Get("name"),
-			"{{name}}",
-			"organizations/{{name}}",
-		)
-	}
-
-	if err := d.Set("name", projectId); err != nil {
-		return nil, fmt.Errorf("Error setting organization: %s", err)
-	}
-
-	if err := d.Set("project_id", projectId); err != nil {
-		return nil, fmt.Errorf("Error setting organization: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeOrganizationCustomImport(d, meta)
 }
 
 func flattenApigeeOrganizationName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -824,34 +785,6 @@ func flattenApigeeOrganizationProperties(v interface{}, d *schema.ResourceData, 
 	transformed["property"] =
 		flattenApigeeOrganizationPropertiesProperty(original["property"], d, config)
 	return []interface{}{transformed}
-}
-func flattenApigeeOrganizationPropertiesProperty(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.([]interface{})
-	apiData := make([]map[string]interface{}, 0, len(l))
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		apiData = append(apiData, map[string]interface{}{
-			"name":  original["name"],
-			"value": original["value"],
-		})
-	}
-	configData := []map[string]interface{}{}
-	for _, item := range d.Get("properties.0.property").([]interface{}) {
-		configData = append(configData, item.(map[string]interface{}))
-	}
-	sorted, err := tpgresource.SortMapsByConfigOrder(configData, apiData, "name")
-	if err != nil {
-		log.Printf("[ERROR] Could not support API response for properties.0.property: %s", err)
-		return apiData
-	}
-	return sorted
 }
 
 func flattenApigeeOrganizationApigeeProjectId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -962,11 +895,6 @@ func expandApigeeOrganizationPropertiesPropertyName(v interface{}, d tpgresource
 
 func expandApigeeOrganizationPropertiesPropertyValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceApigeeOrganizationEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	obj["name"] = d.Get("project_id").(string)
-	return obj, nil
 }
 
 func ResourceApigeeOrganizationFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

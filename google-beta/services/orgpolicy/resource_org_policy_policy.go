@@ -892,39 +892,6 @@ func flattenOrgPolicyPolicySpecRulesValuesDeniedValues(v interface{}, d *schema.
 	return v
 }
 
-func flattenOrgPolicyPolicySpecRulesAllowAll(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-	return strings.ToUpper(strconv.FormatBool(v.(bool)))
-}
-
-func flattenOrgPolicyPolicySpecRulesDenyAll(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-	return strings.ToUpper(strconv.FormatBool(v.(bool)))
-}
-
-func flattenOrgPolicyPolicySpecRulesEnforce(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-	return strings.ToUpper(strconv.FormatBool(v.(bool)))
-}
-
-func flattenOrgPolicyPolicySpecRulesParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenOrgPolicyPolicySpecRulesCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1042,39 +1009,6 @@ func flattenOrgPolicyPolicyDryRunSpecRulesValuesAllowedValues(v interface{}, d *
 
 func flattenOrgPolicyPolicyDryRunSpecRulesValuesDeniedValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenOrgPolicyPolicyDryRunSpecRulesAllowAll(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-	return strings.ToUpper(strconv.FormatBool(v.(bool)))
-}
-
-func flattenOrgPolicyPolicyDryRunSpecRulesDenyAll(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-	return strings.ToUpper(strconv.FormatBool(v.(bool)))
-}
-
-func flattenOrgPolicyPolicyDryRunSpecRulesEnforce(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-	return strings.ToUpper(strconv.FormatBool(v.(bool)))
-}
-
-func flattenOrgPolicyPolicyDryRunSpecRulesParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenOrgPolicyPolicyDryRunSpecRulesCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1281,54 +1215,6 @@ func expandOrgPolicyPolicySpecRulesValuesAllowedValues(v interface{}, d tpgresou
 
 func expandOrgPolicyPolicySpecRulesValuesDeniedValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandOrgPolicyPolicySpecRulesAllowAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	b, err := strconv.ParseBool(v.(string))
-	if err != nil {
-		return nil, nil
-	}
-	return b, nil
-}
-
-func expandOrgPolicyPolicySpecRulesDenyAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	b, err := strconv.ParseBool(v.(string))
-	if err != nil {
-		return nil, nil
-	}
-	return b, nil
-}
-
-func expandOrgPolicyPolicySpecRulesEnforce(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	b, err := strconv.ParseBool(v.(string))
-	if err != nil {
-		return nil, nil
-	}
-	return b, nil
-}
-
-func expandOrgPolicyPolicySpecRulesParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandOrgPolicyPolicySpecRulesCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1553,54 +1439,6 @@ func expandOrgPolicyPolicyDryRunSpecRulesValuesDeniedValues(v interface{}, d tpg
 	return v, nil
 }
 
-func expandOrgPolicyPolicyDryRunSpecRulesAllowAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	b, err := strconv.ParseBool(v.(string))
-	if err != nil {
-		return nil, nil
-	}
-	return b, nil
-}
-
-func expandOrgPolicyPolicyDryRunSpecRulesDenyAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	b, err := strconv.ParseBool(v.(string))
-	if err != nil {
-		return nil, nil
-	}
-	return b, nil
-}
-
-func expandOrgPolicyPolicyDryRunSpecRulesEnforce(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	b, err := strconv.ParseBool(v.(string))
-	if err != nil {
-		return nil, nil
-	}
-	return b, nil
-}
-
-func expandOrgPolicyPolicyDryRunSpecRulesParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandOrgPolicyPolicyDryRunSpecRulesCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1666,12 +1504,6 @@ func expandOrgPolicyPolicyDryRunSpecInheritFromParent(v interface{}, d tpgresour
 
 func expandOrgPolicyPolicyDryRunSpecReset(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceOrgPolicyPolicyEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	name := d.Get("name").(string)
-	d.Set("name", tpgresource.GetResourceNameFromSelfLink(name))
-	return obj, nil
 }
 
 func ResourceOrgPolicyPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

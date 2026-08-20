@@ -710,13 +710,6 @@ func expandDiscoveryEngineCmekConfigSingleRegionKeysKmsKey(v interface{}, d tpgr
 	return v, nil
 }
 
-func resourceDiscoveryEngineCmekConfigUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Always force-send `kms_key` value. This field is immutable and required.
-	// In update operation, the immutable value of this field is ignored and not found, generating generating error: "Field \"kms_key_name\" is a required field, but no value is found."
-	obj["kmsKey"] = d.Get("kms_key")
-	return obj, nil
-}
-
 func ResourceDiscoveryEngineCmekConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

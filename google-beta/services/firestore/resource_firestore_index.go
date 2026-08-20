@@ -389,152 +389,7 @@ When set to "DELETE", deleting the resource is allowed.
 }
 
 func resourceFirestoreIndexCreate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	obj := make(map[string]interface{})
-	databaseProp, err := expandFirestoreIndexDatabase(d.Get("database"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("database"); !tpgresource.IsEmptyValue(reflect.ValueOf(databaseProp)) && (ok || !reflect.DeepEqual(v, databaseProp)) {
-		obj["database"] = databaseProp
-	}
-	collectionProp, err := expandFirestoreIndexCollection(d.Get("collection"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("collection"); !tpgresource.IsEmptyValue(reflect.ValueOf(collectionProp)) && (ok || !reflect.DeepEqual(v, collectionProp)) {
-		obj["collection"] = collectionProp
-	}
-	queryScopeProp, err := expandFirestoreIndexQueryScope(d.Get("query_scope"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("query_scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(queryScopeProp)) && (ok || !reflect.DeepEqual(v, queryScopeProp)) {
-		obj["queryScope"] = queryScopeProp
-	}
-	apiScopeProp, err := expandFirestoreIndexApiScope(d.Get("api_scope"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("api_scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(apiScopeProp)) && (ok || !reflect.DeepEqual(v, apiScopeProp)) {
-		obj["apiScope"] = apiScopeProp
-	}
-	densityProp, err := expandFirestoreIndexDensity(d.Get("density"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("density"); !tpgresource.IsEmptyValue(reflect.ValueOf(densityProp)) && (ok || !reflect.DeepEqual(v, densityProp)) {
-		obj["density"] = densityProp
-	}
-	multikeyProp, err := expandFirestoreIndexMultikey(d.Get("multikey"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("multikey"); !tpgresource.IsEmptyValue(reflect.ValueOf(multikeyProp)) && (ok || !reflect.DeepEqual(v, multikeyProp)) {
-		obj["multikey"] = multikeyProp
-	}
-	uniqueProp, err := expandFirestoreIndexUnique(d.Get("unique"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("unique"); !tpgresource.IsEmptyValue(reflect.ValueOf(uniqueProp)) && (ok || !reflect.DeepEqual(v, uniqueProp)) {
-		obj["unique"] = uniqueProp
-	}
-	fieldsProp, err := expandFirestoreIndexFields(d.Get("fields"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("fields"); !tpgresource.IsEmptyValue(reflect.ValueOf(fieldsProp)) && (ok || !reflect.DeepEqual(v, fieldsProp)) {
-		obj["fields"] = fieldsProp
-	}
-
-	obj, err = resourceFirestoreIndexEncoder(d, meta, obj)
-	if err != nil {
-		return err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{FirestoreBasePath}}projects/{{project}}/databases/{{database}}/collectionGroups/{{collection}}/indexes")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Creating new Index: %#v", obj)
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for Index: %s", err)
-	}
-	billingProject = project
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	headers := make(http.Header)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:               config,
-		Method:               "POST",
-		Project:              billingProject,
-		RawURL:               url,
-		UserAgent:            userAgent,
-		Body:                 obj,
-		Timeout:              d.Timeout(schema.TimeoutCreate),
-		Headers:              headers,
-		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.FirestoreIndex409Retry},
-	})
-	if err != nil {
-		return fmt.Errorf("Error creating Index: %s", err)
-	}
-
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	if d.Get("skip_wait").(bool) {
-		// If skip_wait, the LRO will not be complete so the response will not be populated.
-		// Extract the index name from the metadata field.
-		metadata, ok := res["metadata"].(map[string]interface{})
-		if !ok {
-			return fmt.Errorf("Error constructing id from result.")
-		}
-		index, ok := metadata["index"].(string)
-		if !ok {
-			return fmt.Errorf("Error constructing id from result.")
-		}
-		if err := d.Set("name", flattenFirestoreIndexName(index, d, config)); err != nil {
-			return err
-		}
-	} else {
-		// Use the resource in the operation response to populate
-		// identity fields and d.Id() before read
-		var opRes map[string]interface{}
-		err = FirestoreOperationWaitTimeWithResponse(
-			config, res, &opRes, project, "Creating Index", userAgent,
-			d.Timeout(schema.TimeoutCreate))
-		if err != nil {
-			// The resource didn't actually create
-			d.SetId("")
-
-			return fmt.Errorf("Error waiting to create Index: %s", err)
-		}
-
-		if err := d.Set("name", flattenFirestoreIndexName(opRes["name"], d, config)); err != nil {
-			return err
-		}
-	}
-
-	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "{{name}}")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	log.Printf("[DEBUG] Finished creating Index %q: %#v", d.Id(), res)
-
-	return resourceFirestoreIndexRead(d, meta)
+	return resourceFirestoreIndexCustomCreate(d, meta)
 }
 
 func resourceFirestoreIndexRead(d *schema.ResourceData, meta interface{}) error {
@@ -689,33 +544,7 @@ func resourceFirestoreIndexDelete(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceFirestoreIndexImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) != 8 {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s",
-			d.Get("name"),
-			"projects/{{project}}/databases/{{database}}/collectionGroups/{{collection}}/indexes/{{server_generated_id}}",
-		)
-	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-	if err := d.Set("database", stringParts[3]); err != nil {
-		return nil, fmt.Errorf("Error setting database: %s", err)
-	}
-	if err := d.Set("collection", stringParts[5]); err != nil {
-		return nil, fmt.Errorf("Error setting collection: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceFirestoreIndexCustomImport(d, meta)
 }
 
 func flattenFirestoreIndexName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -723,14 +552,6 @@ func flattenFirestoreIndexName(v interface{}, d *schema.ResourceData, config *tr
 }
 
 func flattenFirestoreIndexQueryScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenFirestoreIndexApiScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "ANY_API"
-	}
-
 	return v
 }
 
@@ -834,20 +655,6 @@ func flattenFirestoreIndexFieldsSearchConfigTextSpecIndexSpecsIndexType(v interf
 }
 
 func flattenFirestoreIndexFieldsSearchConfigTextSpecIndexSpecsMatchType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenFirestoreIndexFieldsSearchConfigGeoSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// work around the inability to set default map fields
-	if v != nil && len(v.(map[string]interface{})) == 0 {
-		transformed := make(map[string]interface{})
-		transformed["geo_json_indexing_disabled"] = false
-		return []interface{}{transformed}
-	} else if v != nil && len(v.(map[string]interface{})) == 1 {
-		transformed := make(map[string]interface{})
-		transformed["geo_json_indexing_disabled"] = v.(map[string]interface{})["geoJsonIndexingDisabled"]
-		return []interface{}{transformed}
-	}
 	return v
 }
 
@@ -1150,16 +957,6 @@ func expandFirestoreIndexFieldsVectorConfigFlat(v interface{}, d tpgresource.Ter
 	transformed := make(map[string]interface{})
 
 	return transformed, nil
-}
-
-func resourceFirestoreIndexEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// We've added project / database / collection as split fields of the name, but
-	// the API doesn't expect them.  Make sure we remove them from any requests.
-
-	delete(obj, "project")
-	delete(obj, "database")
-	delete(obj, "collection")
-	return obj, nil
 }
 
 func ResourceFirestoreIndexFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

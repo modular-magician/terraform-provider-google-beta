@@ -486,17 +486,6 @@ func flattenDiscoveryEngineSchemaName(v interface{}, d *schema.ResourceData, con
 	return v
 }
 
-func flattenDiscoveryEngineSchemaJsonSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	s, err := structure.NormalizeJsonString(v)
-	if err != nil {
-		log.Printf("[ERROR] failed to normalize JSON string: %v", err)
-	}
-	return s
-}
-
 func expandDiscoveryEngineSchemaJsonSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

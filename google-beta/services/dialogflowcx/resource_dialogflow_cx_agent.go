@@ -1281,13 +1281,6 @@ func resourceDialogflowCXAgentImport(d *schema.ResourceData, meta interface{}) (
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenDialogflowCXAgentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenDialogflowCXAgentDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1492,24 +1485,6 @@ func flattenDialogflowCXAgentGitIntegrationSettings(v interface{}, d *schema.Res
 		flattenDialogflowCXAgentGitIntegrationSettingsGithubSettings(original["githubSettings"], d, config)
 	return []interface{}{transformed}
 }
-func flattenDialogflowCXAgentGitIntegrationSettingsGithubSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	// ignore access_token, which is always returned as REDACTED
-	delete(original, "access_token")
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["display_name"] = original["displayName"]
-	transformed["repository_uri"] = original["repositoryUri"]
-	transformed["tracking_branch"] = original["trackingBranch"]
-	transformed["access_token"] = d.Get("git_integration_settings.0.github_settings.0.access_token")
-	transformed["branches"] = original["branches"]
-	return []interface{}{transformed}
-}
 
 func flattenDialogflowCXAgentTextToSpeechSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
@@ -1520,17 +1495,6 @@ func flattenDialogflowCXAgentTextToSpeechSettings(v interface{}, d *schema.Resou
 	transformed["synthesize_speech_configs"] =
 		flattenDialogflowCXAgentTextToSpeechSettingsSynthesizeSpeechConfigs(original["synthesizeSpeechConfigs"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXAgentTextToSpeechSettingsSynthesizeSpeechConfigs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXAgentGenAppBuilderSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1578,17 +1542,6 @@ func flattenDialogflowCXAgentPersonalizationSettings(v interface{}, d *schema.Re
 	transformed["default_end_user_metadata"] =
 		flattenDialogflowCXAgentPersonalizationSettingsDefaultEndUserMetadata(original["defaultEndUserMetadata"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXAgentPersonalizationSettingsDefaultEndUserMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXAgentClientCertificateSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2037,18 +1990,6 @@ func expandDialogflowCXAgentTextToSpeechSettings(v interface{}, d tpgresource.Te
 	return transformed, nil
 }
 
-func expandDialogflowCXAgentTextToSpeechSettingsSynthesizeSpeechConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandDialogflowCXAgentGenAppBuilderSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -2133,18 +2074,6 @@ func expandDialogflowCXAgentPersonalizationSettings(v interface{}, d tpgresource
 	}
 
 	return transformed, nil
-}
-
-func expandDialogflowCXAgentPersonalizationSettingsDefaultEndUserMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandDialogflowCXAgentClientCertificateSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

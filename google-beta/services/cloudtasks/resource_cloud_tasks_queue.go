@@ -1049,32 +1049,6 @@ func resourceCloudTasksQueueImport(d *schema.ResourceData, meta interface{}) ([]
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenCloudTasksQueueName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
-// service, version, and instance are input-only. host is output-only.
-func flattenCloudTasksQueueAppEngineRoutingOverride(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["host"] = original["host"]
-	if override, ok := d.GetOk("app_engine_routing_override"); ok && len(override.([]interface{})) > 0 {
-		transformed["service"] = d.Get("app_engine_routing_override.0.service")
-		transformed["version"] = d.Get("app_engine_routing_override.0.version")
-		transformed["instance"] = d.Get("app_engine_routing_override.0.instance")
-	}
-	return []interface{}{transformed}
-}
-
 func flattenCloudTasksQueueRateLimits(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1402,10 +1376,6 @@ func flattenCloudTasksQueueHttpTargetOidcTokenServiceAccountEmail(v interface{},
 
 func flattenCloudTasksQueueHttpTargetOidcTokenAudience(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandCloudTasksQueueName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/queues/{{name}}")
 }
 
 func expandCloudTasksQueueAppEngineRoutingOverride(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -821,13 +821,6 @@ func resourceWorkflowsWorkflowDelete(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
-func flattenWorkflowsWorkflowName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenWorkflowsWorkflowDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -965,119 +958,6 @@ func expandWorkflowsWorkflowEffectiveLabels(v interface{}, d tpgresource.Terrafo
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceWorkflowsWorkflowEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	var ResName string
-	if v, ok := d.GetOk("name"); ok {
-		ResName = v.(string)
-	} else if v, ok := d.GetOk("name_prefix"); ok {
-		prefix := v.(string)
-		if len(prefix) > 37 {
-			ResName = tpgresource.ReducedPrefixedUniqueId(prefix)
-		} else {
-			ResName = id.PrefixedUniqueId(prefix)
-		}
-	} else {
-		ResName = id.UniqueId()
-	}
-
-	if err := d.Set("name", ResName); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	return obj, nil
-}
-
-func resourceWorkflowsWorkflowResourceV0() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				Description: `Description of the workflow provided by the user. Must be at most 1000 unicode characters long.`,
-			},
-			"labels": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: `A set of key/value label pairs to assign to this Workflow.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Name of the Workflow.`,
-			},
-			"region": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The region of the workflow.`,
-			},
-			"service_account": {
-				Type:             schema.TypeString,
-				Computed:         true,
-				Optional:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description: `Name of the service account associated with the latest workflow version. This service
-account represents the identity of the workflow and determines what permissions the workflow has.
-
-Format: projects/{project}/serviceAccounts/{account}.`,
-			},
-			"source_contents": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Workflow code to be executed. The size limit is 32KB.`,
-			},
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The timestamp of when the workflow was created in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.`,
-			},
-			"revision_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The revision of the workflow. A new one is generated if the service account or source contents is changed.`,
-			},
-			"state": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `State of the workflow deployment.`,
-			},
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The timestamp of when the workflow was last updated in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.`,
-			},
-			"name_prefix": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				Computed:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"name"},
-			},
-			"project": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-		},
-	}
-}
-
-func ResourceWorkflowsWorkflowUpgradeV0(_ context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
-	log.Printf("[DEBUG] Attributes before migration: %#v", rawState)
-
-	rawState["name"] = tpgresource.GetResourceNameFromSelfLink(rawState["name"].(string))
-
-	log.Printf("[DEBUG] Attributes after migration: %#v", rawState)
-	return rawState, nil
 }
 
 func ResourceWorkflowsWorkflowFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

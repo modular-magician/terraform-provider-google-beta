@@ -419,23 +419,6 @@ func flattenFirebaseStorageDefaultBucketName(v interface{}, d *schema.ResourceDa
 	return v
 }
 
-func flattenFirebaseStorageDefaultBucketBucket(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["name"] = original["name"]
-	if name, ok := original["name"].(string); ok {
-		parts := strings.Split(name, "/")
-		transformed["bucket_id"] = parts[len(parts)-1]
-	}
-	return []interface{}{transformed}
-}
-
 func flattenFirebaseStorageDefaultBucketLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

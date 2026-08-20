@@ -1136,11 +1136,6 @@ func expandNetworkConnectivityv1ServiceConnectionPolicyEffectiveLabels(v interfa
 	return m, nil
 }
 
-func resourceNetworkConnectivityv1ServiceConnectionPolicyUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	obj["network"] = d.Get("network").(string)
-	return obj, nil
-}
-
 func ResourceNetworkConnectivityv1ServiceConnectionPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

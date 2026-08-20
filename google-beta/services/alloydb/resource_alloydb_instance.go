@@ -1164,23 +1164,7 @@ func resourceAlloydbInstanceDelete(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceAlloydbInstanceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<cluster>.+)/instances/(?P<instance_id>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{cluster}}/instances/{{instance_id}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceAlloydbInstanceCustomImport(d, meta)
 }
 
 func flattenAlloydbInstanceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1682,59 +1666,6 @@ func flattenAlloydbInstanceOutboundPublicIpAddresses(v interface{}, d *schema.Re
 	return v
 }
 
-func flattenAlloydbInstanceConnectionPoolConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return flattenAlloyDBInstanceEmptyConnectionPoolConfig(v, d, config)
-	}
-	transformed := make(map[string]interface{})
-	transformed["enabled"] =
-		flattenAlloydbInstanceConnectionPoolConfigEnabled(original["enabled"], d, config)
-	transformed["pooler_count"] =
-		flattenAlloydbInstanceConnectionPoolConfigPoolerCount(original["poolerCount"], d, config)
-	transformed["flags"] =
-		flattenAlloydbInstanceConnectionPoolConfigFlags(original["flags"], d, config)
-	return []interface{}{transformed}
-}
-
-func flattenAlloyDBInstanceEmptyConnectionPoolConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// The API returns an nil/empty value for connectionPoolConfig.enabled when
-	// it's set to false. So keep the user's value to avoid a permadiff.
-	return []interface{}{
-		map[string]interface{}{
-			"enabled": d.Get("connection_pool_config.0.enabled"),
-		},
-	}
-}
-
-func flattenAlloydbInstanceConnectionPoolConfigEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenAlloydbInstanceConnectionPoolConfigPoolerCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenAlloydbInstanceConnectionPoolConfigFlags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenAlloydbInstanceTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1845,124 +1776,6 @@ func expandAlloydbInstanceQueryInsightsConfigRecordClientAddress(v interface{}, 
 }
 
 func expandAlloydbInstanceQueryInsightsConfigQueryPlansPerMinute(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedEnabled, err := expandAlloydbInstanceObservabilityConfigEnabled(original["enabled"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedEnabled != nil {
-		transformed["enabled"] = transformedEnabled
-	}
-
-	transformedPreserveComments, err := expandAlloydbInstanceObservabilityConfigPreserveComments(original["preserve_comments"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedPreserveComments != nil {
-		transformed["preserveComments"] = transformedPreserveComments
-	}
-
-	transformedTrackWaitEvents, err := expandAlloydbInstanceObservabilityConfigTrackWaitEvents(original["track_wait_events"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedTrackWaitEvents != nil {
-		transformed["trackWaitEvents"] = transformedTrackWaitEvents
-	}
-
-	transformedMaxQueryStringLength, err := expandAlloydbInstanceObservabilityConfigMaxQueryStringLength(original["max_query_string_length"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxQueryStringLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["maxQueryStringLength"] = transformedMaxQueryStringLength
-	}
-
-	transformedRecordApplicationTags, err := expandAlloydbInstanceObservabilityConfigRecordApplicationTags(original["record_application_tags"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedRecordApplicationTags != nil {
-		transformed["recordApplicationTags"] = transformedRecordApplicationTags
-	}
-
-	transformedQueryPlansPerMinute, err := expandAlloydbInstanceObservabilityConfigQueryPlansPerMinute(original["query_plans_per_minute"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedQueryPlansPerMinute); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["queryPlansPerMinute"] = transformedQueryPlansPerMinute
-	}
-
-	transformedTrackActiveQueries, err := expandAlloydbInstanceObservabilityConfigTrackActiveQueries(original["track_active_queries"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedTrackActiveQueries != nil {
-		transformed["trackActiveQueries"] = transformedTrackActiveQueries
-	}
-
-	transformedTrackClientAddress, err := expandAlloydbInstanceObservabilityConfigTrackClientAddress(original["track_client_address"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedTrackClientAddress != nil {
-		transformed["trackClientAddress"] = transformedTrackClientAddress
-	}
-
-	transformedAssistiveExperiencesEnabled, err := expandAlloydbInstanceObservabilityConfigAssistiveExperiencesEnabled(original["assistive_experiences_enabled"], d, config)
-	if err != nil {
-		return nil, err
-	} else if transformedAssistiveExperiencesEnabled != nil {
-		transformed["assistiveExperiencesEnabled"] = transformedAssistiveExperiencesEnabled
-	}
-	log.Printf("vkanishk: expandAlloydbInstanceObservabilityConfig transformed %v", transformed)
-	return transformed, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigPreserveComments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigTrackWaitEvents(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigTrackWaitEventTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigMaxQueryStringLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigRecordApplicationTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigQueryPlansPerMinute(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigTrackActiveQueries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigTrackClientAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAlloydbInstanceObservabilityConfigAssistiveExperiencesEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

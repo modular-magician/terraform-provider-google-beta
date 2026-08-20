@@ -474,24 +474,7 @@ func resourceAccessContextManagerServicePerimeterResourceDelete(d *schema.Resour
 }
 
 func resourceAccessContextManagerServicePerimeterResourceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	parts, err := tpgresource.GetImportIdQualifiers([]string{"accessPolicies/(?P<accessPolicy>[^/]+)/servicePerimeters/(?P<perimeter>[^/]+)/(?P<resource>.+)"}, d, config, d.Id())
-	if err != nil {
-		return nil, err
-	}
-
-	if err := d.Set("access_policy_id", fmt.Sprintf("accessPolicies/%s", parts["accessPolicy"])); err != nil {
-		return nil, fmt.Errorf("Error setting access_policy_id: %s", err)
-	}
-	if err := d.Set("perimeter_name", fmt.Sprintf("accessPolicies/%s/servicePerimeters/%s", parts["accessPolicy"], parts["perimeter"])); err != nil {
-		return nil, fmt.Errorf("Error setting perimeter_name: %s", err)
-	}
-	if err := d.Set("resource", parts["resource"]); err != nil {
-		return nil, fmt.Errorf("Error setting resource: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceAccessContextManagerServicePerimeterResourceCustomImport(d, meta)
 }
 
 func flattenNestedAccessContextManagerServicePerimeterResourceResource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -504,17 +487,6 @@ func flattenNestedAccessContextManagerServicePerimeterResourceEtag(v interface{}
 
 func expandNestedAccessContextManagerServicePerimeterResourceResource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceAccessContextManagerServicePerimeterResourceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Set the access_policy_id field from part of the perimeter_name parameter.
-
-	// The is logic is inside the encoder since the access_policy_id field is part of
-	// the mutex lock and encoders run before the lock is set.
-	parts := strings.Split(d.Get("perimeter_name").(string), "/")
-	d.Set("access_policy_id", fmt.Sprintf("accessPolicies/%s", parts[1]))
-
-	return obj, nil
 }
 
 func flattenNestedAccessContextManagerServicePerimeterResource(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

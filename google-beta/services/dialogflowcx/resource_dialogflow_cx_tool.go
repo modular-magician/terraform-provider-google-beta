@@ -1069,31 +1069,7 @@ func resourceDialogflowCXToolDelete(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceDialogflowCXToolImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value and parent contains slashes
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<parent>.+)/tools/(?P<name>[^/]+)",
-		"(?P<parent>.+)/(?P<name>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/tools/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDialogflowCXToolName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDialogflowCXToolCustomImport(d, meta)
 }
 
 func flattenDialogflowCXToolDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1400,29 +1376,6 @@ func flattenDialogflowCXToolFunctionSpec(v interface{}, d *schema.ResourceData, 
 	transformed["output_schema"] =
 		flattenDialogflowCXToolFunctionSpecOutputSchema(original["outputSchema"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXToolFunctionSpecInputSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
-func flattenDialogflowCXToolFunctionSpecOutputSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXToolConnectorSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2078,30 +2031,6 @@ func expandDialogflowCXToolFunctionSpec(v interface{}, d tpgresource.TerraformRe
 	}
 
 	return transformed, nil
-}
-
-func expandDialogflowCXToolFunctionSpecInputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func expandDialogflowCXToolFunctionSpecOutputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandDialogflowCXToolConnectorSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

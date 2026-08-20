@@ -2279,48 +2279,6 @@ func expandComputeFirewallPolicyWithRulesParent(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
-func resourceComputeFirewallPolicyWithRulesEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "rules") // Rules are not supported in the create API
-	return obj, nil
-}
-
-func resourceComputeFirewallPolicyWithRulesUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	predefinedRulesProp, err := expandComputeFirewallPolicyWithRulesRule(d.Get("predefined_rules"), d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	rules := obj["rules"].([]interface{})
-	obj["rules"] = append(rules, predefinedRulesProp)
-
-	return obj, nil
-}
-
-func resourceComputeFirewallPolicyWithRulesDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// If rules is nil, this is being called on a Create operation (and we don't want to do anything in that case.)
-	if _, ok := res["rules"]; !ok {
-		return res, nil
-	}
-
-	rules, predefinedRules, err := firewallPolicyWithRulesSplitPredefinedRules(res["rules"].([]interface{}))
-
-	if err != nil {
-		return nil, fmt.Errorf("Error occurred while splitting pre-defined rules: %s", err)
-	}
-
-	res["rules"] = rules
-	res["predefinedRules"] = predefinedRules
-
-	config := meta.(*transport_tpg.Config)
-
-	if err := d.Set("predefined_rules", flattenComputeFirewallPolicyWithRulesPredefinedRules(predefinedRules, d, config)); err != nil {
-		return nil, fmt.Errorf("Error occurred while setting pre-defined rules: %s", err)
-	}
-
-	return res, nil
-}
 func resourceComputeFirewallPolicyWithRulesPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceComputeFirewallPolicyWithRulesDecoder(d, meta, res)

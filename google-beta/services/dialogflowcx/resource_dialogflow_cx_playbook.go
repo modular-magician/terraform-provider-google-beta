@@ -756,31 +756,7 @@ func resourceDialogflowCXPlaybookDelete(d *schema.ResourceData, meta interface{}
 }
 
 func resourceDialogflowCXPlaybookImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value and parent contains slashes
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<parent>.+)/playbooks/(?P<name>[^/]+)",
-		"(?P<parent>.+)/(?P<name>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/playbooks/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDialogflowCXPlaybookName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDialogflowCXPlaybookCustomImport(d, meta)
 }
 
 func flattenDialogflowCXPlaybookDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -829,17 +805,6 @@ func flattenDialogflowCXPlaybookInstructionSteps(v interface{}, d *schema.Resour
 		})
 	}
 	return transformed
-}
-func flattenDialogflowCXPlaybookInstructionStepsSteps(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXPlaybookInstructionStepsText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -964,18 +929,6 @@ func expandDialogflowCXPlaybookInstructionSteps(v interface{}, d tpgresource.Ter
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandDialogflowCXPlaybookInstructionStepsSteps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandDialogflowCXPlaybookInstructionStepsText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

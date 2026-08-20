@@ -5441,15 +5441,6 @@ func expandAgenticApplicationsAnalystAgentPersonaTablesName(v interface{}, d tpg
 	return v, nil
 }
 
-func resourceAgenticApplicationsAnalystAgentPersonaEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	name, err := tpgresource.ReplaceVars(d, meta.(*transport_tpg.Config), "projects/{{project}}/locations/{{location}}/analystAgentPersonas/{{analyst_agent_persona_id}}")
-	if err != nil {
-		return nil, err
-	}
-	obj["name"] = name
-	return obj, nil
-}
-
 func ResourceAgenticApplicationsAnalystAgentPersonaFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

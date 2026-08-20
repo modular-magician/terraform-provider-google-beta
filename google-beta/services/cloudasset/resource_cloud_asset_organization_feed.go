@@ -655,10 +655,7 @@ func resourceCloudAssetOrganizationFeedDelete(d *schema.ResourceData, meta inter
 }
 
 func resourceCloudAssetOrganizationFeedImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	if err := d.Set("name", d.Id()); err != nil {
-		return nil, err
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceCloudAssetOrganizationFeedCustomImport(d, meta)
 }
 
 func flattenCloudAssetOrganizationFeedName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -859,19 +856,6 @@ func expandCloudAssetOrganizationFeedConditionDescription(v interface{}, d tpgre
 
 func expandCloudAssetOrganizationFeedConditionLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceCloudAssetOrganizationFeedEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Remove the "folders/" prefix from the folder ID
-	if folder, ok := d.GetOkExists("folder"); ok {
-		if err := d.Set("folder_id", strings.TrimPrefix(folder.(string), "folders/")); err != nil {
-			return nil, fmt.Errorf("Error setting folder_id: %s", err)
-		}
-	}
-	// The feed object must be under the "feed" attribute on the request.
-	newObj := make(map[string]interface{})
-	newObj["feed"] = obj
-	return newObj, nil
 }
 
 func resourceCloudAssetOrganizationFeedPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

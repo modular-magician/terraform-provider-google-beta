@@ -479,14 +479,6 @@ func expandNestedComputeBackendServiceSignedUrlKeyKeyValue(v interface{}, d tpgr
 	return v, nil
 }
 
-func expandNestedComputeBackendServiceSignedUrlKeyBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("backendServices", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for backend_service: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func flattenNestedComputeBackendServiceSignedUrlKey(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	var v interface{}
 	var ok bool

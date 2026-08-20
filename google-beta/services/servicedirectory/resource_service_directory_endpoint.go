@@ -482,61 +482,7 @@ func resourceServiceDirectoryEndpointDelete(d *schema.ResourceData, meta interfa
 }
 
 func resourceServiceDirectoryEndpointImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	nameParts := strings.Split(d.Get("name").(string), "/")
-	if len(nameParts) == 10 {
-		// `projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}}/endpoints/{{endpoint_id}}`
-		if err := d.Set("service", fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", nameParts[1], nameParts[3], nameParts[5], nameParts[7])); err != nil {
-			return nil, fmt.Errorf("Error setting service: %s", err)
-		}
-		if err := d.Set("endpoint_id", nameParts[9]); err != nil {
-			return nil, fmt.Errorf("Error setting endpoint_id: %s", err)
-		}
-	} else if len(nameParts) == 5 {
-		// `{{project}}/{{location}}/{{namespace_id}}/{{service_id}}/{{endpoint_id}}`
-		if err := d.Set("service", fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", nameParts[0], nameParts[1], nameParts[2], nameParts[3])); err != nil {
-			return nil, fmt.Errorf("Error setting service: %s", err)
-		}
-		if err := d.Set("endpoint_id", nameParts[4]); err != nil {
-			return nil, fmt.Errorf("Error setting endpoint_id: %s", err)
-		}
-		id := fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s/endpoints/%s", nameParts[0], nameParts[1], nameParts[2], nameParts[3], nameParts[4])
-		if err := d.Set("name", id); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-		d.SetId(id)
-	} else if len(nameParts) == 4 {
-		// `{{location}}/{{namespace_id}}/{{service_id}}/{{endpoint_id}}`
-		project, err := tpgresource.GetProject(d, config)
-		if err != nil {
-			return nil, err
-		}
-		if err := d.Set("service", fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", project, nameParts[0], nameParts[1], nameParts[2])); err != nil {
-			return nil, fmt.Errorf("Error setting service: %s", err)
-		}
-		if err := d.Set("endpoint_id", nameParts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting endpoint_id: %s", err)
-		}
-		id := fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s/endpoints/%s", project, nameParts[0], nameParts[1], nameParts[2], nameParts[3])
-		if err := d.Set("name", id); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-		d.SetId(id)
-	} else {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s, %s or %s",
-			d.Get("name"),
-			"projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}}/endpoints/{{endpoint_id}}",
-			"{{project}}/{{location}}/{{namespace_id}}/{{service_id}}/{{endpoint_id}}",
-			"{{location}}/{{namespace_id}}/{{service_id}}/{{endpoint_id}}")
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceServiceDirectoryEndpointCustomImport(d, meta)
 }
 
 func flattenServiceDirectoryEndpointName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -595,18 +541,6 @@ func expandServiceDirectoryEndpointNetwork(v interface{}, d tpgresource.Terrafor
 	return v, nil
 }
 
-func resourceServiceDirectoryEndpointEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-
-	return obj, nil
-}
-
-func resourceServiceDirectoryEndpointDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if _, ok := res["annotations"]; ok {
-		res["metadata"] = res["annotations"].(map[string]interface{})
-		delete(res, "annotations")
-	}
-	return res, nil
-}
 func resourceServiceDirectoryEndpointPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceServiceDirectoryEndpointDecoder(d, meta, res)

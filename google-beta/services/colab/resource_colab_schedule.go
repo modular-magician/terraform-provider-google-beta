@@ -1351,13 +1351,6 @@ func resourceColabScheduleImport(d *schema.ResourceData, meta interface{}) ([]*s
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenColabScheduleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenColabScheduleDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1862,18 +1855,6 @@ func flattenColabScheduleCreatePipelineJobRequestPipelineJobName(v interface{}, 
 
 func flattenColabScheduleCreatePipelineJobRequestPipelineJobNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenColabScheduleCreatePipelineJobRequestPipelineJobPipelineSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenColabScheduleCreatePipelineJobRequestPipelineJobPreflightValidations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2939,18 +2920,6 @@ func expandColabScheduleCreatePipelineJobRequestPipelineJobNetwork(v interface{}
 	return v, nil
 }
 
-func expandColabScheduleCreatePipelineJobRequestPipelineJobPipelineSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandColabScheduleCreatePipelineJobRequestPipelineJobPreflightValidations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -3154,42 +3123,6 @@ func expandColabScheduleCreatePipelineJobRequestPipelineJobId(v interface{}, d t
 
 func expandColabScheduleMaxConcurrentActiveRunCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceColabScheduleEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	location, err := tpgresource.GetRegion(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	// Handle parent injection for creation requests if parent is not explicitly provided
-	if obj["createNotebookExecutionJobRequest"] != nil {
-		jobRequest, ok := obj["createNotebookExecutionJobRequest"].(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("createNotebookExecutionJobRequest is not of type map[string]interface{} or is nil")
-		}
-		if jobRequest["parent"] == nil || jobRequest["parent"] == "" {
-			jobRequest["parent"] = fmt.Sprintf("projects/%s/locations/%s", project, location)
-		}
-	}
-
-	if obj["createPipelineJobRequest"] != nil {
-		pipelineRequest, ok := obj["createPipelineJobRequest"].(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("createPipelineJobRequest is not of type map[string]interface{} or is nil")
-		}
-		if pipelineRequest["parent"] == nil || pipelineRequest["parent"] == "" {
-			pipelineRequest["parent"] = fmt.Sprintf("projects/%s/locations/%s", project, location)
-		}
-	}
-
-	return obj, nil
 }
 
 func resourceColabSchedulePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

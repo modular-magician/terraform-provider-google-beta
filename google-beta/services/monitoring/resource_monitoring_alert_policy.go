@@ -1806,26 +1806,7 @@ func resourceMonitoringAlertPolicyDelete(d *schema.ResourceData, meta interface{
 }
 
 func resourceMonitoringAlertPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf(
-			"Could not split project from name: %s",
-			d.Get("name"),
-		)
-	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceMonitoringAlertPolicyCustomImport(d, meta)
 }
 
 func flattenMonitoringAlertPolicyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

@@ -1102,11 +1102,6 @@ func flattenBigqueryConnectionConnectionName(v interface{}, d *schema.ResourceDa
 	return v
 }
 
-func flattenBigqueryConnectionConnectionConnectionId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenBigqueryConnectionConnectionFriendlyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1150,15 +1145,6 @@ func flattenBigqueryConnectionConnectionCloudSqlInstanceId(v interface{}, d *sch
 
 func flattenBigqueryConnectionConnectionCloudSqlDatabase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenBigqueryConnectionConnectionCloudSqlCredential(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return []interface{}{
-		map[string]interface{}{
-			"username": d.Get("cloud_sql.0.credential.0.username"),
-			"password": d.Get("cloud_sql.0.credential.0.password"),
-		},
-	}
 }
 
 func flattenBigqueryConnectionConnectionCloudSqlType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1446,33 +1432,6 @@ func flattenBigqueryConnectionConnectionConfigurationAuthentication(v interface{
 	transformed["service_account"] =
 		flattenBigqueryConnectionConnectionConfigurationAuthenticationServiceAccount(original["serviceAccount"], d, config)
 	return []interface{}{transformed}
-}
-func flattenBigqueryConnectionConnectionConfigurationAuthenticationUsernamePassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-
-	password := map[string]interface{}{
-		// The API redacts the plaintext on read, so we keep the value from
-		// state to avoid a permadiff.
-		"plaintext": d.Get("configuration.0.authentication.0.username_password.0.password.0.plaintext"),
-	}
-	if originalPassword, ok := original["password"].(map[string]interface{}); ok {
-		if secretType, ok := originalPassword["secretType"]; ok {
-			password["secret_type"] = secretType
-		}
-	}
-
-	return []interface{}{
-		map[string]interface{}{
-			"username": original["username"],
-			"password": []interface{}{password},
-		},
-	}
 }
 
 func flattenBigqueryConnectionConnectionConfigurationAuthenticationServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2267,12 +2226,6 @@ func expandBigqueryConnectionConnectionConfigurationAssetDatabase(v interface{},
 
 func expandBigqueryConnectionConnectionConfigurationAssetGoogleCloudResource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceBigqueryConnectionConnectionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// connectionId is needed to qualify the URL but cannot be sent in the body
-	delete(obj, "connectionId")
-	return obj, nil
 }
 
 func resourceBigqueryConnectionConnectionPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

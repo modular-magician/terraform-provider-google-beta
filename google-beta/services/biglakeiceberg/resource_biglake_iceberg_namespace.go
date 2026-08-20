@@ -562,27 +562,8 @@ func resourceBiglakeIcebergIcebergNamespaceImport(d *schema.ResourceData, meta i
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenBiglakeIcebergIcebergNamespaceNamespaceId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	parts := v.([]interface{})
-	s := make([]string, len(parts))
-	for i, p := range parts {
-		s[i] = p.(string)
-	}
-	return strings.Join(s, "\x1f")
-}
-
 func flattenBiglakeIcebergIcebergNamespaceProperties(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandBiglakeIcebergIcebergNamespaceNamespaceId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	return strings.Split(v.(string), "\x1f"), nil
 }
 
 func expandBiglakeIcebergIcebergNamespaceProperties(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
@@ -594,38 +575,6 @@ func expandBiglakeIcebergIcebergNamespaceProperties(v interface{}, d tpgresource
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceBiglakeIcebergIcebergNamespaceUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if d.HasChange("properties") {
-		oldProp, newProp := d.GetChange("properties")
-		oldMap := oldProp.(map[string]interface{})
-		newMap := newProp.(map[string]interface{})
-
-		removals := []string{}
-		for k := range oldMap {
-			if icebergNamespaceIgnoredProperties[k] {
-				continue
-			}
-			if _, ok := newMap[k]; !ok {
-				removals = append(removals, k)
-			}
-		}
-
-		updates := map[string]string{}
-		for k, v := range newMap {
-			if icebergNamespaceIgnoredProperties[k] {
-				continue
-			}
-			updates[k] = v.(string)
-		}
-
-		return map[string]interface{}{
-			"removals": removals,
-			"updates":  updates,
-		}, nil
-	}
-	return nil, nil
 }
 
 func ResourceBiglakeIcebergIcebergNamespaceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -510,93 +510,7 @@ func resourceColabRuntimeUpdate(d *schema.ResourceData, meta interface{}) error 
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceColabRuntimeRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	name := d.Get("name").(string)
-	state := d.Get("state").(string)
-	desired_state := d.Get("desired_state").(string)
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	identity, err := d.Identity()
-	if err == nil && identity != nil {
-		if v, ok := identity.GetOk("name"); !ok && v == "" {
-			err = identity.Set("name", d.Get("name").(string))
-			if err != nil {
-				return fmt.Errorf("Error setting name: %s", err)
-			}
-		}
-		if v, ok := identity.GetOk("project"); !ok && v == "" {
-			err = identity.Set("project", d.Get("project").(string))
-			if err != nil {
-				return fmt.Errorf("Error setting project: %s", err)
-			}
-		}
-		if v, ok := identity.GetOk("location"); !ok && v == "" {
-			err = identity.Set("location", d.Get("location").(string))
-			if err != nil {
-				return fmt.Errorf("Error setting location: %s", err)
-			}
-		}
-	} else {
-		log.Printf("[DEBUG] (Read) identity not set: %s", err)
-	}
-
-	if desired_state != "" && state != desired_state {
-		var verb string
-
-		switch desired_state {
-		case "STOPPED":
-			verb = "stop"
-		case "RUNNING":
-			verb = "start"
-		default:
-			return fmt.Errorf("desired_state has to be RUNNING or STOPPED")
-		}
-
-		if err := ModifyColabRuntime(config, d, project, billingProject, userAgent, verb); err != nil {
-			return err
-		}
-
-	} else {
-		log.Printf("[DEBUG] Colab runtime %q has state %q.", name, state)
-	}
-
-	var upgrade_runtime bool
-	if d.Get("auto_upgrade").(bool) && d.Get("is_upgradable").(bool) {
-		upgrade_runtime = true
-	}
-
-	expiration_time_string := d.Get("expiration_time").(string)
-	expiration_time, err := time.Parse(time.RFC3339Nano, expiration_time_string)
-	if err != nil {
-		return err
-	}
-
-	if expiration_time.Before(time.Now()) && d.Get("notebook_runtime_type").(string) == "USER_DEFINED" {
-		upgrade_runtime = true
-	}
-
-	if upgrade_runtime {
-		if err := ModifyColabRuntime(config, d, project, billingProject, userAgent, "upgrade"); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return resourceColabRuntimeCustomUpdate(d, meta)
 }
 
 func resourceColabRuntimeDelete(d *schema.ResourceData, meta interface{}) error {
@@ -767,16 +681,6 @@ func expandColabRuntimeDisplayName(v interface{}, d tpgresource.TerraformResourc
 
 func expandColabRuntimeDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceColabRuntimeEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["notebookRuntimeTemplate"], _ = d.GetOk("notebook_runtime_template_ref.0.notebook_runtime_template")
-
-	delete(obj, "notebookRuntimeTemplateRef")
-
-	newObj["notebookRuntime"] = obj
-	return newObj, nil
 }
 
 func ResourceColabRuntimeFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

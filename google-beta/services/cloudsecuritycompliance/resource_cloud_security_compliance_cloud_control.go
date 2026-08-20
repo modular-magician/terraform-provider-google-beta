@@ -37,7 +37,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cty/cty"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/id"
@@ -1488,28 +1487,7 @@ func resourceCloudSecurityComplianceCloudControlDelete(d *schema.ResourceData, m
 }
 
 func resourceCloudSecurityComplianceCloudControlImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^(?P<parent>.*)/locations/(?P<location>[^/]+)/cloudControls/(?P<cloud_control_id>[^/]+)$",
-		"^organizations/(?P<organization>[^/]+)/locations/(?P<location>[^/]+)/cloudControls/(?P<cloud_control_id>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Seamlessly map the overlapping parameters
-	if d.Get("organization").(string) == "" && d.Get("parent").(string) != "" {
-		if strings.HasPrefix(d.Get("parent").(string), "organizations/") {
-			d.Set("organization", strings.TrimPrefix(d.Get("parent").(string), "organizations/"))
-		}
-	} else if d.Get("parent").(string) == "" && d.Get("organization").(string) != "" {
-		d.Set("parent", "organizations/"+d.Get("organization").(string))
-	}
-
-	// Manually construct the ID without relying on the identity generator
-	id := fmt.Sprintf("%s/locations/%s/cloudControls/%s", d.Get("parent").(string), d.Get("location").(string), d.Get("cloud_control_id").(string))
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceCloudSecurityComplianceCloudControlCustomImport(d, meta)
 }
 
 func flattenCloudSecurityComplianceCloudControlCategories(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3993,52 +3971,6 @@ func expandCloudSecurityComplianceCloudControlSeverity(v interface{}, d tpgresou
 
 func expandCloudSecurityComplianceCloudControlSupportedCloudProviders(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceCloudSecurityComplianceCloudControlEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Build the fullname for the CloudControl resource from the provided
-	// parent, location and cloud_control_id fields and set it on the
-	// API object that will be sent in the request.
-	// Extract the parent scope, falling back to organization for backward compatibility
-	var parentStr string
-	if parent, ok := d.GetOk("parent"); ok && parent.(string) != "" {
-		parentStr = parent.(string)
-	} else if org, ok := d.GetOk("organization"); ok && org.(string) != "" {
-		parentStr = fmt.Sprintf("organizations/%s", org.(string))
-	} else {
-		return nil, fmt.Errorf("either parent or organization must be provided")
-	}
-	loc, ok := d.Get("location").(string)
-	if !ok || loc == "" {
-		return nil, fmt.Errorf("location is required and must be a non-empty string")
-	}
-	ccid, ok := d.Get("cloud_control_id").(string)
-	if !ok || ccid == "" {
-		return nil, fmt.Errorf("cloud_control_id is required and must be a non-empty string")
-	}
-	// Compose the resource name in the expected API format.
-	// The parent already includes the resource type (e.g. projects/my-project)
-	name := fmt.Sprintf("%s/locations/%s/cloudControls/%s", parentStr, loc, ccid)
-	obj["name"] = name
-	return obj, nil
-}
-
-func identityCloudSecurityComplianceCloudControlResourceV1() tftypes.Type {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"organization":     tftypes.String,
-			"location":         tftypes.String,
-			"cloud_control_id": tftypes.String,
-		},
-	}
-}
-
-func IdentityCloudSecurityComplianceCloudControlUpgradeV1(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
-	if org, ok := rawState["organization"].(string); ok && org != "" {
-		rawState["parent"] = "organizations/" + org
-		delete(rawState, "organization")
-	}
-	return rawState, nil
 }
 
 func ResourceCloudSecurityComplianceCloudControlFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

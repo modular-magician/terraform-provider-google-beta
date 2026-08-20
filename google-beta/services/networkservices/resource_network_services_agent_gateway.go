@@ -1218,27 +1218,6 @@ func expandNetworkServicesAgentGatewayEffectiveLabels(v interface{}, d tpgresour
 	return m, nil
 }
 
-func expandNetworkServicesAgentGatewayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	location := d.Get("location").(string)
-	name := v.(string)
-
-	// If name is already a full resource name, return it as-is.
-	if strings.HasPrefix(name, "projects/") {
-		return name, nil
-	}
-
-	return fmt.Sprintf("projects/%s/locations/%s/agentGateways/%s", project, location, name), nil
-}
-
 func ResourceNetworkServicesAgentGatewayFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

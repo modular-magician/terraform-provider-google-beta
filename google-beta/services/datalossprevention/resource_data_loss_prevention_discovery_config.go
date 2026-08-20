@@ -1878,45 +1878,7 @@ func resourceDataLossPreventionDiscoveryConfigDelete(d *schema.ResourceData, met
 }
 
 func resourceDataLossPreventionDiscoveryConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	parts := strings.Split(d.Get("name").(string), "/")
-	if len(parts) == 6 {
-		if err := d.Set("name", parts[5]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(parts) == 4 {
-		if err := d.Set("name", parts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf("Unexpected import id: %s, expected form {{parent}}/discoveryConfig/{{name}}", d.Get("name").(string))
-	}
-	// Remove "/discoveryConfig/{{name}}" from the id
-	parts = parts[:len(parts)-2]
-	if err := d.Set("parent", strings.Join(parts, "/")); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/discoveryConfigs/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDataLossPreventionDiscoveryConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDataLossPreventionDiscoveryConfigCustomImport(d, meta)
 }
 
 func flattenDataLossPreventionDiscoveryConfigDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3467,31 +3429,6 @@ func flattenDataLossPreventionDiscoveryConfigErrorsDetailsCode(v interface{}, d 
 
 func flattenDataLossPreventionDiscoveryConfigErrorsDetailsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDataLossPreventionDiscoveryConfigErrorsDetailsDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	detailsArray := v.([]interface{})
-	for i, raw := range detailsArray {
-		m := raw.(map[string]interface{})
-		if len(m) < 1 {
-			// Do not include empty json objects coming back from the API
-			continue
-		}
-		for k, val := range m {
-			if _, ok := val.(string); !ok {
-				b, err := json.Marshal(v)
-				if err != nil {
-					return err
-				}
-				m[k] = string(b)
-			}
-		}
-		detailsArray[i] = m
-	}
-	return detailsArray
 }
 
 func flattenDataLossPreventionDiscoveryConfigErrorsTimestamp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6124,26 +6061,6 @@ func expandDataLossPreventionDiscoveryConfigStatus(v interface{}, d tpgresource.
 	return v, nil
 }
 
-func resourceDataLossPreventionDiscoveryConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["discoveryConfig"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionDiscoveryConfigUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["discoveryConfig"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionDiscoveryConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	v, ok := res["discoveryConfig"]
-	if !ok || v == nil {
-		return res, nil
-	}
-
-	return v.(map[string]interface{}), nil
-}
 func resourceDataLossPreventionDiscoveryConfigPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceDataLossPreventionDiscoveryConfigDecoder(d, meta, res)

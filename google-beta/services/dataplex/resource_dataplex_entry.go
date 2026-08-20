@@ -1026,26 +1026,7 @@ func resourceDataplexEntryDelete(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceDataplexEntryImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/entryGroups/(?P<entry_group_id>[^/]+)/entries/(?P<entry_id>.+)$",
-		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<entry_group_id>[^/]+)/(?P<entry_id>.+)$",
-		"^(?P<location>[^/]+)/(?P<entry_group_id>[^/]+)/(?P<entry_id>.+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Double curly braces are the templating language's special marker.
-	// We need them literally here, so apply a simple trick to force it.
-	template := "projects/{{project}}/locations/{{location}}/entryGroups/{{entry_group_id}}/entries/{{entry_id}}"
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, template)
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-	return []*schema.ResourceData{d}, nil
+	return resourceDataplexEntryCustomImport(d, meta)
 }
 
 func flattenDataplexEntryName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1062,93 +1043,6 @@ func flattenDataplexEntryCreateTime(v interface{}, d *schema.ResourceData, confi
 
 func flattenDataplexEntryUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-// This file is a transposition of mmv1/templates/terraform/flatten_property_method.go.tmpl
-// Most of the code is copied from there, with the exception of sorting logic.
-func flattenDataplexEntryAspects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.([]interface{})
-	transformed := make([]map[string]interface{}, 0, len(l))
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"aspect_key": flattenDataplexEntryAspectsAspectKey(original["aspectKey"], d, config),
-			"aspect":     flattenDataplexEntryAspectsAspect(original["aspect"], d, config),
-		})
-	}
-
-	configData := []map[string]interface{}{}
-
-	for _, item := range d.Get("aspects").([]interface{}) {
-		configData = append(configData, item.(map[string]interface{}))
-	}
-
-	sorted, err := tpgresource.SortMapsByConfigOrder(configData, transformed, "aspect_key")
-	if err != nil {
-		log.Printf("[ERROR] Could not sort API response value: %s", err)
-		return v
-	}
-
-	return sorted
-}
-func flattenDataplexEntryAspectsAspectKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDataplexEntryAspectsAspect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["aspect_type"] =
-		flattenDataplexEntryAspectsAspectAspectType(original["aspectType"], d, config)
-	transformed["path"] =
-		flattenDataplexEntryAspectsAspectPath(original["path"], d, config)
-	transformed["create_time"] =
-		flattenDataplexEntryAspectsAspectCreateTime(original["createTime"], d, config)
-	transformed["update_time"] =
-		flattenDataplexEntryAspectsAspectUpdateTime(original["updateTime"], d, config)
-	transformed["data"] =
-		flattenDataplexEntryAspectsAspectData(original["data"], d, config)
-	return []interface{}{transformed}
-}
-func flattenDataplexEntryAspectsAspectAspectType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDataplexEntryAspectsAspectPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDataplexEntryAspectsAspectCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDataplexEntryAspectsAspectUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDataplexEntryAspectsAspectData(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDataplexEntryParentEntry(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1360,18 +1254,6 @@ func expandDataplexEntryAspectsAspectUpdateTime(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
-func expandDataplexEntryAspectsAspectData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandDataplexEntryParentEntry(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1546,70 +1428,6 @@ func expandDataplexEntryEntrySourceUpdateTime(v interface{}, d tpgresource.Terra
 
 func expandDataplexEntryEntrySourceLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceDataplexEntryEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// The yaml file does not allow validation for Array fields.
-	// Therefore we add validation as a part of the encoding proecess.
-	aspects := obj["aspects"]
-	if aspects != nil {
-		_, errors := NumberOfAspectsValidation(aspects, "aspects")
-		if len(errors) > 0 {
-			return nil, errors[0]
-		}
-	}
-
-	err := TransformAspects(obj)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return obj, nil
-}
-
-func resourceDataplexEntryDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	aspects := res["aspects"]
-	if aspects != nil {
-		_, errors := NumberOfAspectsValidation(aspects, "aspects")
-		if len(errors) > 0 {
-			return nil, errors[0]
-		}
-	}
-
-	aspectKeysOfInterest := make(map[string]struct{})
-	var err error
-
-	if d.HasChange("aspects") {
-		currentAspects, futureAspects := d.GetChange("aspects")
-		err = AddAspectsToSet(aspectKeysOfInterest, currentAspects)
-		if err != nil {
-			return nil, err
-		}
-		err = AddAspectsToSet(aspectKeysOfInterest, futureAspects)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		err = AddAspectsToSet(aspectKeysOfInterest, d.Get("aspects"))
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	err = FilterAspects(aspectKeysOfInterest, res)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = InverseTransformAspects(res)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
 }
 
 func ResourceDataplexEntryFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

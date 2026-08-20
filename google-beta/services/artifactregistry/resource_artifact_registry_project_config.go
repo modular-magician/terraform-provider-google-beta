@@ -514,20 +514,6 @@ func expandArtifactRegistryProjectConfigPlatformLogsConfigSeverityLevel(v interf
 	return v, nil
 }
 
-func resourceArtifactRegistryProjectConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	if _, ok := d.GetOk("location"); !ok {
-		location, err := tpgresource.GetRegion(d, config)
-		if err != nil {
-			return nil, fmt.Errorf("Cannot determine location: set in this resource, or set provider-level 'region' or 'zone'.")
-		}
-		if err := d.Set("location", location); err != nil {
-			return nil, fmt.Errorf("Error setting location: %s", err)
-		}
-	}
-	return obj, nil
-}
-
 func ResourceArtifactRegistryProjectConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

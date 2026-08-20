@@ -385,29 +385,7 @@ func resourceIapClientDelete(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceIapClientImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<brand>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	nameParts := strings.Split(d.Get("brand").(string), "/")
-	if len(nameParts) != 6 {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s",
-			d.Get("brand").(string),
-			"projects/{{project_number}}/brands/{{brand_id}}/identityAwareProxyClients/{{client_id}}",
-		)
-	}
-
-	if err := d.Set("brand", fmt.Sprintf("projects/%s/brands/%s", nameParts[1], nameParts[3])); err != nil {
-		return nil, fmt.Errorf("Error setting brand: %s", err)
-	}
-	if err := d.Set("client_id", nameParts[5]); err != nil {
-		return nil, fmt.Errorf("Error setting client_id: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceIapClientCustomImport(d, meta)
 }
 
 func flattenIapClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -416,13 +394,6 @@ func flattenIapClientSecret(v interface{}, d *schema.ResourceData, config *trans
 
 func flattenIapClientDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenIapClientClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func expandIapClientDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

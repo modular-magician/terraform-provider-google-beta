@@ -4651,45 +4651,7 @@ func resourceDataLossPreventionDeidentifyTemplateDelete(d *schema.ResourceData, 
 }
 
 func resourceDataLossPreventionDeidentifyTemplateImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	parts := strings.Split(d.Get("name").(string), "/")
-	if len(parts) == 6 {
-		if err := d.Set("name", parts[5]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(parts) == 4 {
-		if err := d.Set("name", parts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf("Unexpected import id: %s, expected form {{parent}}/deidentifyTemplate/{{name}}", d.Get("name").(string))
-	}
-	// Remove "/deidentifyTemplate/{{name}}" from the id
-	parts = parts[:len(parts)-2]
-	if err := d.Set("parent", strings.Join(parts, "/")); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/deidentifyTemplates/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDataLossPreventionDeidentifyTemplateName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDataLossPreventionDeidentifyTemplateCustomImport(d, meta)
 }
 
 func flattenDataLossPreventionDeidentifyTemplateDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5208,10 +5170,6 @@ func flattenDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransfor
 
 func flattenDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransformationsTransformationsPrimitiveTransformationReplaceConfigNewValueDayOfWeekValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransformationsTransformationsPrimitiveTransformationReplaceWithInfoTypeConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v != nil
 }
 
 func flattenDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransformationsTransformationsPrimitiveTransformationCharacterMaskConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -11765,14 +11723,6 @@ func expandDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransform
 
 func expandDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransformationsTransformationsPrimitiveTransformationReplaceConfigNewValueDayOfWeekValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransformationsTransformationsPrimitiveTransformationReplaceWithInfoTypeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil || !v.(bool) {
-		return nil, nil
-	}
-
-	return struct{}{}, nil
 }
 
 func expandDataLossPreventionDeidentifyTemplateDeidentifyConfigInfoTypeTransformationsTransformationsPrimitiveTransformationCharacterMaskConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -19240,29 +19190,6 @@ func expandDataLossPreventionDeidentifyTemplateDeidentifyConfigRecordTransformat
 	return v, nil
 }
 
-func resourceDataLossPreventionDeidentifyTemplateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["deidentifyTemplate"] = obj
-	templateIdProp, ok := d.GetOk("template_id")
-	if ok && templateIdProp != nil {
-		newObj["templateId"] = templateIdProp
-	}
-	return newObj, nil
-}
-
-func resourceDataLossPreventionDeidentifyTemplateUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["deidentifyTemplate"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionDeidentifyTemplateDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := d.Set("template_id", flattenDataLossPreventionDeidentifyTemplateName(res["name"], d, config)); err != nil {
-		return nil, fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
-	}
-	return res, nil
-}
 func resourceDataLossPreventionDeidentifyTemplatePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceDataLossPreventionDeidentifyTemplateDecoder(d, meta, res)

@@ -1282,14 +1282,6 @@ func flattenComputeInterconnectAttachmentDescription(v interface{}, d *schema.Re
 	return v
 }
 
-func flattenComputeInterconnectAttachmentMtu(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles int given in float64 format
-	if floatVal, ok := v.(float64); ok {
-		return fmt.Sprintf("%d", int(floatVal))
-	}
-	return v
-}
-
 func flattenComputeInterconnectAttachmentBandwidth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1385,14 +1377,6 @@ func flattenComputeInterconnectAttachmentIpsecInternalAddresses(v interface{}, d
 		return v
 	}
 	return tpgresource.ConvertAndMapStringArr(v.([]interface{}), tpgresource.ConvertSelfLinkToV1)
-}
-
-func flattenComputeInterconnectAttachmentEncryption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "NONE"
-	}
-
-	return v
 }
 
 func flattenComputeInterconnectAttachmentStackType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1512,46 +1496,6 @@ func flattenComputeInterconnectAttachmentL2ForwardingGeneveHeaderVni(v interface
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeInterconnectAttachmentL2ForwardingApplianceMappings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	m := v.(map[string]interface{})
-	l := make([]interface{}, 0, len(m))
-	for key, raw := range m {
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		transformed["vlan_id"] = key
-
-		if v, ok := original["name"]; ok {
-			transformed["name"] = v
-		}
-		if v, ok := original["applianceIpAddress"]; ok {
-			transformed["appliance_ip_address"] = v
-		}
-
-		if v, ok := original["innerVlanToApplianceMappings"]; ok {
-			innerList := v.([]interface{})
-			transformedInnerList := make([]interface{}, 0, len(innerList))
-			for _, itemRaw := range innerList {
-				item := itemRaw.(map[string]interface{})
-				transformedItem := make(map[string]interface{})
-				if ip, ok := item["innerApplianceIpAddress"]; ok {
-					transformedItem["inner_appliance_ip_address"] = ip
-				}
-				if tags, ok := item["innerVlanTags"]; ok {
-					transformedItem["inner_vlan_tags"] = tags
-				}
-				transformedInnerList = append(transformedInnerList, transformedItem)
-			}
-			transformed["inner_vlan_to_appliance_mappings"] = transformedInnerList
-		}
-		l = append(l, transformed)
-	}
-	return l
-}
-
 func flattenComputeInterconnectAttachmentTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1639,14 +1583,6 @@ func expandComputeInterconnectAttachmentType(v interface{}, d tpgresource.Terraf
 	return v, nil
 }
 
-func expandComputeInterconnectAttachmentRouter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("routers", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for router: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeInterconnectAttachmentName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1656,41 +1592,6 @@ func expandComputeInterconnectAttachmentCandidateSubnets(v interface{}, d tpgres
 }
 
 func expandComputeInterconnectAttachmentVlanTag8021q(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeInterconnectAttachmentIpsecInternalAddresses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			return nil, fmt.Errorf("Invalid value for ipsec_internal_addresses: nil")
-		}
-		f, err := tpgresource.ParseRegionalFieldValue("addresses", raw.(string), "project", "region", "zone", d, config, true)
-		if err != nil {
-			return nil, fmt.Errorf("Invalid value for ipsec_internal_addresses: %s", err)
-		}
-		req = append(req, f.RelativeLink())
-	}
-	return req, nil
-}
-
-func expandComputeInterconnectAttachmentEncryption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// v is the value of the 'encryption' field from the Terraform state.
-	// d is the TerraformResourceData, allowing access to other fields like 'type'.
-
-	attachmentType, ok := d.GetOk("type")
-
-	if ok && attachmentType.(string) == "L2_DEDICATED" {
-		// If the attachment type is L2_DEDICATED, do not send the encryption field.
-		// Returning nil will cause the field to be omitted in the API request payload,
-		// assuming the field in the generated Go API client struct is a pointer type (e.g., *string),
-		// which is standard for optional fields.
-		return nil, nil
-	}
-
-	// For all other attachment types, return the configured value of 'encryption'.
-	// Since 'encryption' is an Enum, v is expected to be a string.
 	return v, nil
 }
 
@@ -1772,14 +1673,6 @@ func expandComputeInterconnectAttachmentL2Forwarding(v interface{}, d tpgresourc
 	return transformed, nil
 }
 
-func expandComputeInterconnectAttachmentL2ForwardingNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("networks", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for network: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeInterconnectAttachmentL2ForwardingTunnelEndpointIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1814,49 +1707,6 @@ func expandComputeInterconnectAttachmentL2ForwardingGeneveHeaderVni(v interface{
 	return v, nil
 }
 
-func expandComputeInterconnectAttachmentL2ForwardingApplianceMappings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	m := make(map[string]interface{}, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		vlanID := original["vlan_id"].(string)
-		if vlanID == "" {
-			continue
-		}
-
-		if v, ok := original["name"]; ok {
-			transformed["name"] = v
-		}
-		if v, ok := original["appliance_ip_address"]; ok {
-			transformed["applianceIpAddress"] = v
-		}
-
-		if v, ok := original["inner_vlan_to_appliance_mappings"]; ok {
-			innerList := v.([]interface{})
-			transformedInnerList := make([]interface{}, 0, len(innerList))
-			for _, itemRaw := range innerList {
-				item := itemRaw.(map[string]interface{})
-				transformedItem := make(map[string]interface{})
-				if ip, ok := item["inner_appliance_ip_address"]; ok {
-					transformedItem["innerApplianceIpAddress"] = ip
-				}
-				if tags, ok := item["inner_vlan_tags"]; ok {
-					transformedItem["innerVlanTags"] = tags
-				}
-				transformedInnerList = append(transformedInnerList, transformedItem)
-			}
-			transformed["innerVlanToApplianceMappings"] = transformedInnerList
-		}
-		m[vlanID] = transformed
-	}
-	return m, nil
-}
-
 func expandComputeInterconnectAttachmentEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -1866,14 +1716,6 @@ func expandComputeInterconnectAttachmentEffectiveLabels(v interface{}, d tpgreso
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandComputeInterconnectAttachmentRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeInterconnectAttachmentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

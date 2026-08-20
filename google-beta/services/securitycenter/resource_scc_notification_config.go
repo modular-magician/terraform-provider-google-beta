@@ -484,26 +484,7 @@ func resourceSecurityCenterNotificationConfigDelete(d *schema.ResourceData, meta
 }
 
 func resourceSecurityCenterNotificationConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) != 4 {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s",
-			d.Get("name"),
-			"organizations/{{organization}}/sources/{{source}}",
-		)
-	}
-
-	if err := d.Set("organization", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting organization: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceSecurityCenterNotificationConfigCustomImport(d, meta)
 }
 
 func flattenSecurityCenterNotificationConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

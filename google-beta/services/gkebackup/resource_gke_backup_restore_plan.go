@@ -1074,13 +1074,6 @@ func resourceGKEBackupRestorePlanImport(d *schema.ResourceData, meta interface{}
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenGKEBackupRestorePlanName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenGKEBackupRestorePlanUid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1573,10 +1566,6 @@ func flattenGKEBackupRestorePlanTerraformLabels(v interface{}, d *schema.Resourc
 
 func flattenGKEBackupRestorePlanEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandGKEBackupRestorePlanName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/restorePlans/{{name}}")
 }
 
 func expandGKEBackupRestorePlanDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

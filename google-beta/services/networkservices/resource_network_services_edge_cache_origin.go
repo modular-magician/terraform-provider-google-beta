@@ -1103,30 +1103,6 @@ func flattenNetworkServicesEdgeCacheOriginRetryConditions(v interface{}, d *sche
 	return v
 }
 
-func flattenNetworkServicesEdgeCacheOriginTimeout(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	out := make(map[string]string)
-
-	if v == nil {
-		return nil
-	}
-
-	in := v.(map[string]interface{})
-	if e, ok := in["connectTimeout"]; ok {
-		out["connect_timeout"] = e.(string)
-	}
-	if e, ok := in["maxAttemptsTimeout"]; ok {
-		out["max_attempts_timeout"] = e.(string)
-	}
-	if e, ok := in["responseTimeout"]; ok {
-		out["response_timeout"] = e.(string)
-	}
-	if e, ok := in["readTimeout"]; ok {
-		out["read_timeout"] = e.(string)
-	}
-
-	return []interface{}{out}
-}
-
 func flattenNetworkServicesEdgeCacheOriginAwsV4Authentication(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil

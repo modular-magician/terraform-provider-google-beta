@@ -522,26 +522,6 @@ func expandNestedComputeRegionDiskResourcePolicyAttachmentName(v interface{}, d 
 	return v, nil
 }
 
-func resourceComputeRegionDiskResourcePolicyAttachmentEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	region, err := tpgresource.GetRegion(d, config)
-	if err != nil {
-		return nil, err
-	}
-	if region == "" {
-		return nil, fmt.Errorf("region must be non-empty - set in resource or at provider-level")
-	}
-
-	obj["resourcePolicies"] = []interface{}{fmt.Sprintf("projects/%s/regions/%s/resourcePolicies/%s", project, region, obj["name"])}
-	delete(obj, "name")
-	return obj, nil
-}
-
 func flattenNestedComputeRegionDiskResourcePolicyAttachment(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	var v interface{}
 	var ok bool
@@ -601,10 +581,6 @@ func resourceComputeRegionDiskResourcePolicyAttachmentFindNestedObjectInList(d *
 		return idx, item, nil
 	}
 	return -1, nil, nil
-}
-func resourceComputeRegionDiskResourcePolicyAttachmentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	res["name"] = tpgresource.GetResourceNameFromSelfLink(res["name"].(string))
-	return res, nil
 }
 
 func ResourceComputeRegionDiskResourcePolicyAttachmentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -601,11 +601,6 @@ func flattenChronicleSoarDomainName(v interface{}, d *schema.ResourceData, confi
 	return v
 }
 
-func flattenChronicleSoarDomainSoarDomainId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleSoarDomainDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

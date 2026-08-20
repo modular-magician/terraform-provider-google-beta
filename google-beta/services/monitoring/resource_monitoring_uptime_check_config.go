@@ -1008,82 +1008,15 @@ func resourceMonitoringUptimeCheckConfigDelete(d *schema.ResourceData, meta inte
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing UptimeCheckConfig %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for UptimeCheckConfig: %s", err)
-	}
-	billingProject = project
-
-	lockName, err := tpgresource.ReplaceVars(d, config, "stackdriver/groups/{{project}}")
-	if err != nil {
-		return err
-	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
-	if err != nil {
-		return err
-	}
-
-	var obj map[string]interface{}
-	log.Printf("[DEBUG] Deleting UptimeCheckConfig %q", d.Id())
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:               config,
-		Method:               "DELETE",
-		Project:              billingProject,
-		RawURL:               url,
-		UserAgent:            userAgent,
-		Body:                 obj,
-		Timeout:              d.Timeout(schema.TimeoutDelete),
-		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringConcurrentEditError},
-	})
-
-	if err != nil {
-		if transport_tpg.IsGoogleApiErrorWithCode(err, 400) {
-			err := fmt.Errorf("%w - please ensure all associated Alert Policies are deleted.", err)
-			return errwrap.Wrapf("Error when reading or editing UptimeCheckConfig: {{err}}", err)
-		}
-		return transport_tpg.HandleNotFoundError(err, d, "UptimeCheckConfig")
-	}
-
-	log.Printf("[DEBUG] Finished deleting UptimeCheckConfig %q: %#v", d.Id(), res)
-	return nil
+	return resourceMonitoringUptimeCheckConfigCustomDelete(d, meta)
 }
 
 func resourceMonitoringUptimeCheckConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceMonitoringUptimeCheckConfigCustomImport(d, meta)
 }
 
 func flattenMonitoringUptimeCheckConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenMonitoringUptimeCheckConfigUptimeCheckId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
 }
 
 func flattenMonitoringUptimeCheckConfigDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1233,9 +1166,6 @@ func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfo(v interface{}, d *schem
 	transformed["username"] =
 		flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(original["username"], d, config)
 	return []interface{}{transformed}
-}
-func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("http_check.0.auth_info.0.password")
 }
 
 func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1454,11 +1384,6 @@ func flattenMonitoringUptimeCheckConfigResourceGroup(v interface{}, d *schema.Re
 }
 func flattenMonitoringUptimeCheckConfigResourceGroupResourceType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenMonitoringUptimeCheckConfigResourceGroupGroupId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	project := d.Get("project").(string)
-	return fmt.Sprintf("projects/%s/groups/%s", project, v)
 }
 
 func flattenMonitoringUptimeCheckConfigMonitoredResource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2036,10 +1961,6 @@ func expandMonitoringUptimeCheckConfigResourceGroupResourceType(v interface{}, d
 	return v, nil
 }
 
-func expandMonitoringUptimeCheckConfigResourceGroupGroupId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
-}
-
 func expandMonitoringUptimeCheckConfigMonitoredResource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -2130,24 +2051,6 @@ func expandMonitoringUptimeCheckConfigSyntheticMonitorCloudFunctionV2(v interfac
 
 func expandMonitoringUptimeCheckConfigSyntheticMonitorCloudFunctionV2Name(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceMonitoringUptimeCheckConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// remove passwordWoVersion from the request body
-	if v, ok := obj["httpCheck"]; ok {
-		httpCheck := v.(map[string]interface{})
-		if authInfo, ok := httpCheck["authInfo"].(map[string]interface{}); ok {
-			delete(authInfo, "passwordWoVersion")
-			if len(authInfo) > 0 {
-				httpCheck["authInfo"] = authInfo
-			} else {
-				delete(httpCheck, "authInfo")
-			}
-			obj["httpCheck"] = httpCheck
-		}
-	}
-
-	return obj, nil
 }
 
 func resourceMonitoringUptimeCheckConfigPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

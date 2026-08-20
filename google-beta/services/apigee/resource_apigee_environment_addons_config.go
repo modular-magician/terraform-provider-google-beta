@@ -366,20 +366,7 @@ func resourceApigeeEnvironmentAddonsConfigDelete(d *schema.ResourceData, meta in
 }
 
 func resourceApigeeEnvironmentAddonsConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<env_id>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	id := d.Get("env_id").(string)
-	nameParts := strings.Split(id, "/")
-	if len(nameParts) != 4 {
-		return nil, fmt.Errorf("env is expected to have shape organizations/{{org_id}}/environments/{{env}}, got %s instead", id)
-	}
-	d.SetId(id)
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeEnvironmentAddonsConfigCustomImport(d, meta)
 }
 
 func flattenApigeeEnvironmentAddonsConfigAnalyticsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -388,15 +375,6 @@ func flattenApigeeEnvironmentAddonsConfigAnalyticsEnabled(v interface{}, d *sche
 
 func expandApigeeEnvironmentAddonsConfigAnalyticsEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceApigeeEnvironmentAddonsConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if analyticsConfig, ok := res["analyticsConfig"].(map[string]interface{}); ok {
-		res["analyticsEnabled"] = analyticsConfig["enabled"]
-	} else {
-		res["analyticsEnabled"] = false
-	}
-	return res, nil
 }
 
 func ResourceApigeeEnvironmentAddonsConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -690,22 +690,7 @@ func resourceHealthcareHl7V2StoreDelete(d *schema.ResourceData, meta interface{}
 }
 
 func resourceHealthcareHl7V2StoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	hl7v2StoreId, err := ParseHealthcareHl7V2StoreId(d.Id(), config)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := d.Set("dataset", hl7v2StoreId.DatasetId.DatasetId()); err != nil {
-		return nil, fmt.Errorf("Error setting dataset: %s", err)
-	}
-	if err := d.Set("name", hl7v2StoreId.Name); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceHealthcareHl7V2StoreCustomImport(d, meta)
 }
 
 func flattenHealthcareHl7V2StoreName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -741,18 +726,6 @@ func flattenHealthcareHl7V2StoreParserConfigAllowNullHeader(v interface{}, d *sc
 
 func flattenHealthcareHl7V2StoreParserConfigSegmentTerminator(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenHealthcareHl7V2StoreParserConfigSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenHealthcareHl7V2StoreParserConfigVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -897,18 +870,6 @@ func expandHealthcareHl7V2StoreParserConfigSegmentTerminator(v interface{}, d tp
 	return v, nil
 }
 
-func expandHealthcareHl7V2StoreParserConfigSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func expandHealthcareHl7V2StoreParserConfigVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -988,19 +949,6 @@ func expandHealthcareHl7V2StoreEffectiveLabels(v interface{}, d tpgresource.Terr
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceHealthcareHl7V2StoreDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Take the returned long form of the name and use it as `self_link`.
-	// Then modify the name to be the user specified form.
-	// We can't just ignore_read on `name` as the linter will
-	// complain that the returned `res` is never used afterwards.
-	// Some field needs to be actually set, and we chose `name`.
-	if err := d.Set("self_link", res["name"].(string)); err != nil {
-		return nil, fmt.Errorf("Error setting self_link: %s", err)
-	}
-	res["name"] = d.Get("name").(string)
-	return res, nil
 }
 
 func ResourceHealthcareHl7V2StoreFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

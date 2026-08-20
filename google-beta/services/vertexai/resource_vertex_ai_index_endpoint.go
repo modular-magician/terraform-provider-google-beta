@@ -746,13 +746,6 @@ func resourceVertexAIIndexEndpointImport(d *schema.ResourceData, meta interface{
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenVertexAIIndexEndpointName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenVertexAIIndexEndpointDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -785,36 +778,6 @@ func flattenVertexAIIndexEndpointUpdateTime(v interface{}, d *schema.ResourceDat
 }
 
 func flattenVertexAIIndexEndpointNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenVertexAIIndexEndpointPrivateServiceConnectConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	if v == nil {
-		// Disabled by default, but API will not return object if value is false
-		transformed["enable_private_service_connect"] = false
-		return []interface{}{transformed}
-	}
-
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-
-	transformed["enable_private_service_connect"] =
-		flattenVertexAIIndexEndpointPrivateServiceConnectConfigEnablePrivateServiceConnect(original["enablePrivateServiceConnect"], d, config)
-	transformed["project_allowlist"] =
-		flattenVertexAIIndexEndpointPrivateServiceConnectConfigProjectAllowlist(original["projectAllowlist"], d, config)
-	transformed["psc_automation_configs"] = d.Get("private_service_connect_config.0.psc_automation_configs")
-	return []interface{}{transformed}
-}
-
-func flattenVertexAIIndexEndpointPrivateServiceConnectConfigEnablePrivateServiceConnect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenVertexAIIndexEndpointPrivateServiceConnectConfigProjectAllowlist(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

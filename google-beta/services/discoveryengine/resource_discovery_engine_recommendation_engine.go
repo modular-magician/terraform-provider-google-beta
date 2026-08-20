@@ -1125,12 +1125,6 @@ func expandDiscoveryEngineRecommendationEngineCommonConfigCompanyName(v interfac
 	return v, nil
 }
 
-func resourceDiscoveryEngineRecommendationEngineEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// hard code solutionType to "SOLUTION_TYPE_RECOMMENDATION" for recommendation engine resource
-	obj["solutionType"] = "SOLUTION_TYPE_RECOMMENDATION"
-	return obj, nil
-}
-
 func ResourceDiscoveryEngineRecommendationEngineFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

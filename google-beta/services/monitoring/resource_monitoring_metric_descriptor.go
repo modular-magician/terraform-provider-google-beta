@@ -751,15 +751,7 @@ func resourceMonitoringMetricDescriptorDelete(d *schema.ResourceData, meta inter
 }
 
 func resourceMonitoringMetricDescriptorImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceMonitoringMetricDescriptorCustomImport(d, meta)
 }
 
 func flattenMonitoringMetricDescriptorName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -792,14 +784,6 @@ func flattenMonitoringMetricDescriptorLabels(v interface{}, d *schema.ResourceDa
 	return transformed
 }
 func flattenMonitoringMetricDescriptorLabelsKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenMonitoringMetricDescriptorLabelsValueType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "STRING"
-	}
-
 	return v
 }
 

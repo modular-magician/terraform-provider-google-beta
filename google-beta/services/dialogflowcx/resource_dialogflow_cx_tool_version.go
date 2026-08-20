@@ -952,31 +952,7 @@ func resourceDialogflowCXToolVersionDelete(d *schema.ResourceData, meta interfac
 }
 
 func resourceDialogflowCXToolVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value and parent contains slashes
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<parent>.+)/versions/(?P<name>[^/]+)",
-		"(?P<parent>.+)/(?P<name>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/versions/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDialogflowCXToolVersionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDialogflowCXToolVersionCustomImport(d, meta)
 }
 
 func flattenDialogflowCXToolVersionDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1009,12 +985,6 @@ func flattenDialogflowCXToolVersionTool(v interface{}, d *schema.ResourceData, c
 	transformed["connector_spec"] =
 		flattenDialogflowCXToolVersionToolConnectorSpec(original["connectorSpec"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXToolVersionToolName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func flattenDialogflowCXToolVersionToolDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1321,29 +1291,6 @@ func flattenDialogflowCXToolVersionToolFunctionSpec(v interface{}, d *schema.Res
 	transformed["output_schema"] =
 		flattenDialogflowCXToolVersionToolFunctionSpecOutputSchema(original["outputSchema"], d, config)
 	return []interface{}{transformed}
-}
-func flattenDialogflowCXToolVersionToolFunctionSpecInputSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
-func flattenDialogflowCXToolVersionToolFunctionSpecOutputSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDialogflowCXToolVersionToolConnectorSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2090,30 +2037,6 @@ func expandDialogflowCXToolVersionToolFunctionSpec(v interface{}, d tpgresource.
 	}
 
 	return transformed, nil
-}
-
-func expandDialogflowCXToolVersionToolFunctionSpecInputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func expandDialogflowCXToolVersionToolFunctionSpecOutputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandDialogflowCXToolVersionToolConnectorSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

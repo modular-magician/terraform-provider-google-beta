@@ -793,15 +793,7 @@ func resourceLoggingMetricDelete(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceLoggingMetricImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceLoggingMetricCustomImport(d, meta)
 }
 
 func flattenLoggingMetricName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -883,14 +875,6 @@ func flattenLoggingMetricMetricDescriptorLabelsKey(v interface{}, d *schema.Reso
 }
 
 func flattenLoggingMetricMetricDescriptorLabelsDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenLoggingMetricMetricDescriptorLabelsValueType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "STRING"
-	}
-
 	return v
 }
 

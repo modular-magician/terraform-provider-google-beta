@@ -784,127 +784,7 @@ func resourceComputeRegionPerInstanceConfigDelete(d *schema.ResourceData, meta i
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing RegionPerInstanceConfig %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-
-	lockName, err := tpgresource.ReplaceVars(d, config, "instanceGroupManager/{{project}}/{{region}}/{{region_instance_group_manager}}/{{name}}")
-	if err != nil {
-		return err
-	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
-
-	var url string
-	if d.Get("remove_instance_on_destroy").(bool) {
-		url, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{region_instance_group_manager}}/deleteInstances")
-	} else {
-		url, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{region_instance_group_manager}}/deletePerInstanceConfigs")
-	}
-	if err != nil {
-		return err
-	}
-
-	var obj map[string]interface{}
-	if d.Get("remove_instance_on_destroy").(bool) {
-		// Instance name in deleteInstances request must include zone
-		instanceName, err := findInstanceName(d, config)
-		if err != nil {
-			return err
-		}
-
-		obj = map[string]interface{}{
-			"instances": [1]string{instanceName},
-		}
-	} else {
-		obj = map[string]interface{}{
-			"names": [1]string{d.Get("name").(string)},
-		}
-	}
-	log.Printf("[DEBUG] Deleting RegionPerInstanceConfig %q", d.Id())
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
-	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, "RegionPerInstanceConfig")
-	}
-
-	err = ComputeOperationWaitTime(
-		config, res, project, "Deleting RegionPerInstanceConfig", userAgent,
-		d.Timeout(schema.TimeoutDelete))
-
-	if err != nil {
-		return err
-	}
-
-	if d.Get("remove_instance_on_destroy").(bool) {
-		err = transport_tpg.PollingWaitTime(resourceComputeRegionPerInstanceConfigInstancePollRead(d, meta, d.Get("name").(string)), PollCheckInstanceConfigInstanceDeleted, "Deleting RegionPerInstanceConfig", d.Timeout(schema.TimeoutDelete), 1)
-		if err != nil {
-			return fmt.Errorf("Error waiting for instance delete on RegionPerInstanceConfig %q: %s", d.Id(), err)
-		}
-	} else if d.Get("remove_instance_state_on_destroy").(bool) {
-		// Potentially delete the state managed by this config
-		// Instance name in applyUpdatesToInstances request must include zone
-		instanceName, err := findInstanceName(d, config)
-		if err != nil {
-			return err
-		}
-
-		obj = make(map[string]interface{})
-		obj["instances"] = []string{instanceName}
-
-		// Updates must be applied to the instance after deleting the PerInstanceConfig
-		url, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{region_instance_group_manager}}/applyUpdatesToInstances")
-		if err != nil {
-			return err
-		}
-
-		log.Printf("[DEBUG] Applying updates to PerInstanceConfig %q: %#v", d.Id(), obj)
-		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   project,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-		})
-
-		if err != nil {
-			return fmt.Errorf("Error updating PerInstanceConfig %q: %s", d.Id(), err)
-		}
-
-		err = ComputeOperationWaitTime(
-			config, res, project, "Applying update to PerInstanceConfig", userAgent,
-			d.Timeout(schema.TimeoutUpdate))
-
-		if err != nil {
-			return fmt.Errorf("Error deleting PerInstanceConfig %q: %s", d.Id(), err)
-		}
-
-		// RegionPerInstanceConfig goes into "DELETING" state while the instance is actually deleted
-		err = transport_tpg.PollingWaitTime(resourceComputeRegionPerInstanceConfigPollRead(d, meta), PollCheckInstanceConfigDeleted, "Deleting RegionPerInstanceConfig", d.Timeout(schema.TimeoutDelete), 1)
-		if err != nil {
-			return fmt.Errorf("Error waiting for delete on RegionPerInstanceConfig %q: %s", d.Id(), err)
-		}
-	}
-
-	log.Printf("[DEBUG] Finished deleting RegionPerInstanceConfig %q: %#v", d.Id(), res)
-	return nil
+	return resourceComputeRegionPerInstanceConfigCustomDelete(d, meta)
 }
 
 func resourceComputeRegionPerInstanceConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -967,28 +847,6 @@ func flattenNestedComputeRegionPerInstanceConfigPreservedState(v interface{}, d 
 }
 func flattenNestedComputeRegionPerInstanceConfigPreservedStateMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenNestedComputeRegionPerInstanceConfigPreservedStateDisk(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	disks := v.(map[string]interface{})
-	transformed := make([]interface{}, 0, len(disks))
-	for devName, deleteRuleRaw := range disks {
-		diskObj := deleteRuleRaw.(map[string]interface{})
-		source, err := tpgresource.GetRelativePath(diskObj["source"].(string))
-		if err != nil {
-			source = diskObj["source"].(string)
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"device_name": devName,
-			"delete_rule": diskObj["autoDelete"],
-			"source":      source,
-			"mode":        diskObj["mode"],
-		})
-	}
-	return transformed
 }
 
 func flattenNestedComputeRegionPerInstanceConfigPreservedStateInternalIp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1129,36 +987,6 @@ func expandNestedComputeRegionPerInstanceConfigPreservedStateMetadata(v interfac
 	return m, nil
 }
 
-func expandNestedComputeRegionPerInstanceConfigPreservedStateDisk(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return map[string]interface{}{}, nil
-	}
-	l := v.(*schema.Set).List()
-	req := make(map[string]interface{})
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		deviceName := original["device_name"].(string)
-		diskObj := make(map[string]interface{})
-		deleteRule := original["delete_rule"].(string)
-		if deleteRule != "" {
-			diskObj["autoDelete"] = deleteRule
-		}
-		source := original["source"]
-		if source != "" {
-			diskObj["source"] = source
-		}
-		mode := original["mode"]
-		if source != "" {
-			diskObj["mode"] = mode
-		}
-		req[deviceName] = diskObj
-	}
-	return req, nil
-}
-
 func expandNestedComputeRegionPerInstanceConfigPreservedStateInternalIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
 	if v == nil {
 		return map[string]interface{}{}, nil
@@ -1217,14 +1045,6 @@ func expandNestedComputeRegionPerInstanceConfigPreservedStateInternalIpIpAddress
 	return transformed, nil
 }
 
-func expandNestedComputeRegionPerInstanceConfigPreservedStateInternalIpIpAddressAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("addresses", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for address: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandNestedComputeRegionPerInstanceConfigPreservedStateExternalIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
 	if v == nil {
 		return map[string]interface{}{}, nil
@@ -1281,29 +1101,6 @@ func expandNestedComputeRegionPerInstanceConfigPreservedStateExternalIpIpAddress
 	}
 
 	return transformed, nil
-}
-
-func expandNestedComputeRegionPerInstanceConfigPreservedStateExternalIpIpAddressAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("addresses", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for address: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func resourceComputeRegionPerInstanceConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	wrappedReq := map[string]interface{}{
-		"instances": []interface{}{obj},
-	}
-	return wrappedReq, nil
-}
-
-func resourceComputeRegionPerInstanceConfigUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// updates and creates use different wrapping object names
-	wrappedReq := map[string]interface{}{
-		"perInstanceConfigs": []interface{}{obj},
-	}
-	return wrappedReq, nil
 }
 
 func flattenNestedComputeRegionPerInstanceConfig(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

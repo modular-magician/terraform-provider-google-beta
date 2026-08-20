@@ -726,26 +726,7 @@ func resourceMonitoringNotificationChannelDelete(d *schema.ResourceData, meta in
 }
 
 func resourceMonitoringNotificationChannelImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf(
-			"Could not split project from name: %s",
-			d.Get("name"),
-		)
-	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceMonitoringNotificationChannelCustomImport(d, meta)
 }
 
 func flattenMonitoringNotificationChannelLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -911,72 +892,6 @@ func expandMonitoringNotificationChannelEnabled(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
-func resourceMonitoringNotificationChannelEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	labelmap, ok := obj["labels"]
-	if !ok {
-		labelmap = make(map[string]string)
-	}
-
-	var labels map[string]string
-	labels = labelmap.(map[string]string)
-
-	for _, sl := range sensitiveLabels {
-		if auth, _ := d.GetOkExists("sensitive_labels.0." + sl); auth != "" {
-
-			labels[sl] = auth.(string)
-		}
-	}
-	for _, slwov := range writeOnlySensitiveLabels {
-		if v, _ := d.GetOkExists("sensitive_labels.0." + slwov); v != "" {
-			target := strings.TrimSuffix(slwov, "_version")
-			woProp := tpgresource.GetRawConfigAttributeAsString(d, "sensitive_labels.0."+target)
-			if woProp != "" {
-				labels[strings.TrimSuffix(slwov, "_wo_version")] = woProp
-			}
-		}
-	}
-
-	obj["labels"] = labels
-	delete(obj, "sensitiveLabels")
-
-	return obj, nil
-}
-
-func resourceMonitoringNotificationChannelDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	labels, ok := res["labels"].(map[string]interface{})
-	if !ok {
-		return res, nil
-	}
-
-	sensitiveLabelsRaw := d.Get("sensitive_labels")
-	if sensitiveLabelsRaw != nil {
-		if sensitiveLabelsArr, ok := sensitiveLabelsRaw.([]interface{}); ok && len(sensitiveLabelsArr) > 0 {
-			if configuredSensitiveLabels, ok := sensitiveLabelsArr[0].(map[string]interface{}); ok && len(configuredSensitiveLabels) > 0 {
-				sensitiveLabels := make(map[string]interface{})
-
-				for configKey, configVal := range configuredSensitiveLabels {
-					apiField := strings.TrimSuffix(configKey, "_wo")
-					delete(labels, apiField)
-					sensitiveLabels[configKey] = configVal
-				}
-
-				return res, nil
-			}
-		}
-	}
-
-	// Replace obfuscated API values with configured values to prevent a diff
-	// Scenario where end-user uses "sensitive" labels directly in "labels" block
-	if configuredLabels, ok := d.Get("labels").(map[string]interface{}); ok {
-		for _, field := range []string{"auth_token", "password", "service_key"} {
-			if configVal, exists := configuredLabels[field]; exists && configVal != nil && configVal != "" {
-				labels[field] = configVal
-			}
-		}
-	}
-
-	return res, nil
-}
 func resourceMonitoringNotificationChannelPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceMonitoringNotificationChannelDecoder(d, meta, res)

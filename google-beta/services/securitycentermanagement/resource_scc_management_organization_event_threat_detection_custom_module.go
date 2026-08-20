@@ -597,25 +597,6 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
-func flattenSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleEnablementState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -634,18 +615,6 @@ func flattenSecurityCenterManagementOrganizationEventThreatDetectionCustomModule
 
 func flattenSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleLastEditor(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleEnablementState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

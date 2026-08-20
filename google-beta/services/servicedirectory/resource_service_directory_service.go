@@ -424,62 +424,7 @@ func resourceServiceDirectoryServiceDelete(d *schema.ResourceData, meta interfac
 }
 
 func resourceServiceDirectoryServiceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	nameParts := strings.Split(d.Get("name").(string), "/")
-	if len(nameParts) == 8 {
-		// `projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}}`
-		if err := d.Set("namespace", fmt.Sprintf("projects/%s/locations/%s/namespaces/%s", nameParts[1], nameParts[3], nameParts[5])); err != nil {
-			return nil, fmt.Errorf("Error setting namespace: %s", err)
-		}
-		if err := d.Set("service_id", nameParts[7]); err != nil {
-			return nil, fmt.Errorf("Error setting service_id: %s", err)
-		}
-	} else if len(nameParts) == 4 {
-		// `{{project}}/{{location}}/{{namespace_id}}/{{service_id}}`
-		if err := d.Set("namespace", fmt.Sprintf("projects/%s/locations/%s/namespaces/%s", nameParts[0], nameParts[1], nameParts[2])); err != nil {
-			return nil, fmt.Errorf("Error setting namespace: %s", err)
-		}
-		if err := d.Set("service_id", nameParts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting service_id: %s", err)
-		}
-		id := fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", nameParts[0], nameParts[1], nameParts[2], nameParts[3])
-		if err := d.Set("name", id); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-		d.SetId(id)
-	} else if len(nameParts) == 3 {
-		// `{{location}}/{{namespace_id}}/{{service_id}}`
-		project, err := tpgresource.GetProject(d, config)
-		if err != nil {
-			return nil, err
-		}
-		if err := d.Set("namespace", fmt.Sprintf("projects/%s/locations/%s/namespaces/%s", project, nameParts[0], nameParts[1])); err != nil {
-			return nil, fmt.Errorf("Error setting namespace: %s", err)
-		}
-		if err := d.Set("service_id", nameParts[2]); err != nil {
-			return nil, fmt.Errorf("Error setting service_id: %s", err)
-		}
-		id := fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", project, nameParts[0], nameParts[1], nameParts[2])
-		if err := d.Set("name", id); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-		d.SetId(id)
-	} else {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s, %s or %s",
-			d.Get("name"),
-			"projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}}",
-			"{{project}}/{{location}}/{{namespace_id}}/{{service_id}}",
-			"{{location}}/{{namespace_id}}/{{service_id}}")
-	}
-	return []*schema.ResourceData{d}, nil
-
+	return resourceServiceDirectoryServiceCustomImport(d, meta)
 }
 
 func flattenServiceDirectoryServiceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -501,18 +446,6 @@ func expandServiceDirectoryServiceMetadata(v interface{}, d tpgresource.Terrafor
 	return m, nil
 }
 
-func resourceServiceDirectoryServiceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-
-	return obj, nil
-}
-
-func resourceServiceDirectoryServiceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if _, ok := res["annotations"]; ok {
-		res["metadata"] = res["annotations"].(map[string]interface{})
-		delete(res, "annotations")
-	}
-	return res, nil
-}
 func resourceServiceDirectoryServicePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceServiceDirectoryServiceDecoder(d, meta, res)

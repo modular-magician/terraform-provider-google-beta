@@ -338,43 +338,7 @@ func resourceIapBrandDelete(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceIapBrandImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	nameParts := strings.Split(d.Get("name").(string), "/")
-	if len(nameParts) != 4 && len(nameParts) != 2 {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have either shape %s or %s",
-			d.Get("name"),
-			"projects/{{project}}/brands/{{name}}",
-			"{{project}}/{{name}}",
-		)
-	}
-
-	var project string
-	if len(nameParts) == 4 {
-		project = nameParts[1]
-	}
-	if len(nameParts) == 2 {
-		project = nameParts[0] // Different index
-
-		// Set `name` (and `id`) as a 4-part format so Read func produces valid URL
-		brand := nameParts[1]
-		name := fmt.Sprintf("projects/%s/brands/%s", project, brand)
-		if err := d.Set("name", name); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-		d.SetId(name)
-	}
-
-	if err := d.Set("project", project); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceIapBrandCustomImport(d, meta)
 }
 
 func flattenIapBrandSupportEmail(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

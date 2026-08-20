@@ -642,48 +642,7 @@ func resourceBigqueryAnalyticsHubDataExchangeSubscriptionUpdate(d *schema.Resour
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceBigqueryAnalyticsHubDataExchangeSubscriptionRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	//If a mutable field is added later in the subscription resource, an update API endpoint will be created
-	//and this custom_update will have to be changed and will call a Update API as well as done by mutable resources.
-	// all other fields are immutable for now, don't do anything else
-
-	_ = config
-
-	// We can get here if 'refresh_policy' was updated in the HCL config.
-	// Since 'refresh_policy' has a default, d.Get("refresh_policy") will always return a string.
-	// We check if its value has actually changed from the prior state.
-	if d.HasChange("refresh_policy") {
-		// If 'refresh_policy' was changed by the user, ensure its new value is set in the state.
-		// For an Optional+Computed-false field like this, Terraform usually handles this,
-		// but this explicit Set operation mirrors the previous boolean field handling.
-		if err := d.Set("refresh_policy", d.Get("refresh_policy")); err != nil {
-			return fmt.Errorf("Error updating refresh_policy: %s", err)
-		}
-	}
-
-	identity, err := d.Identity()
-	if err == nil && identity != nil {
-		if locationValue, ok := d.GetOk("location"); ok && locationValue.(string) != "" {
-			if err = identity.Set("location", locationValue.(string)); err != nil {
-				return fmt.Errorf("Error setting location: %s", err)
-			}
-		}
-		if subscriptionIdValue, ok := d.GetOk("subscription_id"); ok && subscriptionIdValue.(string) != "" {
-			if err = identity.Set("subscription_id", subscriptionIdValue.(string)); err != nil {
-				return fmt.Errorf("Error setting subscription_id: %s", err)
-			}
-		}
-		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
-			if err = identity.Set("project", projectValue.(string)); err != nil {
-				return fmt.Errorf("Error setting project: %s", err)
-			}
-		}
-	} else {
-		log.Printf("[DEBUG] (Create) identity not set: %s", err)
-	}
-
-	return nil
+	return resourceBigqueryAnalyticsHubDataExchangeSubscriptionCustomUpdate(d, meta)
 }
 
 func resourceBigqueryAnalyticsHubDataExchangeSubscriptionDelete(d *schema.ResourceData, meta interface{}) error {
@@ -858,11 +817,6 @@ func flattenBigqueryAnalyticsHubDataExchangeSubscriptionLogLinkedDatasetQueryUse
 	return v
 }
 
-func flattenBigqueryAnalyticsHubDataExchangeSubscriptionSubscriptionId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenBigqueryAnalyticsHubDataExchangeSubscriptionSubscriberContact(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -983,62 +937,6 @@ func expandBigqueryAnalyticsHubDataExchangeSubscriptionDestinationDatasetLabels(
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceBigqueryAnalyticsHubDataExchangeSubscriptionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	if v, ok := d.GetOk("subscription_id"); ok {
-		obj["subscription"] = v.(string)
-		// Remove the auto-generated "subscriptionId" if it was added by MM, as it conflicts.
-		delete(obj, "subscriptionId")
-	}
-
-	// The API expects a 'destination' field in the request body for the subscriber's
-	// project and location, e.g., "projects/my-project/locations/us-central1".
-	// This is derived from the 'project' and 'location' fields of the resource.
-	project := d.Get("project").(string)
-	location := d.Get("location").(string)
-	obj["destination"] = fmt.Sprintf("projects/%s/locations/%s", project, location)
-
-	if v, ok := d.GetOk("subscriber_contact"); ok {
-		obj["subscriberContact"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("destination_dataset"); ok && v != nil {
-		expandedDataset, err := expandBigqueryAnalyticsHubDataExchangeSubscriptionDestinationDataset(v, d, config)
-		if err != nil {
-			return nil, fmt.Errorf("error expanding destination_dataset: %w", err)
-		}
-		// Ensure the expanded dataset is not empty before assigning, to avoid sending empty objects.
-		if expandedDataset != nil && !tpgresource.IsEmptyValue(reflect.ValueOf(expandedDataset)) {
-			obj["destinationDataset"] = expandedDataset
-		} else {
-			// If the expanded dataset is empty, remove it from the payload to avoid API errors.
-			delete(obj, "destinationDataset")
-		}
-	} else {
-		// If destination_dataset is not provided by the user, ensure it's not in the payload.
-		delete(obj, "destinationDataset")
-	}
-
-	return obj, nil
-}
-
-func resourceBigqueryAnalyticsHubDataExchangeSubscriptionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := res["name"]; ok && v != nil {
-		name := v.(string)
-		parts := strings.Split(name, "/")
-		if len(parts) > 0 {
-			// The last part of the resource name is the subscription ID.
-			d.Set("subscription_id", parts[len(parts)-1])
-		}
-	}
-
-	if v, ok := res["subscriberContact"]; ok && v != nil {
-		d.Set("subscriber_contact", v.(string))
-	}
-
-	return res, nil
 }
 
 func ResourceBigqueryAnalyticsHubDataExchangeSubscriptionFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

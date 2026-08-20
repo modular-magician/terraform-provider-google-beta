@@ -1948,30 +1948,6 @@ func expandComputeOrganizationSecurityPolicyRuleTargetServiceAccounts(v interfac
 	return v, nil
 }
 
-func resourceComputeOrganizationSecurityPolicyRuleUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if d.HasChange("preconfigured_waf_config") {
-		old, new := d.GetChange("preconfigured_waf_config")
-		if oldVal := reflect.ValueOf(old); oldVal.IsValid() && !tpgresource.IsEmptyValue(oldVal) {
-			if newVal := reflect.ValueOf(new); !newVal.IsValid() || tpgresource.IsEmptyValue(newVal) {
-				obj["preconfiguredWafConfig"] = map[string]interface{}{}
-			}
-		}
-	}
-	return obj, nil
-}
-
-func resourceComputeOrganizationSecurityPolicyRuleDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if preconfiguredWafConfigRaw, ok := res["preconfiguredWafConfig"]; ok && preconfiguredWafConfigRaw != nil {
-		if preconfiguredWafConfig, ok := preconfiguredWafConfigRaw.(map[string]interface{}); ok {
-			exclusionsRaw, found := preconfiguredWafConfig["exclusions"]
-			if !found || exclusionsRaw == nil || tpgresource.IsEmptyValue(reflect.ValueOf(exclusionsRaw)) {
-				delete(res, "preconfiguredWafConfig")
-			}
-		}
-	}
-	return res, nil
-}
-
 func ResourceComputeOrganizationSecurityPolicyRuleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

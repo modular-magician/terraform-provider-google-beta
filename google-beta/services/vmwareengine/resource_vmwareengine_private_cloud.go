@@ -2220,68 +2220,6 @@ func expandVmwareenginePrivateCloudType(v interface{}, d tpgresource.TerraformRe
 	return v, nil
 }
 
-func resourceVmwareenginePrivateCloudUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "managementCluster")
-	return obj, nil
-}
-
-func resourceVmwareenginePrivateCloudDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{VmwareengineBasePath}}projects/{{project}}/locations/{{location}}/privateClouds/{{name}}/clusters")
-	if err != nil {
-		return nil, err
-	}
-
-	url, err = transport_tpg.AddQueryParams(url, map[string]string{"filter": "management=true"})
-	if err != nil {
-		return nil, err
-	}
-
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, fmt.Errorf("Error fetching project for Instance: %s", err)
-	}
-
-	billingProject = project
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	clusterResponse, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
-
-	if err != nil {
-		return nil, fmt.Errorf("Error reading management cluster of PrivateCloud: %s", err)
-	}
-
-	// There can only be 1 management cluster and if the PC read is successfully and
-	// we got response from cluster API then it should be present.
-	mgmtClusterObj := clusterResponse["clusters"].([]interface{})[0].(map[string]interface{})
-	clusterName := mgmtClusterObj["name"].(string)
-	// get clusterId from the full name, clusterName is "projects/project/locations/location/privateClouds/pc/clusters/cls"
-	// then clusterId will be "cls"
-	mgmtClusterObj["clusterId"] = clusterName[strings.LastIndex(clusterName, "/")+1:]
-
-	res["managementCluster"] = mgmtClusterObj
-
-	return res, nil
-}
-
 func ResourceVmwareenginePrivateCloudFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

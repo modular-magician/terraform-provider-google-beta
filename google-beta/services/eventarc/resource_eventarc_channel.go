@@ -648,10 +648,6 @@ func resourceEventarcChannelImport(d *schema.ResourceData, meta interface{}) ([]
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenEventarcChannelName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("name")
-}
-
 func flattenEventarcChannelLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -716,10 +712,6 @@ func flattenEventarcChannelTerraformLabels(v interface{}, d *schema.ResourceData
 
 func flattenEventarcChannelEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandEventarcChannelName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return expandToRegionalLongForm("projects/%s/locations/%s/channels/%s", v, d, config)
 }
 
 func expandEventarcChannelThirdPartyProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

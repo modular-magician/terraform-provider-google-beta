@@ -948,12 +948,6 @@ func expandDiscoveryEngineChatEngineCommonConfigCompanyName(v interface{}, d tpg
 	return v, nil
 }
 
-func resourceDiscoveryEngineChatEngineEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// hard code solutionType to "SOLUTION_TYPE_CHAT" for chat engine resource
-	obj["solutionType"] = "SOLUTION_TYPE_CHAT"
-	return obj, nil
-}
-
 func ResourceDiscoveryEngineChatEngineFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

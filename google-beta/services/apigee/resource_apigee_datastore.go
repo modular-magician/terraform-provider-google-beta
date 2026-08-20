@@ -545,48 +545,7 @@ func resourceApigeeDatastoreDelete(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceApigeeDatastoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	nameParts := strings.Split(d.Get("name").(string), "/")
-	if len(nameParts) == 5 {
-		// `organizations/{{org_name}}/analytics/datastores/{{name}}`
-		orgId := fmt.Sprintf("organizations/%s", nameParts[1])
-		if err := d.Set("org_id", orgId); err != nil {
-			return nil, fmt.Errorf("Error setting org_id: %s", err)
-		}
-		if err := d.Set("name", nameParts[4]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(nameParts) == 3 {
-		// `organizations/{{org_name}}/{{name}}`
-		orgId := fmt.Sprintf("organizations/%s", nameParts[1])
-		if err := d.Set("org_id", orgId); err != nil {
-			return nil, fmt.Errorf("Error setting org_id: %s", err)
-		}
-		if err := d.Set("name", nameParts[2]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf(
-			"Saw %s when the name is expected to have shape %s or %s",
-			d.Get("name"),
-			"organizations/{{org_name}}/analytics/datastores/{{name}}",
-			"organizations/{{org_name}}/{{name}}")
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{org_id}}/analytics/datastores/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeDatastoreCustomImport(d, meta)
 }
 
 func flattenApigeeDatastoreName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -736,13 +695,6 @@ func expandApigeeDatastoreDatastoreConfigTablePrefix(v interface{}, d tpgresourc
 	return v, nil
 }
 
-func resourceApigeeDatastoreDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if selfLink, ok := res["self"].(string); ok && selfLink != "" {
-		parts := strings.Split(selfLink, "/")
-		res["name"] = parts[len(parts)-1]
-	}
-	return res, nil
-}
 func resourceApigeeDatastorePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceApigeeDatastoreDecoder(d, meta, res)

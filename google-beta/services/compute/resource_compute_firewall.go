@@ -1141,25 +1141,6 @@ func flattenComputeFirewallDisabled(v interface{}, d *schema.ResourceData, confi
 	return v
 }
 
-func flattenComputeFirewallLogConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-
-	v, ok := original["enable"]
-	if ok && !v.(bool) {
-		return nil
-	}
-
-	transformed := make(map[string]interface{})
-	transformed["metadata"] = original["metadata"]
-	return []interface{}{transformed}
-}
-
 func flattenComputeFirewallName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1322,36 +1303,8 @@ func expandComputeFirewallDisabled(v interface{}, d tpgresource.TerraformResourc
 	return v, nil
 }
 
-func expandComputeFirewallLogConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	transformed := make(map[string]interface{})
-
-	if len(l) == 0 || l[0] == nil {
-		// send enable = enable_logging value to ensure correct logging status if there is no config
-		transformed["enable"] = d.Get("enable_logging").(bool)
-		return transformed, nil
-	}
-
-	raw := l[0]
-	original := raw.(map[string]interface{})
-
-	// The log_config block is specified, so logging should be enabled
-	transformed["enable"] = true
-	transformed["metadata"] = original["metadata"]
-
-	return transformed, nil
-}
-
 func expandComputeFirewallName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeFirewallNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("networks", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for network: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandComputeFirewallPriority(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

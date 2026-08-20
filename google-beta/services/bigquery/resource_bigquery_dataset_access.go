@@ -857,22 +857,6 @@ func flattenNestedBigQueryDatasetAccessRole(v interface{}, d *schema.ResourceDat
 	return v
 }
 
-func flattenNestedBigQueryDatasetAccessUserByEmail(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	return strings.ToLower(v.(string))
-}
-
-func flattenNestedBigQueryDatasetAccessGroupByEmail(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	return strings.ToLower(v.(string))
-}
-
 func flattenNestedBigQueryDatasetAccessDomain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1022,33 +1006,6 @@ func flattenNestedBigQueryDatasetAccessConditionLocation(v interface{}, d *schem
 
 func expandNestedBigQueryDatasetAccessDatasetId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandNestedBigQueryDatasetAccessRole(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	if primitiveRole, ok := bigqueryAccessRoleToPrimitiveMap[v.(string)]; ok {
-		return primitiveRole, nil
-	}
-	return v, nil
-}
-
-func expandNestedBigQueryDatasetAccessUserByEmail(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return strings.ToLower(v.(string)), nil
-}
-
-func expandNestedBigQueryDatasetAccessGroupByEmail(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return strings.ToLower(v.(string)), nil
 }
 
 func expandNestedBigQueryDatasetAccessDomain(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

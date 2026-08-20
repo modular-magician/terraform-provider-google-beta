@@ -745,19 +745,6 @@ func expandComputeSslPolicyPostQuantumKeyExchange(v interface{}, d tpgresource.T
 	return v, nil
 }
 
-func resourceComputeSslPolicyUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// TODO: https://github.com/GoogleCloudPlatform/magic-modules/issues/184 Handle fingerprint consistently
-	obj["fingerprint"] = d.Get("fingerprint")
-
-	// TODO: https://github.com/GoogleCloudPlatform/magic-modules/issues/183 Can we generalize this
-	// Send a null fields if customFeatures is empty.
-	if v, ok := obj["customFeatures"]; ok && len(v.([]interface{})) == 0 {
-		obj["customFeatures"] = nil
-	}
-
-	return obj, nil
-}
-
 func ResourceComputeSslPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

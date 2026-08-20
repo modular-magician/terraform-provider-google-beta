@@ -1389,13 +1389,6 @@ func resourcePubsubSubscriptionImport(d *schema.ResourceData, meta interface{}) 
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenPubsubSubscriptionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenPubsubSubscriptionTopic(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1644,23 +1637,6 @@ func flattenPubsubSubscriptionPushConfigAttributes(v interface{}, d *schema.Reso
 	return v
 }
 
-func flattenPubsubSubscriptionPushConfigNoWrapper(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	if original["writeMetadata"] == nil {
-		transformed["write_metadata"] = false
-	} else {
-		transformed["write_metadata"] = original["writeMetadata"]
-	}
-
-	return []interface{}{transformed}
-}
-
 func flattenPubsubSubscriptionAckDeadlineSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -1875,32 +1851,6 @@ func flattenPubsubSubscriptionTerraformLabels(v interface{}, d *schema.ResourceD
 
 func flattenPubsubSubscriptionEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandPubsubSubscriptionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/subscriptions/{{name}}")
-}
-
-func expandPubsubSubscriptionTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return "", err
-	}
-
-	topic := d.Get("topic").(string)
-
-	re := regexp.MustCompile(`projects\/(.*)\/topics\/(.*)`)
-	match := re.FindStringSubmatch(topic)
-	if len(match) == 3 {
-		return topic, nil
-	} else {
-		// If no full topic given, we expand it to a full topic on the same project
-		fullTopic := fmt.Sprintf("projects/%s/topics/%s", project, topic)
-		if err := d.Set("topic", fullTopic); err != nil {
-			return nil, fmt.Errorf("Error setting topic: %s", err)
-		}
-		return fullTopic, nil
-	}
 }
 
 func expandPubsubSubscriptionBigqueryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2617,17 +2567,6 @@ func expandPubsubSubscriptionEffectiveLabels(v interface{}, d tpgresource.Terraf
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourcePubsubSubscriptionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "name")
-	return obj, nil
-}
-
-func resourcePubsubSubscriptionUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["subscription"] = obj
-	return newObj, nil
 }
 
 func ResourcePubsubSubscriptionFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -596,37 +596,6 @@ func flattenPubsubLiteSubscriptionDeliveryConfigDeliveryRequirement(v interface{
 	return v
 }
 
-func expandPubsubLiteSubscriptionTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return "", err
-	}
-
-	zone, err := tpgresource.GetZone(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	if zone == "" {
-		return nil, fmt.Errorf("zone must be non-empty - set in resource or at provider-level")
-	}
-
-	topic := d.Get("topic").(string)
-
-	re := regexp.MustCompile(`projects\/(.*)\/locations\/(.*)\/topics\/(.*)`)
-	match := re.FindStringSubmatch(topic)
-	if len(match) == 4 {
-		return topic, nil
-	} else {
-		// If no full topic given, we expand it to a full topic on the same project
-		fullTopic := fmt.Sprintf("projects/%s/locations/%s/topics/%s", project, zone, topic)
-		if err := d.Set("topic", fullTopic); err != nil {
-			return nil, fmt.Errorf("Error setting topic: %s", err)
-		}
-		return fullTopic, nil
-	}
-}
-
 func expandPubsubLiteSubscriptionDeliveryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -651,29 +620,6 @@ func expandPubsubLiteSubscriptionDeliveryConfig(v interface{}, d tpgresource.Ter
 
 func expandPubsubLiteSubscriptionDeliveryConfigDeliveryRequirement(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourcePubsubLiteSubscriptionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	zone, err := tpgresource.GetZone(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	if zone == "" {
-		return nil, fmt.Errorf("zone must be non-empty - set in resource or at provider-level")
-	}
-
-	// API Endpoint requires region in the URL. We infer it from the zone.
-
-	region := tpgresource.GetRegionFromZone(zone)
-
-	if region == "" {
-		return nil, fmt.Errorf("invalid zone %q, unable to infer region from zone", zone)
-	}
-
-	return obj, nil
 }
 
 func ResourcePubsubLiteSubscriptionFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

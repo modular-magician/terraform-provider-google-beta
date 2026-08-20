@@ -1012,13 +1012,6 @@ func flattenContactCenterInsightsQaQuestionMetricsAccuracy(v interface{}, d *sch
 	return v
 }
 
-func flattenContactCenterInsightsQaQuestionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenContactCenterInsightsQaQuestionOrder(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {

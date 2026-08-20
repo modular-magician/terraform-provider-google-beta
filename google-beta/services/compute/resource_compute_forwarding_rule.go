@@ -1691,13 +1691,6 @@ func flattenComputeForwardingRuleEffectiveLabels(v interface{}, d *schema.Resour
 	return v
 }
 
-func flattenComputeForwardingRuleRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandComputeForwardingRuleIsMirroringCollector(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1714,39 +1707,6 @@ func expandComputeForwardingRuleIPProtocol(v interface{}, d tpgresource.Terrafor
 	return v, nil
 }
 
-func expandComputeForwardingRuleBackendService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from a partial self link.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a regional resource, with a partial link that begins with the resource name.
-	// This isn't very likely - it's a last-ditch effort to extract something useful here.  We can do a better job
-	// as soon as MultiResourceRefs are working since we'll know the types that this field is supposed to point to.
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/")
-	if err != nil {
-		return nil, err
-	}
-	return url + v.(string), nil
-}
-
 func expandComputeForwardingRuleLoadBalancingScheme(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1755,61 +1715,8 @@ func expandComputeForwardingRuleName(v interface{}, d tpgresource.TerraformResou
 	return v, nil
 }
 
-func expandComputeForwardingRuleNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("networks", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for network: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeForwardingRulePortRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeForwardingRulePorts(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v.(*schema.Set).List(), nil
-}
-
-func expandComputeForwardingRuleSubnetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("subnetworks", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for subnetwork: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func expandComputeForwardingRuleTarget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// This method returns a full self link from a partial self link.
-	if v == nil || v.(string) == "" {
-		// It does not try to construct anything from empty.
-		return "", nil
-	} else if strings.HasPrefix(v.(string), "https://") {
-		// Anything that starts with a URL scheme is assumed to be a self link worth using.
-		return v, nil
-	} else if strings.HasPrefix(v.(string), "projects/") {
-		// If the self link references a project, we'll just stuck the compute prefix on it
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v.(string))
-		if err != nil {
-			return "", err
-		}
-		return url, nil
-	} else if strings.HasPrefix(v.(string), "regions/") || strings.HasPrefix(v.(string), "zones/") {
-		// For regional or zonal resources which include their region or zone, just put the project in front.
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/")
-		if err != nil {
-			return nil, err
-		}
-		return url + v.(string), nil
-	}
-	// Anything else is assumed to be a regional resource, with a partial link that begins with the resource name.
-	// This isn't very likely - it's a last-ditch effort to extract something useful here.  We can do a better job
-	// as soon as MultiResourceRefs are working since we'll know the types that this field is supposed to point to.
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/")
-	if err != nil {
-		return nil, err
-	}
-	return url + v.(string), nil
 }
 
 func expandComputeForwardingRuleLabelFingerprint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1901,14 +1808,6 @@ func expandComputeForwardingRuleEffectiveLabels(v interface{}, d tpgresource.Ter
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandComputeForwardingRuleRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeForwardingRuleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

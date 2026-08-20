@@ -163,56 +163,7 @@ When set to "DELETE", deleting the resource is allowed.
 }
 
 func resourceApigeeEnvironmentKeyvaluemapsCreate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	obj := make(map[string]interface{})
-	nameProp, err := expandApigeeEnvironmentKeyvaluemapsName(d.Get("name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}{{env_id}}/keyvaluemaps")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Creating new EnvironmentKeyvaluemaps: %#v", obj)
-	billingProject := ""
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
-	if err != nil {
-		return fmt.Errorf("Error creating EnvironmentKeyvaluemaps: %s", err)
-	}
-
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{env_id}}/keyvaluemaps/{{name}}")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	log.Printf("[DEBUG] Finished creating EnvironmentKeyvaluemaps %q: %#v", d.Id(), res)
-
-	return resourceApigeeEnvironmentKeyvaluemapsRead(d, meta)
+	return resourceApigeeEnvironmentKeyvaluemapsCustomCreate(d, meta)
 }
 
 func resourceApigeeEnvironmentKeyvaluemapsRead(d *schema.ResourceData, meta interface{}) error {
@@ -356,24 +307,7 @@ func resourceApigeeEnvironmentKeyvaluemapsDelete(d *schema.ResourceData, meta in
 }
 
 func resourceApigeeEnvironmentKeyvaluemapsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<env_id>.+)/keyvaluemaps/(?P<name>.+)",
-		"(?P<env_id>.+)/(?P<name>.+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{env_id}}/keyvaluemaps/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeEnvironmentKeyvaluemapsCustomImport(d, meta)
 }
 
 func flattenApigeeEnvironmentKeyvaluemapsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -382,19 +316,6 @@ func flattenApigeeEnvironmentKeyvaluemapsName(v interface{}, d *schema.ResourceD
 
 func expandApigeeEnvironmentKeyvaluemapsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceApigeeEnvironmentKeyvaluemapsDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	name, err := tpgresource.ReplaceVars(d, config, "{{name}}")
-	if err != nil {
-		return nil, err
-	}
-	res["name"] = name
-	// "encrypted" field is retained for backward compatibility and the value of encrypted will always be true. Apigee X and hybrid do not support unencrypted key value maps.
-	res["encrypted"] = true
-
-	return res, nil
 }
 
 func ResourceApigeeEnvironmentKeyvaluemapsFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

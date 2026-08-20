@@ -549,61 +549,11 @@ func resourceKMSCryptoKeyVersionDelete(d *schema.ResourceData, meta interface{})
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing CryptoKeyVersion %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	cryptoKeyVersionId, err := parseKmsCryptoKeyVersionId(d.Id(), config)
-	if err != nil {
-		return err
-	}
-	if cryptoKeyVersionId == nil {
-		return nil
-	}
-	if err := deleteCryptoKeyVersions(cryptoKeyVersionId, d, userAgent, config); err != nil {
-		return nil
-	}
-	d.SetId("")
-	return nil
+	return resourceKMSCryptoKeyVersionCustomDelete(d, meta)
 }
 
 func resourceKMSCryptoKeyVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-	importId := d.Id()
-	if importId == "" {
-		identity, err := d.Identity()
-		if err != nil {
-			return nil, fmt.Errorf("Error reading import identity: %s", err)
-		}
-
-		identityName, ok := identity.Get("name").(string)
-		if !ok || identityName == "" {
-			return nil, fmt.Errorf("Error reading import identity: missing required identity field \"name\"")
-		}
-
-		importId = identityName
-	}
-
-	cryptoKeyVersionId, err := parseKmsCryptoKeyVersionId(importId, config)
-	if err != nil {
-		return nil, err
-	}
-	if err := d.Set("crypto_key", cryptoKeyVersionId.CryptoKeyId.CryptoKeyId()); err != nil {
-		return nil, fmt.Errorf("Error setting key_ring: %s", err)
-	}
-	if err := d.Set("name", cryptoKeyVersionId.Name); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceKMSCryptoKeyVersionCustomImport(d, meta)
 }
 
 func flattenKMSCryptoKeyVersionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

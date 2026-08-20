@@ -733,16 +733,6 @@ func flattenBigqueryAnalyticsHubListingSubscriptionDestinationDataset(v interfac
 	return []interface{}{transformed}
 }
 
-// Older Datasets in BigQuery have no Location set in the API response. This may be an issue when importing
-// datasets created before BigQuery was available in multiple zones. We can safely assume that these datasets
-// are in the US, as this was the default at the time.
-func flattenBigqueryAnalyticsHubListingSubscriptionDestinationDatasetLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return "US"
-	}
-	return v
-}
-
 func flattenBigqueryAnalyticsHubListingSubscriptionDestinationDatasetDatasetReference(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -787,11 +777,6 @@ func flattenBigqueryAnalyticsHubListingSubscriptionDestinationDatasetReplicaLoca
 
 func flattenBigqueryAnalyticsHubListingSubscriptionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenBigqueryAnalyticsHubListingSubscriptionSubscriptionId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
 }
 
 func flattenBigqueryAnalyticsHubListingSubscriptionCreationTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1030,13 +1015,6 @@ func expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetReplicaLocat
 	return v, nil
 }
 
-func resourceBigqueryAnalyticsHubListingSubscriptionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// The response from Create nests the resource inside a "subscription" key.
-	if s, ok := res["subscription"]; ok {
-		return s.(map[string]interface{}), nil
-	}
-	return res, nil
-}
 func resourceBigqueryAnalyticsHubListingSubscriptionPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceBigqueryAnalyticsHubListingSubscriptionDecoder(d, meta, res)

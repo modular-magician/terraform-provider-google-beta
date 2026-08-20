@@ -1043,58 +1043,6 @@ func flattenModelArmorTemplateFilterConfigPiAndJailbreakFilterSettingsConfidence
 	return v
 }
 
-func flattenModelArmorTemplateTemplateMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-	transformed["log_template_operations"] = original["logTemplateOperations"]
-	transformed["log_sanitize_operations"] = original["logSanitizeOperations"]
-	transformed["multi_language_detection"] =
-		flattenModelArmorTemplateTemplateMetadataMultiLanguageDetection(original["multiLanguageDetection"], d, config)
-	transformed["ignore_partial_invocation_failures"] = original["ignorePartialInvocationFailures"]
-	transformed["custom_prompt_safety_error_code"] = original["customPromptSafetyErrorCode"]
-	transformed["custom_prompt_safety_error_message"] = original["customPromptSafetyErrorMessage"]
-	transformed["custom_llm_response_safety_error_code"] = original["customLlmResponseSafetyErrorCode"]
-	transformed["custom_llm_response_safety_error_message"] = original["customLlmResponseSafetyErrorMessage"]
-	transformed["enforcement_type"] = original["enforcementType"]
-	transformed["filter_version_selector"] =
-		flattenModelArmorTemplateTemplateMetadataFilterVersionSelector(original["filterVersionSelector"], d, config)
-	return []interface{}{transformed}
-}
-
-func flattenModelArmorTemplateTemplateMetadataFilterVersionSelector(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original, ok := v.(map[string]interface{})
-	if !ok {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["alias"] = original["alias"]
-	transformed["version"] = original["version"]
-	return []interface{}{transformed}
-}
-
-func flattenModelArmorTemplateTemplateMetadataMultiLanguageDetection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original, ok := v.(map[string]interface{})
-	if !ok {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	if val, ok := original["enableMultiLanguageDetection"]; ok {
-		transformed["enable_multi_language_detection"] = val
-	} else {
-		transformed["enable_multi_language_detection"] = false
-	}
-	return []interface{}{transformed}
-}
-
 func flattenModelArmorTemplateTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v

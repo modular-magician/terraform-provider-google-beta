@@ -844,33 +844,6 @@ func expandBinaryAuthorizationPolicyClusterAdmissionRulesEvaluationMode(v interf
 	return v, nil
 }
 
-func expandBinaryAuthorizationPolicyClusterAdmissionRulesRequireAttestationsBy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	r := regexp.MustCompile("projects/(.+)/attestors/(.+)")
-
-	// It's possible that all entries in the list will specify a project, in
-	// which case the user wouldn't necessarily have to specify a provider
-	// project.
-	var project string
-	var err error
-	for _, s := range v.(*schema.Set).List() {
-		if !r.MatchString(s.(string)) {
-			project, err = tpgresource.GetProject(d, config)
-			if err != nil {
-				return []interface{}{}, err
-			}
-			break
-		}
-	}
-
-	return tpgresource.ConvertAndMapStringArr(v.(*schema.Set).List(), func(s string) string {
-		if r.MatchString(s) {
-			return s
-		}
-
-		return fmt.Sprintf("projects/%s/attestors/%s", project, s)
-	}), nil
-}
-
 func expandBinaryAuthorizationPolicyClusterAdmissionRulesEnforcementMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -913,33 +886,6 @@ func expandBinaryAuthorizationPolicyDefaultAdmissionRule(v interface{}, d tpgres
 
 func expandBinaryAuthorizationPolicyDefaultAdmissionRuleEvaluationMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandBinaryAuthorizationPolicyDefaultAdmissionRuleRequireAttestationsBy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	r := regexp.MustCompile("projects/(.+)/attestors/(.+)")
-
-	// It's possible that all entries in the list will specify a project, in
-	// which case the user wouldn't necessarily have to specify a provider
-	// project.
-	var project string
-	var err error
-	for _, s := range v.(*schema.Set).List() {
-		if !r.MatchString(s.(string)) {
-			project, err = tpgresource.GetProject(d, config)
-			if err != nil {
-				return []interface{}{}, err
-			}
-			break
-		}
-	}
-
-	return tpgresource.ConvertAndMapStringArr(v.(*schema.Set).List(), func(s string) string {
-		if r.MatchString(s) {
-			return s
-		}
-
-		return fmt.Sprintf("projects/%s/attestors/%s", project, s)
-	}), nil
 }
 
 func expandBinaryAuthorizationPolicyDefaultAdmissionRuleEnforcementMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -1002,61 +1002,12 @@ func expandComputeRouteName(v interface{}, d tpgresource.TerraformResourceData, 
 	return v, nil
 }
 
-func expandComputeRouteNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("networks", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for network: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeRoutePriority(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandComputeRouteTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v.(*schema.Set).List(), nil
-}
-
-func expandComputeRouteNextHopGateway(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == "default-internet-gateway" {
-		return tpgresource.ReplaceVars(d, config, "projects/{{project}}/global/gateways/default-internet-gateway")
-	} else {
-		return v, nil
-	}
-}
-
-func expandComputeRouteNextHopInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == "" {
-		return v, nil
-	}
-	val, err := tpgresource.ParseZonalFieldValue("instances", v.(string), "project", "next_hop_instance_zone", d, config, true)
-	if err != nil {
-		return nil, err
-	}
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-
-	nextInstance, err := NewClient(config, userAgent).Instances.Get(val.Project, val.Zone, val.Name).Do()
-	if err != nil {
-		return nil, err
-	}
-	return nextInstance.SelfLink, nil
-}
-
 func expandComputeRouteNextHopIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeRouteNextHopVpnTunnel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("vpnTunnels", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for next_hop_vpn_tunnel: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandComputeRouteNextHopIlb(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1094,21 +1045,6 @@ func expandComputeRouteParamsResourceManagerTags(v interface{}, d tpgresource.Te
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceComputeRouteDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := res["nextHopInstance"]; ok {
-		val, err := tpgresource.ParseZonalFieldValue("instances", v.(string), "project", "next_hop_instance_zone", d, meta.(*transport_tpg.Config), true)
-		if err != nil {
-			return nil, err
-		}
-		if err := d.Set("next_hop_instance_zone", val.Zone); err != nil {
-			return nil, fmt.Errorf("Error setting next_hop_instance_zone: %s", err)
-		}
-		res["nextHopInstance"] = val.RelativeLink()
-	}
-
-	return res, nil
 }
 
 func ResourceComputeRouteFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -610,13 +610,6 @@ func resourceCloudQuotasQuotaPreferenceImport(d *schema.ResourceData, meta inter
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenCloudQuotasQuotaPreferenceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenCloudQuotasQuotaPreferenceService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -664,11 +657,6 @@ func flattenCloudQuotasQuotaPreferenceQuotaConfigTraceId(v interface{}, d *schem
 	return v
 }
 
-func flattenCloudQuotasQuotaPreferenceQuotaConfigAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// ignore read on this field
-	return d.Get("quota_config.0.annotations")
-}
-
 func flattenCloudQuotasQuotaPreferenceQuotaConfigRequestOrigin(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -691,10 +679,6 @@ func flattenCloudQuotasQuotaPreferenceUpdateTime(v interface{}, d *schema.Resour
 
 func flattenCloudQuotasQuotaPreferenceReconciling(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandCloudQuotasQuotaPreferenceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
 }
 
 func expandCloudQuotasQuotaPreferenceService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -772,10 +756,6 @@ func expandCloudQuotasQuotaPreferenceQuotaConfigStateDetail(v interface{}, d tpg
 
 func expandCloudQuotasQuotaPreferenceQuotaConfigGrantedValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandCloudQuotasQuotaPreferenceQuotaConfigTraceId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return nil, nil
 }
 
 func expandCloudQuotasQuotaPreferenceQuotaConfigAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {

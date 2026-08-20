@@ -1635,41 +1635,7 @@ func resourceDialogflowConversationProfileDelete(d *schema.ResourceData, meta in
 }
 
 func resourceDialogflowConversationProfileImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf(
-			"Could not split project from name: %s",
-			d.Get("name"),
-		)
-	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-
-	var location string
-	for i, part := range stringParts {
-		if part == "locations" && i+1 < len(stringParts) {
-			location = stringParts[i+1]
-			break
-		}
-	}
-	if location == "" {
-		return nil, fmt.Errorf("Could not extract location from name: %s", d.Get("name"))
-	}
-	if err := d.Set("location", location); err != nil {
-		return nil, fmt.Errorf("Error setting location: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceDialogflowConversationProfileCustomImport(d, meta)
 }
 
 func flattenDialogflowConversationProfileName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1833,19 +1799,6 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugg
 	return v
 }
 
-func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsSuggestionTriggerSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-	if v == nil {
-		transformed["no_small_talk"] = false
-		transformed["only_end_user"] = false
-		return []interface{}{transformed}
-	}
-	original := v.(map[string]interface{})
-	transformed["no_small_talk"] = original["noSmallTalk"]
-	transformed["only_end_user"] = original["onlyEndUser"]
-	return []interface{}{transformed}
-}
-
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsQueryConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1886,21 +1839,6 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSugg
 
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsQueryConfigConfidenceThreshold(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsQueryConfigContextFilterSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-	if v == nil {
-		transformed["drop_handoff_messages"] = false
-		transformed["drop_ivr_messages"] = false
-		transformed["drop_virtual_agent_messages"] = false
-		return []interface{}{transformed}
-	}
-	original := v.(map[string]interface{})
-	transformed["drop_handoff_messages"] = original["dropHandoffMessages"]
-	transformed["drop_ivr_messages"] = original["dropIvrMessages"]
-	transformed["drop_virtual_agent_messages"] = original["dropVirtualAgentMessages"]
-	return []interface{}{transformed}
 }
 
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigHumanAgentSuggestionConfigFeatureConfigsQueryConfigSections(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2105,19 +2043,6 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggest
 	return v
 }
 
-func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsSuggestionTriggerSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-	if v == nil {
-		transformed["no_small_talk"] = false
-		transformed["only_end_user"] = false
-		return []interface{}{transformed}
-	}
-	original := v.(map[string]interface{})
-	transformed["no_small_talk"] = original["noSmallTalk"]
-	transformed["only_end_user"] = original["onlyEndUser"]
-	return []interface{}{transformed}
-}
-
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsQueryConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2162,21 +2087,6 @@ func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggest
 
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsQueryConfigConfidenceThreshold(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsQueryConfigContextFilterSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-	if v == nil {
-		transformed["drop_handoff_messages"] = false
-		transformed["drop_ivr_messages"] = false
-		transformed["drop_virtual_agent_messages"] = false
-		return []interface{}{transformed}
-	}
-	original := v.(map[string]interface{})
-	transformed["drop_handoff_messages"] = original["dropHandoffMessages"]
-	transformed["drop_ivr_messages"] = original["dropIvrMessages"]
-	transformed["drop_virtual_agent_messages"] = original["dropVirtualAgentMessages"]
-	return []interface{}{transformed}
 }
 
 func flattenDialogflowConversationProfileHumanAgentAssistantConfigEndUserSuggestionConfigFeatureConfigsQueryConfigSections(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

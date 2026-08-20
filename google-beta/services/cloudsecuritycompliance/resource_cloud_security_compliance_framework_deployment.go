@@ -37,7 +37,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cty/cty"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/id"
@@ -861,26 +860,7 @@ func resourceCloudSecurityComplianceFrameworkDeploymentDelete(d *schema.Resource
 }
 
 func resourceCloudSecurityComplianceFrameworkDeploymentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^(?P<parent>.*)/locations/(?P<location>[^/]+)/frameworkDeployments/(?P<framework_deployment_id>[^/]+)$",
-		"^organizations/(?P<organization>[^/]+)/locations/(?P<location>[^/]+)/frameworkDeployments/(?P<framework_deployment_id>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	if d.Get("organization").(string) == "" && d.Get("parent").(string) != "" {
-		if strings.HasPrefix(d.Get("parent").(string), "organizations/") {
-			d.Set("organization", strings.TrimPrefix(d.Get("parent").(string), "organizations/"))
-		}
-	} else if d.Get("parent").(string) == "" && d.Get("organization").(string) != "" {
-		d.Set("parent", "organizations/"+d.Get("organization").(string))
-	}
-
-	id := fmt.Sprintf("%s/locations/%s/frameworkDeployments/%s", d.Get("parent").(string), d.Get("location").(string), d.Get("framework_deployment_id").(string))
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceCloudSecurityComplianceFrameworkDeploymentCustomImport(d, meta)
 }
 
 func flattenCloudSecurityComplianceFrameworkDeploymentCloudControlDeploymentReferences(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1741,24 +1721,6 @@ func expandCloudSecurityComplianceFrameworkDeploymentTargetResourceConfigTargetR
 
 func expandCloudSecurityComplianceFrameworkDeploymentTargetResourceConfigTargetResourceCreationConfigProjectCreationConfigProjectDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func identityCloudSecurityComplianceFrameworkDeploymentResourceV1() tftypes.Type {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"organization":            tftypes.String,
-			"location":                tftypes.String,
-			"framework_deployment_id": tftypes.String,
-		},
-	}
-}
-
-func IdentityCloudSecurityComplianceFrameworkDeploymentUpgradeV1(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
-	if org, ok := rawState["organization"].(string); ok && org != "" {
-		rawState["parent"] = "organizations/" + org
-		delete(rawState, "organization")
-	}
-	return rawState, nil
 }
 
 func ResourceCloudSecurityComplianceFrameworkDeploymentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

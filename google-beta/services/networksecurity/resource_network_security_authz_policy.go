@@ -1878,23 +1878,6 @@ func flattenNetworkSecurityAuthzPolicyTargetLoadBalancingScheme(v interface{}, d
 	return v
 }
 
-func flattenNetworkSecurityAuthzPolicyTargetResources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	new := []string{}
-	vArr := v.([]interface{})
-
-	// For GCE resources we send and get back self links, although with project ids -> #s
-	// For new targets the API expects a relative resource name like projects/my-project/locations/us-west1/agentGateways/gateway
-	// but returns an FRN like //networkservices.googleapis.com/projects/0123456789/locations/us-west1/agentGateways/gateway
-	// Project # conversion is handled by a diffsuppressfunc, but to keep input/output consistent strip known FRN prefixes
-	for _, v := range vArr {
-		origRef := v.(string)
-		rel := strings.TrimPrefix(origRef, "//networkservices.googleapis.com/")
-		new = append(new, rel)
-	}
-
-	return new
-}
-
 func flattenNetworkSecurityAuthzPolicyHttpRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -3190,14 +3173,6 @@ func flattenNetworkSecurityAuthzPolicyCustomProvider(v interface{}, d *schema.Re
 		flattenNetworkSecurityAuthzPolicyCustomProviderAuthzExtension(original["authzExtension"], d, config)
 	return []interface{}{transformed}
 }
-func flattenNetworkSecurityAuthzPolicyCustomProviderCloudIap(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["enabled"] = true
-	return []interface{}{transformed}
-}
 
 func flattenNetworkSecurityAuthzPolicyCustomProviderAuthzExtension(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
@@ -3233,13 +3208,6 @@ func flattenNetworkSecurityAuthzPolicyTerraformLabels(v interface{}, d *schema.R
 
 func flattenNetworkSecurityAuthzPolicyEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenNetworkSecurityAuthzPolicyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func expandNetworkSecurityAuthzPolicyDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -5359,23 +5327,6 @@ func expandNetworkSecurityAuthzPolicyCustomProvider(v interface{}, d tpgresource
 	return transformed, nil
 }
 
-func expandNetworkSecurityAuthzPolicyCustomProviderCloudIap(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	if isEnabled, ok := original["enabled"]; ok {
-		if !isEnabled.(bool) {
-			return nil, nil
-		}
-	}
-	transformed := make(map[string]interface{})
-	return transformed, nil
-}
-
 func expandNetworkSecurityAuthzPolicyCustomProviderAuthzExtension(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -5411,10 +5362,6 @@ func expandNetworkSecurityAuthzPolicyEffectiveLabels(v interface{}, d tpgresourc
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandNetworkSecurityAuthzPolicyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return fmt.Sprintf("projects/%s/locations/%s/authzPolicies/%s", d.Get("project"), d.Get("location"), v), nil
 }
 
 func ResourceNetworkSecurityAuthzPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -1743,20 +1743,7 @@ func resourceAccessContextManagerServicePerimeterDelete(d *schema.ResourceData, 
 }
 
 func resourceAccessContextManagerServicePerimeterImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf("Error parsing parent name. Should be in form accessPolicies/{{policy_id}}/servicePerimeters/{{short_name}}")
-	}
-	if err := d.Set("parent", fmt.Sprintf("%s/%s", stringParts[0], stringParts[1])); err != nil {
-		return nil, fmt.Errorf("Error setting parent, %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceAccessContextManagerServicePerimeterCustomImport(d, meta)
 }
 
 func flattenAccessContextManagerServicePerimeterTitle(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1772,14 +1759,6 @@ func flattenAccessContextManagerServicePerimeterCreateTime(v interface{}, d *sch
 }
 
 func flattenAccessContextManagerServicePerimeterUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenAccessContextManagerServicePerimeterPerimeterType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "PERIMETER_TYPE_REGULAR"
-	}
-
 	return v
 }
 
@@ -4505,11 +4484,6 @@ func expandAccessContextManagerServicePerimeterParent(v interface{}, d tpgresour
 
 func expandAccessContextManagerServicePerimeterName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceAccessContextManagerServicePerimeterEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "parent")
-	return obj, nil
 }
 
 func ResourceAccessContextManagerServicePerimeterFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

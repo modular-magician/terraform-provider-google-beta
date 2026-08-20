@@ -1621,26 +1621,6 @@ func flattenPrivatecaCertificateAuthorityConfigSubjectKeyIdKeyId(v interface{}, 
 	return v
 }
 
-func flattenPrivatecaCertificateAuthorityConfigX509Config(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		v = make(map[string]interface{})
-	}
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-	transformed["additional_extensions"] =
-		flattenPrivatecaCertificateConfigX509ConfigAdditionalExtensions(original["additionalExtensions"], d, config)
-	transformed["policy_ids"] =
-		flattenPrivatecaCertificateConfigX509ConfigPolicyIds(original["policyIds"], d, config)
-	transformed["aia_ocsp_servers"] = flattenPrivatecaCertificateConfigX509ConfigAiaOcspServers(original["aiaOcspServers"], d, config)
-	transformed["ca_options"] =
-		flattenPrivatecaCertificateConfigX509ConfigCaOptions(original["caOptions"], d, config)
-	transformed["key_usage"] =
-		flattenPrivatecaCertificateConfigX509ConfigKeyUsage(original["keyUsage"], d, config)
-	transformed["name_constraints"] =
-		flattenPrivatecaCertificateConfigX509ConfigNameConstraints(original["nameConstraints"], d, config)
-	return []interface{}{transformed}
-}
-
 func flattenPrivatecaCertificateAuthorityConfigSubjectConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1791,9 +1771,6 @@ func flattenPrivatecaCertificateAuthoritySubordinateConfig(v interface{}, d *sch
 	transformed["pem_issuer_chain"] =
 		flattenPrivatecaCertificateAuthoritySubordinateConfigPemIssuerChain(original["pemIssuerChain"], d, config)
 	return []interface{}{transformed}
-}
-func flattenPrivatecaCertificateAuthoritySubordinateConfigCertificateAuthority(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("subordinate_config.0.certificate_authority")
 }
 
 func flattenPrivatecaCertificateAuthoritySubordinateConfigPemIssuerChain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1977,59 +1954,6 @@ func expandPrivatecaCertificateAuthorityConfigSubjectKeyId(v interface{}, d tpgr
 
 func expandPrivatecaCertificateAuthorityConfigSubjectKeyIdKeyId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandPrivatecaCertificateAuthorityConfigX509Config(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return v, nil
-	}
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	if len(original) == 0 {
-		return nil, nil
-	}
-	transformed := make(map[string]interface{})
-
-	caOptions, err := expandPrivatecaCertificateConfigX509ConfigCaOptions(original["ca_options"], d, config)
-	if err != nil {
-		return nil, err
-	}
-	transformed["caOptions"] = caOptions
-
-	keyUsage, err := expandPrivatecaCertificateConfigX509ConfigKeyUsage(original["key_usage"], d, config)
-	if err != nil {
-		return nil, err
-	}
-	transformed["keyUsage"] = keyUsage
-
-	policyIds, err := expandPrivatecaCertificateConfigX509ConfigPolicyIds(original["policy_ids"], d, config)
-	if err != nil {
-		return nil, err
-	}
-	transformed["policyIds"] = policyIds
-
-	aiaOcspServers, err := expandPrivatecaCertificateConfigX509ConfigAiaOcspServers(original["aia_ocsp_servers"], d, config)
-	if err != nil {
-		return nil, err
-	}
-	transformed["aiaOcspServers"] = aiaOcspServers
-
-	addExts, err := expandPrivatecaCertificateConfigX509ConfigAdditionalExtensions(original["additional_extensions"], d, config)
-	if err != nil {
-		return nil, err
-	}
-	transformed["additionalExtensions"] = addExts
-
-	nameConstraints, err := expandPrivatecaCertificateConfigX509ConfigNameConstraints(original["name_constraints"], d, config)
-	if err != nil {
-		return nil, err
-	}
-	transformed["nameConstraints"] = nameConstraints
-	return transformed, nil
 }
 
 func expandPrivatecaCertificateAuthorityConfigSubjectConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2373,14 +2297,6 @@ func expandPrivatecaCertificateAuthorityEffectiveLabels(v interface{}, d tpgreso
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourcePrivatecaCertificateAuthorityDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-
-	return res, nil
 }
 
 func ResourcePrivatecaCertificateAuthorityFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

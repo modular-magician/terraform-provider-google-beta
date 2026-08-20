@@ -2114,96 +2114,6 @@ func flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleDaysOfWeek(v interf
 	return v
 }
 
-func flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// If no start times exist, that means we take backups at midnight. This is represented as 0's all around.
-			return append(transformed, map[string]interface{}{})
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"hours":   flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesHours(original["hours"], d, config),
-			"minutes": flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesMinutes(original["minutes"], d, config),
-			"seconds": flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesSeconds(original["seconds"], d, config),
-			"nanos":   flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesNanos(original["nanos"], d, config),
-		})
-	}
-	return transformed
-}
-
-func flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenAlloydbClusterAutomatedBackupPolicyWeeklyScheduleStartTimesNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
 func flattenAlloydbClusterAutomatedBackupPolicyTimeBasedRetention(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2500,39 +2410,6 @@ func flattenAlloydbClusterTrialMetadataUpgradeTime(v interface{}, d *schema.Reso
 
 func flattenAlloydbClusterTrialMetadataGraceEndTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenAlloydbClusterDataplexConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		// The API omits the block when the underlying boolean is its zero-value (false).
-		return []interface{}{
-			map[string]interface{}{
-				"enabled": false,
-			},
-		}
-	}
-
-	original, ok := v.(map[string]interface{})
-	if !ok {
-		// If the API returns an unexpected type, fallback to the zero-value (false)
-		// to remain consistent with the nil handling.
-		return []interface{}{
-			map[string]interface{}{
-				"enabled": false,
-			},
-		}
-	}
-
-	transformed := make(map[string]interface{})
-
-	if val, ok := original["enabled"]; ok {
-		transformed["enabled"] = val
-	} else {
-		// If the block exists but the field is missing, it is also the zero-value (false).
-		transformed["enabled"] = false
-	}
-
-	return []interface{}{transformed}
 }
 
 func flattenAlloydbClusterTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

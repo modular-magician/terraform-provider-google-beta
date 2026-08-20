@@ -484,55 +484,7 @@ func resourceVertexAIRagEngineConfigDelete(d *schema.ResourceData, meta interfac
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing RagEngineConfig %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Beginning custom_delete for Vertex AI RagEngineConfig")
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for RagEngineConfig: %s", err)
-	}
-
-	// Update RagEngineConfig tier to Unprovisioned
-	deleteUrl, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/ragEngineConfig")
-	if err != nil {
-		return err
-	}
-	deleteHeaders := make(http.Header)
-	deleteBody := map[string]interface{}{
-		"ragManagedDbConfig": map[string]interface{}{
-			"unprovisioned": map[string]interface{}{},
-		},
-	}
-	log.Printf("[DEBUG] Updating RagEngineConfig tier to Unprovisioned")
-	deleteRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   project,
-		RawURL:    deleteUrl,
-		UserAgent: userAgent,
-		Body:      deleteBody,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   deleteHeaders,
-	})
-	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, "RagEngineConfig")
-	}
-
-	err = VertexAIOperationWaitTime(
-		config, deleteRes, project, "Updating RagEngineConfig tier to Unprovisioned", userAgent,
-		d.Timeout(schema.TimeoutDelete))
-
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Finished Updating RagEngineConfig tier to Unprovisioned: %#v", deleteRes)
-	return nil
+	return resourceVertexAIRagEngineConfigCustomDelete(d, meta)
 }
 
 func resourceVertexAIRagEngineConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {

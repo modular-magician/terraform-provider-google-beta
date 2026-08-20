@@ -1920,45 +1920,7 @@ func resourceDataLossPreventionJobTriggerDelete(d *schema.ResourceData, meta int
 }
 
 func resourceDataLossPreventionJobTriggerImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	parts := strings.Split(d.Get("name").(string), "/")
-	if len(parts) == 6 {
-		if err := d.Set("name", parts[5]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(parts) == 4 {
-		if err := d.Set("name", parts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf("Unexpected import id: %s, expected form {{parent}}/jobTrigger/{{name}}", d.Get("name").(string))
-	}
-	// Remove "/jobTrigger/{{name}}" from the id
-	parts = parts[:len(parts)-2]
-	if err := d.Set("parent", strings.Join(parts, "/")); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/jobTriggers/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDataLossPreventionJobTriggerName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDataLossPreventionJobTriggerCustomImport(d, meta)
 }
 
 func flattenDataLossPreventionJobTriggerCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6300,29 +6262,6 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPublishToStackdriver(v i
 	return transformed, nil
 }
 
-func resourceDataLossPreventionJobTriggerEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["jobTrigger"] = obj
-	triggerIdProp, ok := d.GetOk("trigger_id")
-	if ok && triggerIdProp != nil {
-		newObj["triggerId"] = triggerIdProp
-	}
-	return newObj, nil
-}
-
-func resourceDataLossPreventionJobTriggerUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["jobTrigger"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionJobTriggerDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := d.Set("trigger_id", flattenDataLossPreventionJobTriggerName(res["name"], d, config)); err != nil {
-		return nil, fmt.Errorf("Error reading JobTrigger: %s", err)
-	}
-	return res, nil
-}
 func resourceDataLossPreventionJobTriggerPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceDataLossPreventionJobTriggerDecoder(d, meta, res)

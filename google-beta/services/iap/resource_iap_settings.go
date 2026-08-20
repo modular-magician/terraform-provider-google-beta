@@ -719,67 +719,11 @@ func resourceIapSettingsDelete(d *schema.ResourceData, meta interface{}) error {
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing Settings %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{IapBasePath}}{{name}}:iapSettings")
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	headers := make(http.Header)
-
-	obj := make(map[string]interface{})
-
-	log.Printf("[DEBUG] Updating Settings %q: %#v", d.Id(), obj)
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-		Headers:   headers,
-	})
-
-	if err != nil {
-		return fmt.Errorf("Error updating Settings %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished updating Settings %q: %#v", d.Id(), res)
-	}
-
-	return nil
-
+	return resourceIapSettingsCustomDelete(d, meta)
 }
 
 func resourceIapSettingsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^(?P<name>.+)/iapSettings$",
-		"^(?P<name>.+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}/iapSettings")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-
+	return resourceIapSettingsCustomImport(d, meta)
 }
 
 func flattenIapSettingsAccessSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

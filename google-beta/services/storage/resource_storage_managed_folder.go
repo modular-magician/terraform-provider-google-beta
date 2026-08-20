@@ -362,37 +362,7 @@ func resourceStorageManagedFolderUpdate(d *schema.ResourceData, meta interface{}
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceStorageManagedFolderRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	_ = config
-
-	// we can only get here if force_destroy was updated
-	if d.Get("force_destroy") != nil {
-		if err := d.Set("force_destroy", d.Get("force_destroy")); err != nil {
-			return fmt.Errorf("Error updating force_destroy: %s", err)
-		}
-	}
-
-	identity, err := d.Identity()
-	if err == nil && identity != nil {
-		if v, ok := identity.GetOk("bucket"); !ok && v == "" {
-			err = identity.Set("bucket", d.Get("bucket").(string))
-			if err != nil {
-				return fmt.Errorf("Error setting bucket: %s", err)
-			}
-		}
-		if v, ok := identity.GetOk("name"); !ok && v == "" {
-			err = identity.Set("name", d.Get("name").(string))
-			if err != nil {
-				return fmt.Errorf("Error setting name: %s", err)
-			}
-		}
-	} else {
-		log.Printf("[DEBUG] (Read) identity not set: %s", err)
-	}
-
-	// all other fields are immutable, don't do anything else
-	return nil
+	return resourceStorageManagedFolderCustomUpdate(d, meta)
 }
 
 func resourceStorageManagedFolderDelete(d *schema.ResourceData, meta interface{}) error {

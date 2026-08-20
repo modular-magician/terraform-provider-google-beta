@@ -884,41 +884,7 @@ func resourceDialogflowGeneratorDelete(d *schema.ResourceData, meta interface{})
 }
 
 func resourceDialogflowGeneratorImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf(
-			"Could not split project from name: %s",
-			d.Get("name"),
-		)
-	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-
-	var location string
-	for i, part := range stringParts {
-		if part == "locations" && i+1 < len(stringParts) {
-			location = stringParts[i+1]
-			break
-		}
-	}
-	if location == "" {
-		return nil, fmt.Errorf("Could not extract location from name: %s", d.Get("name"))
-	}
-	if err := d.Set("location", location); err != nil {
-		return nil, fmt.Errorf("Error setting location: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceDialogflowGeneratorCustomImport(d, meta)
 }
 
 func flattenDialogflowGeneratorName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1233,11 +1199,6 @@ func flattenDialogflowGeneratorTriggerEvent(v interface{}, d *schema.ResourceDat
 
 func flattenDialogflowGeneratorPublishedModel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDialogflowGeneratorGeneratorId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
 }
 
 func expandDialogflowGeneratorDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -670,60 +670,11 @@ func resourceAccessContextManagerAccessLevelsDelete(d *schema.ResourceData, meta
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing AccessLevels %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	obj := make(map[string]interface{})
-	obj["accessLevels"] = []string{}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{AccessContextManagerBasePath}}{{parent}}/accessLevels:replaceAll")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Deleting AccessLevels %q: %#v", d.Id(), obj)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
-
-	if err != nil {
-		return fmt.Errorf("Error deleting AccessLevels %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished deleting AccessLevels %q: %#v", d.Id(), res)
-	}
-
-	err = AccessContextManagerOperationWaitTime(
-		config, res, "Updating AccessLevels", userAgent,
-		d.Timeout(schema.TimeoutUpdate))
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return resourceAccessContextManagerAccessLevelsCustomDelete(d, meta)
 }
 
 func resourceAccessContextManagerAccessLevelsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	parts, err := tpgresource.GetImportIdQualifiers([]string{"accessPolicies/(?P<accessPolicy>[^/]+)/(.+)"}, d, config, d.Id())
-	if err != nil {
-		return nil, err
-	}
-
-	if err := d.Set("parent", fmt.Sprintf("accessPolicies/%s", parts["accessPolicy"])); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceAccessContextManagerAccessLevelsCustomImport(d, meta)
 }
 
 func flattenAccessContextManagerAccessLevelsAccessLevels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -775,13 +726,6 @@ func flattenAccessContextManagerAccessLevelsAccessLevelsBasic(v interface{}, d *
 	transformed["conditions"] =
 		flattenAccessContextManagerAccessLevelsAccessLevelsBasicConditions(original["conditions"], d, config)
 	return []interface{}{transformed}
-}
-func flattenAccessContextManagerAccessLevelsAccessLevelsBasicCombiningFunction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "AND"
-	}
-
-	return v
 }
 
 func flattenAccessContextManagerAccessLevelsAccessLevelsBasicConditions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

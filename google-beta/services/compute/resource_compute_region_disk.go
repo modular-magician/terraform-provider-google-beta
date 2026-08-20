@@ -962,188 +962,7 @@ func resourceComputeRegionDiskUpdate(d *schema.ResourceData, meta interface{}) e
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceComputeRegionDiskRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-
-	// 'config' is provided by the boilerplate.
-	// Use ':=' to declare 'userAgent', 'err', and 'project' for the first time in this scope.
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for RegionDisk: %s", err)
-	}
-	billingProject = project
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	d.Partial(true)
-
-	// 1. Handle Labels (POST to /setLabels)
-	if d.HasChange("label_fingerprint") || d.HasChange("effective_labels") {
-		obj := make(map[string]interface{})
-		if v, ok := d.GetOk("label_fingerprint"); ok {
-			obj["labelFingerprint"] = v
-		}
-
-		// FIX: Use shared ExpandEffectiveLabels for beta/regional compatibility
-		// and to avoid generator pruning issues.
-		obj["labels"] = tpgresource.ExpandEffectiveLabels(d)
-
-		obj, err = resourceComputeRegionDiskUpdateEncoder(d, meta, obj)
-		if err != nil {
-			return err
-		}
-
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/disks/{{name}}/setLabels")
-		if err != nil {
-			return err
-		}
-
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-		})
-		if err != nil {
-			return fmt.Errorf("Error updating RegionDisk %q labels: %s", d.Id(), err)
-		}
-
-		err = ComputeOperationWaitTime(config, res, project, "Updating RegionDisk Labels", userAgent, d.Timeout(schema.TimeoutUpdate))
-		if err != nil {
-			return err
-		}
-	}
-
-	// 2. Handle Size (POST to /resize)
-	if d.HasChange("size") {
-		obj := make(map[string]interface{})
-		// Use d.Get directly for simple integer fields to ensure stability.
-		obj["sizeGb"] = d.Get("size")
-
-		obj, err = resourceComputeRegionDiskUpdateEncoder(d, meta, obj)
-		if err != nil {
-			return err
-		}
-
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/disks/{{name}}/resize")
-		if err != nil {
-			return err
-		}
-
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-		})
-		if err != nil {
-			return fmt.Errorf("Error resizing RegionDisk %q: %s", d.Id(), err)
-		}
-
-		err = ComputeOperationWaitTime(config, res, project, "Resizing RegionDisk", userAgent, d.Timeout(schema.TimeoutUpdate))
-		if err != nil {
-			return err
-		}
-	}
-
-	// 3. Handle Hyperdisk Performance (Atomic Combined PATCH for Group 1)
-	// provisioned_iops and provisioned_throughput MUST be updated together
-	// to avoid API ratio validation errors.
-	if d.HasChange("provisioned_iops") || d.HasChange("provisioned_throughput") {
-		obj := make(map[string]interface{})
-		var paths []string
-
-		if d.HasChange("provisioned_iops") {
-			obj["provisionedIops"] = d.Get("provisioned_iops")
-			paths = append(paths, "provisionedIops")
-		}
-		if d.HasChange("provisioned_throughput") {
-			obj["provisionedThroughput"] = d.Get("provisioned_throughput")
-			paths = append(paths, "provisionedThroughput")
-		}
-
-		obj["name"] = d.Get("name")
-		obj, err = resourceComputeRegionDiskUpdateEncoder(d, meta, obj)
-		if err != nil {
-			return err
-		}
-
-		baseUrl, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/disks/{{name}}")
-		if err != nil {
-			return err
-		}
-		// Atomic Path Construction
-		url := fmt.Sprintf("%s?paths=%s", baseUrl, strings.Join(paths, "&paths="))
-
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "PATCH",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-		})
-		if err != nil {
-			return fmt.Errorf("Error updating RegionDisk %q performance: %s", d.Id(), err)
-		}
-
-		err = ComputeOperationWaitTime(config, res, project, "Updating RegionDisk Performance", userAgent, d.Timeout(schema.TimeoutUpdate))
-		if err != nil {
-			return err
-		}
-	}
-
-	// 4. Handle Access Mode (Separate PATCH for Group 2)
-	// The API forbids combining 'accessMode' with performance fields in a single request.
-	if d.HasChange("access_mode") {
-		obj := make(map[string]interface{})
-		obj["accessMode"] = d.Get("access_mode")
-		obj["name"] = d.Get("name")
-		obj, err = resourceComputeRegionDiskUpdateEncoder(d, meta, obj)
-		if err != nil {
-			return err
-		}
-
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/disks/{{name}}?paths=accessMode")
-		if err != nil {
-			return err
-		}
-
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "PATCH",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-		})
-		if err != nil {
-			return fmt.Errorf("Error updating RegionDisk %q access mode: %s", d.Id(), err)
-		}
-
-		err = ComputeOperationWaitTime(config, res, project, "Updating RegionDisk Access Mode", userAgent, d.Timeout(schema.TimeoutUpdate))
-		if err != nil {
-			return err
-		}
-	}
-
-	d.Partial(false)
-	return resourceComputeRegionDiskRead(d, meta)
+	return resourceComputeRegionDiskCustomUpdate(d, meta)
 }
 
 func resourceComputeRegionDiskDelete(d *schema.ResourceData, meta interface{}) error {
@@ -1552,13 +1371,6 @@ func flattenComputeRegionDiskReplicaZones(v interface{}, d *schema.ResourceData,
 	return tpgresource.ConvertAndMapStringArr(v.([]interface{}), tpgresource.ConvertSelfLinkToV1)
 }
 
-func flattenComputeRegionDiskType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenComputeRegionDiskSourceDisk(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1673,13 +1485,6 @@ func flattenComputeRegionDiskTerraformLabels(v interface{}, d *schema.ResourceDa
 
 func flattenComputeRegionDiskEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenComputeRegionDiskRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func flattenComputeRegionDiskSnapshot(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1890,30 +1695,6 @@ func expandComputeRegionDiskPhysicalBlockSizeBytes(v interface{}, d tpgresource.
 	return v, nil
 }
 
-func expandComputeRegionDiskReplicaZones(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			return nil, fmt.Errorf("Invalid value for replica_zones: nil")
-		}
-		f, err := tpgresource.ParseGlobalFieldValue("zones", raw.(string), "project", d, config, true)
-		if err != nil {
-			return nil, fmt.Errorf("Invalid value for replica_zones: %s", err)
-		}
-		req = append(req, f.RelativeLink())
-	}
-	return req, nil
-}
-
-func expandComputeRegionDiskType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("diskTypes", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for type: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeRegionDiskSourceDisk(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1974,22 +1755,6 @@ func expandComputeRegionDiskGuestOsFeaturesType(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
-func expandComputeRegionDiskLicenses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			return nil, fmt.Errorf("Invalid value for licenses: nil")
-		}
-		f, err := tpgresource.ParseGlobalFieldValue("licenses", raw.(string), "project", d, config, true)
-		if err != nil {
-			return nil, fmt.Errorf("Invalid value for licenses: %s", err)
-		}
-		req = append(req, f.RelativeLink())
-	}
-	return req, nil
-}
-
 func expandComputeRegionDiskAccessMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2017,141 +1782,8 @@ func expandComputeRegionDiskEffectiveLabels(v interface{}, d tpgresource.Terrafo
 	return m, nil
 }
 
-func expandComputeRegionDiskRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func expandComputeRegionDiskSnapshot(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("snapshots", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for snapshot: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeRegionDiskImage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeRegionDiskEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-
-	if v, ok := d.GetOk("type"); ok {
-		log.Printf("[DEBUG] Loading disk type: %s", v.(string))
-		diskType, err := readRegionDiskType(config, d, v.(string))
-		if err != nil {
-			return nil, fmt.Errorf(
-				"Error loading disk type '%s': %s",
-				v.(string), err)
-		}
-
-		obj["type"] = diskType.RelativeLink()
-	}
-
-	if v, ok := d.GetOk("image"); ok {
-		log.Printf("[DEBUG] Resolving image name: %s", v.(string))
-		imageUrl, err := ResolveImage(config, project, v.(string), userAgent)
-		if err != nil {
-			return nil, fmt.Errorf(
-				"Error resolving image name '%s': %s",
-				v.(string), err)
-		}
-
-		obj["sourceImage"] = imageUrl
-		log.Printf("[DEBUG] Image name resolved to: %s", imageUrl)
-	}
-
-	return obj, nil
-}
-
-func resourceComputeRegionDiskUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-
-	if (d.HasChange("provisioned_iops") && strings.Contains(d.Get("type").(string), "hyperdisk")) || (d.HasChange("provisioned_throughput") && strings.Contains(d.Get("type").(string), "hyperdisk")) || (d.HasChange("access_mode") && strings.Contains(d.Get("type").(string), "hyperdisk")) {
-		nameProp := d.Get("name")
-		if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-			obj["name"] = nameProp
-		}
-	}
-	return obj, nil
-}
-
-func resourceComputeRegionDiskDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := res["diskEncryptionKey"]; ok {
-		original := v.(map[string]interface{})
-		transformed := make(map[string]interface{})
-		// The raw key won't be returned, so we need to use the original.
-		transformed["rawKey"] = d.Get("disk_encryption_key.0.raw_key")
-		transformed["rsaEncryptedKey"] = d.Get("disk_encryption_key.0.rsa_encrypted_key")
-		transformed["sha256"] = original["sha256"]
-
-		if kmsKeyName, ok := original["kmsKeyName"]; ok {
-			// The response for crypto keys often includes the version of the key which needs to be removed
-			// format: projects/<project>/locations/<region>/keyRings/<keyring>/cryptoKeys/<key>/cryptoKeyVersions/1
-			transformed["kmsKeyName"] = strings.Split(kmsKeyName.(string), "/cryptoKeyVersions")[0]
-		}
-
-		if kmsKeyServiceAccount, ok := original["kmsKeyServiceAccount"]; ok {
-			transformed["kmsKeyServiceAccount"] = kmsKeyServiceAccount
-		}
-
-		res["diskEncryptionKey"] = transformed
-	}
-
-	if v, ok := res["sourceImageEncryptionKey"]; ok {
-		original := v.(map[string]interface{})
-		transformed := make(map[string]interface{})
-		// The raw key won't be returned, so we need to use the original.
-		transformed["rawKey"] = d.Get("source_image_encryption_key.0.raw_key")
-		transformed["sha256"] = original["sha256"]
-
-		if kmsKeyName, ok := original["kmsKeyName"]; ok {
-			// The response for crypto keys often includes the version of the key which needs to be removed
-			// format: projects/<project>/locations/<region>/keyRings/<keyring>/cryptoKeys/<key>/cryptoKeyVersions/1
-			transformed["kmsKeyName"] = strings.Split(kmsKeyName.(string), "/cryptoKeyVersions")[0]
-		}
-
-		if kmsKeyServiceAccount, ok := original["kmsKeyServiceAccount"]; ok {
-			transformed["kmsKeyServiceAccount"] = kmsKeyServiceAccount
-		}
-
-		res["sourceImageEncryptionKey"] = transformed
-	}
-
-	if v, ok := res["sourceSnapshotEncryptionKey"]; ok {
-		original := v.(map[string]interface{})
-		transformed := make(map[string]interface{})
-		// The raw key won't be returned, so we need to use the original.
-		transformed["rawKey"] = d.Get("source_snapshot_encryption_key.0.raw_key")
-		transformed["sha256"] = original["sha256"]
-
-		if kmsKeyName, ok := original["kmsKeyName"]; ok {
-			// The response for crypto keys often includes the version of the key which needs to be removed
-			// format: projects/<project>/locations/<region>/keyRings/<keyring>/cryptoKeys/<key>/cryptoKeyVersions/1
-			transformed["kmsKeyName"] = strings.Split(kmsKeyName.(string), "/cryptoKeyVersions")[0]
-		}
-
-		if kmsKeyServiceAccount, ok := original["kmsKeyServiceAccount"]; ok {
-			transformed["kmsKeyServiceAccount"] = kmsKeyServiceAccount
-		}
-
-		res["sourceSnapshotEncryptionKey"] = transformed
-	}
-
-	return res, nil
 }
 
 func ResourceComputeRegionDiskFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

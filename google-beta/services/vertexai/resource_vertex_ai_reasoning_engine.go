@@ -2220,13 +2220,6 @@ func resourceVertexAIReasoningEngineImport(d *schema.ResourceData, meta interfac
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenVertexAIReasoningEngineName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenVertexAIReasoningEngineDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2314,18 +2307,6 @@ func flattenVertexAIReasoningEngineSpecAgentFramework(v interface{}, d *schema.R
 	return v
 }
 
-func flattenVertexAIReasoningEngineSpecClassMethods(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenVertexAIReasoningEngineSpecDeploymentSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2358,27 +2339,6 @@ func flattenVertexAIReasoningEngineSpecDeploymentSpec(v interface{}, d *schema.R
 	transformed["dedicated_ingress_endpoint_enabled"] =
 		flattenVertexAIReasoningEngineSpecDeploymentSpecDedicatedIngressEndpointEnabled(original["dedicatedIngressEndpointEnabled"], d, config)
 	return []interface{}{transformed}
-}
-func flattenVertexAIReasoningEngineSpecDeploymentSpecEnv(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		if original["name"] == "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY" {
-			continue
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"name":  original["name"],
-			"value": original["value"],
-		})
-	}
-	return transformed
 }
 
 func flattenVertexAIReasoningEngineSpecDeploymentSpecSecretEnv(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2878,17 +2838,6 @@ func flattenVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceAdkConfig(
 		flattenVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceAdkConfigJsonConfig(original["jsonConfig"], d, config)
 	return []interface{}{transformed}
 }
-func flattenVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceAdkConfigJsonConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
 
 func flattenVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceInlineSource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
@@ -2921,18 +2870,6 @@ func flattenVertexAIReasoningEngineSpecEffectiveIdentity(v interface{}, d *schem
 
 func flattenVertexAIReasoningEngineSpecExampleStore(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenVertexAIReasoningEngineSpecAgentCard(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenVertexAIReasoningEngineSpecBuildSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3461,18 +3398,6 @@ func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfi
 	return v
 }
 
-func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionCallArgs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionResponse(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -3496,18 +3421,6 @@ func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfi
 
 func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionResponseName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionResponseResponse(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsExecutableCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3689,18 +3602,6 @@ func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigStructuredMemoryCo
 }
 func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigStructuredMemoryConfigsSchemaConfigsId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenVertexAIReasoningEngineContextSpecMemoryBankConfigStructuredMemoryConfigsSchemaConfigsMemorySchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenVertexAIReasoningEngineContextSpecExampleStoreConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3968,18 +3869,6 @@ func expandVertexAIReasoningEngineSpec(v interface{}, d tpgresource.TerraformRes
 
 func expandVertexAIReasoningEngineSpecAgentFramework(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandVertexAIReasoningEngineSpecClassMethods(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandVertexAIReasoningEngineSpecDeploymentSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -4845,18 +4734,6 @@ func expandVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceAdkConfig(v
 	return transformed, nil
 }
 
-func expandVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceAdkConfigJsonConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandVertexAIReasoningEngineSpecSourceCodeSpecAgentConfigSourceInlineSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -4897,18 +4774,6 @@ func expandVertexAIReasoningEngineSpecEffectiveIdentity(v interface{}, d tpgreso
 
 func expandVertexAIReasoningEngineSpecExampleStore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandVertexAIReasoningEngineSpecAgentCard(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandVertexAIReasoningEngineSpecBuildSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -5771,18 +5636,6 @@ func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfig
 	return v, nil
 }
 
-func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionCallArgs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionResponse(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -5825,18 +5678,6 @@ func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfig
 
 func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionResponseName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsFunctionResponseResponse(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandVertexAIReasoningEngineContextSpecMemoryBankConfigCustomizationConfigsGenerateMemoriesExamplesConversationSourceEventsContentPartsExecutableCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -6120,18 +5961,6 @@ func expandVertexAIReasoningEngineContextSpecMemoryBankConfigStructuredMemoryCon
 	return v, nil
 }
 
-func expandVertexAIReasoningEngineContextSpecMemoryBankConfigStructuredMemoryConfigsSchemaConfigsMemorySchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandVertexAIReasoningEngineContextSpecExampleStoreConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -6261,124 +6090,6 @@ func expandVertexAIReasoningEngineTrafficConfigTrafficSplitManualTargets(v inter
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandVertexAIReasoningEngineTrafficConfigTrafficSplitManualTargetsRuntimeRevisionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	s, ok := v.(string)
-	if !ok || s == "" {
-		return v, nil
-	}
-
-	// Keyword resolution for LATEST or PREVIOUS by querying live API runtimeRevisions
-	if s == "LATEST" || s == "PREVIOUS" {
-		url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/reasoningEngines/{{name}}/runtimeRevisions")
-		if err != nil || strings.Contains(url, "{{name}}") {
-			return nil, fmt.Errorf("cannot resolve keyword %q: reasoning engine resource name is not yet available (deploy using 'traffic_split_always_latest {}' first)", s)
-		}
-		userAgent, uErr := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-		project, pErr := tpgresource.GetProject(d, config)
-
-		var res map[string]interface{}
-		var reqErr error
-		if uErr != nil {
-			reqErr = uErr
-		} else if pErr != nil {
-			reqErr = pErr
-		} else {
-			res, reqErr = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   project,
-				RawURL:    url,
-				UserAgent: userAgent,
-			})
-		}
-
-		var revs []struct {
-			name       string
-			createTime string
-		}
-		var rawRevs []interface{}
-		if res != nil {
-			if r, ok := res["runtimeRevisions"].([]interface{}); ok && len(r) > 0 {
-				rawRevs = r
-			} else if r, ok := res["reasoningEngineRuntimeRevisions"].([]interface{}); ok && len(r) > 0 {
-				rawRevs = r
-			}
-		}
-
-		if len(rawRevs) > 0 {
-			for _, r := range rawRevs {
-				if rMap, ok := r.(map[string]interface{}); ok {
-					rName, _ := rMap["name"].(string)
-					rTime, _ := rMap["createTime"].(string)
-					if rName != "" {
-						revs = append(revs, struct {
-							name       string
-							createTime string
-						}{name: rName, createTime: rTime})
-					}
-				}
-			}
-		}
-
-		if len(revs) > 0 {
-			// Helper to extract numeric revision ID for sorting fallback (e.g. "rev-10" -> 10)
-			extractRevisionNumber := func(name string) int {
-				base := name
-				if idx := strings.LastIndex(name, "/"); idx != -1 {
-					base = name[idx+1:]
-				}
-				trimmed := strings.TrimPrefix(base, "rev-")
-				if n, err := strconv.Atoi(trimmed); err == nil {
-					return n
-				}
-				return 0
-			}
-
-			// Sort revisions by createTime ascending, falling back to numeric revision ID comparison
-			sort.Slice(revs, func(i, j int) bool {
-				t1, err1 := time.Parse(time.RFC3339Nano, revs[i].createTime)
-				t2, err2 := time.Parse(time.RFC3339Nano, revs[j].createTime)
-				if err1 == nil && err2 == nil && !t1.Equal(t2) {
-					return t1.Before(t2)
-				}
-				num1 := extractRevisionNumber(revs[i].name)
-				num2 := extractRevisionNumber(revs[j].name)
-				if num1 != 0 && num2 != 0 && num1 != num2 {
-					return num1 < num2
-				}
-				return revs[i].name < revs[j].name
-			})
-			if s == "LATEST" {
-				s = revs[len(revs)-1].name
-			} else if s == "PREVIOUS" {
-				if len(revs) > 1 {
-					s = revs[len(revs)-2].name
-				} else {
-					return nil, fmt.Errorf("cannot resolve keyword %q: no previous runtime revision exists for this ReasoningEngine", s)
-				}
-			}
-		} else if reqErr != nil {
-			return nil, fmt.Errorf("error querying runtime revisions from GCP API to resolve keyword %q: %w", s, reqErr)
-		} else {
-			return nil, fmt.Errorf("cannot resolve keyword %q: no runtime revisions returned by GCP API for this ReasoningEngine", s)
-		}
-	}
-
-	// Expand short revision names into full resource URIs
-	if !strings.HasPrefix(s, "projects/") && !strings.Contains(s, "/runtimeRevisions/") {
-		resName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/reasoningEngines/{{name}}")
-		if err != nil || strings.Contains(resName, "{{name}}") {
-			return nil, fmt.Errorf("cannot use revision short name or keyword %q during initial creation: reasoning engine resource must be created first using 'traffic_split_always_latest {}'", s)
-		}
-		return fmt.Sprintf("%s/runtimeRevisions/%s", resName, s), nil
-	}
-
-	return s, nil
 }
 
 func expandVertexAIReasoningEngineTrafficConfigTrafficSplitManualTargetsPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

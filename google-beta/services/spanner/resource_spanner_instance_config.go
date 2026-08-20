@@ -733,13 +733,6 @@ func flattenSpannerInstanceConfigDisplayName(v interface{}, d *schema.ResourceDa
 	return v
 }
 
-func flattenSpannerInstanceConfigBaseConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenSpannerInstanceConfigConfigType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -819,20 +812,6 @@ func expandSpannerInstanceConfigDisplayName(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func expandSpannerInstanceConfigBaseConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	r := regexp.MustCompile("projects/(.+)/instanceConfigs/(.+)")
-	if r.MatchString(v.(string)) {
-		return v.(string), nil
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	return fmt.Sprintf("projects/%s/instanceConfigs/%s", project, v.(string)), nil
-}
-
 func expandSpannerInstanceConfigReplicas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	if v == nil {
@@ -894,70 +873,6 @@ func expandSpannerInstanceConfigEffectiveLabels(v interface{}, d tpgresource.Ter
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceSpannerInstanceConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-	newObj := make(map[string]interface{})
-	if obj["name"] == nil {
-		return nil, fmt.Errorf("Error setting instance config name")
-	}
-	newObj["instanceConfigId"] = obj["name"]
-	obj["name"] = fmt.Sprintf("projects/%s/instanceConfigs/%s", project, obj["name"])
-	baseReplicas, err := getBaseInstanceConfigReplicas(d, config, obj["baseConfig"], project, meta.(*transport_tpg.Config).UserAgent)
-	if err != nil {
-		return nil, err
-	}
-	r := obj["replicas"].([]interface{})
-	obj["replicas"] = append(r, baseReplicas...)
-	newObj["instanceConfig"] = obj
-	return newObj, nil
-}
-
-func resourceSpannerInstanceConfigUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	project, err := tpgresource.GetProject(d, meta.(*transport_tpg.Config))
-	if err != nil {
-		return nil, err
-	}
-	obj["name"] = fmt.Sprintf("projects/%s/instanceConfigs/%s", project, obj["name"])
-	newObj := make(map[string]interface{})
-	newObj["instanceConfig"] = obj
-	return newObj, nil
-}
-
-func resourceSpannerInstanceConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	d.SetId(res["name"].(string))
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/instanceConfigs/(?P<name>[^/]+)"}, d, config); err != nil {
-		return nil, err
-	}
-	res["project"] = d.Get("project").(string)
-	res["name"] = d.Get("name").(string)
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{name}}")
-	if err != nil {
-		return nil, err
-	}
-	baseReplicas, err := getBaseInstanceConfigReplicas(d, config, res["baseConfig"], res["project"].(string), config.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-	customReplica := make(map[int]interface{})
-	for _, b := range baseReplicas {
-		customReplica[replicasHash(b)] = b
-	}
-	var cR []interface{}
-	for _, r := range res["replicas"].([]interface{}) {
-		if _, ok := customReplica[replicasHash(r)]; !ok {
-			cR = append(cR, r)
-		}
-	}
-	res["replicas"] = cR
-	d.SetId(id)
-	return res, nil
 }
 
 func ResourceSpannerInstanceConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

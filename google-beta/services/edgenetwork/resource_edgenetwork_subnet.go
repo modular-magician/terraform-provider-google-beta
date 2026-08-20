@@ -676,14 +676,6 @@ func expandEdgenetworkSubnetDescription(v interface{}, d tpgresource.TerraformRe
 	return v, nil
 }
 
-func expandEdgenetworkSubnetNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseZonalFieldValue("networks", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for network: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandEdgenetworkSubnetIpv4Cidr(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

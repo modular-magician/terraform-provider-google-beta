@@ -534,13 +534,6 @@ func resourceVertexAIDeploymentResourcePoolImport(d *schema.ResourceData, meta i
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenVertexAIDeploymentResourcePoolName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenVertexAIDeploymentResourcePoolDedicatedResources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -822,16 +815,6 @@ func expandVertexAIDeploymentResourcePoolDedicatedResourcesAutoscalingMetricSpec
 
 func expandVertexAIDeploymentResourcePoolDedicatedResourcesAutoscalingMetricSpecsTarget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceVertexAIDeploymentResourcePoolEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["deploymentResourcePool"] = obj
-	nameProp, ok := d.GetOk("name")
-	if ok && nameProp != nil {
-		newObj["deploymentResourcePoolId"] = nameProp
-	}
-	return newObj, nil
 }
 
 func ResourceVertexAIDeploymentResourcePoolFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

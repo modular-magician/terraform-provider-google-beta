@@ -517,30 +517,7 @@ func resourceDataCatalogEntryGroupDelete(d *schema.ResourceData, meta interface{
 }
 
 func resourceDataCatalogEntryGroupImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	egRegex := regexp.MustCompile("projects/(.+)/locations/(.+)/entryGroups/(.+)")
-
-	parts := egRegex.FindStringSubmatch(name)
-	if len(parts) != 4 {
-		return nil, fmt.Errorf("entry group name does not fit the format %s", egRegex)
-	}
-	if err := d.Set("project", parts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-	if err := d.Set("region", parts[2]); err != nil {
-		return nil, fmt.Errorf("Error setting region: %s", err)
-	}
-	if err := d.Set("entry_group_id", parts[3]); err != nil {
-		return nil, fmt.Errorf("Error setting entry_group_id: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceDataCatalogEntryGroupCustomImport(d, meta)
 }
 
 func flattenDataCatalogEntryGroupName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

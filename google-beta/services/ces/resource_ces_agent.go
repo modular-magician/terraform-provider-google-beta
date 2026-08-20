@@ -1407,13 +1407,6 @@ func flattenCESAgentModelSettingsTemperature(v interface{}, d *schema.ResourceDa
 	return v
 }
 
-func flattenCESAgentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenCESAgentLlmAgent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil

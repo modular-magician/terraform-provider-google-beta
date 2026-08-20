@@ -638,13 +638,6 @@ func resourceGKEBackupBackupChannelImport(d *schema.ResourceData, meta interface
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenGKEBackupBackupChannelName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenGKEBackupBackupChannelUid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -697,10 +690,6 @@ func flattenGKEBackupBackupChannelTerraformLabels(v interface{}, d *schema.Resou
 
 func flattenGKEBackupBackupChannelEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandGKEBackupBackupChannelName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/backupChannels/{{name}}")
 }
 
 func expandGKEBackupBackupChannelDestinationProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

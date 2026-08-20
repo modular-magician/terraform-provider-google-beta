@@ -891,11 +891,6 @@ func flattenChronicleParserExtensionValidationReport(v interface{}, d *schema.Re
 	return v
 }
 
-func flattenChronicleParserExtensionParserextension(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleParserExtensionCbnSnippet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

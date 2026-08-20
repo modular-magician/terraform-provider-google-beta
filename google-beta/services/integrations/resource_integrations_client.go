@@ -589,13 +589,6 @@ func expandIntegrationsClientRunAsServiceAccount(v interface{}, d tpgresource.Te
 	return v, nil
 }
 
-func resourceIntegrationsClientDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Since Client resource doesnt have any properties,
-	// Adding this decoder as placeholder else the linter will
-	// complain that the returned `res` is never used afterwards.
-	return res, nil
-}
-
 func ResourceIntegrationsClientFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 
 	return nil

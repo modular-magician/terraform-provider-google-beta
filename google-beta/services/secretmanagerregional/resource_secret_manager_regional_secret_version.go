@@ -430,14 +430,7 @@ func resourceSecretManagerRegionalRegionalSecretVersionUpdate(d *schema.Resource
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceSecretManagerRegionalRegionalSecretVersionRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	err := setEnabled(d.Get("enabled"), d, config)
-	if err != nil {
-		return err
-	}
-
-	return resourceSecretManagerRegionalRegionalSecretVersionRead(d, meta)
+	return resourceSecretManagerRegionalRegionalSecretVersionCustomUpdate(d, meta)
 }
 
 func resourceSecretManagerRegionalRegionalSecretVersionDelete(d *schema.ResourceData, meta interface{}) error {
@@ -498,41 +491,7 @@ func resourceSecretManagerRegionalRegionalSecretVersionDelete(d *schema.Resource
 }
 
 func resourceSecretManagerRegionalRegionalSecretVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	secretRegex := regexp.MustCompile("(projects/.+/locations/.+/secrets/.+)/versions/.+$")
-	versionRegex := regexp.MustCompile("projects/(.+)/locations/(.+)/secrets/(.+)/versions/(.+)$")
-
-	parts := secretRegex.FindStringSubmatch(name)
-	if len(parts) != 2 {
-		return nil, fmt.Errorf("Version name does not fit the format `projects/{{project}}/locations/{{location}}/secrets/{{secret}}/versions/{{version}}`")
-	}
-	if err := d.Set("secret", parts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting secret: %s", err)
-	}
-
-	parts = versionRegex.FindStringSubmatch(name)
-
-	if err := d.Set("version", parts[4]); err != nil {
-		return nil, fmt.Errorf("Error setting version: %s", err)
-	}
-
-	// Explicitly set virtual fields to default values on import
-	if err := d.Set("deletion_policy", "DELETE"); err != nil {
-		return nil, fmt.Errorf("Error setting deletion policy: %s", err)
-	}
-
-	if err := d.Set("location", parts[2]); err != nil {
-		return nil, fmt.Errorf("Error setting location: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceSecretManagerRegionalRegionalSecretVersionCustomImport(d, meta)
 }
 
 func flattenSecretManagerRegionalRegionalSecretVersionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -564,75 +523,6 @@ func flattenSecretManagerRegionalRegionalSecretVersionCustomerManagedEncryptionK
 	return v
 }
 
-func flattenSecretManagerRegionalRegionalSecretVersionVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	name := d.Get("name").(string)
-	secretRegex := regexp.MustCompile("projects/(.+)/locations/(.+)/secrets/(.+)/versions/(.+)$")
-
-	parts := secretRegex.FindStringSubmatch(name)
-	if len(parts) != 5 {
-		return fmt.Errorf("Version name does not fit the format `projects/{{project}}/locations/{{location}}/secrets/{{secret}}/versions/{{version}}`")
-	}
-
-	return parts[4]
-}
-
-func flattenSecretManagerRegionalRegionalSecretVersionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v.(string) == "ENABLED" {
-		return true
-	}
-
-	return false
-}
-
-func flattenSecretManagerRegionalRegionalSecretVersionPayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	// if this secret version is disabled, the api will return an error, as the value cannot be accessed, return what we have
-	if d.Get("enabled").(bool) == false {
-		transformed["secret_data"] = d.Get("secret_data")
-		return []interface{}{transformed}
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerRegionalBasePath}}{{name}}:access")
-	if err != nil {
-		return err
-	}
-
-	parts := strings.Split(d.Get("name").(string), "/")
-	project := parts[1]
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	accessRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
-	if err != nil {
-		return err
-	}
-
-	if d.Get("is_secret_data_base64").(bool) {
-		transformed["secret_data"] = accessRes["payload"].(map[string]interface{})["data"].(string)
-	} else {
-		data, err := base64.StdEncoding.DecodeString(accessRes["payload"].(map[string]interface{})["data"].(string))
-		if err != nil {
-			return err
-		}
-		transformed["secret_data"] = string(data)
-	}
-	return []interface{}{transformed}
-}
-
-func expandSecretManagerRegionalRegionalSecretVersionEnabled(_ interface{}, _ tpgresource.TerraformResourceData, _ *transport_tpg.Config) (interface{}, error) {
-	return nil, nil
-}
-
 func expandSecretManagerRegionalRegionalSecretVersionPayload(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	transformed := make(map[string]interface{})
 	transformedSecretData, err := expandSecretManagerRegionalRegionalSecretVersionPayloadSecretData(d.Get("secret_data"), d, config)
@@ -645,24 +535,6 @@ func expandSecretManagerRegionalRegionalSecretVersionPayload(v interface{}, d tp
 	return transformed, nil
 }
 
-func expandSecretManagerRegionalRegionalSecretVersionPayloadSecretData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	if d.Get("is_secret_data_base64").(bool) {
-		return v, nil
-	}
-	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
-}
-
-func resourceSecretManagerRegionalRegionalSecretVersionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DESTROYED" {
-		return nil, nil
-	}
-
-	return res, nil
-}
 func resourceSecretManagerRegionalRegionalSecretVersionPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceSecretManagerRegionalRegionalSecretVersionDecoder(d, meta, res)

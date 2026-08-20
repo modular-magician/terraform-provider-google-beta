@@ -665,13 +665,6 @@ func resourceIdentityPlatformTenantInboundSamlConfigImport(d *schema.ResourceDat
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenIdentityPlatformTenantInboundSamlConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenIdentityPlatformTenantInboundSamlConfigDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

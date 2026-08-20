@@ -1418,38 +1418,6 @@ func expandGKEHub2RolloutSequenceStagesClusterSelectorLabelSelector(v interface{
 	return v, nil
 }
 
-func expandGKEHub2RolloutSequenceStagesSoakDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	val, ok := v.(string)
-	if !ok {
-		return nil, fmt.Errorf("unexpected value is not string: %v", v)
-	}
-	if len(val) == 0 {
-		return nil, nil
-	}
-	n, err := strconv.Atoi(val[:len(val)-1])
-	if err != nil {
-		return nil, fmt.Errorf("unexpected value is not duration: %v", v)
-	}
-	// time.ParseDuration does not support 'd'
-	var seconds int
-	switch val[len(val)-1] {
-	case 's':
-		seconds = n
-	case 'm':
-		seconds = n * 60
-	case 'h':
-		seconds = n * 3600
-	case 'd':
-		seconds = n * 86400
-	default:
-		return nil, fmt.Errorf("unexpected duration has unknown unit: %c", val[len(val)-1])
-	}
-	return fmt.Sprintf("%ds", seconds), nil
-}
-
 func expandGKEHub2RolloutSequenceAutoUpgradeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1513,23 +1481,6 @@ func expandGKEHub2RolloutSequenceEffectiveLabels(v interface{}, d tpgresource.Te
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceGKEHub2RolloutSequencePostCreateFailure(d *schema.ResourceData, meta interface{}) {
-	log.Printf("[WARN] Attempt to clean up RolloutSequence if it still exists")
-	var cleanErr error
-	if cleanErr = resourceGKEHub2RolloutSequenceRead(d, meta); cleanErr == nil {
-		if d.Id() != "" {
-			log.Printf("[WARN] RolloutSequence %q still exists, attempting to delete...", d.Id())
-			if cleanErr = resourceGKEHub2RolloutSequenceDelete(d, meta); cleanErr == nil {
-				log.Printf("[WARN] Invalid RolloutSequence was successfully deleted")
-				d.SetId("")
-			}
-		}
-	}
-	if cleanErr != nil {
-		log.Printf("[WARN] Could not confirm cleanup of RolloutSequence if created in error state: %v", cleanErr)
-	}
 }
 
 func ResourceGKEHub2RolloutSequenceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

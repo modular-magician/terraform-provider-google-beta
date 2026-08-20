@@ -711,28 +711,7 @@ func resourceVertexAIFeaturestoreEntitytypeDelete(d *schema.ResourceData, meta i
 }
 
 func resourceVertexAIFeaturestoreEntitytypeImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<featurestore>.+)/entityTypes/(?P<name>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{featurestore}}/entityTypes/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	featurestore := d.Get("featurestore").(string)
-
-	re := regexp.MustCompile("^projects/(.+)/locations/(.+)/featurestores/(.+)$")
-	if parts := re.FindStringSubmatch(featurestore); parts != nil {
-		d.Set("region", parts[2])
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceVertexAIFeaturestoreEntitytypeCustomImport(d, meta)
 }
 
 func flattenVertexAIFeaturestoreEntitytypeDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1143,17 +1122,6 @@ func expandVertexAIFeaturestoreEntitytypeEffectiveLabels(v interface{}, d tpgres
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceVertexAIFeaturestoreEntitytypeEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := d.GetOk("featurestore"); ok {
-		re := regexp.MustCompile("projects/(.+)/locations/(.+)/featurestores/(.+)$")
-		if parts := re.FindStringSubmatch(v.(string)); parts != nil {
-			d.Set("region", parts[2])
-		}
-	}
-
-	return obj, nil
 }
 
 func ResourceVertexAIFeaturestoreEntitytypeFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

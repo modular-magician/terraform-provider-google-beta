@@ -1024,9 +1024,6 @@ func flattenComputeSnapshotSnapshotEncryptionKey(v interface{}, d *schema.Resour
 		flattenComputeSnapshotSnapshotEncryptionKeyKmsKeyServiceAccount(original["kmsKeyServiceAccount"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeSnapshotSnapshotEncryptionKeyRawKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("snapshot_encryption_key.0.raw_key")
-}
 
 func flattenComputeSnapshotSnapshotEncryptionKeyRsaEncryptedKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("snapshot_encryption_key.0.rsa_encrypted_key")
@@ -1042,22 +1039,6 @@ func flattenComputeSnapshotSnapshotEncryptionKeyKmsKeySelfLink(v interface{}, d 
 
 func flattenComputeSnapshotSnapshotEncryptionKeyKmsKeyServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandComputeSnapshotSourceDisk(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseZonalFieldValue("disks", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for source_disk: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func expandComputeSnapshotSourceInstantSnapshot(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseZonalFieldValue("instantSnapshots", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for source_instant_snapshot: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandComputeSnapshotChainName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1130,14 +1111,6 @@ func expandComputeSnapshotEffectiveLabels(v interface{}, d tpgresource.Terraform
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandComputeSnapshotZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandComputeSnapshotSnapshotEncryptionKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1267,50 +1240,6 @@ func expandComputeSnapshotSourceDiskEncryptionKeyKmsKeySelfLink(v interface{}, d
 
 func expandComputeSnapshotSourceDiskEncryptionKeyKmsKeyServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeSnapshotDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := res["snapshotEncryptionKey"]; ok {
-		original := v.(map[string]interface{})
-		transformed := make(map[string]interface{})
-		// The raw key won't be returned, so we need to use the original.
-		transformed["rawKey"] = d.Get("snapshot_encryption_key.0.raw_key")
-		transformed["sha256"] = original["sha256"]
-
-		if kmsKeyName, ok := original["kmsKeyName"]; ok {
-			// The response for crypto keys often includes the version of the key which needs to be removed
-			// format: projects/<project>/locations/<region>/keyRings/<keyring>/cryptoKeys/<key>/cryptoKeyVersions/1
-			transformed["kmsKeyName"] = strings.Split(kmsKeyName.(string), "/cryptoKeyVersions")[0]
-		}
-
-		if kmsKeyServiceAccount, ok := original["kmsKeyServiceAccount"]; ok {
-			transformed["kmsKeyServiceAccount"] = kmsKeyServiceAccount
-		}
-
-		res["snapshotEncryptionKey"] = transformed
-	}
-
-	if v, ok := res["sourceDiskEncryptionKey"]; ok {
-		original := v.(map[string]interface{})
-		transformed := make(map[string]interface{})
-		// The raw key won't be returned, so we need to use the original.
-		transformed["rawKey"] = d.Get("source_disk_encryption_key.0.raw_key")
-		transformed["sha256"] = original["sha256"]
-
-		if kmsKeyName, ok := original["kmsKeyName"]; ok {
-			// The response for crypto keys often includes the version of the key which needs to be removed
-			// format: projects/<project>/locations/<region>/keyRings/<keyring>/cryptoKeys/<key>/cryptoKeyVersions/1
-			transformed["kmsKeyName"] = strings.Split(kmsKeyName.(string), "/cryptoKeyVersions")[0]
-		}
-
-		if kmsKeyServiceAccount, ok := original["kmsKeyServiceAccount"]; ok {
-			transformed["kmsKeyServiceAccount"] = kmsKeyServiceAccount
-		}
-
-		res["sourceDiskEncryptionKey"] = transformed
-	}
-
-	return res, nil
 }
 
 func ResourceComputeSnapshotFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -245,8 +245,7 @@ functionality, this value is 'servicenetworking.googleapis.com'.`,
 }
 
 func resourceServiceNetworkingVPCServiceControlsCreate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*transport_tpg.Config)
-	return resourceServiceNetworkingVPCServiceControlsSet(d, meta, config)
+	return resourceServiceNetworkingVPCServiceControlsCustomCreate(d, meta)
 }
 
 func resourceServiceNetworkingVPCServiceControlsRead(d *schema.ResourceData, meta interface{}) error {
@@ -332,9 +331,7 @@ func resourceServiceNetworkingVPCServiceControlsRead(d *schema.ResourceData, met
 }
 
 func resourceServiceNetworkingVPCServiceControlsUpdate(d *schema.ResourceData, meta interface{}) error {
-
-	config := meta.(*transport_tpg.Config)
-	return resourceServiceNetworkingVPCServiceControlsSet(d, meta, config)
+	return resourceServiceNetworkingVPCServiceControlsCustomUpdate(d, meta)
 }
 
 func resourceServiceNetworkingVPCServiceControlsDelete(d *schema.ResourceData, meta interface{}) error {

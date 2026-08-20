@@ -614,18 +614,7 @@ func resourceStorageBatchOperationsJobUpdate(d *schema.ResourceData, meta interf
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceStorageBatchOperationsJobRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	_ = config
-	// we can only get here if delete_protection was updated
-	if d.Get("delete_protection") != nil {
-		if err := d.Set("delete_protection", d.Get("delete_protection")); err != nil {
-			return fmt.Errorf("Error updating delete_protection: %s", err)
-		}
-	}
-
-	// all other fields are immutable, don't do anything else
-	return nil
+	return resourceStorageBatchOperationsJobCustomUpdate(d, meta)
 }
 
 func resourceStorageBatchOperationsJobDelete(d *schema.ResourceData, meta interface{}) error {
@@ -799,24 +788,6 @@ func flattenStorageBatchOperationsJobBucketListBucketsManifest(v interface{}, d 
 	return []interface{}{transformed}
 }
 func flattenStorageBatchOperationsJobBucketListBucketsManifestManifestLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenStorageBatchOperationsJobDeleteObject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-	if len(original) == 0 {
-		transformed["permanent_object_deletion_enabled"] = false
-		return []interface{}{transformed}
-	}
-	transformed["permanent_object_deletion_enabled"] =
-		flattenStorageBatchOperationsJobsDeleteObjectPermanentObjectDeletionEnabled(original["permanentObjectDeletionEnabled"], d, config)
-	return []interface{}{transformed}
-}
-func flattenStorageBatchOperationsJobsDeleteObjectPermanentObjectDeletionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

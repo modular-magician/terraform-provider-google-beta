@@ -746,34 +746,7 @@ func resourceVertexAIIndexEndpointDeployedIndexDelete(d *schema.ResourceData, me
 }
 
 func resourceVertexAIIndexEndpointDeployedIndexImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<index_endpoint>.+)/deployedIndex/(?P<deployed_index_id>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// The Read URL is templated on '{{region}}' (https://{{region}}-aiplatform.googleapis.com/...),
-	// so extract region (and project) from the index_endpoint path. Otherwise an
-	// import that doesn't set provider-level region/zone fails with
-	// "Cannot determine region".
-	indexEndpointRe := regexp.MustCompile(`^projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/indexEndpoints/[^/]+$`)
-	if m := indexEndpointRe.FindStringSubmatch(d.Get("index_endpoint").(string)); m != nil {
-		if err := d.Set("region", m[2]); err != nil {
-			return nil, fmt.Errorf("Error setting region: %s", err)
-		}
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{index_endpoint}}/deployedIndex/{{deployed_index_id}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceVertexAIIndexEndpointDeployedIndexCustomImport(d, meta)
 }
 
 func flattenVertexAIIndexEndpointDeployedIndexName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1211,54 +1184,6 @@ func expandVertexAIIndexEndpointDeployedIndexReservedIpRanges(v interface{}, d t
 
 func expandVertexAIIndexEndpointDeployedIndexDeploymentGroup(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceVertexAIIndexEndpointDeployedIndexEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	req := make(map[string]interface{})
-	obj["id"] = d.Get("deployed_index_id")
-	delete(obj, "deployedIndexId")
-	delete(obj, "name")
-	delete(obj, "indexEndpoint")
-	req["deployedIndex"] = obj
-	return req, nil
-}
-
-func resourceVertexAIIndexEndpointDeployedIndexUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	obj["id"] = obj["deployedIndexId"]
-	delete(obj, "deployedIndexId")
-	return obj, nil
-}
-
-func resourceVertexAIIndexEndpointDeployedIndexDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if d.Get("region").(string) == "" {
-		re := regexp.MustCompile(`^projects/[^/]+/locations/(?P<region>[^/]+)/indexEndpoints/[^/]+$`)
-		if m := re.FindStringSubmatch(d.Get("index_endpoint").(string)); m != nil {
-			if err := d.Set("region", m[1]); err != nil {
-				return nil, fmt.Errorf("Error setting region: %s", err)
-			}
-		}
-	}
-
-	v, ok := res["deployedIndexes"]
-	if !ok || v == nil { // CREATE
-		res["name"] = res["deployedIndexId"]
-		delete(res, "deployedIndexId")
-		return res, nil
-	}
-	dpIndex := make(map[string]interface{})
-	for _, v := range v.([]interface{}) {
-		dpI := v.(map[string]interface{})
-		if dpI["id"] == d.Get("deployed_index_id").(string) {
-			dpI["indexEndpoint"] = d.Get("index_endpoint")
-			dpI["deployedIndexId"] = d.Get("deployed_index_id")
-			dpIndex = dpI
-			break
-		}
-	}
-	if dpIndex == nil {
-		return nil, fmt.Errorf("Error: Deployment Index not Found")
-	}
-	return dpIndex, nil
 }
 
 func ResourceVertexAIIndexEndpointDeployedIndexFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
