@@ -32,7 +32,6 @@ import (
 )
 
 func TestAccAppEngineFlexibleAppVersion_update(t *testing.T) {
-	t.Skip("https://github.com/hashicorp/terraform-provider-google/issues/18239")
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -126,8 +125,14 @@ resource "google_project_iam_member" "gae_api" {
   member  = "serviceAccount:service-${google_project.my_project.number}@gae-api-prod.google.com.iam.gserviceaccount.com"
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  depends_on = [google_project_iam_member.gae_api]
+  create_duration = "120s"
+}
+
 resource "google_app_engine_standard_app_version" "foo" {
   provider = google-beta
+  depends_on = [time_sleep.wait_120_seconds]
   project    = google_project_iam_member.gae_api.project
   version_id = "v1"
   service    = "default"
@@ -313,8 +318,14 @@ resource "google_project_iam_member" "gae_api" {
   member  = "serviceAccount:service-${google_project.my_project.number}@gae-api-prod.google.com.iam.gserviceaccount.com"
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  depends_on = [google_project_iam_member.gae_api]
+  create_duration = "120s"
+}
+
 resource "google_app_engine_standard_app_version" "foo" {
   provider = google-beta
+  depends_on = [time_sleep.wait_120_seconds]
   project    = google_project_iam_member.gae_api.project
   version_id = "v1"
   service    = "default"

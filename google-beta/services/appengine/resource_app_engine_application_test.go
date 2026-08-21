@@ -126,7 +126,13 @@ resource "google_project" "acceptance" {
   deletion_policy = "DELETE"
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  depends_on = [google_project.acceptance]
+  create_duration = "120s"
+}
+
 resource "google_app_engine_application" "acceptance" {
+  depends_on = [time_sleep.wait_120_seconds]
   project        = google_project.acceptance.project_id
   auth_domain    = "hashicorptest.com"
   location_id    = "us-central"
@@ -151,7 +157,13 @@ resource "google_project" "acceptance" {
   deletion_policy = "DELETE"
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  depends_on = [google_project.acceptance]
+  create_duration = "120s"
+}
+
 resource "google_app_engine_application" "acceptance" {
+  depends_on = [time_sleep.wait_120_seconds]
   project        = google_project.acceptance.project_id
   auth_domain    = "hashicorptest.com"
   location_id    = "us-central"
@@ -171,7 +183,13 @@ resource "google_project" "acceptance" {
   deletion_policy = "DELETE"
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  depends_on = [google_project.acceptance]
+  create_duration = "120s"
+}
+
 resource "google_app_engine_application" "acceptance" {
+  depends_on = [time_sleep.wait_120_seconds]
   project        = google_project.acceptance.project_id
   auth_domain    = "tf-test.club"
   location_id    = "us-central"
@@ -191,9 +209,15 @@ resource "google_project" "acceptance" {
   deletion_policy = "DELETE"
 }
 
+resource "time_sleep" "wait_120_seconds" {
+  depends_on = [google_project.acceptance]
+  create_duration = "120s"
+}
+
 resource "google_app_engine_application" "acceptance" {
   project     = google_project.acceptance.project_id
-  location_id = "us-central"
+  depends_on = [time_sleep.wait_120_seconds]
+	location_id = "us-central"
   ssl_policy  = "MODERN"
 }
 `, pid, pid, org, billingAccount)
