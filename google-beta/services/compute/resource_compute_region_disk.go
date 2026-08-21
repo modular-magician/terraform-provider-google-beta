@@ -211,7 +211,6 @@ you create the resource.`,
 			"disk_encryption_key": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				Description: `Encrypts the disk using a customer-supplied encryption key.
 
 After you encrypt a disk with a customer-supplied key, you must
@@ -228,10 +227,14 @@ you do not need to provide a key to use the disk later.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"kms_key_name": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							ForceNew:    true,
-							Description: `The name of the encryption key that is stored in Google Cloud KMS.`,
+							Type:             schema.TypeString,
+							Optional:         true,
+							DiffSuppressFunc: DiskKmsKeyDiffSuppress,
+							Description: `The name of the encryption key that is stored in Google Cloud KMS.
+
+Note: Specify the Cloud KMS CryptoKey resource path without a version suffix
+(e.g. 'projects/[PROJECT]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]').
+Rotating disk to a specific crypto key version is not supported via terraform.`,
 						},
 						"raw_key": {
 							Type:     schema.TypeString,
@@ -1139,6 +1142,51 @@ func resourceComputeRegionDiskUpdate(d *schema.ResourceData, meta interface{}) e
 		err = ComputeOperationWaitTime(config, res, project, "Updating RegionDisk Access Mode", userAgent, d.Timeout(schema.TimeoutUpdate))
 		if err != nil {
 			return err
+		}
+	}
+
+	// 5. KMS Key Update (POST)
+	if d.HasChange("disk_encryption_key") {
+		oldKey, newKey := d.GetChange("disk_encryption_key")
+		oldList := oldKey.([]interface{})
+		newList := newKey.([]interface{})
+
+		var oldKmsKey, newKmsKey string
+		if len(oldList) > 0 && oldList[0] != nil {
+			// Regional uses 'kms_key_name'
+			oldKmsKey = oldList[0].(map[string]interface{})["kms_key_name"].(string)
+		}
+		if len(newList) > 0 && newList[0] != nil {
+			newKmsKey = newList[0].(map[string]interface{})["kms_key_name"].(string)
+		}
+
+		// Converting a disk from CMEK to GMEK is not supported
+		if oldKmsKey != "" && newKmsKey == "" {
+			return fmt.Errorf("Removing 'disk_encryption_key' is not supported in-place. To remove the KMS key, please destroy and recreate the regional disk without a KMS key.")
+		}
+
+		if newKmsKey != "" {
+			obj := map[string]interface{}{
+				"kmsKeyName": newKmsKey,
+			}
+
+			// Use d.Id() to handle the regional path automatically
+			url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+d.Id()+"/updateKmsKey")
+			if err != nil {
+				return err
+			}
+
+			res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config: config, Method: "POST", Project: billingProject, RawURL: url, UserAgent: userAgent, Body: obj, Timeout: d.Timeout(schema.TimeoutUpdate),
+			})
+			if err != nil {
+				return fmt.Errorf("Error updating Region Disk %q KMS key: %s", d.Id(), err)
+			}
+
+			err = ComputeOperationWaitTime(config, res, project, "Updating Region Disk KMS Key", userAgent, d.Timeout(schema.TimeoutUpdate))
+			if err != nil {
+				return err
+			}
 		}
 	}
 

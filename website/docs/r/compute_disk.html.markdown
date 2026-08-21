@@ -420,6 +420,9 @@ The name of the snapshot by default will be `{{disk-name}}-YYYYMMDD-HHmm`
   (`service-{{PROJECT_NUMBER}}@compute-system.iam.gserviceaccount.com`) must have
   `roles/cloudkms.cryptoKeyEncrypterDecrypter` to use this feature.
   See https://cloud.google.com/compute/docs/disks/customer-managed-encryption#encrypt_a_new_persistent_disk_with_your_own_keys
+  Note: Specify the Cloud KMS CryptoKey resource path without a version suffix
+  (e.g. `projects/[PROJECT]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]`).
+  Rotating disk to a specific crypto key version is not supported via terraform.
 
 * `kms_key_service_account` -
   (Optional)

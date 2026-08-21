@@ -366,6 +366,9 @@ The name of the snapshot by default will be `{{disk-name}}-YYYYMMDD-HHmm`
 * `kms_key_name` -
   (Optional)
   The name of the encryption key that is stored in Google Cloud KMS.
+  Note: Specify the Cloud KMS CryptoKey resource path without a version suffix
+  (e.g. `projects/[PROJECT]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]`).
+  Rotating disk to a specific crypto key version is not supported via terraform.
 
 <a name="nested_source_image_encryption_key"></a>The `source_image_encryption_key` block supports:
 

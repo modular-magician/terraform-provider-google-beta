@@ -79,6 +79,23 @@ func AlwaysDiffSuppress(_, _, _ string, _ *schema.ResourceData) bool {
 	return true
 }
 
+// DiskKmsKeyDiffSuppress suppresses diffs between base KMS keys, self-links, and versioned keys
+func DiskKmsKeyDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
+	oldStripped, err := tpgresource.GetRelativePath(old)
+	if err != nil {
+		oldStripped = old
+	}
+	newStripped, err := tpgresource.GetRelativePath(new)
+	if err != nil {
+		newStripped = new
+	}
+
+	oldKey := strings.Split(oldStripped, "/cryptoKeyVersions")[0]
+	newKey := strings.Split(newStripped, "/cryptoKeyVersions")[0]
+
+	return oldKey == newKey
+}
+
 // diffsuppress for beta and to check change in source_disk attribute
 func sourceDiskDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
 	s1 := strings.TrimPrefix(old, "https://www.googleapis.com/compute/beta")
@@ -546,7 +563,6 @@ you create the resource.`,
 			"disk_encryption_key": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				Description: `Encrypts the disk using a customer-supplied encryption key.
 
 After you encrypt a disk with a customer-supplied key, you must
@@ -565,13 +581,16 @@ you do not need to provide a key to use the disk later.`,
 						"kms_key_self_link": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							ForceNew:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+							DiffSuppressFunc: DiskKmsKeyDiffSuppress,
 							Description: `The self link of the encryption key used to encrypt the disk. Also called KmsKeyName
 in the cloud console. Your project's Compute Engine System service account
 ('service-{{PROJECT_NUMBER}}@compute-system.iam.gserviceaccount.com') must have
 'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature.
-See https://cloud.google.com/compute/docs/disks/customer-managed-encryption#encrypt_a_new_persistent_disk_with_your_own_keys`,
+See https://cloud.google.com/compute/docs/disks/customer-managed-encryption#encrypt_a_new_persistent_disk_with_your_own_keys
+
+Note: Specify the Cloud KMS CryptoKey resource path without a version suffix
+(e.g. 'projects/[PROJECT]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]').
+Rotating disk to a specific crypto key version is not supported via terraform.`,
 						},
 						"kms_key_service_account": {
 							Type:     schema.TypeString,
@@ -1579,6 +1598,49 @@ func resourceComputeDiskUpdate(d *schema.ResourceData, meta interface{}) error {
 		err = ComputeOperationWaitTime(config, res, project, "Updating Disk Access Mode", userAgent, d.Timeout(schema.TimeoutUpdate))
 		if err != nil {
 			return err
+		}
+	}
+
+	// 5. KMS Key Update (POST)
+	if d.HasChange("disk_encryption_key") {
+		oldKey, newKey := d.GetChange("disk_encryption_key")
+		oldList := oldKey.([]interface{})
+		newList := newKey.([]interface{})
+
+		var oldKmsKey, newKmsKey string
+		if len(oldList) > 0 && oldList[0] != nil {
+			oldKmsKey = oldList[0].(map[string]interface{})["kms_key_self_link"].(string)
+		}
+		if len(newList) > 0 && newList[0] != nil {
+			newKmsKey = newList[0].(map[string]interface{})["kms_key_self_link"].(string)
+		}
+
+		// Converting a disk from CMEK to GMEK is not supported
+		if oldKmsKey != "" && newKmsKey == "" {
+			return fmt.Errorf("Removing 'disk_encryption_key' is not supported in-place. To remove the KMS key, please destroy and recreate the disk without a KMS key.")
+		}
+
+		if newKmsKey != "" {
+			obj := map[string]interface{}{
+				"kmsKeyName": newKmsKey,
+			}
+
+			url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+d.Id()+"/updateKmsKey")
+			if err != nil {
+				return err
+			}
+
+			res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config: config, Method: "POST", Project: billingProject, RawURL: url, UserAgent: userAgent, Body: obj, Timeout: d.Timeout(schema.TimeoutUpdate),
+			})
+			if err != nil {
+				return fmt.Errorf("Error updating Disk %q KMS key: %s", d.Id(), err)
+			}
+
+			err = ComputeOperationWaitTime(config, res, project, "Updating Disk KMS Key", userAgent, d.Timeout(schema.TimeoutUpdate))
+			if err != nil {
+				return err
+			}
 		}
 	}
 
