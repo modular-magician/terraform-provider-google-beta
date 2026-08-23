@@ -1,0 +1,27 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_chronicle_request_template
+generation_type: mmv1
+source_file: products/chronicle/RequestTemplate.yaml
+api_service_name: chronicle.googleapis.com
+api_version: v1beta
+api_resource_type_kind: RequestTemplate
+autogen_status: true
+autogen_version: 1
+fields:
+    - api_field: allowDescription
+    - api_field: displayName
+    - api_field: environments
+    - api_field: eventFieldDefinitions.entityTypes
+    - api_field: eventFieldDefinitions.name
+    - api_field: eventFieldDefinitions.type
+    - api_field: eventFieldDefinitions.watermark
+    - field: instance
+      provider_only: true
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: requestTemplateId
+    - api_field: visualFamily
+    - field: deletion_policy
+      provider_only: true
