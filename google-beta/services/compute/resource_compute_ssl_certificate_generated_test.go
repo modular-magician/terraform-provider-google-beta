@@ -76,7 +76,7 @@ func TestAccComputeSslCertificate_sslCertificateBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "private_key_wo", "private_key_wo_version"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "name_prefix", "private_key", "private_key_wo", "private_key_wo_version"},
 			},
 			{
 				ResourceName:       "google_compute_ssl_certificate.default",
@@ -125,7 +125,7 @@ func TestAccComputeSslCertificate_sslCertificateBasicWriteonlyExample(t *testing
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "private_key_wo", "private_key_wo_version"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "name_prefix", "private_key", "private_key_wo", "private_key_wo_version"},
 			},
 			{
 				ResourceName:       "google_compute_ssl_certificate.default",
@@ -140,11 +140,12 @@ func TestAccComputeSslCertificate_sslCertificateBasicWriteonlyExample(t *testing
 func testAccComputeSslCertificate_sslCertificateBasicWriteonlyExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_ssl_certificate" "default" {
-  name_prefix            = "my-certificate-"
-  description            = "a description"
-  private_key_wo         = file("test-fixtures/test.key")
-  private_key_wo_version = parseint(filesha256("test-fixtures/test.key"),16)%pow(2,32)
-  certificate            = file("test-fixtures/test.crt")
+  name_prefix              = "my-certificate-"
+  description              = "a description"
+  private_key_wo           = file("test-fixtures/test.key")
+  private_key_wo_version   = parseint(filesha256("test-fixtures/test.key"),16)%pow(2,32)
+  certificate_wo           = file("test-fixtures/test.crt")
+  certificate_wo_version   = parseint(filesha256("test-fixtures/test.crt"),16)%pow(2,32)
 
   lifecycle {
     create_before_destroy = true
@@ -179,7 +180,7 @@ func TestAccComputeSslCertificate_sslCertificateRandomProviderExample(t *testing
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"private_key", "private_key_wo", "private_key_wo_version"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "private_key", "private_key_wo", "private_key_wo_version"},
 			},
 			{
 				ResourceName:       "google_compute_ssl_certificate.default",
@@ -245,7 +246,7 @@ func TestAccComputeSslCertificate_sslCertificateTargetHttpsProxiesExample(t *tes
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "private_key_wo", "private_key_wo_version"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "name_prefix", "private_key", "private_key_wo", "private_key_wo_version"},
 			},
 			{
 				ResourceName:       "google_compute_ssl_certificate.default",

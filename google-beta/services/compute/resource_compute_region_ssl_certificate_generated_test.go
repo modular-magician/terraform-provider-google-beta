@@ -76,7 +76,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateBasicExample(t *test
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "private_key_wo", "private_key_wo_version", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "name_prefix", "private_key", "private_key_wo", "private_key_wo_version", "region"},
 			},
 			{
 				ResourceName:       "google_compute_region_ssl_certificate.default",
@@ -126,7 +126,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateBasicWriteonlyExampl
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "private_key_wo", "private_key_wo_version", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "name_prefix", "private_key", "private_key_wo", "private_key_wo_version", "region"},
 			},
 			{
 				ResourceName:       "google_compute_region_ssl_certificate.default",
@@ -141,12 +141,13 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateBasicWriteonlyExampl
 func testAccComputeRegionSslCertificate_regionSslCertificateBasicWriteonlyExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_ssl_certificate" "default" {
-  region                 = "us-central1"
-  name_prefix            = "my-certificate-"
-  description            = "a description"
-  private_key_wo         = file("test-fixtures/test.key")
-  private_key_wo_version = parseint(filesha256("test-fixtures/test.key"),16)%pow(2,32)
-  certificate            = file("test-fixtures/test.crt")
+  region                   = "us-central1"
+  name_prefix              = "my-certificate-"
+  description              = "a description"
+  private_key_wo           = file("test-fixtures/test.key")
+  private_key_wo_version   = parseint(filesha256("test-fixtures/test.key"),16)%pow(2,32)
+  certificate_wo           = file("test-fixtures/test.crt")
+  certificate_wo_version   = parseint(filesha256("test-fixtures/test.crt"),16)%pow(2,32)
 
   lifecycle {
     create_before_destroy = true
@@ -181,7 +182,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateRandomProviderExampl
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"private_key", "private_key_wo", "private_key_wo_version", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "private_key", "private_key_wo", "private_key_wo_version", "region"},
 			},
 			{
 				ResourceName:       "google_compute_region_ssl_certificate.default",
@@ -249,7 +250,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateTargetHttpsProxiesEx
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "private_key_wo", "private_key_wo_version", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "certificate_wo_version", "name_prefix", "private_key", "private_key_wo", "private_key_wo_version", "region"},
 			},
 			{
 				ResourceName:       "google_compute_region_ssl_certificate.default",

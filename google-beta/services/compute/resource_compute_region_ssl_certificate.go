@@ -153,12 +153,30 @@ func ResourceComputeRegionSslCertificate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"certificate": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 				Description: `The certificate in PEM format.
 The certificate chain must be no greater than 5 certs long.
 The chain must include at least one intermediate cert.`,
-				Sensitive: true,
+				Sensitive:    true,
+				ExactlyOneOf: []string{"certificate", "certificate_wo"},
+			},
+			"certificate_wo": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The certificate in PEM format.
+The certificate chain must be no greater than 5 certs long.
+The chain must include at least one intermediate cert.`,
+				WriteOnly:    true,
+				ExactlyOneOf: []string{"certificate", "certificate_wo"},
+				RequiredWith: []string{"certificate_wo_version"},
+			},
+			"certificate_wo_version": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  `Triggers update of 'certificate_wo' write-only. Increment this value when an update to 'certificate_wo' is needed. For more info see [updating write-only arguments](/docs/providers/google/guides/using_write_only_arguments.html#updating-write-only-arguments)`,
+				RequiredWith: []string{"certificate_wo"},
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -187,14 +205,14 @@ These are in the same namespace as the managed SSL certificates.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: sha256DiffSuppress,
-				Description:      `The write-only private key in PEM format.`,
+				Description:      `The private key in PEM format.`,
 				Sensitive:        true,
 				ExactlyOneOf:     []string{"private_key", "private_key_wo"},
 			},
 			"private_key_wo": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Description:  `The write-only private key in PEM format.`,
+				Description:  `The private key in PEM format.`,
 				WriteOnly:    true,
 				ExactlyOneOf: []string{"private_key", "private_key_wo"},
 				RequiredWith: []string{"private_key_wo_version"},
@@ -306,6 +324,12 @@ func resourceComputeRegionSslCertificateCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("private_key"); !tpgresource.IsEmptyValue(reflect.ValueOf(privateKeyProp)) && (ok || !reflect.DeepEqual(v, privateKeyProp)) {
 		obj["privateKey"] = privateKeyProp
+	}
+	certificateWoProp, err := expandComputeRegionSslCertificateCertificateWo(tpgresource.GetRawConfigAttributeAsString(d, "certificate_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("certificate_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(certificateWoProp)) && (ok || !reflect.DeepEqual(v, certificateWoProp)) {
+		obj["certificate"] = certificateWoProp
 	}
 	privateKeyWoProp, err := expandComputeRegionSslCertificatePrivateKeyWo(tpgresource.GetRawConfigAttributeAsString(d, "private_key_wo"), d, config)
 	if err != nil {
@@ -611,6 +635,10 @@ func flattenComputeRegionSslCertificateName(v interface{}, d *schema.ResourceDat
 	return v
 }
 
+func flattenComputeRegionSslCertificateCertificateWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("certificate_wo_version")
+}
+
 func flattenComputeRegionSslCertificatePrivateKeyWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("private_key_wo_version")
 }
@@ -657,6 +685,10 @@ func expandComputeRegionSslCertificatePrivateKey(v interface{}, d tpgresource.Te
 	return v, nil
 }
 
+func expandComputeRegionSslCertificateCertificateWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeRegionSslCertificatePrivateKeyWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -688,6 +720,9 @@ func ResourceComputeRegionSslCertificateFlatten(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error reading RegionSslCertificate: %s", err)
 	}
 	if err = d.Set("name", flattenComputeRegionSslCertificateName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionSslCertificate: %s", err)
+	}
+	if err = d.Set("certificate_wo_version", flattenComputeRegionSslCertificateCertificateWoVersion(res["certificateWoVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslCertificate: %s", err)
 	}
 	if err = d.Set("private_key_wo_version", flattenComputeRegionSslCertificatePrivateKeyWoVersion(res["privateKeyWoVersion"], d, config)); err != nil {
