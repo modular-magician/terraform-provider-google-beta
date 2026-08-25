@@ -204,6 +204,12 @@ The following arguments are supported:
   Network configuration for the AgentGateway.
   Structure is [documented below](#nested_network_config).
 
+* `agent_connectivity_template` -
+  (Optional)
+  The resource name of the AgentConnectivityTemplate.
+  Format:
+  `projects/{project}/locations/{location}/agentConnectivityTemplates/{template}`
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
