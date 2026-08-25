@@ -832,6 +832,45 @@ DARK`,
 														},
 													},
 												},
+												"whatsapp_config": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: `Configuration specific to WhatsApp deployments.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"description": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The description of the Meta business page or profile.`,
+															},
+															"display_name": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The fetched Meta business page name.`,
+															},
+															"phone_number": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The phone number in E.164 format.`,
+															},
+															"phone_number_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The Meta phone number ID.`,
+															},
+															"thumbnail_url": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The fetched Meta business profile thumbnail URL.`,
+															},
+															"waba_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The WhatsApp Business Account ID.`,
+															},
+														},
+													},
+												},
 											},
 										},
 									},
@@ -1058,6 +1097,12 @@ NUMBER>@gcp-sa-ces.iam.gserviceaccount.com.`,
 																Type:        schema.TypeBool,
 																Computed:    true,
 																Description: `Whether to disable conversation logging for the sessions.`,
+															},
+															"retention_window": {
+																Type:     schema.TypeString,
+																Computed: true,
+																Description: `Controls the retention window for the conversation.
+If not set, the conversation will be retained for 365 days.`,
 															},
 														},
 													},
@@ -1291,6 +1336,27 @@ ARRAY`,
 																Description: `Indicate the items in the array must be unique. Only applies to TYPE.ARRAY.`,
 															},
 														},
+													},
+												},
+											},
+										},
+									},
+									"vpc_sc_settings": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: `VPC-SC settings for the app.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"allowed_origins": {
+													Type:     schema.TypeList,
+													Computed: true,
+													Description: `The allowed HTTP(s) origins that OpenAPI tools in the App are
+able to directly call when VPC Service Controls are enabled. These strings
+must match the origin exactly, including the port if specified. For
+example, "https://example.com" or "https://example.com:443". This list does
+not yet apply to Python tools that may make direct HTTP calls.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
 													},
 												},
 											},
@@ -4069,6 +4135,8 @@ func flattenCESAppVersionSnapshotApp(v interface{}, d *schema.ResourceData, conf
 		flattenCESAppVersionSnapshotAppVariableDeclarations(original["variableDeclarations"], d, config)
 	transformed["client_certificate_settings"] =
 		flattenCESAppVersionSnapshotAppClientCertificateSettings(original["clientCertificateSettings"], d, config)
+	transformed["vpc_sc_settings"] =
+		flattenCESAppVersionSnapshotAppVpcScSettings(original["vpcScSettings"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppVersionSnapshotAppAudioProcessingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4230,6 +4298,8 @@ func flattenCESAppVersionSnapshotAppDefaultChannelProfile(v interface{}, d *sche
 		flattenCESAppVersionSnapshotAppDefaultChannelProfileProfileId(original["profileId"], d, config)
 	transformed["web_widget_config"] =
 		flattenCESAppVersionSnapshotAppDefaultChannelProfileWebWidgetConfig(original["webWidgetConfig"], d, config)
+	transformed["whatsapp_config"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfig(original["whatsappConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppVersionSnapshotAppDefaultChannelProfileChannelType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4291,6 +4361,53 @@ func flattenCESAppVersionSnapshotAppDefaultChannelProfileWebWidgetConfigTheme(v 
 }
 
 func flattenCESAppVersionSnapshotAppDefaultChannelProfileWebWidgetConfigWebWidgetTitle(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["waba_id"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigWabaId(original["wabaId"], d, config)
+	transformed["phone_number_id"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigPhoneNumberId(original["phoneNumberId"], d, config)
+	transformed["phone_number"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigPhoneNumber(original["phoneNumber"], d, config)
+	transformed["display_name"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigDisplayName(original["displayName"], d, config)
+	transformed["thumbnail_url"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigThumbnailUrl(original["thumbnailUrl"], d, config)
+	transformed["description"] =
+		flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigDescription(original["description"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigWabaId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigPhoneNumberId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigThumbnailUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppDefaultChannelProfileWhatsappConfigDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4548,9 +4665,15 @@ func flattenCESAppVersionSnapshotAppLoggingSettingsConversationLoggingSettings(v
 	transformed := make(map[string]interface{})
 	transformed["disable_conversation_logging"] =
 		flattenCESAppVersionSnapshotAppLoggingSettingsConversationLoggingSettingsDisableConversationLogging(original["disableConversationLogging"], d, config)
+	transformed["retention_window"] =
+		flattenCESAppVersionSnapshotAppLoggingSettingsConversationLoggingSettingsRetentionWindow(original["retentionWindow"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppVersionSnapshotAppLoggingSettingsConversationLoggingSettingsDisableConversationLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppLoggingSettingsConversationLoggingSettingsRetentionWindow(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4840,6 +4963,23 @@ func flattenCESAppVersionSnapshotAppClientCertificateSettingsPrivateKey(v interf
 }
 
 func flattenCESAppVersionSnapshotAppClientCertificateSettingsPassphrase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppVpcScSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["allowed_origins"] =
+		flattenCESAppVersionSnapshotAppVpcScSettingsAllowedOrigins(original["allowedOrigins"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppVersionSnapshotAppVpcScSettingsAllowedOrigins(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

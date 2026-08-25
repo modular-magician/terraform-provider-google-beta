@@ -536,6 +536,11 @@ In addition to the arguments listed above, the following computed attributes are
   The default client certificate settings for the app.
   Structure is [documented below](#nested_snapshot_app_client_certificate_settings).
 
+* `vpc_sc_settings` -
+  (Output)
+  VPC-SC settings for the app.
+  Structure is [documented below](#nested_snapshot_app_vpc_sc_settings).
+
 
 <a name="nested_snapshot_app_audio_processing_config"></a>The `audio_processing_config` block contains:
 
@@ -683,6 +688,11 @@ In addition to the arguments listed above, the following computed attributes are
   Message for configuration for the web widget.
   Structure is [documented below](#nested_snapshot_app_default_channel_profile_web_widget_config).
 
+* `whatsapp_config` -
+  (Output)
+  Configuration specific to WhatsApp deployments.
+  Structure is [documented below](#nested_snapshot_app_default_channel_profile_whatsapp_config).
+
 
 <a name="nested_snapshot_app_default_channel_profile_persona_property"></a>The `persona_property` block contains:
 
@@ -716,6 +726,32 @@ In addition to the arguments listed above, the following computed attributes are
 * `web_widget_title` -
   (Output)
   The title of the web widget.
+
+<a name="nested_snapshot_app_default_channel_profile_whatsapp_config"></a>The `whatsapp_config` block contains:
+
+* `waba_id` -
+  (Output)
+  The WhatsApp Business Account ID.
+
+* `phone_number_id` -
+  (Output)
+  The Meta phone number ID.
+
+* `phone_number` -
+  (Output)
+  The phone number in E.164 format.
+
+* `display_name` -
+  (Output)
+  The fetched Meta business page name.
+
+* `thumbnail_url` -
+  (Output)
+  The fetched Meta business profile thumbnail URL.
+
+* `description` -
+  (Output)
+  The description of the Meta business page or profile.
 
 <a name="nested_snapshot_app_evaluation_metrics_thresholds"></a>The `evaluation_metrics_thresholds` block contains:
 
@@ -863,6 +899,11 @@ In addition to the arguments listed above, the following computed attributes are
 * `disable_conversation_logging` -
   (Output)
   Whether to disable conversation logging for the sessions.
+
+* `retention_window` -
+  (Output)
+  Controls the retention window for the conversation.
+  If not set, the conversation will be retained for 365 days.
 
 <a name="nested_snapshot_app_logging_settings_redaction_config"></a>The `redaction_config` block contains:
 
@@ -1031,6 +1072,16 @@ In addition to the arguments listed above, the following computed attributes are
   (Output)
   The passphrase to decrypt the private key.
   Should be left unset if the private key is not encrypted.
+
+<a name="nested_snapshot_app_vpc_sc_settings"></a>The `vpc_sc_settings` block contains:
+
+* `allowed_origins` -
+  (Output)
+  The allowed HTTP(s) origins that OpenAPI tools in the App are
+  able to directly call when VPC Service Controls are enabled. These strings
+  must match the origin exactly, including the port if specified. For
+  example, "https://example.com" or "https://example.com:443". This list does
+  not yet apply to Python tools that may make direct HTTP calls.
 
 <a name="nested_snapshot_examples"></a>The `examples` block contains:
 

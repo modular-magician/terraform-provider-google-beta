@@ -36,6 +36,12 @@ fields:
     - api_field: defaultChannelProfile.webWidgetConfig.modality
     - api_field: defaultChannelProfile.webWidgetConfig.theme
     - api_field: defaultChannelProfile.webWidgetConfig.webWidgetTitle
+    - api_field: defaultChannelProfile.whatsappConfig.description
+    - api_field: defaultChannelProfile.whatsappConfig.displayName
+    - api_field: defaultChannelProfile.whatsappConfig.phoneNumber
+    - api_field: defaultChannelProfile.whatsappConfig.phoneNumberId
+    - api_field: defaultChannelProfile.whatsappConfig.thumbnailUrl
+    - api_field: defaultChannelProfile.whatsappConfig.wabaId
     - api_field: deploymentCount
     - api_field: description
     - api_field: displayName
@@ -58,6 +64,7 @@ fields:
     - api_field: loggingSettings.bigqueryExportSettings.project
     - api_field: loggingSettings.cloudLoggingSettings.enableCloudLogging
     - api_field: loggingSettings.conversationLoggingSettings.disableConversationLogging
+    - api_field: loggingSettings.conversationLoggingSettings.retentionWindow
     - api_field: loggingSettings.redactionConfig.deidentifyTemplate
     - api_field: loggingSettings.redactionConfig.enableRedaction
     - api_field: loggingSettings.redactionConfig.inspectTemplate
@@ -94,5 +101,6 @@ fields:
     - api_field: variableDeclarations.schema.title
     - api_field: variableDeclarations.schema.type
     - api_field: variableDeclarations.schema.uniqueItems
+    - api_field: vpcScSettings.allowedOrigins
     - field: deletion_policy
       provider_only: true

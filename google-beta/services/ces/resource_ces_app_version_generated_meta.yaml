@@ -85,6 +85,12 @@ fields:
     - api_field: snapshot.app.defaultChannelProfile.webWidgetConfig.modality
     - api_field: snapshot.app.defaultChannelProfile.webWidgetConfig.theme
     - api_field: snapshot.app.defaultChannelProfile.webWidgetConfig.webWidgetTitle
+    - api_field: snapshot.app.defaultChannelProfile.whatsappConfig.description
+    - api_field: snapshot.app.defaultChannelProfile.whatsappConfig.displayName
+    - api_field: snapshot.app.defaultChannelProfile.whatsappConfig.phoneNumber
+    - api_field: snapshot.app.defaultChannelProfile.whatsappConfig.phoneNumberId
+    - api_field: snapshot.app.defaultChannelProfile.whatsappConfig.thumbnailUrl
+    - api_field: snapshot.app.defaultChannelProfile.whatsappConfig.wabaId
     - api_field: snapshot.app.deploymentCount
     - api_field: snapshot.app.description
     - api_field: snapshot.app.displayName
@@ -105,6 +111,7 @@ fields:
     - api_field: snapshot.app.loggingSettings.bigqueryExportSettings.project
     - api_field: snapshot.app.loggingSettings.cloudLoggingSettings.enableCloudLogging
     - api_field: snapshot.app.loggingSettings.conversationLoggingSettings.disableConversationLogging
+    - api_field: snapshot.app.loggingSettings.conversationLoggingSettings.retentionWindow
     - api_field: snapshot.app.loggingSettings.redactionConfig.deidentifyTemplate
     - api_field: snapshot.app.loggingSettings.redactionConfig.enableRedaction
     - api_field: snapshot.app.loggingSettings.redactionConfig.inspectTemplate
@@ -137,6 +144,7 @@ fields:
     - api_field: snapshot.app.variableDeclarations.schema.required
     - api_field: snapshot.app.variableDeclarations.schema.type
     - api_field: snapshot.app.variableDeclarations.schema.uniqueItems
+    - api_field: snapshot.app.vpcScSettings.allowedOrigins
     - api_field: snapshot.examples.createTime
     - api_field: snapshot.examples.description
     - api_field: snapshot.examples.displayName

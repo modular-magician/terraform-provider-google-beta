@@ -152,6 +152,7 @@ resource "google_ces_app" "ces_app_basic" {
 
     conversation_logging_settings {
       disable_conversation_logging = true
+      retention_window = "86400s"
     }
   }
 
@@ -251,6 +252,9 @@ resource "google_ces_app" "ces_app_basic" {
     private_key = google_secret_manager_secret_version.fake_secret_version.name
   }
 
+  vpc_sc_settings {
+    allowed_origins = ["https://example.com"]
+  }
 
   # Root agent should not be specified when creating an app
 }
@@ -344,6 +348,7 @@ resource "google_ces_app" "ces_app_basic" {
 
     conversation_logging_settings {
       disable_conversation_logging = true
+      retention_window = "172800s"
     }
   }
 
@@ -427,6 +432,11 @@ resource "google_ces_app" "ces_app_basic" {
       theme    = "LIGHT"
       web_widget_title = "Help Assistant"
     }
+    whatsapp_config {
+      waba_id = "123456789012345"
+      phone_number_id = "987654321098765"
+      phone_number = "+15551234567"
+    }
   }
 
   metadata = {
@@ -440,6 +450,10 @@ resource "google_ces_app" "ces_app_basic" {
   client_certificate_settings {
     tls_certificate = file("test-fixtures/cert.pem")
     private_key = google_secret_manager_secret_version.fake_secret_version.name
+  }
+
+  vpc_sc_settings {
+    allowed_origins = ["https://example.com", "https://example.org:443"]
   }
 
   # Root agent should not be specified when creating an app
