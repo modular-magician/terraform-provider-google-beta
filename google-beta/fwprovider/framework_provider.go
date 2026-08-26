@@ -1265,6 +1265,12 @@ func (p *FrameworkProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 					transport_tpg.CustomEndpointValidator(),
 				},
 			},
+			"storage_ftp_custom_endpoint": &schema.StringAttribute{
+				Optional: true,
+				Validators: []validator.String{
+					transport_tpg.CustomEndpointValidator(),
+				},
+			},
 			"storage_insights_custom_endpoint": &schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
