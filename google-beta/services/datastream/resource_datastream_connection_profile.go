@@ -1766,17 +1766,7 @@ func flattenDatastreamConnectionProfilePostgresqlProfileSslConfig(v interface{},
 	return []interface{}{transformed}
 }
 func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerification(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["ca_certificate"] =
-		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationCaCertificate(original["caCertificate"], d, config)
-	return []interface{}{transformed}
+	return d.Get("postgresql_profile.0.ssl_config.0.server_verification")
 }
 func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate")

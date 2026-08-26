@@ -78,7 +78,7 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfileBasicExample(
 				ResourceName:            "google_datastream_connection_profile.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_datastream_connection_profile.default",
@@ -140,7 +140,7 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresqlPri
 				ResourceName:            "google_datastream_connection_profile.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.password", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.password", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_datastream_connection_profile.default",
@@ -310,7 +310,7 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfileFullExample(t
 				ResourceName:            "google_datastream_connection_profile.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_datastream_connection_profile.default",
@@ -368,7 +368,7 @@ func TestAccDatastreamConnectionProfile_datastreamStreamPostgresqlSslconfigServe
 				ResourceName:            "google_datastream_connection_profile.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.password", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.password", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_datastream_connection_profile.default",
@@ -454,6 +454,113 @@ resource "google_datastream_connection_profile" "default" {
 `, context)
 }
 
+func TestAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresqlSslconfigServerVerificationExample(t *testing.T) {
+	acctest.SkipIfVcr(t)
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"connection_profile_id":  "tf-test-profile-id" + randomSuffix,
+		"database_instance_name": "tf-test-my-instance" + randomSuffix,
+		"deletion_protection":    false,
+		"random_suffix":          randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+		},
+		CheckDestroy: testAccCheckDatastreamConnectionProfileDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresqlSslconfigServerVerificationExample(context),
+			},
+			{
+				ResourceName:            "google_datastream_connection_profile.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.password", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_datastream_connection_profile.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresqlSslconfigServerVerificationExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_datastream_static_ips" "datastream_ips" {
+  location           = "us-central1"
+}
+
+resource "google_sql_database_instance" "instance" {
+  name             = "%{database_instance_name}"
+  database_version = "POSTGRES_15"
+  region           = "us-central1"
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled = true
+      ssl_mode = "ENCRYPTED_ONLY"
+      dynamic "authorized_networks" {
+        for_each = data.google_datastream_static_ips.datastream_ips.static_ips
+        iterator = ip
+
+        content {
+          name  = format("datastream-%d", ip.key)
+          value = ip.value
+        }
+      }
+    }
+  }
+
+  deletion_protection  = %{deletion_protection}
+}
+
+resource "google_sql_database" "db" {
+    instance = google_sql_database_instance.instance.name
+    name     = "db"
+}
+
+resource "random_password" "pwd" {
+  length  = 16
+  special = false
+}
+
+resource "google_sql_user" "user" {
+    name = "user"
+    instance = google_sql_database_instance.instance.name
+    password = random_password.pwd.result
+}
+
+resource "google_datastream_connection_profile" "default" {
+    display_name          = "Connection Profile"
+    location              = "us-central1"
+    connection_profile_id = "%{connection_profile_id}"
+
+    postgresql_profile {
+        hostname = google_sql_database_instance.instance.public_ip_address
+        port     = 5432
+        username = "user"
+        password = random_password.pwd.result
+        database = google_sql_database.db.name
+        ssl_config {
+            server_verification {
+              ca_certificate = google_sql_database_instance.instance.server_ca_cert.0.cert
+            }
+        }
+    }
+}
+`, context)
+}
+
 func TestAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresSecretManagerExample(t *testing.T) {
 	t.Parallel()
 
@@ -476,7 +583,7 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresSecre
 				ResourceName:            "google_datastream_connection_profile.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "create_without_validation", "labels", "location", "mongodb_profile.0.ssl_config.0.ca_certificate", "mongodb_profile.0.ssl_config.0.client_certificate", "mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key", "postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_datastream_connection_profile.default",

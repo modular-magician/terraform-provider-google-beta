@@ -429,6 +429,78 @@ resource "google_datastream_connection_profile" "default" {
     }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=datastream_connection_profile_postgresql_sslconfig_server_verification&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Datastream Connection Profile Postgresql Sslconfig Server Verification
+
+
+```hcl
+data "google_datastream_static_ips" "datastream_ips" {
+  location           = "us-central1"
+}
+
+resource "google_sql_database_instance" "instance" {
+  name             = "my-instance"
+  database_version = "POSTGRES_15"
+  region           = "us-central1"
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled = true
+      ssl_mode = "ENCRYPTED_ONLY"
+      dynamic "authorized_networks" {
+        for_each = data.google_datastream_static_ips.datastream_ips.static_ips
+        iterator = ip
+
+        content {
+          name  = format("datastream-%d", ip.key)
+          value = ip.value
+        }
+      }
+    }
+  }
+
+  deletion_protection  = true
+}
+
+resource "google_sql_database" "db" {
+    instance = google_sql_database_instance.instance.name
+    name     = "db"
+}
+
+resource "random_password" "pwd" {
+  length  = 16
+  special = false
+}
+
+resource "google_sql_user" "user" {
+    name = "user"
+    instance = google_sql_database_instance.instance.name
+    password = random_password.pwd.result
+}
+
+resource "google_datastream_connection_profile" "default" {
+    display_name          = "Connection Profile"
+    location              = "us-central1"
+    connection_profile_id = "profile-id"
+
+    postgresql_profile {
+        hostname = google_sql_database_instance.instance.public_ip_address
+        port     = 5432
+        username = "user"
+        password = random_password.pwd.result
+        database = google_sql_database.db.name
+        ssl_config {
+            server_verification {
+              ca_certificate = google_sql_database_instance.instance.server_ca_cert.0.cert
+            }
+        }
+    }
+}
+```
 ## Example Usage - Datastream Connection Profile Salesforce
 
 
