@@ -787,6 +787,35 @@ Format:
 								},
 							},
 						},
+						"unredacted_bigquery_export_settings": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Settings to describe the BigQuery export behaviors for the app for
+unredacted conversation data.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"dataset": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The BigQuery dataset to export the data to.`,
+									},
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Indicates whether the BigQuery export is enabled.`,
+									},
+									"project": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `The project ID of the BigQuery dataset to export the data to.
+Note: If the BigQuery dataset is in a different project from the app, you should grant
+roles/bigquery.admin role to the CES service agent service-<PROJECT-
+NUMBER>@gcp-sa-ces.iam.gserviceaccount.com.`,
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -2239,6 +2268,8 @@ func flattenCESAppLoggingSettings(v interface{}, d *schema.ResourceData, config 
 		flattenCESAppLoggingSettingsConversationLoggingSettings(original["conversationLoggingSettings"], d, config)
 	transformed["redaction_config"] =
 		flattenCESAppLoggingSettingsRedactionConfig(original["redactionConfig"], d, config)
+	transformed["unredacted_bigquery_export_settings"] =
+		flattenCESAppLoggingSettingsUnredactedBigqueryExportSettings(original["unredactedBigqueryExportSettings"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppLoggingSettingsAudioRecordingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2359,6 +2390,35 @@ func flattenCESAppLoggingSettingsRedactionConfigEnableRedaction(v interface{}, d
 }
 
 func flattenCESAppLoggingSettingsRedactionConfigInspectTemplate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppLoggingSettingsUnredactedBigqueryExportSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["dataset"] =
+		flattenCESAppLoggingSettingsUnredactedBigqueryExportSettingsDataset(original["dataset"], d, config)
+	transformed["enabled"] =
+		flattenCESAppLoggingSettingsUnredactedBigqueryExportSettingsEnabled(original["enabled"], d, config)
+	transformed["project"] =
+		flattenCESAppLoggingSettingsUnredactedBigqueryExportSettingsProject(original["project"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppLoggingSettingsUnredactedBigqueryExportSettingsDataset(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppLoggingSettingsUnredactedBigqueryExportSettingsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppLoggingSettingsUnredactedBigqueryExportSettingsProject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3426,6 +3486,13 @@ func expandCESAppLoggingSettings(v interface{}, d tpgresource.TerraformResourceD
 		transformed["redactionConfig"] = transformedRedactionConfig
 	}
 
+	transformedUnredactedBigqueryExportSettings, err := expandCESAppLoggingSettingsUnredactedBigqueryExportSettings(original["unredacted_bigquery_export_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUnredactedBigqueryExportSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["unredactedBigqueryExportSettings"] = transformedUnredactedBigqueryExportSettings
+	}
+
 	return transformed, nil
 }
 
@@ -3622,6 +3689,54 @@ func expandCESAppLoggingSettingsRedactionConfigEnableRedaction(v interface{}, d 
 }
 
 func expandCESAppLoggingSettingsRedactionConfigInspectTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppLoggingSettingsUnredactedBigqueryExportSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedDataset, err := expandCESAppLoggingSettingsUnredactedBigqueryExportSettingsDataset(original["dataset"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDataset); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dataset"] = transformedDataset
+	}
+
+	transformedEnabled, err := expandCESAppLoggingSettingsUnredactedBigqueryExportSettingsEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedProject, err := expandCESAppLoggingSettingsUnredactedBigqueryExportSettingsProject(original["project"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["project"] = transformedProject
+	}
+
+	return transformed, nil
+}
+
+func expandCESAppLoggingSettingsUnredactedBigqueryExportSettingsDataset(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppLoggingSettingsUnredactedBigqueryExportSettingsEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppLoggingSettingsUnredactedBigqueryExportSettingsProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

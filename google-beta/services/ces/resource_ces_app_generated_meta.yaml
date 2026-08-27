@@ -72,6 +72,9 @@ fields:
     - api_field: loggingSettings.redactionConfig.deidentifyTemplate
     - api_field: loggingSettings.redactionConfig.enableRedaction
     - api_field: loggingSettings.redactionConfig.inspectTemplate
+    - api_field: loggingSettings.unredactedBigqueryExportSettings.dataset
+    - api_field: loggingSettings.unredactedBigqueryExportSettings.enabled
+    - api_field: loggingSettings.unredactedBigqueryExportSettings.project
     - api_field: metadata
     - api_field: modelSettings.model
     - api_field: modelSettings.temperature

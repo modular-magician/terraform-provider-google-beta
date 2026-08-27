@@ -857,6 +857,12 @@ In addition to the arguments listed above, the following computed attributes are
   Configuration to instruct how sensitive data should be handled.
   Structure is [documented below](#nested_snapshot_app_logging_settings_redaction_config).
 
+* `unredacted_bigquery_export_settings` -
+  (Output)
+  Settings to describe the BigQuery export behaviors for the app for
+  unredacted conversation data.
+  Structure is [documented below](#nested_snapshot_app_logging_settings_unredacted_bigquery_export_settings).
+
 
 <a name="nested_snapshot_app_logging_settings_audio_recording_config"></a>The `audio_recording_config` block contains:
 
@@ -935,6 +941,23 @@ In addition to the arguments listed above, the following computed attributes are
   detection of sensitive data types.
   Format:
   `projects/{project}/locations/{location}/inspectTemplates/{inspect_template}`
+
+<a name="nested_snapshot_app_logging_settings_unredacted_bigquery_export_settings"></a>The `unredacted_bigquery_export_settings` block contains:
+
+* `dataset` -
+  (Output)
+  The BigQuery dataset to export the data to.
+
+* `enabled` -
+  (Output)
+  Indicates whether the BigQuery export is enabled.
+
+* `project` -
+  (Output)
+  The project ID of the BigQuery dataset to export the data to.
+  Note: If the BigQuery dataset is in a different project from the app, you should grant
+  roles/bigquery.admin role to the CES service agent service-<PROJECT-
+  NUMBER>@gcp-sa-ces.iam.gserviceaccount.com.
 
 <a name="nested_snapshot_app_model_settings"></a>The `model_settings` block contains:
 

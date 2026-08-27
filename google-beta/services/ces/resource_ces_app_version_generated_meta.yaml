@@ -120,6 +120,9 @@ fields:
     - api_field: snapshot.app.loggingSettings.redactionConfig.deidentifyTemplate
     - api_field: snapshot.app.loggingSettings.redactionConfig.enableRedaction
     - api_field: snapshot.app.loggingSettings.redactionConfig.inspectTemplate
+    - api_field: snapshot.app.loggingSettings.unredactedBigqueryExportSettings.dataset
+    - api_field: snapshot.app.loggingSettings.unredactedBigqueryExportSettings.enabled
+    - api_field: snapshot.app.loggingSettings.unredactedBigqueryExportSettings.project
     - api_field: snapshot.app.metadata
     - api_field: snapshot.app.modelSettings.model
     - api_field: snapshot.app.modelSettings.temperature

@@ -1201,6 +1201,34 @@ Format:
 														},
 													},
 												},
+												"unredacted_bigquery_export_settings": {
+													Type:     schema.TypeList,
+													Computed: true,
+													Description: `Settings to describe the BigQuery export behaviors for the app for
+unredacted conversation data.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"dataset": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The BigQuery dataset to export the data to.`,
+															},
+															"enabled": {
+																Type:        schema.TypeBool,
+																Computed:    true,
+																Description: `Indicates whether the BigQuery export is enabled.`,
+															},
+															"project": {
+																Type:     schema.TypeString,
+																Computed: true,
+																Description: `The project ID of the BigQuery dataset to export the data to.
+Note: If the BigQuery dataset is in a different project from the app, you should grant
+roles/bigquery.admin role to the CES service agent service-<PROJECT-
+NUMBER>@gcp-sa-ces.iam.gserviceaccount.com.`,
+															},
+														},
+													},
+												},
 											},
 										},
 									},
@@ -4654,6 +4682,8 @@ func flattenCESAppVersionSnapshotAppLoggingSettings(v interface{}, d *schema.Res
 		flattenCESAppVersionSnapshotAppLoggingSettingsConversationLoggingSettings(original["conversationLoggingSettings"], d, config)
 	transformed["redaction_config"] =
 		flattenCESAppVersionSnapshotAppLoggingSettingsRedactionConfig(original["redactionConfig"], d, config)
+	transformed["unredacted_bigquery_export_settings"] =
+		flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettings(original["unredactedBigqueryExportSettings"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppVersionSnapshotAppLoggingSettingsAudioRecordingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4774,6 +4804,35 @@ func flattenCESAppVersionSnapshotAppLoggingSettingsRedactionConfigEnableRedactio
 }
 
 func flattenCESAppVersionSnapshotAppLoggingSettingsRedactionConfigInspectTemplate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["dataset"] =
+		flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettingsDataset(original["dataset"], d, config)
+	transformed["enabled"] =
+		flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettingsEnabled(original["enabled"], d, config)
+	transformed["project"] =
+		flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettingsProject(original["project"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettingsDataset(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettingsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAppLoggingSettingsUnredactedBigqueryExportSettingsProject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
