@@ -817,6 +817,20 @@ When the field is set to false, deleting the WorkerPool is allowed.
   Startup probe of application within the container. All other probes are disabled if a startup probe is provided, until it succeeds. Container will not be added to service endpoints if the probe fails.
   Structure is [documented below](#nested_template_containers_startup_probe).
 
+* `base_image_uri` -
+  (Optional)
+  Base image for this container. If set, it indicates that the service is enrolled into automatic base image update.
+
+* `build_info` -
+  (Output)
+  The build info of the container image.
+  Structure is [documented below](#nested_template_containers_build_info).
+
+* `source_code` -
+  (Optional)
+  Location of the source.
+  Structure is [documented below](#nested_template_containers_source_code).
+
 
 <a name="nested_template_containers_env"></a>The `env` block supports:
 
@@ -1023,6 +1037,61 @@ When the field is set to false, deleting the WorkerPool is allowed.
 * `service` -
   (Optional)
   Optional. Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md ). If this is not specified, the default behavior is defined by gRPC
+
+<a name="nested_template_containers_build_info"></a>The `build_info` block contains:
+
+* `function_target` -
+  (Output)
+  Entry point of the function when the image is a Cloud Run function.
+
+* `source_location` -
+  (Output)
+  Source code location of the image.
+
+<a name="nested_template_containers_source_code"></a>The `source_code` block supports:
+
+* `cloud_storage_source` -
+  (Optional)
+  Cloud Storage source.
+  Structure is [documented below](#nested_template_containers_source_code_cloud_storage_source).
+
+* `inlined_source` -
+  (Optional)
+  Inlined source.
+  Structure is [documented below](#nested_template_containers_source_code_inlined_source).
+
+
+<a name="nested_template_containers_source_code_cloud_storage_source"></a>The `cloud_storage_source` block supports:
+
+* `bucket` -
+  (Required)
+  The Cloud Storage bucket name.
+
+* `object` -
+  (Required)
+  The Cloud Storage object name.
+
+* `generation` -
+  (Optional)
+  The Cloud Storage object generation. This is an int64 value. As with most Google APIs, its JSON representation will be a string instead of an integer.
+
+<a name="nested_template_containers_source_code_inlined_source"></a>The `inlined_source` block supports:
+
+* `sources` -
+  (Required)
+  The source code.
+  Structure is [documented below](#nested_template_containers_source_code_inlined_source_sources).
+
+
+<a name="nested_template_containers_source_code_inlined_source_sources"></a>The `sources` block supports:
+
+* `filename` -
+  (Required)
+  The relative path of the file to the root of the source directory.
+
+* `content` -
+  (Required)
+  Represents the exact, literal, and complete source code of the file.
 
 <a name="nested_template_volumes"></a>The `volumes` block supports:
 
