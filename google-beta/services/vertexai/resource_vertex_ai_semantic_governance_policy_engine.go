@@ -201,9 +201,12 @@ implicitly and need not be listed. Format: projects/{project} (ID or number).`,
 							},
 						},
 						"dns_zone_name": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `FQDN of the private DNS zone to create DNS record set for PSC endpoint.`,
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The name of the private Cloud DNS managed zone in which the backend
+creates the DNS record set for this gateway's PSC endpoint. This is the
+managed-zone resource name, not a fully-qualified domain name. The zone
+must already exist and be attached to the gateway's VPC at provision time.`,
 						},
 						"network": {
 							Type:     schema.TypeString,
@@ -220,14 +223,17 @@ not provided 'default' subnet will be used from the same {location}
 Format: projects/{project}/regions/{region}/subnetworks/{subnetwork}`,
 						},
 						"dns_record": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: `The fully qualified record name of the created A-record in Cloud DNS.`,
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The fully qualified record name of the A-record the backend writes into
+'dns_zone_name' for this gateway. Populated after the gateway reaches
+'ACTIVE'; empty until then.`,
 						},
 						"ip_address": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: `The private IP address of the PSC endpoint.`,
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The private IP address of the PSC endpoint. This field is currently
+always empty and is slated for deprecation; do not depend on it.`,
 						},
 						"psc_endpoint": {
 							Type:     schema.TypeString,
@@ -239,7 +245,9 @@ rule.`,
 							Type:     schema.TypeString,
 							Computed: true,
 							Description: `The state of the Gateway configuration. One of: STATE_UNSPECIFIED,
-PROVISIONING, ACTIVE, DEPROVISIONING, INACTIVE, FAILED.`,
+PROVISIONING, ACTIVE, DEPROVISIONING, INACTIVE, FAILED. A 'FAILED'
+gateway is surfaced here without a provider error; the engine as a
+whole may still be 'ACTIVE'.`,
 						},
 					},
 				},

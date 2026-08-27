@@ -97,7 +97,10 @@ The following arguments are supported:
 
 * `dns_zone_name` -
   (Optional)
-  FQDN of the private DNS zone to create DNS record set for PSC endpoint.
+  The name of the private Cloud DNS managed zone in which the backend
+  creates the DNS record set for this gateway's PSC endpoint. This is the
+  managed-zone resource name, not a fully-qualified domain name. The zone
+  must already exist and be attached to the gateway's VPC at provision time.
 
 * `allowed_projects` -
   (Optional)
@@ -112,11 +115,14 @@ The following arguments are supported:
 * `state` -
   (Output)
   The state of the Gateway configuration. One of: STATE_UNSPECIFIED,
-  PROVISIONING, ACTIVE, DEPROVISIONING, INACTIVE, FAILED.
+  PROVISIONING, ACTIVE, DEPROVISIONING, INACTIVE, FAILED. A `FAILED`
+  gateway is surfaced here without a provider error; the engine as a
+  whole may still be `ACTIVE`.
 
 * `ip_address` -
   (Output)
-  The private IP address of the PSC endpoint.
+  The private IP address of the PSC endpoint. This field is currently
+  always empty and is slated for deprecation; do not depend on it.
 
 * `psc_endpoint` -
   (Output)
@@ -125,7 +131,9 @@ The following arguments are supported:
 
 * `dns_record` -
   (Output)
-  The fully qualified record name of the created A-record in Cloud DNS.
+  The fully qualified record name of the A-record the backend writes into
+  `dns_zone_name` for this gateway. Populated after the gateway reaches
+  `ACTIVE`; empty until then.
 
 ## Attributes Reference
 
