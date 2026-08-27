@@ -3271,7 +3271,7 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 				if commonAliasIpv6Ranges := CheckForCommonAliasIpv6(instNetworkInterface, networkInterface); len(commonAliasIpv6Ranges) > 0 {
 					ni.AliasIpv6Ranges = commonAliasIpv6Ranges
 				}
-				op, err := NewClient(config, userAgent).Instances.UpdateNetworkInterface(project, zone, instance.Name, networkName, ni).Do()
+				op, err := DEPRECATED_LegacyApiaryClient(config, userAgent).Instances.UpdateNetworkInterface(project, zone, instance.Name, networkName, ni).Do()
 				if err != nil {
 					return errwrap.Wrapf("Error removing alias_ipv6_range: {{err}}", err)
 				}
@@ -3280,7 +3280,7 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 					return opErr
 				}
 				// re-read fingerprint
-				instance, err = NewClient(config, userAgent).Instances.Get(project, zone, instance.Name).Do()
+				instance, err = DEPRECATED_LegacyApiaryClient(config, userAgent).Instances.Get(project, zone, instance.Name).Do()
 				if err != nil {
 					return err
 				}
@@ -3291,7 +3291,7 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 				AliasIpv6Ranges: networkInterface.AliasIpv6Ranges,
 				Fingerprint:     instNetworkInterface.Fingerprint,
 			}
-			updateCall := NewClient(config, userAgent).Instances.UpdateNetworkInterface(project, zone, instance.Name, networkName, networkInterfacePatchObj).Do
+			updateCall := DEPRECATED_LegacyApiaryClient(config, userAgent).Instances.UpdateNetworkInterface(project, zone, instance.Name, networkName, networkInterfacePatchObj).Do
 			op, err := updateCall()
 			if err != nil {
 				return errwrap.Wrapf("Error updating network interface: {{err}}", err)
@@ -3301,7 +3301,7 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 				return opErr
 			}
 			// re-read fingerprint
-			instance, err = NewClient(config, userAgent).Instances.Get(project, zone, instance.Name).Do()
+			instance, err = DEPRECATED_LegacyApiaryClient(config, userAgent).Instances.Get(project, zone, instance.Name).Do()
 			if err != nil {
 				return err
 			}
