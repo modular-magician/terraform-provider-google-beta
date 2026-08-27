@@ -165,6 +165,13 @@ func ResourceGeminiGeminiGcpEnablementSetting() *schema.Resource {
 				Optional:    true,
 				Description: `Whether customer data sharing should be enabled.`,
 			},
+			"gemini_enterprise_project": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The Gemini enterprise project for this setting.
+Format: projects/{project}
+The '{project}' segment can be the project ID or project number.`,
+			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -173,6 +180,15 @@ func ResourceGeminiGeminiGcpEnablementSetting() *schema.Resource {
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"release_channel": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				DiffSuppressFunc: tpgresource.EmptyOrDefaultStringSuppress("CHANNEL_TYPE_UNSPECIFIED"),
+				Description: `Specifies the release channel for Gemini features. The release channel determines which set of features are available to the user.
+Possible values:
+STABLE
+EXPERIMENTAL`,
 			},
 			"web_grounding_type": {
 				Type:     schema.TypeString,
@@ -259,6 +275,18 @@ func resourceGeminiGeminiGcpEnablementSettingCreate(d *schema.ResourceData, meta
 		return err
 	} else if v, ok := d.GetOkExists("web_grounding_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(webGroundingTypeProp)) && (ok || !reflect.DeepEqual(v, webGroundingTypeProp)) {
 		obj["webGroundingType"] = webGroundingTypeProp
+	}
+	geminiEnterpriseProjectProp, err := expandGeminiGeminiGcpEnablementSettingGeminiEnterpriseProject(d.Get("gemini_enterprise_project"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("gemini_enterprise_project"); !tpgresource.IsEmptyValue(reflect.ValueOf(geminiEnterpriseProjectProp)) && (ok || !reflect.DeepEqual(v, geminiEnterpriseProjectProp)) {
+		obj["geminiEnterpriseProject"] = geminiEnterpriseProjectProp
+	}
+	releaseChannelProp, err := expandGeminiGeminiGcpEnablementSettingReleaseChannel(d.Get("release_channel"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("release_channel"); !tpgresource.IsEmptyValue(reflect.ValueOf(releaseChannelProp)) && (ok || !reflect.DeepEqual(v, releaseChannelProp)) {
+		obj["releaseChannel"] = releaseChannelProp
 	}
 	effectiveLabelsProp, err := expandGeminiGeminiGcpEnablementSettingEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -497,6 +525,18 @@ func resourceGeminiGeminiGcpEnablementSettingUpdate(d *schema.ResourceData, meta
 	} else if v, ok := d.GetOkExists("web_grounding_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, webGroundingTypeProp)) {
 		obj["webGroundingType"] = webGroundingTypeProp
 	}
+	geminiEnterpriseProjectProp, err := expandGeminiGeminiGcpEnablementSettingGeminiEnterpriseProject(d.Get("gemini_enterprise_project"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("gemini_enterprise_project"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, geminiEnterpriseProjectProp)) {
+		obj["geminiEnterpriseProject"] = geminiEnterpriseProjectProp
+	}
+	releaseChannelProp, err := expandGeminiGeminiGcpEnablementSettingReleaseChannel(d.Get("release_channel"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("release_channel"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, releaseChannelProp)) {
+		obj["releaseChannel"] = releaseChannelProp
+	}
 	effectiveLabelsProp, err := expandGeminiGeminiGcpEnablementSettingEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -530,6 +570,14 @@ func resourceGeminiGeminiGcpEnablementSettingUpdate(d *schema.ResourceData, meta
 
 	if d.HasChange("web_grounding_type") {
 		updateMask = append(updateMask, "webGroundingType")
+	}
+
+	if d.HasChange("gemini_enterprise_project") {
+		updateMask = append(updateMask, "geminiEnterpriseProject")
+	}
+
+	if d.HasChange("release_channel") {
+		updateMask = append(updateMask, "releaseChannel")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -691,6 +739,14 @@ func flattenGeminiGeminiGcpEnablementSettingWebGroundingType(v interface{}, d *s
 	return v
 }
 
+func flattenGeminiGeminiGcpEnablementSettingGeminiEnterpriseProject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenGeminiGeminiGcpEnablementSettingReleaseChannel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenGeminiGeminiGcpEnablementSettingTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -719,6 +775,14 @@ func expandGeminiGeminiGcpEnablementSettingDisableWebGrounding(v interface{}, d 
 }
 
 func expandGeminiGeminiGcpEnablementSettingWebGroundingType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandGeminiGeminiGcpEnablementSettingGeminiEnterpriseProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandGeminiGeminiGcpEnablementSettingReleaseChannel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -755,6 +819,12 @@ func ResourceGeminiGeminiGcpEnablementSettingFlatten(d *schema.ResourceData, met
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
 	if err = d.Set("web_grounding_type", flattenGeminiGeminiGcpEnablementSettingWebGroundingType(res["webGroundingType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
+	}
+	if err = d.Set("gemini_enterprise_project", flattenGeminiGeminiGcpEnablementSettingGeminiEnterpriseProject(res["geminiEnterpriseProject"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
+	}
+	if err = d.Set("release_channel", flattenGeminiGeminiGcpEnablementSettingReleaseChannel(res["releaseChannel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenGeminiGeminiGcpEnablementSettingTerraformLabels(res["labels"], d, config)); err != nil {
