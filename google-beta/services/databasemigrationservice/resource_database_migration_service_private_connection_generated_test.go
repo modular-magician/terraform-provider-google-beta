@@ -94,7 +94,7 @@ func TestAccDatabaseMigrationServicePrivateConnection_databaseMigrationServicePr
 func testAccDatabaseMigrationServicePrivateConnection_databaseMigrationServicePrivateConnectionExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_database_migration_service_private_connection" "default" {
-	display_name          = "dbms_pc"
+	display_name          = "dbms-pc"
 	location              = "us-west1"
 	private_connection_id = "%{private_connection_id}"
 
@@ -158,7 +158,7 @@ func TestAccDatabaseMigrationServicePrivateConnection_databaseMigrationServicePr
 func testAccDatabaseMigrationServicePrivateConnection_databaseMigrationServicePrivateConnectionPscExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_database_migration_service_private_connection" "default" {
-	display_name          = "dbms_pc"
+	display_name          = "dbms-pc"
 	location              = "us-west1"
 	private_connection_id = "%{private_connection_id}"
 
@@ -217,11 +217,12 @@ func testAccCheckDatabaseMigrationServicePrivateConnectionDestroyProducer(t *tes
 			}
 
 			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: config.UserAgent,
+				Config:               config,
+				Method:               "GET",
+				Project:              billingProject,
+				RawURL:               url,
+				UserAgent:            config.UserAgent,
+				ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDatabaseMigrationServiceOperationTimeoutError},
 			})
 			if err == nil {
 				return fmt.Errorf("DatabaseMigrationServicePrivateConnection still exists at %s", url)
