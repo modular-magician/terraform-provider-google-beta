@@ -4678,6 +4678,11 @@ func TestAccComputeInstance_autoDeleteUpdate(t *testing.T) {
 			},
 			{
 				Config: testAccComputeInstance_autoDeleteUpdate(context_2),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_instance.foobar", plancheck.ResourceActionUpdate),
+					},
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(t, "google_compute_instance.foobar", &instance),
 					resource.TestCheckResourceAttr("google_compute_instance.foobar", "boot_disk.0.auto_delete", "false"),
@@ -4685,6 +4690,11 @@ func TestAccComputeInstance_autoDeleteUpdate(t *testing.T) {
 			},
 			{
 				Config: testAccComputeInstance_autoDeleteUpdate(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_instance.foobar", plancheck.ResourceActionUpdate),
+					},
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(t, "google_compute_instance.foobar", &instance),
 					resource.TestCheckResourceAttr("google_compute_instance.foobar", "boot_disk.0.auto_delete", "true"),
