@@ -142,6 +142,14 @@ resource "google_compute_subnetwork" "subnet" {
   private_ip_google_access = true
 }
 
+# Destroy subnetwork 10 minutes after metastore service is deleted.
+# It guarantees that the background PSC IP address cleanup has completed.
+resource "time_sleep" "wait_10_minutes" {
+  depends_on = [google_compute_subnetwork.subnet]
+
+  destroy_duration = "10m"
+}
+
 resource "google_dataproc_metastore_service" "default" {
   service_id = "metastore-srv"
   location   = "us-central1"
@@ -156,6 +164,8 @@ resource "google_dataproc_metastore_service" "default" {
       subnetwork = google_compute_subnetwork.subnet.id
     }
   }
+
+  depends_on = [time_sleep.wait_10_minutes]
 }
 ```
 ## Example Usage - Dataproc Metastore Service Private Service Connect Custom Routes
@@ -177,6 +187,14 @@ resource "google_compute_subnetwork" "subnet" {
   private_ip_google_access = true
 }
 
+# Destroy subnetwork 10 minutes after metastore service is deleted.
+# It guarantees that the background PSC IP address cleanup has completed.
+resource "time_sleep" "wait_10_minutes" {
+  depends_on = [google_compute_subnetwork.subnet]
+
+  destroy_duration = "10m"
+}
+
 resource "google_dataproc_metastore_service" "default" {
   provider   = google-beta
   service_id = "metastore-srv"
@@ -192,6 +210,8 @@ resource "google_dataproc_metastore_service" "default" {
     }
     custom_routes_enabled = true
   }
+
+  depends_on = [time_sleep.wait_10_minutes]
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">

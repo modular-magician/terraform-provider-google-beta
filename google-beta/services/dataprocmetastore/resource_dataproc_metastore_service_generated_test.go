@@ -423,7 +423,10 @@ func TestAccDataprocMetastoreService_dataprocMetastoreServicePrivateServiceConne
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDataprocMetastoreServiceDestroyProducer(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccCheckDataprocMetastoreServiceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataprocMetastoreService_dataprocMetastoreServicePrivateServiceConnectExample(context),
@@ -459,6 +462,14 @@ resource "google_compute_subnetwork" "subnet" {
   private_ip_google_access = true
 }
 
+# Destroy subnetwork 10 minutes after metastore service is deleted.
+# It guarantees that the background PSC IP address cleanup has completed.
+resource "time_sleep" "wait_10_minutes" {
+  depends_on = [google_compute_subnetwork.subnet]
+
+  destroy_duration = "10m"
+}
+
 resource "google_dataproc_metastore_service" "default" {
   service_id = "%{metastore_service_name}"
   location   = "us-central1"
@@ -473,6 +484,8 @@ resource "google_dataproc_metastore_service" "default" {
       subnetwork = google_compute_subnetwork.subnet.id
     }
   }
+
+  depends_on = [time_sleep.wait_10_minutes]
 }
 `, context)
 }
