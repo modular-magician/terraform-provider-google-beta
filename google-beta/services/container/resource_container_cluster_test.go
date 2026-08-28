@@ -17076,7 +17076,7 @@ func bootstrapAdditionalIpRangesNetworkConfig(t *testing.T, name string, additio
 
 	// We create our network to ensure no range collisions.
 	networkName := tpgcompute.BootstrapSharedTestNetwork(t, fmt.Sprintf("%s-network", name))
-	mainSubnet := tpgcompute.BootstrapSubnetWithOverrides(t, fmt.Sprintf("%s-subnet-main", name), networkName, map[string]interface{}{
+	mainSubnet := tpgcompute.BootstrapSubnetWithOverrides(t, fmt.Sprintf("%s-subnet-main", name), networkName, envvar.GetTestRegionFromEnv(), map[string]interface{}{
 		"ipCidrRange": "10.2.0.0/24",
 		"secondaryIpRanges": []map[string]interface{}{
 			{
@@ -17117,7 +17117,7 @@ func bootstrapAdditionalIpRangesNetworkConfig(t *testing.T, name string, additio
 		}
 
 		subnetName := fmt.Sprintf("%s-subnet-add-%d", name, subnetIndex)
-		tpgcompute.BootstrapSubnetWithOverrides(t, subnetName, networkName, subnetOverrides)
+		tpgcompute.BootstrapSubnetWithOverrides(t, subnetName, networkName, envvar.GetTestRegionFromEnv(), subnetOverrides)
 
 		si := subnetRangeInfo{
 			SubnetName: subnetName,
