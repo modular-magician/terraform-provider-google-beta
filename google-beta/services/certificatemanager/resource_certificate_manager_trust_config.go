@@ -428,6 +428,18 @@ func resourceCertificateManagerTrustConfigRead(d *schema.ResourceData, meta inte
 
 	log.Printf("[DEBUG] Finished reading CertificateManagerTrustConfig %q: %#v", d.Id(), res)
 
+	res, err = resourceCertificateManagerTrustConfigDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing CertificateManagerTrustConfig because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
@@ -941,6 +953,13 @@ func expandCertificateManagerTrustConfigEffectiveLabels(v interface{}, d tpgreso
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceCertificateManagerTrustConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	if v, ok := res["name"].(string); ok && v != "" {
+		res["name"] = tpgresource.GetResourceNameFromSelfLink(v)
+	}
+	return res, nil
 }
 
 func ResourceCertificateManagerTrustConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

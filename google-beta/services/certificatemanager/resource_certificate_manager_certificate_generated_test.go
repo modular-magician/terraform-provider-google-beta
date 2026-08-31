@@ -56,6 +56,54 @@ var (
 	_ = certificatemanager.Product
 )
 
+func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"cert_name":     "tf-test-self-managed-cert" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCertificateManagerCertificateDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(context),
+			},
+			{
+				ResourceName:            "google_certificate_manager_certificate.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_certificate_manager_certificate.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_certificate_manager_certificate" "default" {
+  name        = "%{cert_name}"
+  description = "Regional cert"
+  location    = "us-central1"
+  self_managed {
+    pem_certificate = file("test-fixtures/cert.pem")
+    pem_private_key = file("test-fixtures/private-key.pem")
+  }
+}
+`, context)
+}
+
 func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertificateDnsExample(t *testing.T) {
 	t.Parallel()
 
@@ -79,13 +127,13 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				Config: testAccCertificateManagerCertificate_certificateManagerGoogleManagedCertificateDnsExample(context),
 			},
 			{
-				ResourceName:            "google_certificate_manager_certificate.default",
+				ResourceName:            "google_certificate_manager_certificate.",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
 			},
 			{
-				ResourceName:       "google_certificate_manager_certificate.default",
+				ResourceName:       "google_certificate_manager_certificate.",
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
@@ -96,7 +144,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 
 func testAccCertificateManagerCertificate_certificateManagerGoogleManagedCertificateDnsExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_certificate_manager_certificate" "default" {
+resource "google_certificate_manager_certificate" "" {
   name        = "%{cert_name}"
   description = "The default cert"
   scope       = "EDGE_CACHE"
@@ -377,54 +425,6 @@ resource "google_certificate_manager_certificate" "default" {
     pem_certificate            = file("test-fixtures/cert.pem")
     pem_private_key_wo         = file("test-fixtures/private-key.pem")
     pem_private_key_wo_version = parseint(filesha256("test-fixtures/private-key.pem"), 16) % pow(2, 32)
-  }
-}
-`, context)
-}
-
-func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(t *testing.T) {
-	t.Parallel()
-
-	randomSuffix := acctest.RandString(t, 10)
-
-	context := map[string]interface{}{
-		"cert_name":     "tf-test-self-managed-cert" + randomSuffix,
-		"random_suffix": randomSuffix,
-	}
-
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckCertificateManagerCertificateDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(context),
-			},
-			{
-				ResourceName:            "google_certificate_manager_certificate.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "self_managed", "terraform_labels"},
-			},
-			{
-				ResourceName:       "google_certificate_manager_certificate.default",
-				RefreshState:       true,
-				ExpectNonEmptyPlan: true,
-				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
-			},
-		},
-	})
-}
-
-func testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_certificate_manager_certificate" "default" {
-  name        = "%{cert_name}"
-  description = "Regional cert"
-  location    = "us-central1"
-  self_managed {
-    pem_certificate = file("test-fixtures/cert.pem")
-    pem_private_key = file("test-fixtures/private-key.pem")
   }
 }
 `, context)

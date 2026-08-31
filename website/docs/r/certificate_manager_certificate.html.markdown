@@ -38,6 +38,25 @@ values will be stored in the raw state as plain text: `self_managed.certificate_
 [Read more about Write-only Arguments](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/write-only-arguments).
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=certificate_manager_self_managed_certificate_regional&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Certificate Manager Self Managed Certificate Regional
+
+
+```hcl
+resource "google_certificate_manager_certificate" "default" {
+  name        = "self-managed-cert"
+  description = "Regional cert"
+  location    = "us-central1"
+  self_managed {
+    pem_certificate = file("test-fixtures/cert.pem")
+    pem_private_key = file("test-fixtures/private-key.pem")
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=certificate_manager_google_managed_certificate_dns&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -46,7 +65,7 @@ values will be stored in the raw state as plain text: `self_managed.certificate_
 
 
 ```hcl
-resource "google_certificate_manager_certificate" "default" {
+resource "google_certificate_manager_certificate" "" {
   name        = "dns-cert"
   description = "The default cert"
   scope       = "EDGE_CACHE"
@@ -197,25 +216,6 @@ resource "google_certificate_manager_certificate" "default" {
     pem_certificate            = file("test-fixtures/cert.pem")
     pem_private_key_wo         = file("test-fixtures/private-key.pem")
     pem_private_key_wo_version = parseint(filesha256("test-fixtures/private-key.pem"), 16) % pow(2, 32)
-  }
-}
-```
-<div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=certificate_manager_self_managed_certificate_regional&open_in_editor=main.tf" target="_blank">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
-  </a>
-</div>
-## Example Usage - Certificate Manager Self Managed Certificate Regional
-
-
-```hcl
-resource "google_certificate_manager_certificate" "default" {
-  name        = "self-managed-cert"
-  description = "Regional cert"
-  location    = "us-central1"
-  self_managed {
-    pem_certificate = file("test-fixtures/cert.pem")
-    pem_private_key = file("test-fixtures/private-key.pem")
   }
 }
 ```

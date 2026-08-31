@@ -416,6 +416,18 @@ func resourceCertificateManagerDnsAuthorizationRead(d *schema.ResourceData, meta
 
 	log.Printf("[DEBUG] Finished reading CertificateManagerDnsAuthorization %q: %#v", d.Id(), res)
 
+	res, err = resourceCertificateManagerDnsAuthorizationDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing CertificateManagerDnsAuthorization because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
@@ -764,6 +776,13 @@ func expandCertificateManagerDnsAuthorizationEffectiveLabels(v interface{}, d tp
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceCertificateManagerDnsAuthorizationDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	if v, ok := res["name"].(string); ok && v != "" {
+		res["name"] = tpgresource.GetResourceNameFromSelfLink(v)
+	}
+	return res, nil
 }
 
 func ResourceCertificateManagerDnsAuthorizationUpgradeV0(_ context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {

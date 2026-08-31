@@ -181,7 +181,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/certificateIssuanceConfigs/{{name}}`
 
 * `create_time` -
   The creation timestamp of a CertificateIssuanceConfig. Timestamp is in RFC3339 UTC "Zulu" format,

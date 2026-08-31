@@ -60,6 +60,7 @@ func TestAccCertificateManagerTrustConfig_certificateManagerTrustConfigExample(t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":          "us-central1",
 		"trust_config_name": "tf-test-trust-config" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}

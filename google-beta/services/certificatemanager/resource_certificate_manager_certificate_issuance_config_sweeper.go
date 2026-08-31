@@ -117,7 +117,7 @@ func listAndActionCertificateManagerCertificateIssuanceConfig(action sweeper.Res
 		}
 
 		// Prepare list URL
-		listTemplate := strings.Split("https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs", "?")[0]
+		listTemplate := strings.Split("https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/global/certificateIssuanceConfigs", "?")[0]
 		listUrl, err := tpgresource.ReplaceVars(mockConfig, config, listTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -195,7 +195,7 @@ func deleteResourceCertificateManagerCertificateIssuanceConfig(config *transport
 		return nil
 	}
 
-	deleteTemplate := "https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs/{{name}}"
+	deleteTemplate := "https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/global/certificateIssuanceConfigs/{{name}}"
 
 	url, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 	if err != nil {

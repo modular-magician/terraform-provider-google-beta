@@ -388,6 +388,18 @@ func resourceCertificateManagerCertificateMapRead(d *schema.ResourceData, meta i
 
 	log.Printf("[DEBUG] Finished reading CertificateManagerCertificateMap %q: %#v", d.Id(), res)
 
+	res, err = resourceCertificateManagerCertificateMapDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing CertificateManagerCertificateMap because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
@@ -745,6 +757,13 @@ func expandCertificateManagerCertificateMapEffectiveLabels(v interface{}, d tpgr
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceCertificateManagerCertificateMapDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	if v, ok := res["name"].(string); ok && v != "" {
+		res["name"] = tpgresource.GetResourceNameFromSelfLink(v)
+	}
+	return res, nil
 }
 
 func ResourceCertificateManagerCertificateMapFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -54,65 +54,6 @@ var (
 	_ = certificatemanager.Product
 )
 
-func TestAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationBasicExample(t *testing.T) {
-	t.Parallel()
-
-	randomSuffix := acctest.RandString(t, 10)
-
-	context := map[string]interface{}{
-		"dns_auth_name": "tf-test-dns-auth" + randomSuffix,
-		"subdomain":     "subdomain" + randomSuffix,
-		"zone_name":     "tf-test-my-zone" + randomSuffix,
-		"random_suffix": randomSuffix,
-	}
-
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckCertificateManagerDnsAuthorizationDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationBasicExample(context),
-			},
-			{
-				ResourceName:            "google_certificate_manager_dns_authorization.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
-			},
-			{
-				ResourceName:       "google_certificate_manager_dns_authorization.default",
-				RefreshState:       true,
-				ExpectNonEmptyPlan: true,
-				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
-			},
-		},
-	})
-}
-
-func testAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationBasicExample(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_certificate_manager_dns_authorization" "default" {
-  name        = "%{dns_auth_name}"
-  location    = "global"
-  description = "The default dns"
-  domain      = "%{subdomain}.hashicorptest.com"
-}
-
-output "record_name_to_insert" {
- value = google_certificate_manager_dns_authorization.default.dns_resource_record.0.name
-}
-
-output "record_type_to_insert" {
- value = google_certificate_manager_dns_authorization.default.dns_resource_record.0.type
-}
-
-output "record_data_to_insert" {
- value = google_certificate_manager_dns_authorization.default.dns_resource_record.0.data
-}
-`, context)
-}
-
 func TestAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationRegionalExample(t *testing.T) {
 	t.Parallel()
 
@@ -157,6 +98,65 @@ resource "google_certificate_manager_dns_authorization" "default" {
   description = "reginal dns"
   type        = "PER_PROJECT_RECORD"
   domain      = "%{subdomain}.hashicorptest.com"
+}
+`, context)
+}
+
+func TestAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationBasicExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"dns_auth_name": "tf-test-dns-auth" + randomSuffix,
+		"subdomain":     "subdomain" + randomSuffix,
+		"zone_name":     "tf-test-my-zone" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCertificateManagerDnsAuthorizationDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationBasicExample(context),
+			},
+			{
+				ResourceName:            "google_certificate_manager_dns_authorization.",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_certificate_manager_dns_authorization.",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizationBasicExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_certificate_manager_dns_authorization" "" {
+  name        = "%{dns_auth_name}"
+  location    = "global"
+  description = "The default dns"
+  domain      = "%{subdomain}.hashicorptest.com"
+}
+
+output "record_name_to_insert" {
+ value = google_certificate_manager_dns_authorization..dns_resource_record.0.name
+}
+
+output "record_type_to_insert" {
+ value = google_certificate_manager_dns_authorization..dns_resource_record.0.type
+}
+
+output "record_data_to_insert" {
+ value = google_certificate_manager_dns_authorization..dns_resource_record.0.data
 }
 `, context)
 }

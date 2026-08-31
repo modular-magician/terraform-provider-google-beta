@@ -367,7 +367,7 @@ func resourceCertificateManagerCertificateIssuanceConfigCreate(d *schema.Resourc
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/certificateIssuanceConfigs/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -416,7 +416,7 @@ func resourceCertificateManagerCertificateIssuanceConfigRead(d *schema.ResourceD
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/certificateIssuanceConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -448,6 +448,18 @@ func resourceCertificateManagerCertificateIssuanceConfigRead(d *schema.ResourceD
 	}
 
 	log.Printf("[DEBUG] Finished reading CertificateManagerCertificateIssuanceConfig %q: %#v", d.Id(), res)
+
+	res, err = resourceCertificateManagerCertificateIssuanceConfigDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing CertificateManagerCertificateIssuanceConfig because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
 
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
@@ -524,7 +536,7 @@ func resourceCertificateManagerCertificateIssuanceConfigDelete(d *schema.Resourc
 		return fmt.Errorf("Error fetching project for CertificateIssuanceConfig: %s", err)
 	}
 	billingProject = project
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/certificateIssuanceConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -576,7 +588,7 @@ func resourceCertificateManagerCertificateIssuanceConfigImport(d *schema.Resourc
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificateIssuanceConfigs/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/certificateIssuanceConfigs/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -759,6 +771,13 @@ func expandCertificateManagerCertificateIssuanceConfigEffectiveLabels(v interfac
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceCertificateManagerCertificateIssuanceConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	if v, ok := res["name"].(string); ok && v != "" {
+		res["name"] = tpgresource.GetResourceNameFromSelfLink(v)
+	}
+	return res, nil
 }
 
 func resourceCertificateManagerCertificateIssuanceConfigResourceV0() *schema.Resource {
