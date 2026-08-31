@@ -329,6 +329,29 @@ protected by the KMS key, as indicated in the cmek_config field.`,
 					},
 				},
 			},
+			"observability_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `Observability config for the engine.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"observability_enabled": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Optional:    true,
+							Description: `Enables observability. If 'false', all other flags are ignored.`,
+						},
+						"sensitive_logging_enabled": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Optional:    true,
+							Description: `Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If 'false', will sanitize all sensitive fields.`,
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -437,6 +460,12 @@ func resourceDiscoveryEngineSearchEngineCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("knowledge_graph_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(knowledgeGraphConfigProp)) && (ok || !reflect.DeepEqual(v, knowledgeGraphConfigProp)) {
 		obj["knowledgeGraphConfig"] = knowledgeGraphConfigProp
+	}
+	observabilityConfigProp, err := expandDiscoveryEngineSearchEngineObservabilityConfig(d.Get("observability_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("observability_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(observabilityConfigProp)) && (ok || !reflect.DeepEqual(v, observabilityConfigProp)) {
+		obj["observabilityConfig"] = observabilityConfigProp
 	}
 
 	obj, err = resourceDiscoveryEngineSearchEngineEncoder(d, meta, obj)
@@ -717,6 +746,12 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("knowledge_graph_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, knowledgeGraphConfigProp)) {
 		obj["knowledgeGraphConfig"] = knowledgeGraphConfigProp
 	}
+	observabilityConfigProp, err := expandDiscoveryEngineSearchEngineObservabilityConfig(d.Get("observability_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("observability_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, observabilityConfigProp)) {
+		obj["observabilityConfig"] = observabilityConfigProp
+	}
 
 	obj, err = resourceDiscoveryEngineSearchEngineEncoder(d, meta, obj)
 	if err != nil {
@@ -758,6 +793,10 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("knowledge_graph_config") {
 		updateMask = append(updateMask, "knowledgeGraphConfig")
+	}
+
+	if d.HasChange("observability_config") {
+		updateMask = append(updateMask, "observabilityConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1025,6 +1064,29 @@ func flattenDiscoveryEngineSearchEngineKnowledgeGraphConfigFeatureConfigDisableP
 	return v
 }
 
+func flattenDiscoveryEngineSearchEngineObservabilityConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["observability_enabled"] =
+		flattenDiscoveryEngineSearchEngineObservabilityConfigObservabilityEnabled(original["observabilityEnabled"], d, config)
+	transformed["sensitive_logging_enabled"] =
+		flattenDiscoveryEngineSearchEngineObservabilityConfigSensitiveLoggingEnabled(original["sensitiveLoggingEnabled"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineSearchEngineObservabilityConfigObservabilityEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineSearchEngineObservabilityConfigSensitiveLoggingEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDiscoveryEngineSearchEngineIndustryVertical(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1248,6 +1310,43 @@ func expandDiscoveryEngineSearchEngineKnowledgeGraphConfigFeatureConfigDisablePr
 	return v, nil
 }
 
+func expandDiscoveryEngineSearchEngineObservabilityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedObservabilityEnabled, err := expandDiscoveryEngineSearchEngineObservabilityConfigObservabilityEnabled(original["observability_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedObservabilityEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["observabilityEnabled"] = transformedObservabilityEnabled
+	}
+
+	transformedSensitiveLoggingEnabled, err := expandDiscoveryEngineSearchEngineObservabilityConfigSensitiveLoggingEnabled(original["sensitive_logging_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSensitiveLoggingEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sensitiveLoggingEnabled"] = transformedSensitiveLoggingEnabled
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineSearchEngineObservabilityConfigObservabilityEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineSearchEngineObservabilityConfigSensitiveLoggingEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourceDiscoveryEngineSearchEngineEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	// hard code solutionType to "SOLUTION_TYPE_SEARCH" for search engine resource
 	obj["solutionType"] = "SOLUTION_TYPE_SEARCH"
@@ -1291,6 +1390,9 @@ func ResourceDiscoveryEngineSearchEngineFlatten(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
 	if err = d.Set("knowledge_graph_config", flattenDiscoveryEngineSearchEngineKnowledgeGraphConfig(res["knowledgeGraphConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SearchEngine: %s", err)
+	}
+	if err = d.Set("observability_config", flattenDiscoveryEngineSearchEngineObservabilityConfig(res["observabilityConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
 

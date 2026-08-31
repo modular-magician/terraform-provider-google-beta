@@ -167,6 +167,11 @@ The following arguments are supported:
   Configurations for the Knowledge Graph.
   Structure is [documented below](#nested_knowledge_graph_config).
 
+* `observability_config` -
+  (Optional)
+  Observability config for the engine.
+  Structure is [documented below](#nested_observability_config).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -240,6 +245,16 @@ The following arguments are supported:
 * `disable_private_kg_query_ui_chips` -
   (Optional)
   Whether to disable the private KG for query UI chips.
+
+<a name="nested_observability_config"></a>The `observability_config` block supports:
+
+* `observability_enabled` -
+  (Optional)
+  Enables observability. If `false`, all other flags are ignored.
+
+* `sensitive_logging_enabled` -
+  (Optional)
+  Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If `false`, will sanitize all sensitive fields.
 
 ## Attributes Reference
 
