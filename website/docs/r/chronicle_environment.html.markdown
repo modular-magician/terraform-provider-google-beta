@@ -46,6 +46,7 @@ resource "google_chronicle_environment" "sample" {
   aliases_json            = jsonencode([])
   data_access_scopes_json = jsonencode([])
   retention_duration = 3
+  environment_allowed_for_all_users = true
 
   deletion_protection  = false
 }
@@ -101,6 +102,10 @@ The following arguments are supported:
 * `data_access_scopes_json` -
   (Optional)
   data access scopes.
+
+* `environment_allowed_for_all_users` -
+  (Optional)
+  If set to true, automatically assigns the new environment to all existing users and API keys.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

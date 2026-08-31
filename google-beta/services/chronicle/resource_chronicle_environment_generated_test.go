@@ -128,6 +128,7 @@ resource "google_chronicle_environment" "sample" {
   aliases_json            = jsonencode([])
   data_access_scopes_json = jsonencode([])
   retention_duration = 3
+  environment_allowed_for_all_users = true
 
   deletion_protection  = false
 }
@@ -148,6 +149,7 @@ resource "google_chronicle_environment" "sample" {
   aliases_json            = jsonencode([])
   data_access_scopes_json = jsonencode([])
   retention_duration = 3
+  environment_allowed_for_all_users = true
 
   deletion_protection  = false
 }

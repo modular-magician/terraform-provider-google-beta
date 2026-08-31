@@ -204,6 +204,12 @@ MAX_NAME_LENGTH = 256`,
 				Optional:    true,
 				Description: `data access scopes.`,
 			},
+			"environment_allowed_for_all_users": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `If set to true, automatically assigns the new environment to all existing users and API keys.`,
+			},
 			"environment_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -300,6 +306,12 @@ func resourceChronicleEnvironmentCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("retention_duration"); !tpgresource.IsEmptyValue(reflect.ValueOf(retentionDurationProp)) && (ok || !reflect.DeepEqual(v, retentionDurationProp)) {
 		obj["retentionDuration"] = retentionDurationProp
+	}
+	environmentAllowedForAllUsersProp, err := expandChronicleEnvironmentEnvironmentAllowedForAllUsers(d.Get("environment_allowed_for_all_users"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("environment_allowed_for_all_users"); !tpgresource.IsEmptyValue(reflect.ValueOf(environmentAllowedForAllUsersProp)) && (ok || !reflect.DeepEqual(v, environmentAllowedForAllUsersProp)) {
+		obj["environmentAllowedForAllUsers"] = environmentAllowedForAllUsersProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/instances/{{instance}}/environments")
@@ -771,6 +783,10 @@ func flattenChronicleEnvironmentRetentionDuration(v interface{}, d *schema.Resou
 	return v // let terraform core handle it otherwise
 }
 
+func flattenChronicleEnvironmentEnvironmentAllowedForAllUsers(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenChronicleEnvironmentEnvironmentId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	parts := strings.Split(d.Get("name").(string), "/")
 	return parts[len(parts)-1]
@@ -805,6 +821,10 @@ func expandChronicleEnvironmentDataAccessScopesJson(v interface{}, d tpgresource
 }
 
 func expandChronicleEnvironmentRetentionDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandChronicleEnvironmentEnvironmentAllowedForAllUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -848,6 +868,9 @@ func ResourceChronicleEnvironmentFlatten(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
 	if err = d.Set("retention_duration", flattenChronicleEnvironmentRetentionDuration(res["retentionDuration"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Environment: %s", err)
+	}
+	if err = d.Set("environment_allowed_for_all_users", flattenChronicleEnvironmentEnvironmentAllowedForAllUsers(res["environmentAllowedForAllUsers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
 	if err = d.Set("environment_id", flattenChronicleEnvironmentEnvironmentId(res["environmentId"], d, config)); err != nil {
