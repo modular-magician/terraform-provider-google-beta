@@ -109,7 +109,7 @@ func ResourceDiscoveryEngineCmekConfig() *schema.Resource {
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(60 * time.Minute),
 			Update: schema.DefaultTimeout(60 * time.Minute),
-			Delete: schema.DefaultTimeout(60 * time.Minute),
+			Delete: schema.DefaultTimeout(480 * time.Minute),
 		},
 
 		CustomizeDiff: customdiff.All(
@@ -284,14 +284,15 @@ func resourceDiscoveryEngineCmekConfigCreate(d *schema.ResourceData, meta interf
 
 	headers := make(http.Header)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+		Config:               config,
+		Method:               "PATCH",
+		Project:              billingProject,
+		RawURL:               url,
+		UserAgent:            userAgent,
+		Body:                 obj,
+		Timeout:              d.Timeout(schema.TimeoutCreate),
+		Headers:              headers,
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDiscoveryEngineCmekConfigInUseError},
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating CmekConfig: %s", err)
@@ -367,12 +368,13 @@ func resourceDiscoveryEngineCmekConfigRead(d *schema.ResourceData, meta interfac
 
 	headers := make(http.Header)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Headers:   headers,
+		Config:               config,
+		Method:               "GET",
+		Project:              billingProject,
+		RawURL:               url,
+		UserAgent:            userAgent,
+		Headers:              headers,
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDiscoveryEngineCmekConfigInUseError},
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DiscoveryEngineCmekConfig %q", d.Id()))
@@ -504,14 +506,15 @@ func resourceDiscoveryEngineCmekConfigUpdate(d *schema.ResourceData, meta interf
 	}
 
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-		Headers:   headers,
+		Config:               config,
+		Method:               "PATCH",
+		Project:              billingProject,
+		RawURL:               url,
+		UserAgent:            userAgent,
+		Body:                 obj,
+		Timeout:              d.Timeout(schema.TimeoutUpdate),
+		Headers:              headers,
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDiscoveryEngineCmekConfigInUseError},
 	})
 
 	if err != nil {
@@ -568,14 +571,15 @@ func resourceDiscoveryEngineCmekConfigDelete(d *schema.ResourceData, meta interf
 
 	log.Printf("[DEBUG] Deleting CmekConfig %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:               config,
+		Method:               "DELETE",
+		Project:              billingProject,
+		RawURL:               url,
+		UserAgent:            userAgent,
+		Body:                 obj,
+		Timeout:              d.Timeout(schema.TimeoutDelete),
+		Headers:              headers,
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDiscoveryEngineCmekConfigInUseError},
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "CmekConfig")

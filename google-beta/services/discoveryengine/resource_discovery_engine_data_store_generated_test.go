@@ -33,6 +33,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/discoveryengine"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -110,9 +111,10 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreKmsKeyNameExample(t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"data_store_id": "tf-test-data-store-id" + randomSuffix,
-		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
-		"random_suffix": randomSuffix,
+		"cmek_config_id": "tf-bootstrap-datastore-cmekconfig",
+		"data_store_id":  "tf-test-data-store-id" + randomSuffix,
+		"kms_key_name":   kms.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us", "tf-bootstrap-discoveryengine-datastore-key").CryptoKey.Name,
+		"random_suffix":  randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -151,6 +153,25 @@ resource "google_discovery_engine_data_store" "kms_key_name" {
   kms_key_name                 = "%{kms_key_name}"
   create_advanced_site_search  = false
   skip_default_schema_creation = false
+
+  depends_on = [google_discovery_engine_cmek_config.default]
+}
+
+resource "google_discovery_engine_cmek_config" "default" {
+  location       = "us"
+  cmek_config_id = "%{cmek_config_id}"
+  kms_key        = "%{kms_key_name}"
+  set_default    = false
+
+  depends_on = [google_kms_crypto_key_iam_member.crypto_key]
+}
+
+data "google_project" "project" {}
+
+resource "google_kms_crypto_key_iam_member" "crypto_key" {
+  crypto_key_id = "%{kms_key_name}"
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-discoveryengine.iam.gserviceaccount.com"
 }
 `, context)
 }

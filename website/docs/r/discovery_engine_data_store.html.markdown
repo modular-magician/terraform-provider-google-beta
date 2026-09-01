@@ -72,6 +72,25 @@ resource "google_discovery_engine_data_store" "kms_key_name" {
   kms_key_name                 = "kms-key"
   create_advanced_site_search  = false
   skip_default_schema_creation = false
+
+  depends_on = [google_discovery_engine_cmek_config.default]
+}
+
+resource "google_discovery_engine_cmek_config" "default" {
+  location       = "us"
+  cmek_config_id = "cmek-config-id"
+  kms_key        = "kms-key"
+  set_default    = false
+
+  depends_on = [google_kms_crypto_key_iam_member.crypto_key]
+}
+
+data "google_project" "project" {}
+
+resource "google_kms_crypto_key_iam_member" "crypto_key" {
+  crypto_key_id = "kms-key"
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-discoveryengine.iam.gserviceaccount.com"
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
