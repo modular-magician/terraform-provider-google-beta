@@ -26,6 +26,7 @@ fields:
     - api_field: clientCertificateSettings.privateKey
     - api_field: clientCertificateSettings.tlsCertificate
     - api_field: createTime
+    - api_field: dashboardSettings.defaultDashboard
     - api_field: dataStoreSettings.engines.name
     - api_field: dataStoreSettings.engines.type
     - api_field: defaultChannelProfile.channelType
@@ -53,6 +54,19 @@ fields:
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.expectationLevelMetricsThresholds.toolInvocationParameterCorrectnessThreshold
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.overallToolInvocationCorrectnessThreshold
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.semanticSimilaritySuccessThreshold
+    - api_field: evaluationPersonas.description
+    - api_field: evaluationPersonas.displayName
+    - api_field: evaluationPersonas.name
+    - api_field: evaluationPersonas.personality
+    - api_field: evaluationPersonas.speechConfig.environment
+    - api_field: evaluationPersonas.speechConfig.speakingRate
+    - api_field: evaluationPersonas.speechConfig.voiceId
+    - api_field: evaluationSettings.evaluationRunCachingSettings.enableCaching
+    - api_field: evaluationSettings.goldenEvaluationToolCallBehaviour
+    - api_field: evaluationSettings.goldenRunMethod
+    - api_field: evaluationSettings.scenarioConversationInitiator
+    - api_field: evaluationSettings.scenarioEvaluationToolCallBehaviour
+    - api_field: evaluationSettings.scenarioExecutionMode
     - api_field: globalInstruction
     - api_field: guardrails
     - api_field: languageSettings.defaultLanguageCode
@@ -61,6 +75,7 @@ fields:
     - api_field: languageSettings.supportedLanguageCodes
     - field: location
       provider_only: true
+    - api_field: locked
     - api_field: loggingSettings.audioRecordingConfig.gcsBucket
     - api_field: loggingSettings.audioRecordingConfig.gcsPathPrefix
     - api_field: loggingSettings.bigqueryExportSettings.dataset
@@ -77,10 +92,28 @@ fields:
     - api_field: modelSettings.temperature
     - api_field: name
     - api_field: pinned
+    - api_field: predefinedVariableDeclarations.description
+    - api_field: predefinedVariableDeclarations.name
+    - api_field: predefinedVariableDeclarations.schema.additionalProperties
+    - api_field: predefinedVariableDeclarations.schema.anyOf
+    - api_field: predefinedVariableDeclarations.schema.default
+    - api_field: predefinedVariableDeclarations.schema.defs
+    - api_field: predefinedVariableDeclarations.schema.description
+    - api_field: predefinedVariableDeclarations.schema.enum
+    - api_field: predefinedVariableDeclarations.schema.items
+    - api_field: predefinedVariableDeclarations.schema.nullable
+    - api_field: predefinedVariableDeclarations.schema.prefixItems
+    - api_field: predefinedVariableDeclarations.schema.properties
+    - api_field: predefinedVariableDeclarations.schema.ref
+    - api_field: predefinedVariableDeclarations.schema.required
+    - api_field: predefinedVariableDeclarations.schema.title
+    - api_field: predefinedVariableDeclarations.schema.type
+    - api_field: predefinedVariableDeclarations.schema.uniqueItems
     - api_field: rootAgent
     - api_field: timeZoneSettings.timeZone
     - api_field: toolExecutionMode
     - api_field: updateTime
+    - api_field: validationErrors
     - api_field: variableDeclarations.description
     - api_field: variableDeclarations.name
     - api_field: variableDeclarations.schema.additionalProperties

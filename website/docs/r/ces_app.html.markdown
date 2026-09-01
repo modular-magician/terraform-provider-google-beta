@@ -434,6 +434,11 @@ The following arguments are supported:
   (Optional)
   Whether the app is pinned in the app list.
 
+* `dashboard_settings` -
+  (Optional)
+  App-specific dashboard settings for linking and configuring Contact Center Insights dashboards.
+  Structure is [documented below](#nested_dashboard_settings).
+
 * `data_store_settings` -
   (Optional)
   Data store related settings for the app.
@@ -449,10 +454,26 @@ The following arguments are supported:
   (Optional)
   Human-readable description of the app.
 
+* `error_handling_settings` -
+  (Optional)
+  Settings to describe how errors should be handled in the app.
+  Structure is [documented below](#nested_error_handling_settings).
+
 * `evaluation_metrics_thresholds` -
   (Optional)
   Threshold settings for metrics in an Evaluation.
   Structure is [documented below](#nested_evaluation_metrics_thresholds).
+
+* `evaluation_personas` -
+  (Optional)
+  The evaluation personas for the app. This field is used to define the personas that can be used for evaluation.
+  Maximum of 30 personas can be defined.
+  Structure is [documented below](#nested_evaluation_personas).
+
+* `evaluation_settings` -
+  (Optional)
+  Settings for evaluation.
+  Structure is [documented below](#nested_evaluation_settings).
 
 * `global_instruction` -
   (Optional)
@@ -470,6 +491,11 @@ The following arguments are supported:
   (Optional)
   Language settings of the app.
   Structure is [documented below](#nested_language_settings).
+
+* `locked` -
+  (Optional)
+  Indicates whether the app is locked for changes. If the app is locked,
+  modifications to the app resources will be rejected.
 
 * `logging_settings` -
   (Optional)
@@ -515,11 +541,6 @@ The following arguments are supported:
   (Optional)
   VPC-SC settings for the app.
   Structure is [documented below](#nested_vpc_sc_settings).
-
-* `error_handling_settings` -
-  (Optional)
-  Settings to describe how errors should be handled in the app.
-  Structure is [documented below](#nested_error_handling_settings).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -617,6 +638,13 @@ The following arguments are supported:
   The speaking rate/speed in the range [0.25, 2.0]. 1.0 is the normal native
   speed supported by the specific voice. 2.0 is twice as fast, and 0.5 is
   half as fast. Values outside of the range [0.25, 2.0] will return an error.
+
+<a name="nested_dashboard_settings"></a>The `dashboard_settings` block supports:
+
+* `default_dashboard` -
+  (Optional)
+  The resource name of the default Contact Center Insights dashboard associated with the app.
+  Format: projects/{project}/locations/{location}/dashboards/{dashboard}
 
 <a name="nested_data_store_settings"></a>The `data_store_settings` block supports:
 
@@ -743,6 +771,45 @@ The following arguments are supported:
   (Output)
   The description of the Meta business page or profile.
 
+<a name="nested_error_handling_settings"></a>The `error_handling_settings` block supports:
+
+* `end_session_config` -
+  (Optional)
+  Configuration for ending the session in case of system errors.
+  Structure is [documented below](#nested_error_handling_settings_end_session_config).
+
+* `error_handling_strategy` -
+  (Optional)
+  Defines the strategy for handling errors.
+  Possible values:
+  ERROR_HANDLING_STRATEGY_UNSPECIFIED
+  NONE
+  FALLBACK_RESPONSE
+  END_SESSION
+
+* `fallback_response_config` -
+  (Optional)
+  Configuration for handling fallback responses.
+  Structure is [documented below](#nested_error_handling_settings_fallback_response_config).
+
+
+<a name="nested_error_handling_settings_end_session_config"></a>The `end_session_config` block supports:
+
+* `escalate_session` -
+  (Optional)
+  Whether to escalate the session in EndSession.
+
+<a name="nested_error_handling_settings_fallback_response_config"></a>The `fallback_response_config` block supports:
+
+* `custom_fallback_messages` -
+  (Optional)
+  The fallback messages in case of system errors (e.g. LLM errors),
+  mapped by supported language code.
+
+* `max_fallback_attempts` -
+  (Optional)
+  The maximum number of fallback attempts to make before the agent emitting EndSession Signal.
+
 <a name="nested_evaluation_metrics_thresholds"></a>The `evaluation_metrics_thresholds` block supports:
 
 * `golden_evaluation_metrics_thresholds` -
@@ -782,6 +849,106 @@ The following arguments are supported:
   (Optional)
   The success threshold for semantic similarity. Must be an integer
   between 0 and 4. Default is >= 3.
+
+<a name="nested_evaluation_personas"></a>The `evaluation_personas` block supports:
+
+* `description` -
+  (Optional)
+  The description of the persona.
+
+* `display_name` -
+  (Required)
+  The display name of the persona. Unique within an app.
+
+* `name` -
+  (Required)
+  The unique identifier of the persona.
+  Format: `projects/{project}/locations/{location}/apps/{app}/evaluationPersonas/{evaluationPersona}`
+
+* `personality` -
+  (Required)
+  An instruction for the agent on how to behave in the evaluation.
+
+* `speech_config` -
+  (Optional)
+  Configuration for how the persona sounds (TTS settings).
+  Structure is [documented below](#nested_evaluation_personas_speech_config).
+
+
+<a name="nested_evaluation_personas_speech_config"></a>The `speech_config` block supports:
+
+* `environment` -
+  (Optional)
+  The simulated audio environment.
+  Possible values:
+  BACKGROUND_ENVIRONMENT_UNSPECIFIED
+  CALL_CENTER
+  TRAFFIC
+  KIDS_NOISE
+  CAFE
+
+* `speaking_rate` -
+  (Optional)
+  The speaking rate. 1.0 is normal.
+
+* `voice_id` -
+  (Optional)
+  The specific voice identifier/accent to use.
+  Example: "en-US-Wavenet-D" or "en-GB-Standard-A"
+
+<a name="nested_evaluation_settings"></a>The `evaluation_settings` block supports:
+
+* `evaluation_run_caching_settings` -
+  (Optional)
+  The caching settings to use for the evaluation run.
+  Structure is [documented below](#nested_evaluation_settings_evaluation_run_caching_settings).
+
+* `golden_evaluation_tool_call_behaviour` -
+  (Optional)
+  Configures the default tool call behaviour for golden evaluations.
+  Possible values:
+  EVALUATION_TOOL_CALL_BEHAVIOUR_UNSPECIFIED
+  MOCK_ALL
+  RUN_LIVE
+
+* `golden_run_method` -
+  (Optional)
+  The default method used to run golden evaluations.
+  Possible values:
+  GOLDEN_RUN_METHOD_UNSPECIFIED
+  PREVIOUS_BEST
+  LATEST
+
+* `scenario_conversation_initiator` -
+  (Optional)
+  Determines who starts the conversation in a scenario evaluation session.
+  Possible values:
+  SCENARIO_CONVERSATION_INITIATOR_UNSPECIFIED
+  USER
+  AGENT
+
+* `scenario_evaluation_tool_call_behaviour` -
+  (Optional)
+  Configures the default tool call behaviour for scenario evaluations.
+  Possible values:
+  EVALUATION_TOOL_CALL_BEHAVIOUR_UNSPECIFIED
+  MOCK_ALL
+  RUN_LIVE
+
+* `scenario_execution_mode` -
+  (Optional)
+  The execution mode for scenario evaluations.
+  Possible values:
+  SCENARIO_EXECUTION_MODE_UNSPECIFIED
+  QUALITY_OPTIMIZED
+  SPEED_OPTIMIZED
+
+
+<a name="nested_evaluation_settings_evaluation_run_caching_settings"></a>The `evaluation_run_caching_settings` block supports:
+
+* `enable_caching` -
+  (Optional)
+  Whether caching is enabled for the evaluation run.
 
 <a name="nested_language_settings"></a>The `language_settings` block supports:
 
@@ -1077,48 +1244,6 @@ The following arguments are supported:
   example, "https://example.com" or "https://example.com:443". This list does
   not yet apply to Python tools that may make direct HTTP calls.
 
-<a name="nested_error_handling_settings"></a>The `error_handling_settings` block supports:
-
-* `error_handling_strategy` -
-  (Optional)
-  The strategy to use for error handling.
-  Possible values:
-  NONE
-  FALLBACK_RESPONSE
-  END_SESSION
-
-* `fallback_response_config` -
-  (Optional)
-  Configuration for handling fallback responses.
-  Structure is [documented below](#nested_error_handling_settings_fallback_response_config).
-
-* `end_session_config` -
-  (Optional)
-  Configuration for ending the session in case of system errors (e.g. LLM
-  errors).
-  Structure is [documented below](#nested_error_handling_settings_end_session_config).
-
-
-<a name="nested_error_handling_settings_fallback_response_config"></a>The `fallback_response_config` block supports:
-
-* `custom_fallback_messages` -
-  (Optional)
-  The fallback messages in case of system errors (e.g. LLM errors),
-  mapped by supported language code
-  (https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/reference/language).
-
-* `max_fallback_attempts` -
-  (Optional)
-  The maximum number of fallback attempts to make before the agent
-  emitting EndSession Signal.
-
-<a name="nested_error_handling_settings_end_session_config"></a>The `end_session_config` block supports:
-
-* `escalate_session` -
-  (Optional)
-  Whether to escalate the session in EndSession. If session is escalated,
-  metadata in EndSession will contain session_escalated = true.
-
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -1140,9 +1265,94 @@ In addition to the arguments listed above, the following computed attributes are
   Identifier. The unique identifier of the app.
   Format: `projects/{project}/locations/{location}/apps/{app}`
 
+* `predefined_variable_declarations` -
+  The declarations of predefined variables for the app.
+  Structure is [documented below](#nested_predefined_variable_declarations).
+
 * `update_time` -
   Timestamp when the app was last updated.
 
+* `validation_errors` -
+  Misconfigurations or warnings in the app.
+
+
+<a name="nested_predefined_variable_declarations"></a>The `predefined_variable_declarations` block contains:
+
+* `description` -
+  (Output)
+  The description of the variable.
+
+* `name` -
+  (Output)
+  The name of the variable.
+
+* `schema` -
+  (Output)
+  Represents a select subset of an OpenAPI 3.0 schema object.
+  Structure is [documented below](#nested_predefined_variable_declarations_schema).
+
+
+<a name="nested_predefined_variable_declarations_schema"></a>The `schema` block contains:
+
+* `additional_properties` -
+  (Output)
+  Schema for additional properties.
+
+* `any_of` -
+  (Output)
+  Schemas of which the value must validate against at least one.
+
+* `default` -
+  (Output)
+  Default value.
+
+* `defs` -
+  (Output)
+  Schema definitions.
+
+* `description` -
+  (Output)
+  The description of the data.
+
+* `enum` -
+  (Output)
+  Possible values of the element of primitive type with enum format.
+
+* `items` -
+  (Output)
+  Schema of the items in an array.
+
+* `nullable` -
+  (Output)
+  Indicates if the value may be null.
+
+* `prefix_items` -
+  (Output)
+  Schemas for array prefix items.
+
+* `properties` -
+  (Output)
+  Properties of an object.
+
+* `ref` -
+  (Output)
+  Allows indirect references between schema nodes.
+
+* `required` -
+  (Output)
+  Required properties of an object.
+
+* `title` -
+  (Output)
+  The title of the schema.
+
+* `type` -
+  (Output)
+  The type of the data.
+
+* `unique_items` -
+  (Output)
+  Indicates if the items in the array must be unique.
 
 ## Timeouts
 

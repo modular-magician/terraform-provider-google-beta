@@ -252,6 +252,8 @@ resource "google_ces_app" "ces_app_basic" {
     private_key = google_secret_manager_secret_version.fake_secret_version.name
   }
 
+  locked = false
+
   vpc_sc_settings {
     allowed_origins = ["https://example.com"]
   }
@@ -465,6 +467,8 @@ resource "google_ces_app" "ces_app_basic" {
     private_key = google_secret_manager_secret_version.fake_secret_version.name
   }
 
+  locked = false
+
   vpc_sc_settings {
     allowed_origins = ["https://example.com", "https://example.org:443"]
   }
@@ -480,6 +484,29 @@ resource "google_ces_app" "ces_app_basic" {
     }
     end_session_config {
       escalate_session = false
+    }
+  }
+
+  evaluation_settings {
+    golden_run_method = "LATEST"
+    golden_evaluation_tool_call_behaviour = "RUN_LIVE"
+    scenario_conversation_initiator = "USER"
+    scenario_evaluation_tool_call_behaviour = "RUN_LIVE"
+    scenario_execution_mode = "QUALITY_OPTIMIZED"
+    evaluation_run_caching_settings {
+      enable_caching = true
+    }
+  }
+
+  evaluation_personas {
+    name         = "projects/${data.google_project.project.name}/locations/us/apps/tf-test-app-id-%{random_suffix}/evaluationPersonas/persona-1"
+    display_name = "Persona 1"
+    personality  = "Friendly customer seeking assistance."
+    description  = "Customer persona for evaluation"
+    speech_config {
+      speaking_rate = 1.0
+      environment   = "CALL_CENTER"
+      voice_id      = "en-US-Standard-A"
     }
   }
 
