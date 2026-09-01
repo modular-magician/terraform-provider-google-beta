@@ -1,0 +1,188 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_integrations_integration_version
+generation_type: mmv1
+source_file: products/integrations/IntegrationVersion.yaml
+api_service_name: integrations.googleapis.com
+api_version: v1
+api_resource_type_kind: IntegrationVersion
+autogen_status: true
+autogen_version: 2
+fields:
+    - api_field: cloudKmsKey
+    - api_field: cloudLoggingDetails.cloudLoggingSeverity
+    - api_field: cloudLoggingDetails.enableCloudLogging
+    - field: create_sample_integrations
+      provider_only: true
+    - api_field: createTime
+    - api_field: createdFromTemplate
+    - api_field: databasePersistencePolicy
+    - api_field: description
+    - api_field: enableVariableMasking
+    - api_field: errorCatcherConfigs.description
+    - api_field: errorCatcherConfigs.errorCatcherId
+    - api_field: errorCatcherConfigs.errorCatcherNumber
+    - api_field: errorCatcherConfigs.label
+    - api_field: errorCatcherConfigs.position.x
+    - api_field: errorCatcherConfigs.position.y
+    - api_field: errorCatcherConfigs.startErrorTasks.condition
+    - api_field: errorCatcherConfigs.startErrorTasks.description
+    - api_field: errorCatcherConfigs.startErrorTasks.displayName
+    - api_field: errorCatcherConfigs.startErrorTasks.taskConfigId
+    - api_field: errorCatcherConfigs.startErrorTasks.taskId
+    - field: integration
+      provider_only: true
+    - api_field: integrationConfigParameters.parameter.containsLargeData
+    - api_field: integrationConfigParameters.parameter.dataType
+    - api_field: integrationConfigParameters.parameter.defaultValue.booleanArray.booleanValues
+    - api_field: integrationConfigParameters.parameter.defaultValue.booleanValue
+    - api_field: integrationConfigParameters.parameter.defaultValue.doubleArray.doubleValues
+    - api_field: integrationConfigParameters.parameter.defaultValue.doubleValue
+    - api_field: integrationConfigParameters.parameter.defaultValue.intArray.intValues
+    - api_field: integrationConfigParameters.parameter.defaultValue.intValue
+    - api_field: integrationConfigParameters.parameter.defaultValue.jsonValue
+    - api_field: integrationConfigParameters.parameter.defaultValue.stringArray.stringValues
+    - api_field: integrationConfigParameters.parameter.defaultValue.stringValue
+    - api_field: integrationConfigParameters.parameter.description
+    - api_field: integrationConfigParameters.parameter.displayName
+    - api_field: integrationConfigParameters.parameter.inputOutputType
+    - api_field: integrationConfigParameters.parameter.isTransient
+    - api_field: integrationConfigParameters.parameter.jsonSchema
+    - api_field: integrationConfigParameters.parameter.key
+    - api_field: integrationConfigParameters.parameter.masked
+    - api_field: integrationConfigParameters.parameter.producer
+    - api_field: integrationConfigParameters.parameter.searchable
+    - api_field: integrationConfigParameters.value.booleanArray.booleanValues
+    - api_field: integrationConfigParameters.value.booleanValue
+    - api_field: integrationConfigParameters.value.doubleArray.doubleValues
+    - api_field: integrationConfigParameters.value.doubleValue
+    - api_field: integrationConfigParameters.value.intArray.intValues
+    - api_field: integrationConfigParameters.value.intValue
+    - api_field: integrationConfigParameters.value.jsonValue
+    - api_field: integrationConfigParameters.value.stringArray.stringValues
+    - api_field: integrationConfigParameters.value.stringValue
+    - api_field: integrationParameters.containsLargeData
+    - api_field: integrationParameters.dataType
+    - api_field: integrationParameters.defaultValue.booleanArray.booleanValues
+    - api_field: integrationParameters.defaultValue.booleanValue
+    - api_field: integrationParameters.defaultValue.doubleArray.doubleValues
+    - api_field: integrationParameters.defaultValue.doubleValue
+    - api_field: integrationParameters.defaultValue.intArray.intValues
+    - api_field: integrationParameters.defaultValue.intValue
+    - api_field: integrationParameters.defaultValue.jsonValue
+    - api_field: integrationParameters.defaultValue.stringArray.stringValues
+    - api_field: integrationParameters.defaultValue.stringValue
+    - api_field: integrationParameters.description
+    - api_field: integrationParameters.displayName
+    - api_field: integrationParameters.inputOutputType
+    - api_field: integrationParameters.isTransient
+    - api_field: integrationParameters.jsonSchema
+    - api_field: integrationParameters.key
+    - api_field: integrationParameters.masked
+    - api_field: integrationParameters.producer
+    - api_field: integrationParameters.searchable
+    - api_field: lastModifierEmail
+    - field: location
+      provider_only: true
+    - api_field: lockHolder
+    - api_field: name
+    - field: new_integration
+      provider_only: true
+    - api_field: origin
+    - api_field: parentTemplateId
+    - api_field: runAsServiceAccount
+    - api_field: snapshotNumber
+    - api_field: state
+    - api_field: status
+    - api_field: taskConfigs.conditionalFailurePolicies.defaultFailurePolicy.condition
+    - api_field: taskConfigs.conditionalFailurePolicies.defaultFailurePolicy.intervalTime
+    - api_field: taskConfigs.conditionalFailurePolicies.defaultFailurePolicy.maxRetries
+    - api_field: taskConfigs.conditionalFailurePolicies.defaultFailurePolicy.retryStrategy
+    - api_field: taskConfigs.conditionalFailurePolicies.failurePolicies.condition
+    - api_field: taskConfigs.conditionalFailurePolicies.failurePolicies.intervalTime
+    - api_field: taskConfigs.conditionalFailurePolicies.failurePolicies.maxRetries
+    - api_field: taskConfigs.conditionalFailurePolicies.failurePolicies.retryStrategy
+    - api_field: taskConfigs.description
+    - api_field: taskConfigs.displayName
+    - api_field: taskConfigs.errorCatcherId
+    - api_field: taskConfigs.externalTaskType
+    - api_field: taskConfigs.failurePolicy.condition
+    - api_field: taskConfigs.failurePolicy.intervalTime
+    - api_field: taskConfigs.failurePolicy.maxRetries
+    - api_field: taskConfigs.failurePolicy.retryStrategy
+    - api_field: taskConfigs.jsonValidationOption
+    - api_field: taskConfigs.nextTasks.condition
+    - api_field: taskConfigs.nextTasks.description
+    - api_field: taskConfigs.nextTasks.displayName
+    - api_field: taskConfigs.nextTasks.taskConfigId
+    - api_field: taskConfigs.nextTasks.taskId
+    - api_field: taskConfigs.nextTasksExecutionPolicy
+    - api_field: taskConfigs.parameters.key
+    - api_field: taskConfigs.parameters.value.masked
+      field: task_configs.parameters.masked
+    - api_field: taskConfigs.parameters.value.value.booleanArray.booleanValues
+      field: task_configs.parameters.value.boolean_array.boolean_values
+    - api_field: taskConfigs.parameters.value.value.booleanValue
+      field: task_configs.parameters.value.boolean_value
+    - api_field: taskConfigs.parameters.value.value.doubleArray.doubleValues
+      field: task_configs.parameters.value.double_array.double_values
+    - api_field: taskConfigs.parameters.value.value.doubleValue
+      field: task_configs.parameters.value.double_value
+    - api_field: taskConfigs.parameters.value.value.intArray.intValues
+      field: task_configs.parameters.value.int_array.int_values
+    - api_field: taskConfigs.parameters.value.value.intValue
+      field: task_configs.parameters.value.int_value
+    - api_field: taskConfigs.parameters.value.value.jsonValue
+      field: task_configs.parameters.value.json_value
+    - api_field: taskConfigs.parameters.value.value.stringArray.stringValues
+      field: task_configs.parameters.value.string_array.string_values
+    - api_field: taskConfigs.parameters.value.value.stringValue
+      field: task_configs.parameters.value.string_value
+    - api_field: taskConfigs.position.x
+    - api_field: taskConfigs.position.y
+    - api_field: taskConfigs.successPolicy.finalState
+    - api_field: taskConfigs.synchronousCallFailurePolicy.condition
+    - api_field: taskConfigs.synchronousCallFailurePolicy.intervalTime
+    - api_field: taskConfigs.synchronousCallFailurePolicy.maxRetries
+    - api_field: taskConfigs.synchronousCallFailurePolicy.retryStrategy
+    - api_field: taskConfigs.task
+    - api_field: taskConfigs.taskExecutionStrategy
+    - api_field: taskConfigs.taskId
+    - api_field: taskConfigs.taskTemplate
+    - api_field: triggerConfigs.alertConfig.aggregationPeriod
+    - api_field: triggerConfigs.alertConfig.alertThreshold
+    - api_field: triggerConfigs.alertConfig.disableAlert
+    - api_field: triggerConfigs.alertConfig.displayName
+    - api_field: triggerConfigs.alertConfig.durationThreshold
+    - api_field: triggerConfigs.alertConfig.metricType
+    - api_field: triggerConfigs.alertConfig.onlyFinalAttempt
+    - api_field: triggerConfigs.alertConfig.thresholdType
+    - api_field: triggerConfigs.alertConfig.thresholdValue.absolute
+    - api_field: triggerConfigs.alertConfig.thresholdValue.percentage
+    - api_field: triggerConfigs.cloudSchedulerConfig.cronTab
+    - api_field: triggerConfigs.cloudSchedulerConfig.errorMessage
+    - api_field: triggerConfigs.cloudSchedulerConfig.location
+    - api_field: triggerConfigs.cloudSchedulerConfig.serviceAccountEmail
+    - api_field: triggerConfigs.description
+    - api_field: triggerConfigs.errorCatcherId
+    - api_field: triggerConfigs.inputVariables.names
+    - api_field: triggerConfigs.label
+    - api_field: triggerConfigs.nextTasksExecutionPolicy
+    - api_field: triggerConfigs.outputVariables.names
+    - api_field: triggerConfigs.position.x
+    - api_field: triggerConfigs.position.y
+    - api_field: triggerConfigs.properties
+    - api_field: triggerConfigs.startTasks.condition
+    - api_field: triggerConfigs.startTasks.description
+    - api_field: triggerConfigs.startTasks.displayName
+    - api_field: triggerConfigs.startTasks.taskConfigId
+    - api_field: triggerConfigs.startTasks.taskId
+    - api_field: triggerConfigs.trigger
+    - api_field: triggerConfigs.triggerId
+    - api_field: triggerConfigs.triggerNumber
+    - api_field: triggerConfigs.triggerType
+    - api_field: updateTime
+    - api_field: userLabel
+    - api_field: version
+    - field: deletion_policy
+      provider_only: true

@@ -66,8 +66,8 @@ func BootstrapIntegrationsClient(t *testing.T, locationID string) BootstrapClien
 
 		shouldDeprovision := true
 		if isGmekVal, ok := client["isGmek"]; ok {
-			if isGmek, ok := isGmekVal.(bool); ok {
-				shouldDeprovision = !isGmek
+			if isGmek, ok := isGmekVal.(bool); ok && isGmek {
+				shouldDeprovision = false
 			}
 		}
 
@@ -82,6 +82,12 @@ func BootstrapIntegrationsClient(t *testing.T, locationID string) BootstrapClien
 			})
 			if err != nil {
 				t.Fatalf("Unable to deprovision client: %s", err)
+			}
+		} else {
+			return BootstrapClient{
+				ProjectID: projectID,
+				Region:    locationID,
+				IsGMEK:    true,
 			}
 		}
 	}

@@ -1,0 +1,23 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_integrations_integration_version_deployment
+generation_type: mmv1
+source_file: products/integrations/IntegrationVersionDeployment.yaml
+api_service_name: integrations.googleapis.com
+api_version: v1
+api_resource_type_kind: IntegrationVersionDeployment
+fields:
+    - api_field: createTime
+    - field: integration
+      provider_only: true
+    - api_field: lastModifierEmail
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: state
+    - api_field: status
+    - api_field: updateTime
+    - field: version
+      provider_only: true
+    - field: deletion_policy
+      provider_only: true
