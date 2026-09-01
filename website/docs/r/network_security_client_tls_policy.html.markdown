@@ -180,7 +180,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/clientTlsPolicies/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/clientTlsPolicies/{{name}}`
 
 * `create_time` -
   Time the ClientTlsPolicy was created in UTC.

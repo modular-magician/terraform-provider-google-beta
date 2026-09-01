@@ -409,7 +409,7 @@ func resourceNetworkSecurityServerTlsPolicyCreate(d *schema.ResourceData, meta i
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/serverTlsPolicies/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/serverTlsPolicies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -458,7 +458,7 @@ func resourceNetworkSecurityServerTlsPolicyRead(d *schema.ResourceData, meta int
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/serverTlsPolicies/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/serverTlsPolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -620,7 +620,7 @@ func resourceNetworkSecurityServerTlsPolicyUpdate(d *schema.ResourceData, meta i
 		obj["labels"] = effectiveLabelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/serverTlsPolicies/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/serverTlsPolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -712,7 +712,7 @@ func resourceNetworkSecurityServerTlsPolicyDelete(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error fetching project for ServerTlsPolicy: %s", err)
 	}
 	billingProject = project
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/serverTlsPolicies/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/serverTlsPolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -764,7 +764,7 @@ func resourceNetworkSecurityServerTlsPolicyImport(d *schema.ResourceData, meta i
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/serverTlsPolicies/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/serverTlsPolicies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

@@ -285,7 +285,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/serverTlsPolicies/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/serverTlsPolicies/{{name}}`
 
 * `create_time` -
   Time the ServerTlsPolicy was created in UTC.

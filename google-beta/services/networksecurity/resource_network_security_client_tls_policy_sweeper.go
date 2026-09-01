@@ -115,7 +115,7 @@ func listAndActionNetworkSecurityClientTlsPolicy(action sweeper.ResourceAction) 
 		}
 
 		// Prepare list URL
-		listTemplate := strings.Split("https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/{{location}}/clientTlsPolicies", "?")[0]
+		listTemplate := strings.Split("https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/global/clientTlsPolicies", "?")[0]
 		listUrl, err := tpgresource.ReplaceVars(mockConfig, config, listTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -193,7 +193,7 @@ func deleteResourceNetworkSecurityClientTlsPolicy(config *transport_tpg.Config, 
 		return nil
 	}
 
-	deleteTemplate := "https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/{{location}}/clientTlsPolicies/{{name}}"
+	deleteTemplate := "https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/global/clientTlsPolicies/{{name}}"
 
 	url, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 	if err != nil {

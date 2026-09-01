@@ -199,7 +199,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/authorizationPolicies/{{name}}`
 
 * `create_time` -
   Time the AuthorizationPolicy was created in UTC.

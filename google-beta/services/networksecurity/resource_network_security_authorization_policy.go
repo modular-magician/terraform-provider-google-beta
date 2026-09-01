@@ -382,7 +382,7 @@ func resourceNetworkSecurityAuthorizationPolicyCreate(d *schema.ResourceData, me
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/authorizationPolicies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -431,7 +431,7 @@ func resourceNetworkSecurityAuthorizationPolicyRead(d *schema.ResourceData, meta
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/authorizationPolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -587,7 +587,7 @@ func resourceNetworkSecurityAuthorizationPolicyUpdate(d *schema.ResourceData, me
 		obj["labels"] = effectiveLabelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/authorizationPolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -675,7 +675,7 @@ func resourceNetworkSecurityAuthorizationPolicyDelete(d *schema.ResourceData, me
 		return fmt.Errorf("Error fetching project for AuthorizationPolicy: %s", err)
 	}
 	billingProject = project
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/global/authorizationPolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -727,7 +727,7 @@ func resourceNetworkSecurityAuthorizationPolicyImport(d *schema.ResourceData, me
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/authorizationPolicies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

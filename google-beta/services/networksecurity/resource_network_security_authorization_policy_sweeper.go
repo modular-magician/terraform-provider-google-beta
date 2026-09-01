@@ -115,7 +115,7 @@ func listAndActionNetworkSecurityAuthorizationPolicy(action sweeper.ResourceActi
 		}
 
 		// Prepare list URL
-		listTemplate := strings.Split("https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/{{location}}/authorizationPolicies", "?")[0]
+		listTemplate := strings.Split("https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/global/authorizationPolicies", "?")[0]
 		listUrl, err := tpgresource.ReplaceVars(mockConfig, config, listTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -193,7 +193,7 @@ func deleteResourceNetworkSecurityAuthorizationPolicy(config *transport_tpg.Conf
 		return nil
 	}
 
-	deleteTemplate := "https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/{{location}}/authorizationPolicies/{{name}}"
+	deleteTemplate := "https://networksecurity.googleapis.com/v1beta1/projects/{{project}}/locations/global/authorizationPolicies/{{name}}"
 
 	url, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 	if err != nil {
