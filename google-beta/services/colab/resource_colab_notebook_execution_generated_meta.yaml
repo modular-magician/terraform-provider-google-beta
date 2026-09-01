@@ -33,6 +33,8 @@ fields:
       provider_only: true
     - api_field: notebookRuntimeTemplateResourceName
     - api_field: serviceAccount
+    - api_field: workbenchRuntime.customContainerImage.repository
+    - api_field: workbenchRuntime.customContainerImage.tag
     - api_field: workbenchRuntime.vmImage.family
     - api_field: workbenchRuntime.vmImage.name
     - api_field: workbenchRuntime.vmImage.project

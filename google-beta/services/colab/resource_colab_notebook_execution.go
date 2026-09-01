@@ -391,9 +391,33 @@ func ResourceColabNotebookExecution() *schema.Resource {
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"custom_container_image": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Use a user-provided container image to run the notebook execution in. The notebook execution will run in a container based on this image.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"repository": {
+										Type:        schema.TypeString,
+										Required:    true,
+										ForceNew:    true,
+										Description: `The path to the Container Registry or Artifact Registry image. For example: gcr.io/{project_id}/{image_name}`,
+									},
+									"tag": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The tag of the container image. If not specified, this defaults to the latest tag.`,
+									},
+								},
+							},
+							ExactlyOneOf: []string{"workbench_runtime.0.custom_container_image", "workbench_runtime.0.vm_image"},
+						},
 						"vm_image": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Optional:    true,
 							ForceNew:    true,
 							Description: `Custom Compute Engine VM image for the Workbench instance.`,
 							MaxItems:    1,
@@ -421,6 +445,7 @@ func ResourceColabNotebookExecution() *schema.Resource {
 									},
 								},
 							},
+							ExactlyOneOf: []string{"workbench_runtime.0.custom_container_image", "workbench_runtime.0.vm_image"},
 						},
 					},
 				},
@@ -1368,6 +1393,13 @@ func expandColabNotebookExecutionWorkbenchRuntime(v interface{}, d tpgresource.T
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
+	transformedCustomContainerImage, err := expandColabNotebookExecutionWorkbenchRuntimeCustomContainerImage(original["custom_container_image"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomContainerImage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customContainerImage"] = transformedCustomContainerImage
+	}
+
 	transformedVmImage, err := expandColabNotebookExecutionWorkbenchRuntimeVmImage(original["vm_image"], d, config)
 	if err != nil {
 		return nil, err
@@ -1376,6 +1408,43 @@ func expandColabNotebookExecutionWorkbenchRuntime(v interface{}, d tpgresource.T
 	}
 
 	return transformed, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeCustomContainerImage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRepository, err := expandColabNotebookExecutionWorkbenchRuntimeCustomContainerImageRepository(original["repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["repository"] = transformedRepository
+	}
+
+	transformedTag, err := expandColabNotebookExecutionWorkbenchRuntimeCustomContainerImageTag(original["tag"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTag); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tag"] = transformedTag
+	}
+
+	return transformed, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeCustomContainerImageRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandColabNotebookExecutionWorkbenchRuntimeCustomContainerImageTag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandColabNotebookExecutionWorkbenchRuntimeVmImage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
