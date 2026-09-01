@@ -1713,6 +1713,99 @@ resource "google_compute_health_check" "default" {
   }
 } 
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=url_map_image_optimization_policy&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Url Map Image Optimization Policy
+
+
+```hcl
+resource "google_compute_url_map" "urlmap" {
+  provider        = google-beta
+  name            = "urlmap"
+  description     = "a description"
+  default_service = google_compute_backend_service.example.id
+
+  default_route_action {
+    image_optimization_policy {
+      query_parameter_interpretation = "ENABLED"
+    }
+  }
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "mysite-path"
+  }
+
+  host_rule {
+    hosts        = ["api.mysite.com"]
+    path_matcher = "mysite-route"
+  }
+
+  path_matcher {
+    name            = "mysite-path"
+    default_service = google_compute_backend_service.example.id
+
+    default_route_action {
+      image_optimization_policy {
+        query_parameter_interpretation = "DISABLED"
+      }
+    }
+
+    path_rule {
+      paths   = ["/private/*"]
+      service = google_compute_backend_service.example.id
+
+      route_action {
+        image_optimization_policy {
+          query_parameter_interpretation = "ENABLED"
+        }
+      }
+    }
+  }
+
+  path_matcher {
+    name            = "mysite-route"
+    default_service = google_compute_backend_service.example.id
+
+    route_rules {
+      priority = 1
+      match_rules {
+        prefix_match = "/images"
+      }
+      service = google_compute_backend_service.example.id
+
+      route_action {
+        image_optimization_policy {
+          query_parameter_interpretation = "DISABLED"
+        }
+      }
+    }
+  }
+}
+
+resource "google_compute_backend_service" "example" {
+  provider    = google-beta
+  name        = "example"
+  port_name   = "http"
+  protocol    = "HTTP"
+  timeout_sec = 10
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  enable_cdn            = true
+
+  health_checks = [google_compute_http_health_check.default.id]
+}
+
+resource "google_compute_http_health_check" "default" {
+  provider           = google-beta
+  name               = "health-check"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+```
 
 ## Argument Reference
 
@@ -2130,6 +2223,11 @@ The following arguments are supported:
 
 <a name="nested_path_matcher_path_rule_route_action"></a>The `route_action` block supports:
 
+* `image_optimization_policy` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Specifies the image optimization policy for this route.
+  Structure is [documented below](#nested_path_matcher_path_rule_route_action_image_optimization_policy).
+
 * `cors_policy` -
   (Optional)
   The specification for allowing client side cross-origin requests. Please see W3C
@@ -2203,6 +2301,16 @@ The following arguments are supported:
   backend has Identity-Aware Proxy enabled.
   Structure is [documented below](#nested_path_matcher_path_rule_route_action_cache_policy).
 
+
+<a name="nested_path_matcher_path_rule_route_action_image_optimization_policy"></a>The `image_optimization_policy` block supports:
+
+* `query_parameter_interpretation` -
+  (Optional)
+  How query parameters are interpreted for cache key matches.
+  Possible values:
+    - DISABLED
+    - ENABLED
+  Possible values are: `DISABLED`, `ENABLED`.
 
 <a name="nested_path_matcher_path_rule_route_action_cors_policy"></a>The `cors_policy` block supports:
 
@@ -3112,6 +3220,11 @@ The following arguments are supported:
 
 <a name="nested_path_matcher_route_rules_route_action"></a>The `route_action` block supports:
 
+* `image_optimization_policy` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Specifies the image optimization policy for this route.
+  Structure is [documented below](#nested_path_matcher_route_rules_route_action_image_optimization_policy).
+
 * `cors_policy` -
   (Optional)
   The specification for allowing client side cross-origin requests. Please see W3C
@@ -3185,6 +3298,16 @@ The following arguments are supported:
   backend has Identity-Aware Proxy enabled.
   Structure is [documented below](#nested_path_matcher_route_rules_route_action_cache_policy).
 
+
+<a name="nested_path_matcher_route_rules_route_action_image_optimization_policy"></a>The `image_optimization_policy` block supports:
+
+* `query_parameter_interpretation` -
+  (Optional)
+  How query parameters are interpreted for cache key matches.
+  Possible values:
+    - DISABLED
+    - ENABLED
+  Possible values are: `DISABLED`, `ENABLED`.
 
 <a name="nested_path_matcher_route_rules_route_action_cors_policy"></a>The `cors_policy` block supports:
 
@@ -3937,6 +4060,11 @@ The following arguments are supported:
   the host / authority header is suffixed with -shadow.
   Structure is [documented below](#nested_path_matcher_default_route_action_request_mirror_policy).
 
+* `image_optimization_policy` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Specifies the image optimization policy for this route.
+  Structure is [documented below](#nested_path_matcher_default_route_action_image_optimization_policy).
+
 * `cors_policy` -
   (Optional)
   The specification for allowing client side cross-origin requests. Please see
@@ -4132,6 +4260,16 @@ The following arguments are supported:
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   The percentage of requests to be mirrored to backendService.
   The value must be between 0.0 and 100.0 inclusive.
+
+<a name="nested_path_matcher_default_route_action_image_optimization_policy"></a>The `image_optimization_policy` block supports:
+
+* `query_parameter_interpretation` -
+  (Optional)
+  How query parameters are interpreted for cache key matches.
+  Possible values:
+    - DISABLED
+    - ENABLED
+  Possible values are: `DISABLED`, `ENABLED`.
 
 <a name="nested_path_matcher_default_route_action_cors_policy"></a>The `cors_policy` block supports:
 
@@ -4652,6 +4790,11 @@ The following arguments are supported:
   the host / authority header is suffixed with -shadow.
   Structure is [documented below](#nested_default_route_action_request_mirror_policy).
 
+* `image_optimization_policy` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Specifies the image optimization policy for this route.
+  Structure is [documented below](#nested_default_route_action_image_optimization_policy).
+
 * `cors_policy` -
   (Optional)
   The specification for allowing client side cross-origin requests. Please see
@@ -4847,6 +4990,16 @@ The following arguments are supported:
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   The percentage of requests to be mirrored to backendService.
   The value must be between 0.0 and 100.0 inclusive.
+
+<a name="nested_default_route_action_image_optimization_policy"></a>The `image_optimization_policy` block supports:
+
+* `query_parameter_interpretation` -
+  (Optional)
+  How query parameters are interpreted for cache key matches.
+  Possible values:
+    - DISABLED
+    - ENABLED
+  Possible values are: `DISABLED`, `ENABLED`.
 
 <a name="nested_default_route_action_cors_policy"></a>The `cors_policy` block supports:
 

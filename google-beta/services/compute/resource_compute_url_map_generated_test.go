@@ -2374,6 +2374,130 @@ resource "google_compute_health_check" "default" {
 `, context)
 }
 
+func TestAccComputeUrlMap_urlMapImageOptimizationPolicyExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"backend_service_name":   "tf-test-example" + randomSuffix,
+		"http_health_check_name": "tf-test-health-check" + randomSuffix,
+		"url_map_name":           "urlmap" + randomSuffix,
+		"random_suffix":          randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeUrlMapDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeUrlMap_urlMapImageOptimizationPolicyExample(context),
+			},
+			{
+				ResourceName:            "google_compute_url_map.urlmap",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"default_route_action.0.cache_policy.0.client_ttl.0.nanos", "default_route_action.0.cache_policy.0.default_ttl.0.nanos", "default_route_action.0.cache_policy.0.max_ttl.0.nanos", "default_route_action.0.cache_policy.0.serve_while_stale.0.nanos", "default_service"},
+			},
+			{
+				ResourceName:       "google_compute_url_map.urlmap",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeUrlMap_urlMapImageOptimizationPolicyExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_url_map" "urlmap" {
+  provider        = google-beta
+  name            = "%{url_map_name}"
+  description     = "a description"
+  default_service = google_compute_backend_service.example.id
+
+  default_route_action {
+    image_optimization_policy {
+      query_parameter_interpretation = "ENABLED"
+    }
+  }
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "mysite-path"
+  }
+
+  host_rule {
+    hosts        = ["api.mysite.com"]
+    path_matcher = "mysite-route"
+  }
+
+  path_matcher {
+    name            = "mysite-path"
+    default_service = google_compute_backend_service.example.id
+
+    default_route_action {
+      image_optimization_policy {
+        query_parameter_interpretation = "DISABLED"
+      }
+    }
+
+    path_rule {
+      paths   = ["/private/*"]
+      service = google_compute_backend_service.example.id
+
+      route_action {
+        image_optimization_policy {
+          query_parameter_interpretation = "ENABLED"
+        }
+      }
+    }
+  }
+
+  path_matcher {
+    name            = "mysite-route"
+    default_service = google_compute_backend_service.example.id
+
+    route_rules {
+      priority = 1
+      match_rules {
+        prefix_match = "/images"
+      }
+      service = google_compute_backend_service.example.id
+
+      route_action {
+        image_optimization_policy {
+          query_parameter_interpretation = "DISABLED"
+        }
+      }
+    }
+  }
+}
+
+resource "google_compute_backend_service" "example" {
+  provider    = google-beta
+  name        = "%{backend_service_name}"
+  port_name   = "http"
+  protocol    = "HTTP"
+  timeout_sec = 10
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  enable_cdn            = true
+
+  health_checks = [google_compute_http_health_check.default.id]
+}
+
+resource "google_compute_http_health_check" "default" {
+  provider           = google-beta
+  name               = "%{http_health_check_name}"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+`, context)
+}
+
 func testAccCheckComputeUrlMapDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
