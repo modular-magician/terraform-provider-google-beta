@@ -92,10 +92,131 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/dataSources/{{data_source_id}}`
 
+* `authorization_type` -
+  Indicates the type of authorization.
+
+* `client_id` -
+  Data source client id which should be used to receive refresh token.
+
+* `data_refresh_type` -
+  Specifies whether the data source supports automatic data refresh for the
+  past few days, and how it's supported. For some data sources, data might
+  not be complete until a few days later, so it's useful to refresh data
+  automatically.
+
+* `default_data_refresh_window_days` -
+  Default data refresh window on days.
+  Only meaningful when `data_refresh_type` = `SLIDING_WINDOW`.
+
+* `default_schedule` -
+  Default data transfer schedule.
+
+* `description` -
+  User friendly data source description string.
+
 * `display_name` -
   User friendly name of the enrolled data source, for example
   `Google Cloud Carbon Footprint Exports`.
 
+* `help_url` -
+  Url for the help document for this data source.
+
+* `manual_runs_disabled` -
+  Disables backfilling and manual run scheduling for the data source.
+
+* `minimum_schedule_interval` -
+  The minimum interval for scheduler to schedule runs.
+
+* `parameters` -
+  Data source parameters.
+  Structure is [documented below](#nested_parameters).
+
+* `scopes` -
+  Api auth scopes for which refresh token needs to be obtained. These are
+  scopes needed by a data source to prepare data and ingest them into
+  BigQuery, e.g., https://www.googleapis.com/auth/bigquery
+
+* `supports_custom_schedule` -
+  Specifies whether the data source supports a user defined schedule, or
+  operates on the default schedule. When set to `true`, user can override
+  default schedule.
+
+* `update_deadline_seconds` -
+  The number of seconds to wait for an update from the data source
+  before the Data Transfer Service marks the transfer as FAILED.
+
+
+<a name="nested_parameters"></a>The `parameters` block contains:
+
+* `allowed_values` -
+  (Output)
+  All possible values for the parameter.
+
+* `deprecated` -
+  (Output)
+  If true, it should not be used in new transfers, and it should not be
+  visible to users.
+
+* `description` -
+  (Output)
+  Parameter description.
+
+* `display_name` -
+  (Output)
+  Parameter display name in the user interface.
+
+* `fields` -
+  (Output)
+  Deprecated. This field has no effect.
+
+* `immutable` -
+  (Output)
+  Cannot be changed after initial creation.
+
+* `max_list_size` -
+  (Output)
+  For list parameters, the max size of the list.
+
+* `max_value` -
+  (Output)
+  For integer and double values specifies maximum allowed value.
+
+* `min_value` -
+  (Output)
+  For integer and double values specifies minimum allowed value.
+
+* `param_id` -
+  (Output)
+  Parameter identifier.
+
+* `recurse` -
+  (Output)
+  Deprecated. This field has no effect.
+
+* `repeated` -
+  (Output)
+  Deprecated. This field has no effect.
+
+* `required` -
+  (Output)
+  Is parameter required.
+
+* `type` -
+  (Output)
+  Parameter type.
+
+* `validation_description` -
+  (Output)
+  Description of the requirements for this field, in case the user input does
+  not fulfill the regex pattern or min/max values.
+
+* `validation_help_url` -
+  (Output)
+  URL to a help document to further explain the naming requirements.
+
+* `validation_regex` -
+  (Output)
+  Regular expression which can be used for parameter validation.
 
 ## Timeouts
 

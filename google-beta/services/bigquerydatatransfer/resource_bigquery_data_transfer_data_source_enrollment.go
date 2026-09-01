@@ -154,11 +154,185 @@ this only exists because the API offers no project-level unenroll method. Overri
 'us' is not routable for the project, for example under a data-residency organization policy.`,
 				Default: "us",
 			},
+			"authorization_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Indicates the type of authorization.`,
+			},
+			"client_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Data source client id which should be used to receive refresh token.`,
+			},
+			"data_refresh_type": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Specifies whether the data source supports automatic data refresh for the
+past few days, and how it's supported. For some data sources, data might
+not be complete until a few days later, so it's useful to refresh data
+automatically.`,
+			},
+			"default_data_refresh_window_days": {
+				Type:     schema.TypeInt,
+				Computed: true,
+				Description: `Default data refresh window on days.
+Only meaningful when 'data_refresh_type' = 'SLIDING_WINDOW'.`,
+			},
+			"default_schedule": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Default data transfer schedule.`,
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `User friendly data source description string.`,
+			},
 			"display_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `User friendly name of the enrolled data source, for example
 'Google Cloud Carbon Footprint Exports'.`,
+			},
+			"help_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Url for the help document for this data source.`,
+			},
+			"manual_runs_disabled": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: `Disables backfilling and manual run scheduling for the data source.`,
+			},
+			"minimum_schedule_interval": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The minimum interval for scheduler to schedule runs.`,
+			},
+			"parameters": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Data source parameters.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"allowed_values": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: `All possible values for the parameter.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"deprecated": {
+							Type:     schema.TypeBool,
+							Computed: true,
+							Description: `If true, it should not be used in new transfers, and it should not be
+visible to users.`,
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Parameter description.`,
+						},
+						"display_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Parameter display name in the user interface.`,
+						},
+						"fields": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: `Deprecated. This field has no effect.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"immutable": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Cannot be changed after initial creation.`,
+						},
+						"max_list_size": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: `For list parameters, the max size of the list.`,
+						},
+						"max_value": {
+							Type:        schema.TypeFloat,
+							Computed:    true,
+							Description: `For integer and double values specifies maximum allowed value.`,
+						},
+						"min_value": {
+							Type:        schema.TypeFloat,
+							Computed:    true,
+							Description: `For integer and double values specifies minimum allowed value.`,
+						},
+						"param_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Parameter identifier.`,
+						},
+						"recurse": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Deprecated. This field has no effect.`,
+						},
+						"repeated": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Deprecated. This field has no effect.`,
+						},
+						"required": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Is parameter required.`,
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Parameter type.`,
+						},
+						"validation_description": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Description of the requirements for this field, in case the user input does
+not fulfill the regex pattern or min/max values.`,
+						},
+						"validation_help_url": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `URL to a help document to further explain the naming requirements.`,
+						},
+						"validation_regex": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Regular expression which can be used for parameter validation.`,
+						},
+					},
+				},
+			},
+			"scopes": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Description: `Api auth scopes for which refresh token needs to be obtained. These are
+scopes needed by a data source to prepare data and ingest them into
+BigQuery, e.g., https://www.googleapis.com/auth/bigquery`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"supports_custom_schedule": {
+				Type:     schema.TypeBool,
+				Computed: true,
+				Description: `Specifies whether the data source supports a user defined schedule, or
+operates on the default schedule. When set to 'true', user can override
+default schedule.`,
+			},
+			"update_deadline_seconds": {
+				Type:     schema.TypeInt,
+				Computed: true,
+				Description: `The number of seconds to wait for an update from the data source
+before the Data Transfer Service marks the transfer as FAILED.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -474,8 +648,198 @@ func resourceBigqueryDataTransferDataSourceEnrollmentImport(d *schema.ResourceDa
 	return []*schema.ResourceData{d}, nil
 }
 
+func flattenBigqueryDataTransferDataSourceEnrollmentAuthorizationType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentDataRefreshType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentDefaultDataRefreshWindowDays(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentDefaultSchedule(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenBigqueryDataTransferDataSourceEnrollmentDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentHelpUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentManualRunsDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentMinimumScheduleInterval(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"allowed_values":         flattenBigqueryDataTransferDataSourceEnrollmentParametersAllowedValues(original["allowedValues"], d, config),
+			"deprecated":             flattenBigqueryDataTransferDataSourceEnrollmentParametersDeprecated(original["deprecated"], d, config),
+			"description":            flattenBigqueryDataTransferDataSourceEnrollmentParametersDescription(original["description"], d, config),
+			"display_name":           flattenBigqueryDataTransferDataSourceEnrollmentParametersDisplayName(original["displayName"], d, config),
+			"fields":                 flattenBigqueryDataTransferDataSourceEnrollmentParametersFields(original["fields"], d, config),
+			"immutable":              flattenBigqueryDataTransferDataSourceEnrollmentParametersImmutable(original["immutable"], d, config),
+			"max_list_size":          flattenBigqueryDataTransferDataSourceEnrollmentParametersMaxListSize(original["maxListSize"], d, config),
+			"max_value":              flattenBigqueryDataTransferDataSourceEnrollmentParametersMaxValue(original["maxValue"], d, config),
+			"min_value":              flattenBigqueryDataTransferDataSourceEnrollmentParametersMinValue(original["minValue"], d, config),
+			"param_id":               flattenBigqueryDataTransferDataSourceEnrollmentParametersParamId(original["paramId"], d, config),
+			"recurse":                flattenBigqueryDataTransferDataSourceEnrollmentParametersRecurse(original["recurse"], d, config),
+			"repeated":               flattenBigqueryDataTransferDataSourceEnrollmentParametersRepeated(original["repeated"], d, config),
+			"required":               flattenBigqueryDataTransferDataSourceEnrollmentParametersRequired(original["required"], d, config),
+			"type":                   flattenBigqueryDataTransferDataSourceEnrollmentParametersType(original["type"], d, config),
+			"validation_description": flattenBigqueryDataTransferDataSourceEnrollmentParametersValidationDescription(original["validationDescription"], d, config),
+			"validation_help_url":    flattenBigqueryDataTransferDataSourceEnrollmentParametersValidationHelpUrl(original["validationHelpUrl"], d, config),
+			"validation_regex":       flattenBigqueryDataTransferDataSourceEnrollmentParametersValidationRegex(original["validationRegex"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersAllowedValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersDeprecated(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersImmutable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersMaxListSize(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersMaxValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersMinValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersParamId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersRecurse(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersRepeated(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersRequired(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersValidationDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersValidationHelpUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentParametersValidationRegex(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentScopes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentSupportsCustomSchedule(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferDataSourceEnrollmentUpdateDeadlineSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
 }
 
 func resourceBigqueryDataTransferDataSourceEnrollmentEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
@@ -487,7 +851,46 @@ func resourceBigqueryDataTransferDataSourceEnrollmentEncoder(d *schema.ResourceD
 func ResourceBigqueryDataTransferDataSourceEnrollmentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
+	if err = d.Set("authorization_type", flattenBigqueryDataTransferDataSourceEnrollmentAuthorizationType(res["authorizationType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("client_id", flattenBigqueryDataTransferDataSourceEnrollmentClientId(res["clientId"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("data_refresh_type", flattenBigqueryDataTransferDataSourceEnrollmentDataRefreshType(res["dataRefreshType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("default_data_refresh_window_days", flattenBigqueryDataTransferDataSourceEnrollmentDefaultDataRefreshWindowDays(res["defaultDataRefreshWindowDays"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("default_schedule", flattenBigqueryDataTransferDataSourceEnrollmentDefaultSchedule(res["defaultSchedule"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("description", flattenBigqueryDataTransferDataSourceEnrollmentDescription(res["description"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
 	if err = d.Set("display_name", flattenBigqueryDataTransferDataSourceEnrollmentDisplayName(res["displayName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("help_url", flattenBigqueryDataTransferDataSourceEnrollmentHelpUrl(res["helpUrl"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("manual_runs_disabled", flattenBigqueryDataTransferDataSourceEnrollmentManualRunsDisabled(res["manualRunsDisabled"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("minimum_schedule_interval", flattenBigqueryDataTransferDataSourceEnrollmentMinimumScheduleInterval(res["minimumScheduleInterval"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("parameters", flattenBigqueryDataTransferDataSourceEnrollmentParameters(res["parameters"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("scopes", flattenBigqueryDataTransferDataSourceEnrollmentScopes(res["scopes"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("supports_custom_schedule", flattenBigqueryDataTransferDataSourceEnrollmentSupportsCustomSchedule(res["supportsCustomSchedule"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
+	}
+	if err = d.Set("update_deadline_seconds", flattenBigqueryDataTransferDataSourceEnrollmentUpdateDeadlineSeconds(res["updateDeadlineSeconds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
 
