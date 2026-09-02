@@ -16,12 +16,12 @@
 # ----------------------------------------------------------------------------
 subcategory: "Developer Connect"
 description: |-
-  A connection for GitHub, GitHub Enterprise, GitLab, and GitLab Enterprise.
+  A connection for GitHub, GitHub Enterprise, GitLab, GitLab Enterprise, Bitbucket Cloud, Bitbucket Data Center, and Secure Source Manager.
 ---
 
 # google_developer_connect_connection
 
-A connection for GitHub, GitHub Enterprise, GitLab, and GitLab Enterprise.
+A connection for GitHub, GitHub Enterprise, GitLab, GitLab Enterprise, Bitbucket Cloud, Bitbucket Data Center, and Secure Source Manager.
 
 
 To get more information about Connection, see:
@@ -797,6 +797,55 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=developer_connect_connection_securesourcemanager&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Developer Connect Connection Securesourcemanager
+
+
+```hcl
+data "google_project" "project" {}
+
+resource "google_project_service_identity" "devconnect_p4sa" {
+  service = "developerconnect.googleapis.com"
+}
+
+resource "google_project_iam_member" "devconnect_sa_role" {
+  project = data.google_project.project.project_id
+  role    = "roles/developerconnect.serviceAgent"
+  member  = google_project_service_identity.devconnect_p4sa.member
+}
+
+resource "google_project_iam_member" "devconnect_ssm_linker" {
+  project = data.google_project.project.project_id
+  role    = "roles/securesourcemanager.developerConnectLinker"
+  member  = google_project_service_identity.devconnect_p4sa.member
+}
+
+resource "google_secure_source_manager_instance" "instance" {
+    location = "us-east1"
+    instance_id = "tf-test-instance"
+
+    # Prevent accidental deletions.
+    deletion_policy = "DELETE"
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+    location = "us-east1"
+    connection_id = "tf-test-connection"
+
+    secure_source_manager_instance_config {
+        instance = google_secure_source_manager_instance.instance.name
+    }
+
+    depends_on = [
+        google_project_iam_member.devconnect_sa_role,
+        google_project_iam_member.devconnect_ssm_linker
+    ]
+}
+```
 
 ## Argument Reference
 
@@ -878,6 +927,11 @@ The following arguments are supported:
   The crypto key configuration. This field is used by the Customer-managed
   encryption keys (CMEK) feature.
   Structure is [documented below](#nested_crypto_key_config).
+
+* `secure_source_manager_instance_config` -
+  (Optional)
+  Configuration for connections to an instance of Secure Source Manager.
+  Structure is [documented below](#nested_secure_source_manager_instance_config).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -1280,6 +1334,13 @@ The following arguments are supported:
   Required. The name of the key which is used to encrypt/decrypt customer data. For key
   in Cloud KMS, the key should be in the format of
   `projects/*/locations/*/keyRings/*/cryptoKeys/*`.
+
+<a name="nested_secure_source_manager_instance_config"></a>The `secure_source_manager_instance_config` block supports:
+
+* `instance` -
+  (Required)
+  Required. Immutable. The Secure Source Manager instance resource name,
+  formatted as `projects/*/locations/*/instances/*`.
 
 ## Attributes Reference
 

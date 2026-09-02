@@ -742,6 +742,23 @@ projects/{project}/locations/{location}/namespaces/{namespace}/services/{service
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"secure_source_manager_instance_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration for connections to an instance of Secure Source Manager.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `Required. Immutable. The Secure Source Manager instance resource name,
+formatted as 'projects/*/locations/*/instances/*'.`,
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -917,6 +934,12 @@ func resourceDeveloperConnectConnectionCreate(d *schema.ResourceData, meta inter
 		return err
 	} else if v, ok := d.GetOkExists("crypto_key_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(cryptoKeyConfigProp)) && (ok || !reflect.DeepEqual(v, cryptoKeyConfigProp)) {
 		obj["cryptoKeyConfig"] = cryptoKeyConfigProp
+	}
+	secureSourceManagerInstanceConfigProp, err := expandDeveloperConnectConnectionSecureSourceManagerInstanceConfig(d.Get("secure_source_manager_instance_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("secure_source_manager_instance_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(secureSourceManagerInstanceConfigProp)) && (ok || !reflect.DeepEqual(v, secureSourceManagerInstanceConfigProp)) {
+		obj["secureSourceManagerInstanceConfig"] = secureSourceManagerInstanceConfigProp
 	}
 	effectiveLabelsProp, err := expandDeveloperConnectConnectionEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -1206,6 +1229,12 @@ func resourceDeveloperConnectConnectionUpdate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("crypto_key_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, cryptoKeyConfigProp)) {
 		obj["cryptoKeyConfig"] = cryptoKeyConfigProp
 	}
+	secureSourceManagerInstanceConfigProp, err := expandDeveloperConnectConnectionSecureSourceManagerInstanceConfig(d.Get("secure_source_manager_instance_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("secure_source_manager_instance_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, secureSourceManagerInstanceConfigProp)) {
+		obj["secureSourceManagerInstanceConfig"] = secureSourceManagerInstanceConfigProp
+	}
 	effectiveLabelsProp, err := expandDeveloperConnectConnectionEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1266,6 +1295,10 @@ func resourceDeveloperConnectConnectionUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("crypto_key_config") {
 		updateMask = append(updateMask, "cryptoKeyConfig")
+	}
+
+	if d.HasChange("secure_source_manager_instance_config") {
+		updateMask = append(updateMask, "secureSourceManagerInstanceConfig")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -2077,6 +2110,23 @@ func flattenDeveloperConnectConnectionCryptoKeyConfig(v interface{}, d *schema.R
 	return []interface{}{transformed}
 }
 func flattenDeveloperConnectConnectionCryptoKeyConfigKeyReference(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectConnectionSecureSourceManagerInstanceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["instance"] =
+		flattenDeveloperConnectConnectionSecureSourceManagerInstanceConfigInstance(original["instance"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDeveloperConnectConnectionSecureSourceManagerInstanceConfigInstance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3122,6 +3172,32 @@ func expandDeveloperConnectConnectionCryptoKeyConfigKeyReference(v interface{}, 
 	return v, nil
 }
 
+func expandDeveloperConnectConnectionSecureSourceManagerInstanceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedInstance, err := expandDeveloperConnectConnectionSecureSourceManagerInstanceConfigInstance(original["instance"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInstance); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["instance"] = transformedInstance
+	}
+
+	return transformed, nil
+}
+
+func expandDeveloperConnectConnectionSecureSourceManagerInstanceConfigInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDeveloperConnectConnectionEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -3202,6 +3278,9 @@ func ResourceDeveloperConnectConnectionFlatten(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
 	if err = d.Set("crypto_key_config", flattenDeveloperConnectConnectionCryptoKeyConfig(res["cryptoKeyConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Connection: %s", err)
+	}
+	if err = d.Set("secure_source_manager_instance_config", flattenDeveloperConnectConnectionSecureSourceManagerInstanceConfig(res["secureSourceManagerInstanceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenDeveloperConnectConnectionTerraformLabels(res["labels"], d, config)); err != nil {

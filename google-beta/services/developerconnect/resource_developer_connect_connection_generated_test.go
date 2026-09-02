@@ -32,6 +32,8 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/developerconnect"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securesourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -537,6 +539,85 @@ resource "google_developer_connect_connection" "my-connection" {
     }
     
   }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectConnection_developerConnectConnectionSecuresourcemanagerExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
+		"instance_id":     "tf-test-tf-test-instance" + randomSuffix,
+		"random_suffix":   randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionSecuresourcemanagerExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_connection.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "connection_id", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_developer_connect_connection.my-connection",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectConnection_developerConnectConnectionSecuresourcemanagerExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {}
+
+resource "google_project_service_identity" "devconnect_p4sa" {
+  service = "developerconnect.googleapis.com"
+}
+
+resource "google_project_iam_member" "devconnect_sa_role" {
+  project = data.google_project.project.project_id
+  role    = "roles/developerconnect.serviceAgent"
+  member  = google_project_service_identity.devconnect_p4sa.member
+}
+
+resource "google_project_iam_member" "devconnect_ssm_linker" {
+  project = data.google_project.project.project_id
+  role    = "roles/securesourcemanager.developerConnectLinker"
+  member  = google_project_service_identity.devconnect_p4sa.member
+}
+
+resource "google_secure_source_manager_instance" "instance" {
+    location = "us-east1"
+    instance_id = "%{instance_id}"
+
+    # Prevent accidental deletions.
+    deletion_policy = "DELETE"
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+    location = "us-east1"
+    connection_id = "%{connection_name}"
+
+    secure_source_manager_instance_config {
+        instance = google_secure_source_manager_instance.instance.name
+    }
+
+    depends_on = [
+        google_project_iam_member.devconnect_sa_role,
+        google_project_iam_member.devconnect_ssm_linker
+    ]
 }
 `, context)
 }
