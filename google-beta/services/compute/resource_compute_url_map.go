@@ -918,6 +918,40 @@ request's path is replaced by pathPrefixRewrite.
 The value must be between 1 and 1024 characters.`,
 										AtLeastOneOf: []string{"default_route_action.0.url_rewrite.0.host_rewrite", "default_route_action.0.url_rewrite.0.path_prefix_rewrite"},
 									},
+									"regex_rewrite": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `The regex rewrite to be applied to the URL. Only one of pathPrefixRewrite, pathTemplateRewrite, or regexRewrite may be specified.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"path_pattern": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The regular expression used to match against the URL path.
+It uses RE2 syntax with the following constraints:
+ - Any single character operators
+ - Groups are allowed to have only submatch operator inside
+ - Groups are allowed only without any char repetition, e.g. .*
+ - Any char repetition, e.g. .*, is only allowed to be used in a single regex together with:
+     - Empty string operators
+     - Other repetitions
+     - Ranges
+     - Repetitions of ranges
+ - Ranges are only allowed to have:
+     - Character range
+     - Digits range
+     - Symbols listed in characters allowed for ranges`,
+												},
+												"path_substitution": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `Required when path pattern is specified. Used to rewrite matching parts of
+the path.`,
+												},
+											},
+										},
+									},
 								},
 							},
 							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
@@ -1959,6 +1993,40 @@ request's path is replaced by pathPrefixRewrite.
 
 The value must be between 1 and 1024 characters.`,
 												},
+												"regex_rewrite": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `The regex rewrite to be applied to the URL. Only one of pathPrefixRewrite, pathTemplateRewrite, or regexRewrite may be specified.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"path_pattern": {
+																Type:     schema.TypeString,
+																Optional: true,
+																Description: `The regular expression used to match against the URL path.
+It uses RE2 syntax with the following constraints:
+ - Any single character operators
+ - Groups are allowed to have only submatch operator inside
+ - Groups are allowed only without any char repetition, e.g. .*
+ - Any char repetition, e.g. .*, is only allowed to be used in a single regex together with:
+     - Empty string operators
+     - Other repetitions
+     - Ranges
+     - Repetitions of ranges
+ - Ranges are only allowed to have:
+     - Character range
+     - Digits range
+     - Symbols listed in characters allowed for ranges`,
+															},
+															"path_substitution": {
+																Type:     schema.TypeString,
+																Optional: true,
+																Description: `Required when path pattern is specified. Used to rewrite matching parts of
+the path.`,
+															},
+														},
+													},
+												},
 											},
 										},
 									},
@@ -2997,6 +3065,40 @@ header is replaced with contents of hostRewrite. The value must be between 1 and
 																Description: `Prior to forwarding the request to the selected backend service, the matching
 portion of the request's path is replaced by pathPrefixRewrite. The value must
 be between 1 and 1024 characters.`,
+															},
+															"regex_rewrite": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `The regex rewrite to be applied to the URL. Only one of pathPrefixRewrite, pathTemplateRewrite, or regexRewrite may be specified.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"path_pattern": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The regular expression used to match against the URL path.
+It uses RE2 syntax with the following constraints:
+ - Any single character operators
+ - Groups are allowed to have only submatch operator inside
+ - Groups are allowed only without any char repetition, e.g. .*
+ - Any char repetition, e.g. .*, is only allowed to be used in a single regex together with:
+     - Empty string operators
+     - Other repetitions
+     - Ranges
+     - Repetitions of ranges
+ - Ranges are only allowed to have:
+     - Character range
+     - Digits range
+     - Symbols listed in characters allowed for ranges`,
+																		},
+																		"path_substitution": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `Required when path pattern is specified. Used to rewrite matching parts of
+the path.`,
+																		},
+																	},
+																},
 															},
 														},
 													},
@@ -4354,6 +4456,40 @@ MatchRules specify pathTemplate.
 
 Only one of pathPrefixRewrite and pathTemplateRewrite may be
 specified.`,
+															},
+															"regex_rewrite": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `The regex rewrite to be applied to the URL. Only one of pathPrefixRewrite, pathTemplateRewrite, or regexRewrite may be specified.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"path_pattern": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The regular expression used to match against the URL path.
+It uses RE2 syntax with the following constraints:
+ - Any single character operators
+ - Groups are allowed to have only submatch operator inside
+ - Groups are allowed only without any char repetition, e.g. .*
+ - Any char repetition, e.g. .*, is only allowed to be used in a single regex together with:
+     - Empty string operators
+     - Other repetitions
+     - Ranges
+     - Repetitions of ranges
+ - Ranges are only allowed to have:
+     - Character range
+     - Digits range
+     - Symbols listed in characters allowed for ranges`,
+																		},
+																		"path_substitution": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `Required when path pattern is specified. Used to rewrite matching parts of
+the path.`,
+																		},
+																	},
+																},
 															},
 														},
 													},
@@ -6033,11 +6169,36 @@ func flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewrite(v interface{},
 	transformed := make(map[string]interface{})
 	transformed["host_rewrite"] =
 		flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteHostRewrite(original["hostRewrite"], d, config)
+	transformed["regex_rewrite"] =
+		flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewrite(original["regexRewrite"], d, config)
 	transformed["path_prefix_rewrite"] =
 		flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewritePathPrefixRewrite(original["pathPrefixRewrite"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteHostRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["path_pattern"] =
+		flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathPattern(original["pathPattern"], d, config)
+	transformed["path_substitution"] =
+		flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathSubstitution(original["pathSubstitution"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -7255,6 +7416,8 @@ func flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewrite(v interface{
 	transformed := make(map[string]interface{})
 	transformed["host_rewrite"] =
 		flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteHostRewrite(original["hostRewrite"], d, config)
+	transformed["regex_rewrite"] =
+		flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewrite(original["regexRewrite"], d, config)
 	transformed["path_prefix_rewrite"] =
 		flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewritePathPrefixRewrite(original["pathPrefixRewrite"], d, config)
 	transformed["path_template_rewrite"] =
@@ -7262,6 +7425,29 @@ func flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewrite(v interface{
 	return []interface{}{transformed}
 }
 func flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteHostRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["path_pattern"] =
+		flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathPattern(original["pathPattern"], d, config)
+	transformed["path_substitution"] =
+		flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathSubstitution(original["pathSubstitution"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -8067,12 +8253,37 @@ func flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewrite(v interface{}, 
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["regex_rewrite"] =
+		flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewrite(original["regexRewrite"], d, config)
 	transformed["path_prefix_rewrite"] =
 		flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewritePathPrefixRewrite(original["pathPrefixRewrite"], d, config)
 	transformed["host_rewrite"] =
 		flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteHostRewrite(original["hostRewrite"], d, config)
 	return []interface{}{transformed}
 }
+func flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["path_pattern"] =
+		flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathPattern(original["pathPattern"], d, config)
+	transformed["path_substitution"] =
+		flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(original["pathSubstitution"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeUrlMapPathMatcherDefaultRouteActionUrlRewritePathPrefixRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -9067,12 +9278,37 @@ func flattenComputeUrlMapDefaultRouteActionUrlRewrite(v interface{}, d *schema.R
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["regex_rewrite"] =
+		flattenComputeUrlMapDefaultRouteActionUrlRewriteRegexRewrite(original["regexRewrite"], d, config)
 	transformed["path_prefix_rewrite"] =
 		flattenComputeUrlMapDefaultRouteActionUrlRewritePathPrefixRewrite(original["pathPrefixRewrite"], d, config)
 	transformed["host_rewrite"] =
 		flattenComputeUrlMapDefaultRouteActionUrlRewriteHostRewrite(original["hostRewrite"], d, config)
 	return []interface{}{transformed}
 }
+func flattenComputeUrlMapDefaultRouteActionUrlRewriteRegexRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["path_pattern"] =
+		flattenComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathPattern(original["pathPattern"], d, config)
+	transformed["path_substitution"] =
+		flattenComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(original["pathSubstitution"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeUrlMapDefaultRouteActionUrlRewritePathPrefixRewrite(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -11021,6 +11257,13 @@ func expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewrite(v interface{}, 
 		transformed["hostRewrite"] = transformedHostRewrite
 	}
 
+	transformedRegexRewrite, err := expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewrite(original["regex_rewrite"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRegexRewrite); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["regexRewrite"] = transformedRegexRewrite
+	}
+
 	transformedPathPrefixRewrite, err := expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewritePathPrefixRewrite(original["path_prefix_rewrite"], d, config)
 	if err != nil {
 		return nil, err
@@ -11032,6 +11275,43 @@ func expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewrite(v interface{}, 
 }
 
 func expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteHostRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPathPattern, err := expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathPattern(original["path_pattern"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathPattern"] = transformedPathPattern
+	}
+
+	transformedPathSubstitution, err := expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathSubstitution(original["path_substitution"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathSubstitution); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathSubstitution"] = transformedPathSubstitution
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -12959,6 +13239,13 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewrite(v interface{}
 		transformed["hostRewrite"] = transformedHostRewrite
 	}
 
+	transformedRegexRewrite, err := expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewrite(original["regex_rewrite"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRegexRewrite); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["regexRewrite"] = transformedRegexRewrite
+	}
+
 	transformedPathPrefixRewrite, err := expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewritePathPrefixRewrite(original["path_prefix_rewrite"], d, config)
 	if err != nil {
 		return nil, err
@@ -12977,6 +13264,43 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewrite(v interface{}
 }
 
 func expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteHostRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPathPattern, err := expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathPattern(original["path_pattern"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathPattern"] = transformedPathPattern
+	}
+
+	transformedPathSubstitution, err := expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathSubstitution(original["path_substitution"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathSubstitution); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathSubstitution"] = transformedPathSubstitution
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -14296,6 +14620,13 @@ func expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewrite(v interface{}, d
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
+	transformedRegexRewrite, err := expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewrite(original["regex_rewrite"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRegexRewrite); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["regexRewrite"] = transformedRegexRewrite
+	}
+
 	transformedPathPrefixRewrite, err := expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewritePathPrefixRewrite(original["path_prefix_rewrite"], d, config)
 	if err != nil {
 		return nil, err
@@ -14311,6 +14642,43 @@ func expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewrite(v interface{}, d
 	}
 
 	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPathPattern, err := expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathPattern(original["path_pattern"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathPattern"] = transformedPathPattern
+	}
+
+	transformedPathSubstitution, err := expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(original["path_substitution"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathSubstitution); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathSubstitution"] = transformedPathSubstitution
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeUrlMapPathMatcherDefaultRouteActionUrlRewritePathPrefixRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -15836,6 +16204,13 @@ func expandComputeUrlMapDefaultRouteActionUrlRewrite(v interface{}, d tpgresourc
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
+	transformedRegexRewrite, err := expandComputeUrlMapDefaultRouteActionUrlRewriteRegexRewrite(original["regex_rewrite"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRegexRewrite); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["regexRewrite"] = transformedRegexRewrite
+	}
+
 	transformedPathPrefixRewrite, err := expandComputeUrlMapDefaultRouteActionUrlRewritePathPrefixRewrite(original["path_prefix_rewrite"], d, config)
 	if err != nil {
 		return nil, err
@@ -15851,6 +16226,43 @@ func expandComputeUrlMapDefaultRouteActionUrlRewrite(v interface{}, d tpgresourc
 	}
 
 	return transformed, nil
+}
+
+func expandComputeUrlMapDefaultRouteActionUrlRewriteRegexRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPathPattern, err := expandComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathPattern(original["path_pattern"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathPattern"] = transformedPathPattern
+	}
+
+	transformedPathSubstitution, err := expandComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(original["path_substitution"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPathSubstitution); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pathSubstitution"] = transformedPathSubstitution
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapDefaultRouteActionUrlRewriteRegexRewritePathSubstitution(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeUrlMapDefaultRouteActionUrlRewritePathPrefixRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

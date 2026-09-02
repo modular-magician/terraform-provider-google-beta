@@ -31,6 +31,8 @@ fields:
     - api_field: defaultRouteAction.timeout.seconds
     - api_field: defaultRouteAction.urlRewrite.hostRewrite
     - api_field: defaultRouteAction.urlRewrite.pathPrefixRewrite
+    - api_field: defaultRouteAction.urlRewrite.regexRewrite.pathPattern
+    - api_field: defaultRouteAction.urlRewrite.regexRewrite.pathSubstitution
     - api_field: defaultRouteAction.weightedBackendServices.backendService
     - api_field: defaultRouteAction.weightedBackendServices.headerAction.requestHeadersToAdd.headerName
     - api_field: defaultRouteAction.weightedBackendServices.headerAction.requestHeadersToAdd.headerValue
@@ -119,6 +121,10 @@ fields:
       field: path_matcher.default_route_action.url_rewrite.path_prefix_rewrite
     - api_field: pathMatchers.defaultRouteAction.urlRewrite.pathTemplateRewrite
       field: path_matcher.default_route_action.url_rewrite.path_template_rewrite
+    - api_field: pathMatchers.defaultRouteAction.urlRewrite.regexRewrite.pathPattern
+      field: path_matcher.default_route_action.url_rewrite.regex_rewrite.path_pattern
+    - api_field: pathMatchers.defaultRouteAction.urlRewrite.regexRewrite.pathSubstitution
+      field: path_matcher.default_route_action.url_rewrite.regex_rewrite.path_substitution
     - api_field: pathMatchers.defaultRouteAction.weightedBackendServices.backendService
       field: path_matcher.default_route_action.weighted_backend_services.backend_service
     - api_field: pathMatchers.defaultRouteAction.weightedBackendServices.headerAction.requestHeadersToAdd.headerName
@@ -221,6 +227,10 @@ fields:
       field: path_matcher.path_rule.route_action.url_rewrite.host_rewrite
     - api_field: pathMatchers.pathRules.routeAction.urlRewrite.pathPrefixRewrite
       field: path_matcher.path_rule.route_action.url_rewrite.path_prefix_rewrite
+    - api_field: pathMatchers.pathRules.routeAction.urlRewrite.regexRewrite.pathPattern
+      field: path_matcher.path_rule.route_action.url_rewrite.regex_rewrite.path_pattern
+    - api_field: pathMatchers.pathRules.routeAction.urlRewrite.regexRewrite.pathSubstitution
+      field: path_matcher.path_rule.route_action.url_rewrite.regex_rewrite.path_substitution
     - api_field: pathMatchers.pathRules.routeAction.weightedBackendServices.backendService
       field: path_matcher.path_rule.route_action.weighted_backend_services.backend_service
     - api_field: pathMatchers.pathRules.routeAction.weightedBackendServices.headerAction.requestHeadersToAdd.headerName
@@ -363,6 +373,10 @@ fields:
       field: path_matcher.route_rules.route_action.url_rewrite.path_prefix_rewrite
     - api_field: pathMatchers.routeRules.routeAction.urlRewrite.pathTemplateRewrite
       field: path_matcher.route_rules.route_action.url_rewrite.path_template_rewrite
+    - api_field: pathMatchers.routeRules.routeAction.urlRewrite.regexRewrite.pathPattern
+      field: path_matcher.route_rules.route_action.url_rewrite.regex_rewrite.path_pattern
+    - api_field: pathMatchers.routeRules.routeAction.urlRewrite.regexRewrite.pathSubstitution
+      field: path_matcher.route_rules.route_action.url_rewrite.regex_rewrite.path_substitution
     - api_field: pathMatchers.routeRules.routeAction.weightedBackendServices.backendService
       field: path_matcher.route_rules.route_action.weighted_backend_services.backend_service
     - api_field: pathMatchers.routeRules.routeAction.weightedBackendServices.headerAction.requestHeadersToAdd.headerName
