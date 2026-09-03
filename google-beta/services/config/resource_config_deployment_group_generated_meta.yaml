@@ -1,0 +1,36 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_config_deployment_group
+generation_type: mmv1
+source_file: products/config/DeploymentGroup.yaml
+api_service_name: config.googleapis.com
+api_version: v1
+api_resource_type_kind: DeploymentGroup
+fields:
+    - api_field: annotations
+    - api_field: createTime
+    - field: deployment_reference_policy
+      provider_only: true
+    - api_field: deploymentUnits.dependencies
+    - api_field: deploymentUnits.deployment
+    - api_field: deploymentUnits.id
+    - field: effective_annotations
+      provider_only: true
+    - field: effective_labels
+      provider_only: true
+    - field: force_destroy
+      provider_only: true
+    - api_field: labels
+    - field: location
+      provider_only: true
+    - field: name
+      provider_only: true
+    - api_field: provisioningState
+    - api_field: provisioningStateDescription
+    - api_field: state
+    - api_field: stateDescription
+    - field: terraform_labels
+      provider_only: true
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
