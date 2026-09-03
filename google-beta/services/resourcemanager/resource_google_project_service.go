@@ -27,7 +27,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/registry"
-	rmClient "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager/client"
 	tpgserviceusage "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/serviceusage"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -260,10 +259,6 @@ func resourceGoogleProjectServiceCreate(d *schema.ResourceData, meta interface{}
 
 func resourceGoogleProjectServiceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
 
 	project, err := tpgresource.GetProject(d, config)
 	if err != nil {
@@ -272,17 +267,7 @@ func resourceGoogleProjectServiceRead(d *schema.ResourceData, meta interface{}) 
 	project = tpgresource.GetResourceNameFromSelfLink(project)
 
 	// Verify project for services still exists
-	projectGetCall := rmClient.NewClient(config, userAgent).Projects.Get(project)
-	if config.UserProjectOverride {
-		billingProject := project
-
-		// err == nil indicates that the billing_project value was found
-		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-			billingProject = bp
-		}
-		projectGetCall.Header().Add("X-Goog-User-Project", billingProject)
-	}
-	p, err := projectGetCall.Do()
+	p, err := BatchRequestReadProject(project, d, config)
 
 	if err == nil && p.LifecycleState == "DELETE_REQUESTED" {
 		// Construct a 404 error for transport_tpg.HandleNotFoundError
