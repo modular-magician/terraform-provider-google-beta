@@ -250,6 +250,24 @@ Note: Language code is case-insensitive.`,
 										Type:     schema.TypeString,
 										Required: true,
 									},
+									"consent_audio_gcs_uri": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The Cloud Storage URI to the consent audio for voice cloning.`,
+									},
+									"instruction": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The instruction used to synthesize speech when using a generative model.`,
+									},
+									"model": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `The model used to synthesize audio.
+Currently supported values:
+- "gemini-3.1-flash-tts-preview"
+If empty, Chirp3-HD is used.`,
+									},
 									"speaking_rate": {
 										Type:     schema.TypeFloat,
 										Optional: true,
@@ -264,6 +282,15 @@ half as fast. Values outside of the range [0.25, 2.0] will return an error.`,
 voice based on the other parameters such as language_code.
 For the list of available voices, please refer to Supported voices and
 languages from Cloud Text-to-Speech.`,
+									},
+									"voice_sample_gcs_uri": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `The Cloud Storage URI to the audio sample for voice cloning. The audio sample
+should be a mono-channel, 24kHz WAV file.
+Note: Please make sure the CES service agent
+'service-<PROJECT-NUMBER>@gcp-sa-ces.iam.gserviceaccount.com' has
+'storage.objects.get' permission to the Cloud Storage object.`,
 									},
 								},
 							},
@@ -1869,9 +1896,13 @@ func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigs(v interface{}, d 
 	for k, raw := range l {
 		original := raw.(map[string]interface{})
 		transformed = append(transformed, map[string]interface{}{
-			"language_code": k,
-			"voice":         flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoice(original["voice"], d, config),
-			"speaking_rate": flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsSpeakingRate(original["speakingRate"], d, config),
+			"language_code":         k,
+			"voice":                 flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoice(original["voice"], d, config),
+			"voice_sample_gcs_uri":  flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoiceSampleGcsUri(original["voiceSampleGcsUri"], d, config),
+			"speaking_rate":         flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsSpeakingRate(original["speakingRate"], d, config),
+			"model":                 flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsModel(original["model"], d, config),
+			"instruction":           flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsInstruction(original["instruction"], d, config),
+			"consent_audio_gcs_uri": flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsConsentAudioGcsUri(original["consentAudioGcsUri"], d, config),
 		})
 	}
 	return transformed
@@ -1880,7 +1911,23 @@ func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoice(v interface{
 	return v
 }
 
+func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoiceSampleGcsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsSpeakingRate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsModel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsInstruction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppAudioProcessingConfigSynthesizeSpeechConfigsConsentAudioGcsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2865,11 +2912,39 @@ func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigs(v interface{}, d t
 			transformed["voice"] = transformedVoice
 		}
 
+		transformedVoiceSampleGcsUri, err := expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoiceSampleGcsUri(original["voice_sample_gcs_uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedVoiceSampleGcsUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["voiceSampleGcsUri"] = transformedVoiceSampleGcsUri
+		}
+
 		transformedSpeakingRate, err := expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsSpeakingRate(original["speaking_rate"], d, config)
 		if err != nil {
 			return nil, err
 		} else if val := reflect.ValueOf(transformedSpeakingRate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 			transformed["speakingRate"] = transformedSpeakingRate
+		}
+
+		transformedModel, err := expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsModel(original["model"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedModel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["model"] = transformedModel
+		}
+
+		transformedInstruction, err := expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsInstruction(original["instruction"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedInstruction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["instruction"] = transformedInstruction
+		}
+
+		transformedConsentAudioGcsUri, err := expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsConsentAudioGcsUri(original["consent_audio_gcs_uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedConsentAudioGcsUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["consentAudioGcsUri"] = transformedConsentAudioGcsUri
 		}
 
 		transformedLanguageCode, err := tpgresource.ExpandString(original["language_code"], d, config)
@@ -2885,7 +2960,23 @@ func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoice(v interface{}
 	return v, nil
 }
 
+func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsVoiceSampleGcsUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsSpeakingRate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsModel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsInstruction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppAudioProcessingConfigSynthesizeSpeechConfigsConsentAudioGcsUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

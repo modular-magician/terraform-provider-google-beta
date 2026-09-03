@@ -77,11 +77,15 @@ resource "google_ces_app" "ces_app_basic" {
       language_code = "en-US"
       voice         = "en-US-Standard-A"
       speaking_rate = 1.0
+      model         = "gemini-3.1-flash-tts-preview"
+      instruction   = "Speak clearly in a professional and helpful tone."
     }
     synthesize_speech_configs {
       language_code = "es-ES"
       voice         = "es-ES-Standard-A"
       speaking_rate = 0.95
+      model         = "gemini-3.1-flash-tts-preview"
+      instruction   = "Habla de manera clara y profesional."
     }
 
     barge_in_config {
@@ -612,11 +616,34 @@ The following arguments are supported:
   For the list of available voices, please refer to Supported voices and
   languages from Cloud Text-to-Speech.
 
+* `voice_sample_gcs_uri` -
+  (Optional)
+  The Cloud Storage URI to the audio sample for voice cloning. The audio sample
+  should be a mono-channel, 24kHz WAV file.
+  Note: Please make sure the CES service agent
+  `service-<PROJECT-NUMBER>@gcp-sa-ces.iam.gserviceaccount.com` has
+  `storage.objects.get` permission to the Cloud Storage object.
+
 * `speaking_rate` -
   (Optional)
   The speaking rate/speed in the range [0.25, 2.0]. 1.0 is the normal native
   speed supported by the specific voice. 2.0 is twice as fast, and 0.5 is
   half as fast. Values outside of the range [0.25, 2.0] will return an error.
+
+* `model` -
+  (Optional)
+  The model used to synthesize audio.
+  Currently supported values:
+  - "gemini-3.1-flash-tts-preview"
+  If empty, Chirp3-HD is used.
+
+* `instruction` -
+  (Optional)
+  The instruction used to synthesize speech when using a generative model.
+
+* `consent_audio_gcs_uri` -
+  (Optional)
+  The Cloud Storage URI to the consent audio for voice cloning.
 
 <a name="nested_data_store_settings"></a>The `data_store_settings` block supports:
 

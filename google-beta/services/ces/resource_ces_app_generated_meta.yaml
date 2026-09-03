@@ -18,10 +18,18 @@ fields:
     - api_field: audioProcessingConfig.inactivityTimeout
     - api_field: audioProcessingConfig.synthesizeSpeechConfigs.key
       field: audio_processing_config.synthesize_speech_configs.language_code
+    - api_field: audioProcessingConfig.synthesizeSpeechConfigs.value.consentAudioGcsUri
+      field: audio_processing_config.synthesize_speech_configs.consent_audio_gcs_uri
+    - api_field: audioProcessingConfig.synthesizeSpeechConfigs.value.instruction
+      field: audio_processing_config.synthesize_speech_configs.instruction
+    - api_field: audioProcessingConfig.synthesizeSpeechConfigs.value.model
+      field: audio_processing_config.synthesize_speech_configs.model
     - api_field: audioProcessingConfig.synthesizeSpeechConfigs.value.speakingRate
       field: audio_processing_config.synthesize_speech_configs.speaking_rate
     - api_field: audioProcessingConfig.synthesizeSpeechConfigs.value.voice
       field: audio_processing_config.synthesize_speech_configs.voice
+    - api_field: audioProcessingConfig.synthesizeSpeechConfigs.value.voiceSampleGcsUri
+      field: audio_processing_config.synthesize_speech_configs.voice_sample_gcs_uri
     - api_field: clientCertificateSettings.passphrase
     - api_field: clientCertificateSettings.privateKey
     - api_field: clientCertificateSettings.tlsCertificate
