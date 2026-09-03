@@ -191,6 +191,8 @@ fields:
     api_field: 'properties.scheduling.automaticRestart'
   - field: 'scheduling.availability_domain'
     api_field: 'properties.scheduling.availabilityDomain'
+  - field: 'scheduling.expose_host_topology'
+    api_field: 'properties.scheduling.exposeHostTopology'
   - api_field: 'properties.scheduling.gracefulShutdown.enabled'
     field: 'scheduling.graceful_shutdown.enabled'
   - api_field: 'properties.scheduling.gracefulShutdown.maxDuration.nanos'

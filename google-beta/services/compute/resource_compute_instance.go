@@ -135,6 +135,7 @@ var (
 		"scheduling.0.skip_guest_os_shutdown",
 		"scheduling.0.preemption_notice_duration",
 		"scheduling.0.local_ssd_recovery_timeout",
+		"scheduling.0.expose_host_topology",
 	}
 
 	shieldedInstanceConfigKeys = []string{
@@ -1368,6 +1369,12 @@ be from 0 to 999,999,999 inclusive.`,
 									},
 								},
 							},
+						},
+						"expose_host_topology": {
+							Type:         schema.TypeBool,
+							Optional:     true,
+							AtLeastOneOf: schedulingKeys,
+							Description:  `Opt-in flag to expose the hashed physical host ID in the VM's ResourceStatus.`,
 						},
 					},
 				},
