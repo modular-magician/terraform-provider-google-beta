@@ -1,0 +1,16 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_cloud_trace_sink
+generation_type: mmv1
+source_file: products/cloudtrace/Sink.yaml
+api_service_name: cloudtrace.googleapis.com
+api_version: v2beta1
+api_resource_type_kind: Sink
+fields:
+    - api_field: name
+    - api_field: outputConfig.destination
+    - field: sink_id
+      provider_only: true
+    - api_field: writerIdentity
+    - field: deletion_policy
+      provider_only: true

@@ -69,6 +69,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudsecuritycompliance"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudsupport"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudtasks"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudtrace"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/colab"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/composer"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"

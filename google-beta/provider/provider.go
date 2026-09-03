@@ -486,6 +486,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: ValidateCustomEndpoint,
 			},
+			"cloud_trace_custom_endpoint": &schema.Schema{
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: ValidateCustomEndpoint,
+			},
 			"colab_custom_endpoint": &schema.Schema{
 				Type:         schema.TypeString,
 				Optional:     true,
