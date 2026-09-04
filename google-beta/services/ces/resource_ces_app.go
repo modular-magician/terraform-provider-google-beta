@@ -575,6 +575,15 @@ correctness. Must be a float between 0 and 1. Default is 1.0.`,
 													Description: `The success threshold for overall tool invocation correctness. Must be
 a float between 0 and 1. Default is 1.0.`,
 												},
+												"semantic_similarity_channel": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The semantic similarity channel to use for evaluation.
+Possible values:
+SEMANTIC_SIMILARITY_CHANNEL_UNSPECIFIED
+TEXT
+AUDIO`,
+												},
 												"semantic_similarity_success_threshold": {
 													Type:     schema.TypeInt,
 													Optional: true,
@@ -2154,6 +2163,8 @@ func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTu
 		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsOverallToolInvocationCorrectnessThreshold(original["overallToolInvocationCorrectnessThreshold"], d, config)
 	transformed["semantic_similarity_success_threshold"] =
 		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilaritySuccessThreshold(original["semanticSimilaritySuccessThreshold"], d, config)
+	transformed["semantic_similarity_channel"] =
+		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilarityChannel(original["semanticSimilarityChannel"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsOverallToolInvocationCorrectnessThreshold(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2175,6 +2186,10 @@ func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTu
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilarityChannel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenCESAppGlobalInstruction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3301,6 +3316,13 @@ func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTur
 		transformed["semanticSimilaritySuccessThreshold"] = transformedSemanticSimilaritySuccessThreshold
 	}
 
+	transformedSemanticSimilarityChannel, err := expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilarityChannel(original["semantic_similarity_channel"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSemanticSimilarityChannel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["semanticSimilarityChannel"] = transformedSemanticSimilarityChannel
+	}
+
 	return transformed, nil
 }
 
@@ -3309,6 +3331,10 @@ func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTur
 }
 
 func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilaritySuccessThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilarityChannel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
