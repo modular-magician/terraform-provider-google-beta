@@ -232,6 +232,16 @@ execution stops and any remaining callbacks are skipped.`,
 													Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 												},
+												"proactive_execution_enabled": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
+												},
 												"python_code": {
 													Type:        schema.TypeString,
 													Computed:    true,
@@ -260,6 +270,16 @@ execution stops and any remaining callbacks are skipped.`,
 													Computed: true,
 													Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+												},
+												"proactive_execution_enabled": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
 												},
 												"python_code": {
 													Type:        schema.TypeString,
@@ -290,6 +310,16 @@ execution stops and any remaining callbacks are skipped.`,
 													Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 												},
+												"proactive_execution_enabled": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
+												},
 												"python_code": {
 													Type:        schema.TypeString,
 													Computed:    true,
@@ -317,6 +347,16 @@ execution stops and any remaining callbacks are skipped.`,
 													Computed: true,
 													Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+												},
+												"proactive_execution_enabled": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
 												},
 												"python_code": {
 													Type:        schema.TypeString,
@@ -347,6 +387,16 @@ execution stops and any remaining callbacks are skipped.`,
 													Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 												},
+												"proactive_execution_enabled": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
+												},
 												"python_code": {
 													Type:        schema.TypeString,
 													Computed:    true,
@@ -375,6 +425,16 @@ execution stops and any remaining callbacks are skipped.`,
 													Computed: true,
 													Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+												},
+												"proactive_execution_enabled": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
 												},
 												"python_code": {
 													Type:        schema.TypeString,
@@ -1771,6 +1831,16 @@ agent interaction.`,
 																Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 															},
+															"proactive_execution_enabled": {
+																Type:     schema.TypeBool,
+																Computed: true,
+																Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
+															},
 															"python_code": {
 																Type:        schema.TypeString,
 																Computed:    true,
@@ -1796,6 +1866,16 @@ agent interaction.`,
 																Computed: true,
 																Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+															},
+															"proactive_execution_enabled": {
+																Type:     schema.TypeBool,
+																Computed: true,
+																Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
 															},
 															"python_code": {
 																Type:        schema.TypeString,
@@ -1823,6 +1903,16 @@ agent interaction.`,
 																Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
 															},
+															"proactive_execution_enabled": {
+																Type:     schema.TypeBool,
+																Computed: true,
+																Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
+															},
 															"python_code": {
 																Type:        schema.TypeString,
 																Computed:    true,
@@ -1848,6 +1938,16 @@ agent interaction.`,
 																Computed: true,
 																Description: `Whether the callback is disabled. Disabled callbacks are ignored by the
 agent.`,
+															},
+															"proactive_execution_enabled": {
+																Type:     schema.TypeBool,
+																Computed: true,
+																Description: `If enabled, the callback will also be executed on intermediate model
+outputs. This setting only affects after model callback.
+**ENABLE WITH CAUTION**. Typically after model callback only needs to be
+executed after receiving all model responses. Enabling proactive execution
+may have negative implication on the execution cost and latency, and
+should only be enabled in rare situations.`,
 															},
 															"python_code": {
 																Type:        schema.TypeString,
@@ -3815,9 +3915,10 @@ func flattenCESAppVersionSnapshotAgentsAfterAgentCallbacks(v interface{}, d *sch
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -3827,6 +3928,10 @@ func flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksDescription(v interfac
 }
 
 func flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAgentsAfterAgentCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3848,9 +3953,10 @@ func flattenCESAppVersionSnapshotAgentsAfterModelCallbacks(v interface{}, d *sch
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAppVersionSnapshotAgentsAfterModelCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAppVersionSnapshotAgentsAfterModelCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAppVersionSnapshotAgentsAfterModelCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAppVersionSnapshotAgentsAfterModelCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAppVersionSnapshotAgentsAfterModelCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAppVersionSnapshotAgentsAfterModelCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAppVersionSnapshotAgentsAfterModelCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -3860,6 +3966,10 @@ func flattenCESAppVersionSnapshotAgentsAfterModelCallbacksDescription(v interfac
 }
 
 func flattenCESAppVersionSnapshotAgentsAfterModelCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAgentsAfterModelCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3881,9 +3991,10 @@ func flattenCESAppVersionSnapshotAgentsAfterToolCallbacks(v interface{}, d *sche
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAppVersionSnapshotAgentsAfterToolCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAppVersionSnapshotAgentsAfterToolCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAppVersionSnapshotAgentsAfterToolCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAppVersionSnapshotAgentsAfterToolCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAppVersionSnapshotAgentsAfterToolCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAppVersionSnapshotAgentsAfterToolCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAppVersionSnapshotAgentsAfterToolCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -3893,6 +4004,10 @@ func flattenCESAppVersionSnapshotAgentsAfterToolCallbacksDescription(v interface
 }
 
 func flattenCESAppVersionSnapshotAgentsAfterToolCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAgentsAfterToolCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3914,9 +4029,10 @@ func flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacks(v interface{}, d *sc
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -3926,6 +4042,10 @@ func flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksDescription(v interfa
 }
 
 func flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAgentsBeforeAgentCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3947,9 +4067,10 @@ func flattenCESAppVersionSnapshotAgentsBeforeModelCallbacks(v interface{}, d *sc
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -3959,6 +4080,10 @@ func flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksDescription(v interfa
 }
 
 func flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAgentsBeforeModelCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3980,9 +4105,10 @@ func flattenCESAppVersionSnapshotAgentsBeforeToolCallbacks(v interface{}, d *sch
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"description": flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksDescription(original["description"], d, config),
-			"disabled":    flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksDisabled(original["disabled"], d, config),
-			"python_code": flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksPythonCode(original["pythonCode"], d, config),
+			"description":                 flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksDescription(original["description"], d, config),
+			"disabled":                    flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksDisabled(original["disabled"], d, config),
+			"proactive_execution_enabled": flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config),
+			"python_code":                 flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksPythonCode(original["pythonCode"], d, config),
 		})
 	}
 	return transformed
@@ -3992,6 +4118,10 @@ func flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksDescription(v interfac
 }
 
 func flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotAgentsBeforeToolCallbacksProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5588,6 +5718,8 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallback(v inte
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -5597,6 +5729,10 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackDescrip
 }
 
 func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterAgentCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5617,6 +5753,8 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallback(v inte
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -5626,6 +5764,10 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackDescrip
 }
 
 func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotGuardrailsCodeCallbackAfterModelCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5646,6 +5788,8 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallback(v int
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -5655,6 +5799,10 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackDescri
 }
 
 func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeAgentCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5675,6 +5823,8 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallback(v int
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackDescription(original["description"], d, config)
 	transformed["disabled"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackDisabled(original["disabled"], d, config)
+	transformed["proactive_execution_enabled"] =
+		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackProactiveExecutionEnabled(original["proactiveExecutionEnabled"], d, config)
 	transformed["python_code"] =
 		flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackPythonCode(original["pythonCode"], d, config)
 	return []interface{}{transformed}
@@ -5684,6 +5834,10 @@ func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackDescri
 }
 
 func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESAppVersionSnapshotGuardrailsCodeCallbackBeforeModelCallbackProactiveExecutionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
