@@ -51,6 +51,7 @@ fields:
     - api_field: errorHandlingSettings.fallbackResponseConfig.maxFallbackAttempts
     - api_field: etag
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.expectationLevelMetricsThresholds.toolInvocationParameterCorrectnessThreshold
+    - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.toolMatchingSettings.extraToolCallBehavior
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.overallToolInvocationCorrectnessThreshold
     - api_field: evaluationMetricsThresholds.goldenEvaluationMetricsThresholds.turnLevelMetricsThresholds.semanticSimilaritySuccessThreshold
     - api_field: globalInstruction

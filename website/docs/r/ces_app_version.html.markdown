@@ -783,6 +783,13 @@ In addition to the arguments listed above, the following computed attributes are
   Turn level metrics thresholds.
   Structure is [documented below](#nested_snapshot_app_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_turn_level_metrics_thresholds).
 
+* `tool_matching_settings` -
+  (Output)
+  The tool matching settings. An extra tool call is a tool call that is
+  present in the execution but does not match any tool call in the golden
+  expectation.
+  Structure is [documented below](#nested_snapshot_app_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_tool_matching_settings).
+
 
 <a name="nested_snapshot_app_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_expectation_level_metrics_thresholds"></a>The `expectation_level_metrics_thresholds` block contains:
 
@@ -802,6 +809,17 @@ In addition to the arguments listed above, the following computed attributes are
   (Output)
   The success threshold for semantic similarity. Must be an integer
   between 0 and 4. Default is >= 3.
+
+<a name="nested_snapshot_app_evaluation_metrics_thresholds_golden_evaluation_metrics_thresholds_tool_matching_settings"></a>The `tool_matching_settings` block contains:
+
+* `extra_tool_call_behavior` -
+  (Output)
+  Defines the behavior when an extra tool call is encountered. An extra
+  tool call is a tool call that is present in the execution but does
+  not match any tool call in the golden expectation.
+  Possible values:
+  FAIL
+  ALLOW
 
 <a name="nested_snapshot_app_language_settings"></a>The `language_settings` block contains:
 

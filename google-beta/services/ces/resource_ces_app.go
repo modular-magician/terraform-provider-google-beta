@@ -562,6 +562,26 @@ correctness. Must be a float between 0 and 1. Default is 1.0.`,
 											},
 										},
 									},
+									"tool_matching_settings": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `The tool matching settings. An extra tool call is a tool call that is
+present in the execution but does not match any tool call in the golden
+expectation.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"extra_tool_call_behavior": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: verify.ValidateEnum([]string{"FAIL", "ALLOW", ""}),
+													Description: `Defines the behavior when an extra tool call is encountered. An extra
+tool call is a tool call that is present in the execution but does
+not match any tool call in the golden expectation. Possible values: ["FAIL", "ALLOW"]`,
+												},
+											},
+										},
+									},
 									"turn_level_metrics_thresholds": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -2122,6 +2142,8 @@ func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholds(v
 		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsExpectationLevelMetricsThresholds(original["expectationLevelMetricsThresholds"], d, config)
 	transformed["turn_level_metrics_thresholds"] =
 		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholds(original["turnLevelMetricsThresholds"], d, config)
+	transformed["tool_matching_settings"] =
+		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettings(original["toolMatchingSettings"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsExpectationLevelMetricsThresholds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2175,6 +2197,23 @@ func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTu
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["extra_tool_call_behavior"] =
+		flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettingsExtraToolCallBehavior(original["extraToolCallBehavior"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettingsExtraToolCallBehavior(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenCESAppGlobalInstruction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3246,6 +3285,13 @@ func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholds(v 
 		transformed["turnLevelMetricsThresholds"] = transformedTurnLevelMetricsThresholds
 	}
 
+	transformedToolMatchingSettings, err := expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettings(original["tool_matching_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedToolMatchingSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["toolMatchingSettings"] = transformedToolMatchingSettings
+	}
+
 	return transformed, nil
 }
 
@@ -3309,6 +3355,32 @@ func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTur
 }
 
 func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsTurnLevelMetricsThresholdsSemanticSimilaritySuccessThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExtraToolCallBehavior, err := expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettingsExtraToolCallBehavior(original["extra_tool_call_behavior"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExtraToolCallBehavior); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["extraToolCallBehavior"] = transformedExtraToolCallBehavior
+	}
+
+	return transformed, nil
+}
+
+func expandCESAppEvaluationMetricsThresholdsGoldenEvaluationMetricsThresholdsToolMatchingSettingsExtraToolCallBehavior(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
