@@ -60,6 +60,7 @@ func TestAccNetworkServicesMesh_networkServicesMeshBasicExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "global",
 		"resource_name": "tf-test-my-mesh" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

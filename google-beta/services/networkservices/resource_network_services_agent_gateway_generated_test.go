@@ -57,6 +57,65 @@ var (
 	_ = networkservices.Product
 )
 
+func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgentExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
+		"name":          "tf-test-my-client-to-agent-gateway" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkServicesAgentGatewayDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgentExample(context),
+			},
+			{
+				ResourceName:            "google_network_services_agent_gateway.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_network_services_agent_gateway.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgentExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_network_services_agent_gateway" "default" {
+  name     = "%{name}"
+  location = "us-central1"
+
+  google_managed {
+    governed_access_path = "CLIENT_TO_AGENT"
+  }
+
+  registries = [
+    "//agentregistry.googleapis.com/projects/%{project}/locations/us-central1"
+  ]
+
+  depends_on = [google_project_service.agent_registry]
+}
+
+resource "google_project_service" "agent_registry" {
+  service            = "agentregistry.googleapis.com"
+  disable_on_destroy = false
+}
+`, context)
+}
+
 func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewayFullExample(t *testing.T) {
 	t.Parallel()
 
@@ -171,65 +230,6 @@ resource "google_dns_managed_zone" "default" {
       network_url = google_compute_network.default.id
     }
   }
-}
-`, context)
-}
-
-func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgentExample(t *testing.T) {
-	t.Parallel()
-
-	randomSuffix := acctest.RandString(t, 10)
-
-	context := map[string]interface{}{
-		"project":       envvar.GetTestProjectFromEnv(),
-		"name":          "tf-test-my-client-to-agent-gateway" + randomSuffix,
-		"random_suffix": randomSuffix,
-	}
-
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckNetworkServicesAgentGatewayDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgentExample(context),
-			},
-			{
-				ResourceName:            "google_network_services_agent_gateway.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "name", "terraform_labels"},
-			},
-			{
-				ResourceName:       "google_network_services_agent_gateway.default",
-				RefreshState:       true,
-				ExpectNonEmptyPlan: true,
-				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
-			},
-		},
-	})
-}
-
-func testAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgentExample(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_network_services_agent_gateway" "default" {
-  name     = "%{name}"
-  location = "us-central1"
-
-  google_managed {
-    governed_access_path = "CLIENT_TO_AGENT"
-  }
-
-  registries = [
-    "//agentregistry.googleapis.com/projects/%{project}/locations/us-central1"
-  ]
-
-  depends_on = [google_project_service.agent_registry]
-}
-
-resource "google_project_service" "agent_registry" {
-  service            = "agentregistry.googleapis.com"
-  disable_on_destroy = false
 }
 `, context)
 }

@@ -63,6 +63,7 @@ func TestAccNetworkServicesGateway_networkServicesGatewayBasicExample(t *testing
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      envvar.GetTestRegionFromEnv(),
 		"resource_name": "tf-test-my-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -98,6 +99,7 @@ resource "google_network_services_gateway" "default" {
   scope    = "default-scope-basic"
   type     = "OPEN_MESH"
   ports    = [443]
+  location = "%{location}"
 }
 `, context)
 }

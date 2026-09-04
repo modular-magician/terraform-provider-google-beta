@@ -54,6 +54,7 @@ resource "google_compute_health_check" "default" {
 resource "google_network_services_tls_route" "default" {
   name                   = "my-tls-route"
   description             = "my description"
+  location               = "global"
   rules                   {
     matches {
       sni_host = ["example.com"]

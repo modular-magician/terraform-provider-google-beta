@@ -28,6 +28,30 @@ To get more information about AgentGateway, see:
 
 * [API documentation](https://cloud.google.com/network-services/docs/reference/network-services/rest/v1/projects.locations.agentGateways)
 
+## Example Usage - Network Services Agent Gateway Client To Agent
+
+
+```hcl
+resource "google_network_services_agent_gateway" "default" {
+  name     = "my-client-to-agent-gateway"
+  location = "us-central1"
+
+  google_managed {
+    governed_access_path = "CLIENT_TO_AGENT"
+  }
+
+  registries = [
+    "//agentregistry.googleapis.com/projects/my-project-name/locations/us-central1"
+  ]
+
+  depends_on = [google_project_service.agent_registry]
+}
+
+resource "google_project_service" "agent_registry" {
+  service            = "agentregistry.googleapis.com"
+  disable_on_destroy = false
+}
+```
 ## Example Usage - Network Services Agent Gateway Full
 
 
@@ -105,30 +129,6 @@ resource "google_dns_managed_zone" "default" {
       network_url = google_compute_network.default.id
     }
   }
-}
-```
-## Example Usage - Network Services Agent Gateway Client To Agent
-
-
-```hcl
-resource "google_network_services_agent_gateway" "default" {
-  name     = "my-client-to-agent-gateway"
-  location = "us-central1"
-
-  google_managed {
-    governed_access_path = "CLIENT_TO_AGENT"
-  }
-
-  registries = [
-    "//agentregistry.googleapis.com/projects/my-project-name/locations/us-central1"
-  ]
-
-  depends_on = [google_project_service.agent_registry]
-}
-
-resource "google_project_service" "agent_registry" {
-  service            = "agentregistry.googleapis.com"
-  disable_on_destroy = false
 }
 ```
 ## Example Usage - Network Services Agent Gateway Self Managed

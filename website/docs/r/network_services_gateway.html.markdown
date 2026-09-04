@@ -45,6 +45,7 @@ resource "google_network_services_gateway" "default" {
   scope    = "default-scope-basic"
   type     = "OPEN_MESH"
   ports    = [443]
+  location = "global"
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">

@@ -115,7 +115,7 @@ func listAndActionNetworkServicesGrpcRoute(action sweeper.ResourceAction) error 
 		}
 
 		// Prepare list URL
-		listTemplate := strings.Split("https://networkservices.googleapis.com/v1/projects/{{project}}/locations/{{location}}/grpcRoutes", "?")[0]
+		listTemplate := strings.Split("https://networkservices.googleapis.com/v1/projects/{{project}}/locations/global/grpcRoutes", "?")[0]
 		listUrl, err := tpgresource.ReplaceVars(mockConfig, config, listTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)

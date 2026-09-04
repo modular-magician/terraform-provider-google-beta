@@ -60,6 +60,7 @@ func TestAccNetworkServicesGrpcRoute_networkServicesGrpcRouteBasicExample(t *tes
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "global",
 		"resource_name": "tf-test-my-grpc-route" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

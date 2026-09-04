@@ -63,6 +63,7 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteBasicExample(t *testi
 	context := map[string]interface{}{
 		"backend_service_name": "tf-test-my-backend-service" + randomSuffix,
 		"health_check_name":    "tf-test-backend-service-health-check" + randomSuffix,
+		"location":             envvar.GetTestRegionFromEnv(),
 		"resource_name":        "tf-test-my-tls-route" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
@@ -110,6 +111,7 @@ resource "google_compute_health_check" "default" {
 resource "google_network_services_tls_route" "default" {
   name                   = "%{resource_name}"
   description             = "my description"
+  location               = "%{location}"
   rules                   {
     matches {
       sni_host = ["example.com"]
