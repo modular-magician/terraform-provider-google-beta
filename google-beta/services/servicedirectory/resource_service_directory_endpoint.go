@@ -143,10 +143,10 @@ Metadata that goes beyond any these limits will be rejected.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"network": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The URL to the network, such as projects/PROJECT_NUMBER/locations/global/networks/NETWORK_NAME.`,
+				Type:             schema.TypeString,
+				Optional:         true,
+				DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePathsIgnoreProjectId,
+				Description:      `The URL to the network, such as projects/PROJECT_NUMBER/locations/global/networks/NETWORK_NAME.`,
 			},
 			"port": {
 				Type:         schema.TypeInt,
@@ -371,6 +371,12 @@ func resourceServiceDirectoryEndpointUpdate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("metadata"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, metadataProp)) {
 		obj["metadata"] = metadataProp
+	}
+	networkProp, err := expandServiceDirectoryEndpointNetwork(d.Get("network"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkProp)) {
+		obj["network"] = networkProp
 	}
 
 	obj, err = resourceServiceDirectoryEndpointEncoder(d, meta, obj)
