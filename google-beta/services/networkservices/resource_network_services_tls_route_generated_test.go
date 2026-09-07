@@ -461,6 +461,7 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteRegionTargetTcpProxyB
 	context := map[string]interface{}{
 		"backend_service_name":  "tf-test-my-backend-service" + randomSuffix,
 		"health_check_name":     "tf-test-my-health-check" + randomSuffix,
+		"region":                "europe-west4",
 		"resource_name":         "tf-test-my-tls-route" + randomSuffix,
 		"target_tcp_proxy_name": "tf-test-my-target-tcp-proxy" + randomSuffix,
 		"random_suffix":         randomSuffix,
@@ -468,7 +469,7 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteRegionTargetTcpProxyB
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckNetworkServicesTlsRouteDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -493,20 +494,18 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteRegionTargetTcpProxyB
 func testAccNetworkServicesTlsRoute_networkServicesTlsRouteRegionTargetTcpProxyBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  provider    = google-beta
   name        = "%{backend_service_name}"
   protocol    = "TCP"
   timeout_sec = 10
-  region      = "europe-west4"
+  region      = "%{region}"
 
   health_checks         = [google_compute_region_health_check.default.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider           = google-beta
   name               = "%{health_check_name}"
-  region             = "europe-west4"
+  region             = "%{region}"
   timeout_sec        = 1
   check_interval_sec = 1
   tcp_health_check {
@@ -515,16 +514,14 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_target_tcp_proxy" "default" {
-  provider              = google-beta
   name                  = "%{target_tcp_proxy_name}"
-  region                = "europe-west4"
+  region                = "%{region}"
   load_balancing_scheme = "EXTERNAL_MANAGED"
 }
 
 resource "google_network_services_tls_route" "default" {
-  provider = google-beta
   name     = "%{resource_name}"
-  location = "europe-west4"
+  location = "%{region}"
 
   target_proxies = [
     google_compute_region_target_tcp_proxy.default.self_link

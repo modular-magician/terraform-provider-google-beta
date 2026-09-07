@@ -280,7 +280,6 @@ resource "google_network_services_tls_route" "default" {
 
 ```hcl
 resource "google_compute_region_backend_service" "default" {
-  provider    = google-beta
   name        = "my-backend-service"
   protocol    = "TCP"
   timeout_sec = 10
@@ -291,7 +290,6 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider           = google-beta
   name               = "my-health-check"
   region             = "europe-west4"
   timeout_sec        = 1
@@ -302,14 +300,12 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_target_tcp_proxy" "default" {
-  provider              = google-beta
   name                  = "my-target-tcp-proxy"
   region                = "europe-west4"
   load_balancing_scheme = "EXTERNAL_MANAGED"
 }
 
 resource "google_network_services_tls_route" "default" {
-  provider = google-beta
   name     = "my-tls-route"
   location = "europe-west4"
 

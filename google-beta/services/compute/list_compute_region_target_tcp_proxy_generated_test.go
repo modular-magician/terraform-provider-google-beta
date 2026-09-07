@@ -47,7 +47,7 @@ func TestAccComputeRegionTargetTcpProxyListQuery_generated(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
 		"health_check_name":            "tf-test-health-check" + randomSuffix,
-		"region":                       "us-central1",
+		"region":                       "europe-west4",
 		"region_backend_service_name":  "tf-test-backend-service" + randomSuffix,
 		"region_target_tcp_proxy_name": "tf-test-test-proxy" + randomSuffix,
 		"project":                      envvar.GetTestProjectFromEnv(),
