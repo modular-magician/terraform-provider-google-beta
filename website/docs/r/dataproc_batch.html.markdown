@@ -37,8 +37,6 @@ To get more information about Batch, see:
 
 ```hcl
 resource "google_dataproc_batch" "example_batch_spark" {
-
-    batch_id      = "tf-test-batch%{random_suffix}"
     location      = "us-central1"
     labels        = {"batch_test": "terraform"}
 
@@ -300,6 +298,11 @@ The following arguments are supported:
 
 
 
+* `batch_id` -
+  (Optional)
+  The ID to use for the batch, which will become the final component of the batch's resource name.
+  This value must be 4-63 characters. Valid characters are /[a-z][0-9]-/.
+
 * `labels` -
   (Optional)
   The labels to associate with this batch.
@@ -340,11 +343,6 @@ The following arguments are supported:
 * `location` -
   (Optional)
   The location in which the batch will be created in.
-
-* `batch_id` -
-  (Optional)
-  The ID to use for the batch, which will become the final component of the batch's resource name.
-  This value must be 4-63 characters. Valid characters are /[a-z][0-9]-/.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -725,8 +723,8 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 ```tf
 import {
   identity = {
-    location = "<-optional value->"
     batchId = "<-optional value->"
+    location = "<-optional value->"
     project = "<-optional value->"
   }
   to = google_dataproc_batch.default

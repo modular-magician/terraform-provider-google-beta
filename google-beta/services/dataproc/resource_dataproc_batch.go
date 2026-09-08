@@ -138,11 +138,11 @@ func ResourceDataprocBatch() *schema.Resource {
 			Version: 1,
 			SchemaFunc: func() map[string]*schema.Schema {
 				return map[string]*schema.Schema{
-					"location": {
+					"batch_id": {
 						Type:              schema.TypeString,
 						OptionalForImport: true,
 					},
-					"batch_id": {
+					"location": {
 						Type:              schema.TypeString,
 						OptionalForImport: true,
 					},
@@ -160,6 +160,7 @@ func ResourceDataprocBatch() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"batch_id": {
 				Type:     schema.TypeString,
+				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Description: `The ID to use for the batch, which will become the final component of the batch's resource name.
@@ -801,6 +802,12 @@ func resourceDataprocBatchCreate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	obj := make(map[string]interface{})
+	batchIdProp, err := expandDataprocBatchBatchId(d.Get("batch_id"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("batch_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(batchIdProp)) && (ok || !reflect.DeepEqual(v, batchIdProp)) {
+		obj["batchId"] = batchIdProp
+	}
 	runtimeConfigProp, err := expandDataprocBatchRuntimeConfig(d.Get("runtime_config"), d, config)
 	if err != nil {
 		return err
@@ -885,28 +892,57 @@ func resourceDataprocBatchCreate(d *schema.ResourceData, meta interface{}) error
 	}
 	d.SetId(id)
 
-	err = DataprocOperationWaitTime(
-		config, res, project, "Creating Batch", userAgent,
+	// Use the resource in the operation response to populate
+	// identity fields and d.Id() before read
+	var opRes map[string]interface{}
+	err = DataprocOperationWaitTimeWithResponse(
+		config, res, &opRes, project, "Creating Batch", userAgent,
 		d.Timeout(schema.TimeoutCreate))
-
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
+
 		return fmt.Errorf("Error waiting to create Batch: %s", err)
 	}
+
+	opRes, err = resourceDataprocBatchDecoder(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("Error decoding response from operation: %s", err)
+	}
+	if opRes == nil {
+		return fmt.Errorf("Error decoding response from operation, could not find object")
+	}
+
+	// Setting `name` field so that `id_from_name` flattener will work properly.
+	if err := d.Set("name", flattenDataprocBatchName(opRes["name"], d, config)); err != nil {
+		return err
+	}
+	// batch_id is set by API when unset
+	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("batch_id"))) {
+		if err := d.Set("batch_id", flattenDataprocBatchBatchId(opRes["batchId"], d, config)); err != nil {
+			return fmt.Errorf(`Error setting computed identity field "batch_id": %s`, err)
+		}
+	}
+
+	// This may have caused the ID to update - update it if so.
+	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/batches/{{batch_id}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating Batch %q: %#v", d.Id(), res)
 
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
-		if locationValue, ok := d.GetOk("location"); ok && locationValue.(string) != "" {
-			if err = identity.Set("location", locationValue.(string)); err != nil {
-				return fmt.Errorf("Error setting location: %s", err)
-			}
-		}
 		if batchIdValue, ok := d.GetOk("batch_id"); ok && batchIdValue.(string) != "" {
 			if err = identity.Set("batch_id", batchIdValue.(string)); err != nil {
 				return fmt.Errorf("Error setting batch_id: %s", err)
+			}
+		}
+		if locationValue, ok := d.GetOk("location"); ok && locationValue.(string) != "" {
+			if err = identity.Set("location", locationValue.(string)); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
 		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
@@ -997,16 +1033,16 @@ func resourceDataprocBatchRead(d *schema.ResourceData, meta interface{}) error {
 
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
-		if v, ok := identity.GetOk("location"); !ok && v == "" {
-			err = identity.Set("location", d.Get("location").(string))
-			if err != nil {
-				return fmt.Errorf("Error setting location: %s", err)
-			}
-		}
 		if v, ok := identity.GetOk("batch_id"); !ok && v == "" {
 			err = identity.Set("batch_id", d.Get("batch_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting batch_id: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
+			err = identity.Set("location", d.Get("location").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
 		if v, ok := identity.GetOk("project"); !ok && v == "" {
@@ -1107,6 +1143,11 @@ func resourceDataprocBatchImport(d *schema.ResourceData, meta interface{}) ([]*s
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+func flattenDataprocBatchBatchId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	parts := strings.Split(d.Get("name").(string), "/")
+	return parts[len(parts)-1]
 }
 
 func flattenDataprocBatchName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1665,6 +1706,10 @@ func flattenDataprocBatchTerraformLabels(v interface{}, d *schema.ResourceData, 
 
 func flattenDataprocBatchEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func expandDataprocBatchBatchId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDataprocBatchRuntimeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2323,6 +2368,9 @@ func resourceDataprocBatchDecoder(d *schema.ResourceData, meta interface{}, res 
 func ResourceDataprocBatchFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
+	if err = d.Set("batch_id", flattenDataprocBatchBatchId(res["batchId"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Batch: %s", err)
+	}
 	if err = d.Set("name", flattenDataprocBatchName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Batch: %s", err)
 	}

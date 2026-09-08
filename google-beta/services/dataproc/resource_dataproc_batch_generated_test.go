@@ -82,7 +82,7 @@ func TestAccDataprocBatch_dataprocBatchSparkExample(t *testing.T) {
 				ResourceName:            "google_dataproc_batch.example_batch_spark",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"batch_id", "labels", "location", "runtime_config.0.properties", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_dataproc_batch.example_batch_spark",
@@ -97,8 +97,6 @@ func TestAccDataprocBatch_dataprocBatchSparkExample(t *testing.T) {
 func testAccDataprocBatch_dataprocBatchSparkExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_batch" "example_batch_spark" {
-
-    batch_id      = "tf-test-batch%{random_suffix}"
     location      = "us-central1"
     labels        = {"batch_test": "terraform"}
 
@@ -149,7 +147,7 @@ func TestAccDataprocBatch_dataprocBatchSparkFullExample(t *testing.T) {
 				ResourceName:            "google_dataproc_batch.example_batch_spark",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"batch_id", "labels", "location", "runtime_config.0.properties", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_dataproc_batch.example_batch_spark",
@@ -296,7 +294,7 @@ func TestAccDataprocBatch_dataprocBatchSparksqlExample(t *testing.T) {
 				ResourceName:            "google_dataproc_batch.example_batch_sparsql",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"batch_id", "labels", "location", "runtime_config.0.properties", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_dataproc_batch.example_batch_sparsql",
@@ -360,7 +358,7 @@ func TestAccDataprocBatch_dataprocBatchPysparkExample(t *testing.T) {
 				ResourceName:            "google_dataproc_batch.example_batch_pyspark",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"batch_id", "labels", "location", "runtime_config.0.properties", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_dataproc_batch.example_batch_pyspark",
@@ -428,7 +426,7 @@ func TestAccDataprocBatch_dataprocBatchSparkrExample(t *testing.T) {
 				ResourceName:            "google_dataproc_batch.example_batch_sparkr",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"batch_id", "labels", "location", "runtime_config.0.properties", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_dataproc_batch.example_batch_sparkr",
@@ -492,7 +490,7 @@ func TestAccDataprocBatch_dataprocBatchAutotuningExample(t *testing.T) {
 				ResourceName:            "google_dataproc_batch.example_batch_autotuning",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"batch_id", "labels", "location", "runtime_config.0.properties", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_dataproc_batch.example_batch_autotuning",
