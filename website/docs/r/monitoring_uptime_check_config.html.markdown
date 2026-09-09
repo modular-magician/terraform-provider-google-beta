@@ -44,6 +44,7 @@ values will be stored in the raw state as plain text: `http_check.auth_info.pass
 resource "google_monitoring_uptime_check_config" "http" {
   display_name       = "http-uptime-check"
   timeout            = "60s"
+  selected_regions   = ["USA"]
   log_check_failures = true
   user_labels  = {
     example-key = "example-value"
@@ -182,6 +183,7 @@ resource "google_monitoring_uptime_check_config" "status_code" {
 resource "google_monitoring_uptime_check_config" "https" {
   display_name = "https-uptime-check"
   timeout = "60s"
+  selected_regions = ["USA"]
 
   http_check {
     path = "/some-path"
@@ -314,7 +316,7 @@ The following arguments are supported:
 
 * `selected_regions` -
   (Optional)
-  The list of regions from which the check will be run. Some regions contain one location, and others contain more than one. If this field is specified, enough regions to include a minimum of 3 locations must be provided, or an error message is returned. Not specifying this field will result in uptime checks running from all regions.
+  The list of regions from which the check will be run. Some regions contain one location, and others contain more than one. If this field is specified, enough regions to include a minimum of 3 locations must be provided, or an error message is returned. Not specifying this field will result in uptime checks running from all available checker locations, where each location executes a probe each period. To meet the 3-location API minimum with the fewest checker executions, you can specify `["USA"]` (which covers 3 locations) or any 3 individual checker locations. For details on checker regions and location counts, see https://cloud.google.com/monitoring/uptime-checks. For execution pricing details, see https://cloud.google.com/monitoring/pricing.
 
 * `log_check_failures` -
   (Optional)

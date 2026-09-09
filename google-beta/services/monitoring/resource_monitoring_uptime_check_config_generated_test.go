@@ -96,6 +96,7 @@ func testAccMonitoringUptimeCheckConfig_uptimeCheckConfigHttpExample(context map
 resource "google_monitoring_uptime_check_config" "http" {
   display_name       = "%{display_name}"
   timeout            = "60s"
+  selected_regions   = ["USA"]
   log_check_failures = true
   user_labels  = {
     example-key = "example-value"
@@ -339,6 +340,7 @@ func testAccMonitoringUptimeCheckConfig_uptimeCheckConfigHttpsExample(context ma
 resource "google_monitoring_uptime_check_config" "https" {
   display_name = "%{display_name}"
   timeout = "60s"
+  selected_regions = ["USA"]
 
   http_check {
     path = "/some-path"
