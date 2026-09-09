@@ -1,0 +1,22 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_vertex_ai_publisher_model_config
+generation_type: mmv1
+source_file: products/vertexai/PublisherModelConfig.yaml
+api_service_name: aiplatform.googleapis.com
+api_version: v1beta1
+api_resource_type_kind: PublisherModelConfig
+fields:
+    - api_field: dataSharingEnabledProvider
+    - field: location
+      provider_only: true
+    - api_field: loggingConfig.bigqueryDestination.outputUri
+    - api_field: loggingConfig.enableOtelLogging
+    - api_field: loggingConfig.enabled
+    - api_field: loggingConfig.errorSamplingRate
+    - api_field: loggingConfig.requestResponseLoggingSchemaVersion
+    - api_field: loggingConfig.samplingRate
+    - field: model
+      provider_only: true
+    - field: publisher
+      provider_only: true
