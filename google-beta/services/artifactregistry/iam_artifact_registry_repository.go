@@ -54,6 +54,11 @@ func init() {
 		Type:        registry.SchemaTypeIAMResource,
 		Schema:      NewArtifactRegistryRepositoryIamMemberResource(),
 	}.Register()
+	registry.FrameworkListResource{
+		Name:        "google_artifact_registry_repository_iam_member",
+		ProductName: "ArtifactRegistry",
+		Func:        NewArtifactRegistryRepositoryIamMemberListResource,
+	}.Register()
 	registry.Schema{
 		Name:        "google_artifact_registry_repository_iam_policy",
 		ProductName: "ArtifactRegistry",
