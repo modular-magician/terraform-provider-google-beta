@@ -56,5 +56,8 @@ fields:
     - api_field: uiSettings.generativeAnswerConfig.resultCount
     - api_field: uiSettings.interactionType
     - api_field: uiSettings.resultDescriptionType
+    - api_field: uiSettings.searchAddonSpec.generativeAnswerAddOnDisabled
+    - api_field: uiSettings.searchAddonSpec.kpiPersonalizationAddOnDisabled
+    - api_field: uiSettings.searchAddonSpec.semanticAddOnDisabled
     - field: widget_config_id
       provider_only: true
