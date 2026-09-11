@@ -127,7 +127,7 @@ func BiglakeHiveHiveDatabaseIamUpdaterProducer(d tpgresource.TerraformResourceDa
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/catalogs/(?P<catalog>[^/]+)/namespaces/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config, d.Get("name").(string))
+	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/catalogs/(?P<catalog>[^/]+)/databases/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config, d.Get("name").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func BiglakeHiveHiveDatabaseIdParseFunc(d *schema.ResourceData, config *transpor
 		values["project"] = project
 	}
 
-	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/catalogs/(?P<catalog>[^/]+)/namespaces/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config, d.Id())
+	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/catalogs/(?P<catalog>[^/]+)/databases/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<catalog>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}
@@ -266,7 +266,7 @@ func (u *BiglakeHiveHiveDatabaseIamUpdater) SetResourceIamPolicy(policy *cloudre
 }
 
 func (u *BiglakeHiveHiveDatabaseIamUpdater) qualifyHiveDatabaseUrl(methodIdentifier string) (string, error) {
-	urlTemplate := fmt.Sprintf("{{BiglakeHiveBasePath}}%s:%s", fmt.Sprintf("v1/projects/%s/catalogs/%s/namespaces/%s", u.project, u.catalog, u.name), methodIdentifier)
+	urlTemplate := fmt.Sprintf("{{BiglakeHiveBasePath}}%s:%s", fmt.Sprintf("hive/v1/projects/%s/catalogs/%s/databases/%s", u.project, u.catalog, u.name), methodIdentifier)
 	url, err := tpgresource.ReplaceVars(u.d, u.Config, urlTemplate)
 	if err != nil {
 		return "", err
@@ -275,7 +275,7 @@ func (u *BiglakeHiveHiveDatabaseIamUpdater) qualifyHiveDatabaseUrl(methodIdentif
 }
 
 func (u *BiglakeHiveHiveDatabaseIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("v1/projects/%s/catalogs/%s/namespaces/%s", u.project, u.catalog, u.name)
+	return fmt.Sprintf("hive/v1/projects/%s/catalogs/%s/databases/%s", u.project, u.catalog, u.name)
 }
 
 func BiglakeHiveHiveDatabaseIamParentParentResourceIdentityParser(d *schema.ResourceData, identity *schema.IdentityData, transportConfig *transport_tpg.Config) (string, error) {
@@ -285,7 +285,7 @@ func BiglakeHiveHiveDatabaseIamParentParentResourceIdentityParser(d *schema.Reso
 			{Key: "catalog", IdentityKey: "catalog"},
 			{Key: "name", IdentityKey: "name"},
 		},
-		UriFormat: "v1/projects/%s/catalogs/%s/namespaces/%s",
+		UriFormat: "hive/v1/projects/%s/catalogs/%s/databases/%s",
 	})
 }
 

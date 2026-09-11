@@ -128,7 +128,7 @@ exported:
 
 For all import syntaxes, the "resource in question" can take any of the following forms:
 
-* projects/{{project}}/catalogs/{{catalog}}/namespaces/{{database}}/tables/{{name}}
+* projects/{{project}}/catalogs/{{catalog}}/databases/{{database}}/tables/{{name}}
 * {{project}}/{{catalog}}/{{database}}/{{name}}
 * {{catalog}}/{{database}}/{{name}}
 * {{name}}
@@ -139,17 +139,17 @@ BigLake Hive Metastore hivetable IAM resources can be imported using the resourc
 
 IAM member imports use space-delimited identifiers: the resource in question, the role, and the member identity, e.g.
 ```
-$ terraform import google_biglake_hive_table_iam_member.editor "projects/{{project}}/catalogs/{{catalog}}/namespaces/{{database}}/tables/{{hive_table}} roles/biglake.editor user:jane@example.com"
+$ terraform import google_biglake_hive_table_iam_member.editor "projects/{{project}}/catalogs/{{catalog}}/databases/{{database}}/tables/{{hive_table}} roles/biglake.editor user:jane@example.com"
 ```
 
 IAM binding imports use space-delimited identifiers: the resource in question and the role, e.g.
 ```
-$ terraform import google_biglake_hive_table_iam_binding.editor "projects/{{project}}/catalogs/{{catalog}}/namespaces/{{database}}/tables/{{hive_table}} roles/biglake.editor"
+$ terraform import google_biglake_hive_table_iam_binding.editor "projects/{{project}}/catalogs/{{catalog}}/databases/{{database}}/tables/{{hive_table}} roles/biglake.editor"
 ```
 
 IAM policy imports use the identifier of the resource in question, e.g.
 ```
-$ terraform import google_biglake_hive_table_iam_policy.editor projects/{{project}}/catalogs/{{catalog}}/namespaces/{{database}}/tables/{{hive_table}}
+$ terraform import google_biglake_hive_table_iam_policy.editor projects/{{project}}/catalogs/{{catalog}}/databases/{{database}}/tables/{{hive_table}}
 ```
 
 -> **Custom Roles** If you're importing a IAM resource with a custom role, make sure to use the

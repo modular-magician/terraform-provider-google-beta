@@ -251,7 +251,7 @@ func (u *BiglakeHiveHiveCatalogIamUpdater) SetResourceIamPolicy(policy *cloudres
 }
 
 func (u *BiglakeHiveHiveCatalogIamUpdater) qualifyHiveCatalogUrl(methodIdentifier string) (string, error) {
-	urlTemplate := fmt.Sprintf("{{BiglakeHiveBasePath}}%s:%s", fmt.Sprintf("v1/projects/%s/catalogs/%s", u.project, u.name), methodIdentifier)
+	urlTemplate := fmt.Sprintf("{{BiglakeHiveBasePath}}%s:%s", fmt.Sprintf("hive/v1/projects/%s/catalogs/%s", u.project, u.name), methodIdentifier)
 	url, err := tpgresource.ReplaceVars(u.d, u.Config, urlTemplate)
 	if err != nil {
 		return "", err
@@ -260,7 +260,7 @@ func (u *BiglakeHiveHiveCatalogIamUpdater) qualifyHiveCatalogUrl(methodIdentifie
 }
 
 func (u *BiglakeHiveHiveCatalogIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("v1/projects/%s/catalogs/%s", u.project, u.name)
+	return fmt.Sprintf("hive/v1/projects/%s/catalogs/%s", u.project, u.name)
 }
 
 func BiglakeHiveHiveCatalogIamParentParentResourceIdentityParser(d *schema.ResourceData, identity *schema.IdentityData, transportConfig *transport_tpg.Config) (string, error) {
@@ -269,7 +269,7 @@ func BiglakeHiveHiveCatalogIamParentParentResourceIdentityParser(d *schema.Resou
 			{Key: "project", IdentityKey: "project"},
 			{Key: "name", IdentityKey: "name"},
 		},
-		UriFormat: "v1/projects/%s/catalogs/%s",
+		UriFormat: "hive/v1/projects/%s/catalogs/%s",
 	})
 }
 

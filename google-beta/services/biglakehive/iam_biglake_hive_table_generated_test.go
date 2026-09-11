@@ -513,7 +513,7 @@ func generateBiglakeHiveHiveTableIAMPolicyStateID(iamResourceAddr string) func(*
 		catalog := tpgresource.GetResourceNameFromSelfLink(rawState["catalog"])
 		database := tpgresource.GetResourceNameFromSelfLink(rawState["database"])
 		name := tpgresource.GetResourceNameFromSelfLink(rawState["name"])
-		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/namespaces/%s/tables/%s", project, catalog, database, name), "", "", rawState["condition.0.title"]), nil
+		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/databases/%s/tables/%s", project, catalog, database, name), "", "", rawState["condition.0.title"]), nil
 	}
 }
 
@@ -532,7 +532,7 @@ func generateBiglakeHiveHiveTableIAMBindingStateID(iamResourceAddr string) func(
 		catalog := tpgresource.GetResourceNameFromSelfLink(rawState["catalog"])
 		database := tpgresource.GetResourceNameFromSelfLink(rawState["database"])
 		name := tpgresource.GetResourceNameFromSelfLink(rawState["name"])
-		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/namespaces/%s/tables/%s", project, catalog, database, name), rawState["role"], "", rawState["condition.0.title"]), nil
+		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/databases/%s/tables/%s", project, catalog, database, name), rawState["role"], "", rawState["condition.0.title"]), nil
 	}
 }
 
@@ -551,6 +551,6 @@ func generateBiglakeHiveHiveTableIAMMemberStateID(iamResourceAddr string) func(*
 		catalog := tpgresource.GetResourceNameFromSelfLink(rawState["catalog"])
 		database := tpgresource.GetResourceNameFromSelfLink(rawState["database"])
 		name := tpgresource.GetResourceNameFromSelfLink(rawState["name"])
-		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/namespaces/%s/tables/%s", project, catalog, database, name), rawState["role"], rawState["member"], rawState["condition.0.title"]), nil
+		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/databases/%s/tables/%s", project, catalog, database, name), rawState["role"], rawState["member"], rawState["condition.0.title"]), nil
 	}
 }

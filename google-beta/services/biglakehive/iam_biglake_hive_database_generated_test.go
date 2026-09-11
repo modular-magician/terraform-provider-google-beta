@@ -369,7 +369,7 @@ func generateBiglakeHiveHiveDatabaseIAMPolicyStateID(iamResourceAddr string) fun
 		project := tpgresource.GetResourceNameFromSelfLink(rawState["project"])
 		catalog := tpgresource.GetResourceNameFromSelfLink(rawState["catalog"])
 		name := tpgresource.GetResourceNameFromSelfLink(rawState["name"])
-		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/namespaces/%s", project, catalog, name), "", "", rawState["condition.0.title"]), nil
+		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/databases/%s", project, catalog, name), "", "", rawState["condition.0.title"]), nil
 	}
 }
 
@@ -387,7 +387,7 @@ func generateBiglakeHiveHiveDatabaseIAMBindingStateID(iamResourceAddr string) fu
 		project := tpgresource.GetResourceNameFromSelfLink(rawState["project"])
 		catalog := tpgresource.GetResourceNameFromSelfLink(rawState["catalog"])
 		name := tpgresource.GetResourceNameFromSelfLink(rawState["name"])
-		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/namespaces/%s", project, catalog, name), rawState["role"], "", rawState["condition.0.title"]), nil
+		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/databases/%s", project, catalog, name), rawState["role"], "", rawState["condition.0.title"]), nil
 	}
 }
 
@@ -405,6 +405,6 @@ func generateBiglakeHiveHiveDatabaseIAMMemberStateID(iamResourceAddr string) fun
 		project := tpgresource.GetResourceNameFromSelfLink(rawState["project"])
 		catalog := tpgresource.GetResourceNameFromSelfLink(rawState["catalog"])
 		name := tpgresource.GetResourceNameFromSelfLink(rawState["name"])
-		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/namespaces/%s", project, catalog, name), rawState["role"], rawState["member"], rawState["condition.0.title"]), nil
+		return acctest.BuildIAMImportId(fmt.Sprintf("projects/%s/catalogs/%s/databases/%s", project, catalog, name), rawState["role"], rawState["member"], rawState["condition.0.title"]), nil
 	}
 }
