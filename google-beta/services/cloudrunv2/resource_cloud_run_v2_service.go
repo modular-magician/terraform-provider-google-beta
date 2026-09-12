@@ -1111,6 +1111,40 @@ subnetwork with the same name with the network will be used.`,
 								},
 							},
 						},
+						"workload_identity_config": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Optional: true,
+							Description: `The Revision's workload identity settings. Used to assign an
+[Agent Platform](https://cloud.google.com/run/docs/ai/agent-platform-features) identity to the workload.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"identity": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Optional:    true,
+										Description: `The Revision's SPIFFE workload identity. Enables provisioning of SPIFFE workload certificates.`,
+									},
+									"identity_certificate_enabled": {
+										Type:     schema.TypeBool,
+										Computed: true,
+										Optional: true,
+										Description: `Controls whether an instance receives a managed workload identity (MWLID) certificate.
+Defaults to true when 'identity_type' is 'IDENTITY_TYPE_AGENT_IDENTITY'.`,
+									},
+									"identity_type": {
+										Type:         schema.TypeString,
+										Computed:     true,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"IDENTITY_TYPE_SERVICE_ACCOUNT", "IDENTITY_TYPE_AGENT_IDENTITY", ""}),
+										Description: `The type of identity to use. 'IDENTITY_TYPE_AGENT_IDENTITY' assigns a system-managed agent identity and
+is required when the Service's 'functional_type' is 'FUNCTIONAL_TYPE_AGENT'. Once set, this field
+cannot be changed or unset. Possible values: ["IDENTITY_TYPE_SERVICE_ACCOUNT", "IDENTITY_TYPE_AGENT_IDENTITY"]`,
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -1239,6 +1273,18 @@ For more information, see https://cloud.google.com/run/docs/configuring/custom-a
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `User-provided description of the Service. This field currently has a 512-character limit.`,
+			},
+			"functional_type": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"FUNCTIONAL_TYPE_AGENT", "FUNCTIONAL_TYPE_MCP_SERVER", ""}),
+				Description: `The functional type of the Service. Declares the primary purpose of the workload so that it can be
+registered with [Agent Platform](https://cloud.google.com/run/docs/ai/agent-platform-features).
+Once set, this field cannot be changed or unset.
+
+A Service with 'FUNCTIONAL_TYPE_AGENT' must also set 'template.workload_identity_config.identity_type'
+to 'IDENTITY_TYPE_AGENT_IDENTITY'. Possible values: ["FUNCTIONAL_TYPE_AGENT", "FUNCTIONAL_TYPE_MCP_SERVER"]`,
 			},
 			"iap_enabled": {
 				Type:        schema.TypeBool,
@@ -1761,6 +1807,12 @@ func resourceCloudRunV2ServiceCreate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("launch_stage"); !tpgresource.IsEmptyValue(reflect.ValueOf(launchStageProp)) && (ok || !reflect.DeepEqual(v, launchStageProp)) {
 		obj["launchStage"] = launchStageProp
 	}
+	functionalTypeProp, err := expandCloudRunV2ServiceFunctionalType(d.Get("functional_type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("functional_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(functionalTypeProp)) && (ok || !reflect.DeepEqual(v, functionalTypeProp)) {
+		obj["functionalType"] = functionalTypeProp
+	}
 	binaryAuthorizationProp, err := expandCloudRunV2ServiceBinaryAuthorization(d.Get("binary_authorization"), d, config)
 	if err != nil {
 		return err
@@ -2083,6 +2135,12 @@ func resourceCloudRunV2ServiceUpdate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("launch_stage"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, launchStageProp)) {
 		obj["launchStage"] = launchStageProp
 	}
+	functionalTypeProp, err := expandCloudRunV2ServiceFunctionalType(d.Get("functional_type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("functional_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, functionalTypeProp)) {
+		obj["functionalType"] = functionalTypeProp
+	}
 	binaryAuthorizationProp, err := expandCloudRunV2ServiceBinaryAuthorization(d.Get("binary_authorization"), d, config)
 	if err != nil {
 		return err
@@ -2369,6 +2427,10 @@ func flattenCloudRunV2ServiceLaunchStage(v interface{}, d *schema.ResourceData, 
 	return v
 }
 
+func flattenCloudRunV2ServiceFunctionalType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCloudRunV2ServiceBinaryAuthorization(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2503,6 +2565,8 @@ func flattenCloudRunV2ServiceTemplate(v interface{}, d *schema.ResourceData, con
 		flattenCloudRunV2ServiceTemplateTimeout(original["timeout"], d, config)
 	transformed["service_account"] =
 		flattenCloudRunV2ServiceTemplateServiceAccount(original["serviceAccount"], d, config)
+	transformed["workload_identity_config"] =
+		flattenCloudRunV2ServiceTemplateWorkloadIdentityConfig(original["workloadIdentityConfig"], d, config)
 	transformed["containers"] =
 		flattenCloudRunV2ServiceTemplateContainers(original["containers"], d, config)
 	transformed["volumes"] =
@@ -2663,6 +2727,35 @@ func flattenCloudRunV2ServiceTemplateTimeout(v interface{}, d *schema.ResourceDa
 }
 
 func flattenCloudRunV2ServiceTemplateServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCloudRunV2ServiceTemplateWorkloadIdentityConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["identity_type"] =
+		flattenCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityType(original["identityType"], d, config)
+	transformed["identity_certificate_enabled"] =
+		flattenCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityCertificateEnabled(original["identityCertificateEnabled"], d, config)
+	transformed["identity"] =
+		flattenCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentity(original["identity"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityCertificateEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4363,6 +4456,10 @@ func expandCloudRunV2ServiceLaunchStage(v interface{}, d tpgresource.TerraformRe
 	return v, nil
 }
 
+func expandCloudRunV2ServiceFunctionalType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCloudRunV2ServiceBinaryAuthorization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -4537,6 +4634,13 @@ func expandCloudRunV2ServiceTemplate(v interface{}, d tpgresource.TerraformResou
 		return nil, err
 	} else if val := reflect.ValueOf(transformedServiceAccount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["serviceAccount"] = transformedServiceAccount
+	}
+
+	transformedWorkloadIdentityConfig, err := expandCloudRunV2ServiceTemplateWorkloadIdentityConfig(original["workload_identity_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWorkloadIdentityConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["workloadIdentityConfig"] = transformedWorkloadIdentityConfig
 	}
 
 	transformedContainers, err := expandCloudRunV2ServiceTemplateContainers(original["containers"], d, config)
@@ -4783,6 +4887,54 @@ func expandCloudRunV2ServiceTemplateTimeout(v interface{}, d tpgresource.Terrafo
 }
 
 func expandCloudRunV2ServiceTemplateServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateWorkloadIdentityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIdentityType, err := expandCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityType(original["identity_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentityType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["identityType"] = transformedIdentityType
+	}
+
+	transformedIdentityCertificateEnabled, err := expandCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityCertificateEnabled(original["identity_certificate_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentityCertificateEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["identityCertificateEnabled"] = transformedIdentityCertificateEnabled
+	}
+
+	transformedIdentity, err := expandCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentity(original["identity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["identity"] = transformedIdentity
+	}
+
+	return transformed, nil
+}
+
+func expandCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentityCertificateEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateWorkloadIdentityConfigIdentity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -6843,6 +6995,9 @@ func ResourceCloudRunV2ServiceFlatten(d *schema.ResourceData, meta interface{}, 
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
 	if err = d.Set("launch_stage", flattenCloudRunV2ServiceLaunchStage(res["launchStage"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
+	if err = d.Set("functional_type", flattenCloudRunV2ServiceFunctionalType(res["functionalType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
 	if err = d.Set("binary_authorization", flattenCloudRunV2ServiceBinaryAuthorization(res["binaryAuthorization"], d, config)); err != nil {
