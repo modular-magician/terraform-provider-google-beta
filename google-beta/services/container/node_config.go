@@ -1392,7 +1392,7 @@ func schemaNodeConfig() *schema.Schema {
 								Type:         schema.TypeString,
 								Required:     true,
 								ForceNew:     true,
-								Description:  `.`,
+								Description:  `Specifies the frequency of planned maintenance events. One of: "MAINTENANCE_INTERVAL_UNSPECIFIED", "AS_NEEDED", "PERIODIC".`,
 								ValidateFunc: validation.StringInSlice([]string{"MAINTENANCE_INTERVAL_UNSPECIFIED", "AS_NEEDED", "PERIODIC"}, false),
 							},
 							"opportunistic_maintenance_strategy": {
