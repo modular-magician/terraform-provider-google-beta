@@ -176,10 +176,20 @@ func ResourceIAM3FoldersPolicyBinding() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Description: `Required. Immutable. Full Resource Name of the principal set used for principal access boundary policy bindings.
+							Description: `Immutable. Full Resource Name of the principal set used for principal access boundary policy bindings.
 Examples for each one of the following supported principal set types:
 * Folder: '//cloudresourcemanager.googleapis.com/folders/FOLDER_ID'
 It must be parent by the policy binding's parent (the folder).`,
+							ExactlyOneOf: []string{"target.0.principal_set", "target.0.resource"},
+						},
+						"resource": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `Immutable. Full Resource Name used for access policy bindings.
+Examples:
+* '//cloudresourcemanager.googleapis.com/folders/FOLDER_ID'`,
+							ExactlyOneOf: []string{"target.0.principal_set", "target.0.resource"},
 						},
 					},
 				},
@@ -767,9 +777,15 @@ func flattenIAM3FoldersPolicyBindingTarget(v interface{}, d *schema.ResourceData
 	transformed := make(map[string]interface{})
 	transformed["principal_set"] =
 		flattenIAM3FoldersPolicyBindingTargetPrincipalSet(original["principalSet"], d, config)
+	transformed["resource"] =
+		flattenIAM3FoldersPolicyBindingTargetResource(original["resource"], d, config)
 	return []interface{}{transformed}
 }
 func flattenIAM3FoldersPolicyBindingTargetPrincipalSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIAM3FoldersPolicyBindingTargetResource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -855,10 +871,21 @@ func expandIAM3FoldersPolicyBindingTarget(v interface{}, d tpgresource.Terraform
 		transformed["principalSet"] = transformedPrincipalSet
 	}
 
+	transformedResource, err := expandIAM3FoldersPolicyBindingTargetResource(original["resource"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResource); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["resource"] = transformedResource
+	}
+
 	return transformed, nil
 }
 
 func expandIAM3FoldersPolicyBindingTargetPrincipalSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIAM3FoldersPolicyBindingTargetResource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
