@@ -428,6 +428,11 @@ When set to "DELETE", deleting the resource is allowed.
 
 func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
+	// App Hub Service and Workload creation uses a long-running operation (LRO).
+	// When a discovered service or workload is unregistered, a temporary registration lease
+	// remains on it. Re-registering before the lease expires fails inside the LRO with
+	// FailedPrecondition ("... is under lease"). To retry on lease conflicts, both the POST
+	// request and the LRO wait must be retried together.
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
@@ -479,15 +484,31 @@ func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	headers := make(http.Header)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+	var res map[string]interface{}
+	err = transport_tpg.Retry(transport_tpg.RetryOptions{
+		RetryFunc: func() error {
+			var reqErr error
+			res, reqErr = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:               config,
+				Method:               "POST",
+				Project:              billingProject,
+				RawURL:               url,
+				UserAgent:            userAgent,
+				Body:                 obj,
+				Timeout:              d.Timeout(schema.TimeoutCreate),
+				Headers:              headers,
+				ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApphubLeaseConflictError},
+			})
+			if reqErr != nil {
+				return reqErr
+			}
+
+			return ApphubOperationWaitTime(
+				config, res, project, "Creating Workload", userAgent,
+				d.Timeout(schema.TimeoutCreate))
+		},
+		Timeout:              d.Timeout(schema.TimeoutCreate),
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApphubLeaseConflictError},
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating Workload: %s", err)
@@ -499,16 +520,6 @@ func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
-
-	err = ApphubOperationWaitTime(
-		config, res, project, "Creating Workload", userAgent,
-		d.Timeout(schema.TimeoutCreate))
-
-	if err != nil {
-		// The resource didn't actually create
-		d.SetId("")
-		return fmt.Errorf("Error waiting to create Workload: %s", err)
-	}
 
 	log.Printf("[DEBUG] Finished creating Workload %q: %#v", d.Id(), res)
 
@@ -568,12 +579,13 @@ func resourceApphubWorkloadRead(d *schema.ResourceData, meta interface{}) error 
 
 	headers := make(http.Header)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Headers:   headers,
+		Config:               config,
+		Method:               "GET",
+		Project:              billingProject,
+		RawURL:               url,
+		UserAgent:            userAgent,
+		Headers:              headers,
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApphubLeaseConflictError},
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ApphubWorkload %q", d.Id()))
@@ -744,14 +756,15 @@ func resourceApphubWorkloadUpdate(d *schema.ResourceData, meta interface{}) erro
 	// if updateMask is empty we are not updating anything so skip the post
 	if len(updateMask) > 0 {
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "PATCH",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-			Headers:   headers,
+			Config:               config,
+			Method:               "PATCH",
+			Project:              billingProject,
+			RawURL:               url,
+			UserAgent:            userAgent,
+			Body:                 obj,
+			Timeout:              d.Timeout(schema.TimeoutUpdate),
+			Headers:              headers,
+			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApphubLeaseConflictError},
 		})
 
 		if err != nil {
@@ -809,14 +822,15 @@ func resourceApphubWorkloadDelete(d *schema.ResourceData, meta interface{}) erro
 
 	log.Printf("[DEBUG] Deleting Workload %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:               config,
+		Method:               "DELETE",
+		Project:              billingProject,
+		RawURL:               url,
+		UserAgent:            userAgent,
+		Body:                 obj,
+		Timeout:              d.Timeout(schema.TimeoutDelete),
+		Headers:              headers,
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApphubLeaseConflictError},
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Workload")
