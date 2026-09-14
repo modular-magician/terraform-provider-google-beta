@@ -165,14 +165,18 @@ this only exists because the API offers no project-level unenroll method. Overri
 				Description: `Data source client id which should be used to receive refresh token.`,
 			},
 			"data_refresh_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Data refresh type.`,
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Specifies whether the data source supports automatic data refresh for the
+past few days, and how it's supported. For some data sources, data might
+not be complete until a few days later, so it's useful to refresh data
+automatically.`,
 			},
 			"default_data_refresh_window_days": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: `Default data refresh window on days.`,
+				Type:     schema.TypeInt,
+				Computed: true,
+				Description: `Default data refresh window on days.
+Only meaningful when 'data_refresh_type' = 'SLIDING_WINDOW'.`,
 			},
 			"default_schedule": {
 				Type:        schema.TypeString,
@@ -193,17 +197,17 @@ this only exists because the API offers no project-level unenroll method. Overri
 			"help_url": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `Url to the documentation about the data source.`,
+				Description: `Url for the help document for this data source.`,
 			},
 			"manual_runs_disabled": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: `Disables support for manual transfer runs.`,
+				Description: `Disables backfilling and manual run scheduling for the data source.`,
 			},
 			"minimum_schedule_interval": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `The minimum interval between two scheduled runs.`,
+				Description: `The minimum interval for scheduler to schedule runs.`,
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -219,15 +223,16 @@ this only exists because the API offers no project-level unenroll method. Overri
 						"allowed_values": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: `All possible values for parameters with fixed list of options.`,
+							Description: `All possible values for the parameter.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
 						},
 						"deprecated": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: `If true, it should not be used in new transfers, and it should not be visible to users.`,
+							Type:     schema.TypeBool,
+							Computed: true,
+							Description: `If true, it should not be used in new transfers, and it should not be
+visible to users.`,
 						},
 						"description": {
 							Type:        schema.TypeString,
@@ -237,12 +242,12 @@ this only exists because the API offers no project-level unenroll method. Overri
 						"display_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: `User friendly parameter name.`,
+							Description: `Parameter display name in the user interface.`,
 						},
 						"immutable": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: `Cannot be changed after initial transfer config creation. Applies only to custom data sources.`,
+							Description: `Cannot be changed after initial creation.`,
 						},
 						"max_list_size": {
 							Type:        schema.TypeInt,
@@ -275,9 +280,10 @@ this only exists because the API offers no project-level unenroll method. Overri
 							Description: `Parameter type.`,
 						},
 						"validation_description": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: `Description of the requirements for this field, in case the user input does not fulfill the regex.`,
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Description of the requirements for this field, in case the user input does
+not fulfill the regex pattern or min/max values.`,
 						},
 						"validation_help_url": {
 							Type:        schema.TypeString,
@@ -293,22 +299,27 @@ this only exists because the API offers no project-level unenroll method. Overri
 				},
 			},
 			"scopes": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: `Api auth scopes for which refresh token needs to be obtained.`,
+				Type:     schema.TypeList,
+				Computed: true,
+				Description: `Api auth scopes for which refresh token needs to be obtained. These are
+scopes needed by a data source to prepare data and ingest them into
+BigQuery, e.g., https://www.googleapis.com/auth/bigquery`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"supports_custom_schedule": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: `Specifies whether the data source supports a user defined schedule.`,
+				Type:     schema.TypeBool,
+				Computed: true,
+				Description: `Specifies whether the data source supports a user defined schedule, or
+operates on the default schedule. When set to 'true', user can override
+default schedule.`,
 			},
 			"update_deadline_seconds": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: `The number of seconds to wait for a transfer to start before declaring the failure.`,
+				Type:     schema.TypeInt,
+				Computed: true,
+				Description: `The number of seconds to wait for an update from the data source
+before the Data Transfer Service marks the transfer as FAILED.`,
 			},
 			"project": {
 				Type:     schema.TypeString,

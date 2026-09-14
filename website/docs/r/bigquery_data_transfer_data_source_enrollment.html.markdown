@@ -106,38 +106,47 @@ In addition to the arguments listed above, the following computed attributes are
   Data source client id which should be used to receive refresh token.
 
 * `scopes` -
-  Api auth scopes for which refresh token needs to be obtained.
+  Api auth scopes for which refresh token needs to be obtained. These are
+  scopes needed by a data source to prepare data and ingest them into
+  BigQuery, e.g., https://www.googleapis.com/auth/bigquery
 
 * `update_deadline_seconds` -
-  The number of seconds to wait for a transfer to start before declaring the failure.
+  The number of seconds to wait for an update from the data source
+  before the Data Transfer Service marks the transfer as FAILED.
 
 * `default_schedule` -
   Default data transfer schedule.
 
 * `supports_custom_schedule` -
-  Specifies whether the data source supports a user defined schedule.
+  Specifies whether the data source supports a user defined schedule, or
+  operates on the default schedule. When set to `true`, user can override
+  default schedule.
 
 * `parameters` -
   Data source parameters.
   Structure is [documented below](#nested_parameters).
 
 * `help_url` -
-  Url to the documentation about the data source.
+  Url for the help document for this data source.
 
 * `authorization_type` -
   Indicates the type of authorization.
 
 * `data_refresh_type` -
-  Data refresh type.
+  Specifies whether the data source supports automatic data refresh for the
+  past few days, and how it's supported. For some data sources, data might
+  not be complete until a few days later, so it's useful to refresh data
+  automatically.
 
 * `default_data_refresh_window_days` -
   Default data refresh window on days.
+  Only meaningful when `data_refresh_type` = `SLIDING_WINDOW`.
 
 * `manual_runs_disabled` -
-  Disables support for manual transfer runs.
+  Disables backfilling and manual run scheduling for the data source.
 
 * `minimum_schedule_interval` -
-  The minimum interval between two scheduled runs.
+  The minimum interval for scheduler to schedule runs.
 
 
 <a name="nested_parameters"></a>The `parameters` block contains:
@@ -148,7 +157,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `display_name` -
   (Output)
-  User friendly parameter name.
+  Parameter display name in the user interface.
 
 * `description` -
   (Output)
@@ -168,7 +177,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `allowed_values` -
   (Output)
-  All possible values for parameters with fixed list of options.
+  All possible values for the parameter.
 
 * `min_value` -
   (Output)
@@ -180,7 +189,8 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `validation_description` -
   (Output)
-  Description of the requirements for this field, in case the user input does not fulfill the regex.
+  Description of the requirements for this field, in case the user input does
+  not fulfill the regex pattern or min/max values.
 
 * `validation_help_url` -
   (Output)
@@ -188,11 +198,12 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `immutable` -
   (Output)
-  Cannot be changed after initial transfer config creation. Applies only to custom data sources.
+  Cannot be changed after initial creation.
 
 * `deprecated` -
   (Output)
-  If true, it should not be used in new transfers, and it should not be visible to users.
+  If true, it should not be used in new transfers, and it should not be
+  visible to users.
 
 * `max_list_size` -
   (Output)
