@@ -249,6 +249,103 @@ resource "google_project_service" "fah" {
 `, context)
 }
 
+func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyWithPathsExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project_id":     envvar.GetTestProjectFromEnv(),
+		"backend_id":     "tf-test-traffic-rpwp" + randomSuffix,
+		"branch":         "main" + randomSuffix,
+		"service_act_id": "tf-test-traffic-rpwp",
+		"random_suffix":  randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyWithPathsExample(context),
+			},
+			{
+				ResourceName:            "google_firebase_app_hosting_traffic.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"backend", "location"},
+			},
+			{
+				ResourceName:       "google_firebase_app_hosting_traffic.example",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyWithPathsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_firebase_app_hosting_traffic" "example" {
+  project          = google_firebase_app_hosting_backend.example.project
+  location         = google_firebase_app_hosting_backend.example.location
+  backend          = google_firebase_app_hosting_backend.example.backend_id
+
+  rollout_policy {
+    codebase_branch = "%{branch}"
+    ignored_paths {
+      pattern = "foo/bar/excluded/*"
+      type = "GLOB"
+    }
+    required_paths {
+      pattern = "foo/bar/*"
+      type = "GLOB"
+    }
+  }
+}
+
+resource "google_firebase_app_hosting_backend" "example" {
+  project          = "%{project_id}"
+  # Choose the region closest to your users
+
+  location         = "asia-east1"
+  backend_id       = "%{backend_id}"
+  app_id           = "1:0000000000:web:674cde32020e16fbce9dbd"
+  serving_locality = "GLOBAL_ACCESS"
+  service_account  = google_service_account.service_account.email
+
+  depends_on = [google_project_service.fah]
+}
+
+### Include these blocks only once per project if you are starting from scratch ###
+resource "google_service_account" "service_account" {
+  project = "%{project_id}"
+
+  # Must be firebase-app-hosting-compute
+  account_id                   = "%{service_act_id}"
+  display_name                 = "Firebase App Hosting compute service account"
+
+  # Do not throw if already exists
+  create_ignore_already_exists = true
+}
+
+resource "google_project_iam_member" "app_hosting_sa_runner" {
+  project = "%{project_id}"
+
+  # For App Hosting
+  role   = "roles/firebaseapphosting.computeRunner"
+  member = google_service_account.service_account.member
+}
+
+resource "google_project_service" "fah" {
+  project = "%{project_id}"
+  service = "firebaseapphosting.googleapis.com"
+}
+###
+`, context)
+}
+
 func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyDisabledExample(t *testing.T) {
 	t.Parallel()
 
