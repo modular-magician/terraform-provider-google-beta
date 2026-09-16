@@ -931,6 +931,16 @@ Must only be set for file-based resources.`,
 											},
 										},
 									},
+									"visualization_mode": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `Mode for generating visualizations.
+Possible values:
+VISUALIZATION_MODE_EXPLICIT_ONLY
+VISUALIZATION_MODE_WHEN_NECESSARY
+VISUALIZATION_MODE_WHEN_HELPFUL
+VISUALIZATION_MODE_ALWAYS`,
+									},
 								},
 							},
 						},
@@ -1084,6 +1094,12 @@ and can only contain letters, numbers, spaces, underscores, and hyphens.`,
 							Optional:    true,
 							Description: `Input only. The API key of the MCP server.`,
 							Sensitive:   true,
+						},
+						"api_key_header": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The HTTP header when the API key is passed in a request header
+(e.g. 'x-api-key', 'api-key', 'X-Auth-Token').`,
 						},
 						"api_key_name": {
 							Type:        schema.TypeString,
@@ -1404,6 +1420,31 @@ RANGE are not supported.`,
 					},
 				},
 			},
+			"web_search_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration for web search grounding for the analyst agent.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Whether web search grounding is disabled for the analyst agent.
+Defaults to false if not specified (i.e. web search grounding is enabled).`,
+						},
+						"excluded_domains": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `List of domains to be excluded from Google Search / Enterprise Web Search
+grounding.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -1529,6 +1570,12 @@ func resourceAgenticApplicationsAnalystAgentPersonaCreate(d *schema.ResourceData
 		return err
 	} else if v, ok := d.GetOkExists("tables"); !tpgresource.IsEmptyValue(reflect.ValueOf(tablesProp)) && (ok || !reflect.DeepEqual(v, tablesProp)) {
 		obj["tables"] = tablesProp
+	}
+	webSearchConfigProp, err := expandAgenticApplicationsAnalystAgentPersonaWebSearchConfig(d.Get("web_search_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("web_search_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(webSearchConfigProp)) && (ok || !reflect.DeepEqual(v, webSearchConfigProp)) {
+		obj["webSearchConfig"] = webSearchConfigProp
 	}
 
 	obj, err = resourceAgenticApplicationsAnalystAgentPersonaEncoder(d, meta, obj)
@@ -1829,6 +1876,12 @@ func resourceAgenticApplicationsAnalystAgentPersonaUpdate(d *schema.ResourceData
 	} else if v, ok := d.GetOkExists("tables"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tablesProp)) {
 		obj["tables"] = tablesProp
 	}
+	webSearchConfigProp, err := expandAgenticApplicationsAnalystAgentPersonaWebSearchConfig(d.Get("web_search_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("web_search_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, webSearchConfigProp)) {
+		obj["webSearchConfig"] = webSearchConfigProp
+	}
 
 	obj, err = resourceAgenticApplicationsAnalystAgentPersonaEncoder(d, meta, obj)
 	if err != nil {
@@ -1894,6 +1947,10 @@ func resourceAgenticApplicationsAnalystAgentPersonaUpdate(d *schema.ResourceData
 
 	if d.HasChange("tables") {
 		updateMask = append(updateMask, "tables")
+	}
+
+	if d.HasChange("web_search_config") {
+		updateMask = append(updateMask, "webSearchConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -2654,6 +2711,8 @@ func flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOp
 	transformed := make(map[string]interface{})
 	transformed["visualization_examples"] =
 		flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOptionsVisualizationExamples(original["visualizationExamples"], d, config)
+	transformed["visualization_mode"] =
+		flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOptionsVisualizationMode(original["visualizationMode"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOptionsVisualizationExamples(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2840,6 +2899,10 @@ func flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOp
 	return v
 }
 
+func flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOptionsVisualizationMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenAgenticApplicationsAnalystAgentPersonaCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -3006,6 +3069,7 @@ func flattenAgenticApplicationsAnalystAgentPersonaMcpDataSources(v interface{}, 
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
+			"api_key_header":  flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyHeader(original["apiKeyHeader"], d, config),
 			"api_key_name":    flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyName(original["apiKeyName"], d, config),
 			"client_id":       flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesClientId(original["clientId"], d, config),
 			"description":     flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesDescription(original["description"], d, config),
@@ -3020,6 +3084,10 @@ func flattenAgenticApplicationsAnalystAgentPersonaMcpDataSources(v interface{}, 
 }
 func flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("mcp_data_sources.0.api_key")
+}
+
+func flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyHeader(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3354,6 +3422,29 @@ func flattenAgenticApplicationsAnalystAgentPersonaTablesName(v interface{}, d *s
 }
 
 func flattenAgenticApplicationsAnalystAgentPersonaUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["disabled"] =
+		flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfigDisabled(original["disabled"], d, config)
+	transformed["excluded_domains"] =
+		flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfigExcludedDomains(original["excludedDomains"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfigDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfigExcludedDomains(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4466,6 +4557,13 @@ func expandAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOpt
 		transformed["visualizationExamples"] = transformedVisualizationExamples
 	}
 
+	transformedVisualizationMode, err := expandAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOptionsVisualizationMode(original["visualization_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVisualizationMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["visualizationMode"] = transformedVisualizationMode
+	}
+
 	return transformed, nil
 }
 
@@ -4791,6 +4889,10 @@ func expandAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOpt
 	return v, nil
 }
 
+func expandAgenticApplicationsAnalystAgentPersonaArtifactsConfigVisualizationOptionsVisualizationMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandAgenticApplicationsAnalystAgentPersonaCustomerContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -4955,6 +5057,13 @@ func expandAgenticApplicationsAnalystAgentPersonaMcpDataSources(v interface{}, d
 			transformed["apiKey"] = transformedApiKey
 		}
 
+		transformedApiKeyHeader, err := expandAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyHeader(original["api_key_header"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedApiKeyHeader); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["apiKeyHeader"] = transformedApiKeyHeader
+		}
+
 		transformedApiKeyName, err := expandAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyName(original["api_key_name"], d, config)
 		if err != nil {
 			return nil, err
@@ -5024,6 +5133,10 @@ func expandAgenticApplicationsAnalystAgentPersonaMcpDataSources(v interface{}, d
 }
 
 func expandAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgenticApplicationsAnalystAgentPersonaMcpDataSourcesApiKeyHeader(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -5556,6 +5669,43 @@ func expandAgenticApplicationsAnalystAgentPersonaTablesName(v interface{}, d tpg
 	return v, nil
 }
 
+func expandAgenticApplicationsAnalystAgentPersonaWebSearchConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedDisabled, err := expandAgenticApplicationsAnalystAgentPersonaWebSearchConfigDisabled(original["disabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["disabled"] = transformedDisabled
+	}
+
+	transformedExcludedDomains, err := expandAgenticApplicationsAnalystAgentPersonaWebSearchConfigExcludedDomains(original["excluded_domains"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExcludedDomains); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["excludedDomains"] = transformedExcludedDomains
+	}
+
+	return transformed, nil
+}
+
+func expandAgenticApplicationsAnalystAgentPersonaWebSearchConfigDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgenticApplicationsAnalystAgentPersonaWebSearchConfigExcludedDomains(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourceAgenticApplicationsAnalystAgentPersonaEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	name, err := tpgresource.ReplaceVars(d, meta.(*transport_tpg.Config), "projects/{{project}}/locations/{{location}}/analystAgentPersonas/{{analyst_agent_persona_id}}")
 	if err != nil {
@@ -5614,6 +5764,9 @@ func ResourceAgenticApplicationsAnalystAgentPersonaFlatten(d *schema.ResourceDat
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
 	if err = d.Set("update_time", flattenAgenticApplicationsAnalystAgentPersonaUpdateTime(res["updateTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
+	}
+	if err = d.Set("web_search_config", flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfig(res["webSearchConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
 

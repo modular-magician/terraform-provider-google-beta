@@ -337,6 +337,7 @@ resource "google_agentic_applications_analyst_agent_persona" "example" {
       }
     }
     visualization_options {
+      visualization_mode = "VISUALIZATION_MODE_WHEN_NECESSARY"
       visualization_examples {
         visualization_type = "VISUALIZATION_TYPE_UNSPECIFIED"
         resource {
@@ -364,8 +365,14 @@ resource "google_agentic_applications_analyst_agent_persona" "example" {
     enabled         = true
     prompt          = "Use this server for queries"
     api_key_name    = "x-api-key"
+    api_key_header  = "x-api-key-header"
     client_id       = "sample-client-id"
     oauth_token_url = "https://example.com/oauth/token"
+  }
+
+  web_search_config {
+    disabled         = false
+    excluded_domains = ["example.com"]
   }
 
   resources {
@@ -534,6 +541,7 @@ resource "google_agentic_applications_analyst_agent_persona" "example" {
       }
     }
     visualization_options {
+      visualization_mode = "VISUALIZATION_MODE_ALWAYS"
       visualization_examples {
         visualization_type = "VISUALIZATION_TYPE_UNSPECIFIED"
         resource {
@@ -561,8 +569,14 @@ resource "google_agentic_applications_analyst_agent_persona" "example" {
     enabled         = true
     prompt          = "Use this server for updated queries"
     api_key_name    = "x-api-key"
+    api_key_header  = "x-api-key-header-updated"
     client_id       = "sample-client-id"
     oauth_token_url = "https://example.com/oauth/token"
+  }
+
+  web_search_config {
+    disabled         = true
+    excluded_domains = ["example.com", "updated.com"]
   }
 
   resources {

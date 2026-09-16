@@ -187,6 +187,7 @@ resource "google_agentic_applications_analyst_agent_persona" "example" {
       }
     }
     visualization_options {
+      visualization_mode = "VISUALIZATION_MODE_WHEN_NECESSARY"
       visualization_examples {
         visualization_type = "VISUALIZATION_TYPE_UNSPECIFIED"
         resource {
@@ -214,8 +215,14 @@ resource "google_agentic_applications_analyst_agent_persona" "example" {
     enabled         = true
     prompt          = "Use this server for queries"
     api_key_name    = "x-api-key"
+    api_key_header  = "x-api-key-header"
     client_id       = "sample-client-id"
     oauth_token_url = "https://example.com/oauth/token"
+  }
+
+  web_search_config {
+    disabled         = false
+    excluded_domains = ["example.com"]
   }
 
   resources {
@@ -403,6 +410,11 @@ The following arguments are supported:
   table in the customer's database, e.g. to provide additional context to the
   agent.
   Structure is [documented below](#nested_tables).
+
+* `web_search_config` -
+  (Optional)
+  Configuration for web search grounding for the analyst agent.
+  Structure is [documented below](#nested_web_search_config).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -856,6 +868,15 @@ The following arguments are supported:
   Examples for visualizations.
   Structure is [documented below](#nested_artifacts_config_visualization_options_visualization_examples).
 
+* `visualization_mode` -
+  (Optional)
+  Mode for generating visualizations.
+  Possible values:
+  VISUALIZATION_MODE_EXPLICIT_ONLY
+  VISUALIZATION_MODE_WHEN_NECESSARY
+  VISUALIZATION_MODE_WHEN_HELPFUL
+  VISUALIZATION_MODE_ALWAYS
+
 
 <a name="nested_artifacts_config_visualization_options_visualization_examples"></a>The `visualization_examples` block supports:
 
@@ -1031,6 +1052,11 @@ The following arguments are supported:
   (Optional)
   Input only. The API key of the MCP server.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `api_key_header` -
+  (Optional)
+  The HTTP header when the API key is passed in a request header
+  (e.g. `x-api-key`, `api-key`, `X-Auth-Token`).
 
 * `api_key_name` -
   (Optional)
@@ -1245,6 +1271,18 @@ The following arguments are supported:
 * `name` -
   (Required)
   The name of the column.
+
+<a name="nested_web_search_config"></a>The `web_search_config` block supports:
+
+* `disabled` -
+  (Optional)
+  Whether web search grounding is disabled for the analyst agent.
+  Defaults to false if not specified (i.e. web search grounding is enabled).
+
+* `excluded_domains` -
+  (Optional)
+  List of domains to be excluded from Google Search / Enterprise Web Search
+  grounding.
 
 ## Attributes Reference
 
