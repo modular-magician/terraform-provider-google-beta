@@ -40,7 +40,9 @@ fields:
     - api_field: errors.message
     - api_field: incrementalRefreshInterval
     - api_field: incrementalSyncDisabled
-    - api_field: jsonParams
+    - api_field: params
+      field: json_params
+      json: true
     - api_field: kmsKeyName
     - api_field: lastSyncTime
     - api_field: latestPauseTime

@@ -441,10 +441,13 @@ sync will be disabled.`,
 				Description: `Indicates whether incremental syncs are paused for this connector.`,
 			},
 			"json_params": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Description:  `Params needed to access the source in the format of json string.`,
-				ExactlyOneOf: []string{"json_params", "params"},
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     validation.StringIsJSON,
+				DiffSuppressFunc: DataConnectorJsonStructFieldsDiffSuppress,
+				StateFunc:        func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+				Description:      `Params needed to access the source in structured json format.`,
+				ExactlyOneOf:     []string{"json_params", "params"},
 			},
 			"kms_key_name": {
 				Type:     schema.TypeString,
@@ -459,6 +462,7 @@ this connector will be protected by the KMS key.`,
 			"params": {
 				Type:         schema.TypeMap,
 				Optional:     true,
+				Deprecated:   "`params` is deprecated and will be removed in a future major release. Use `json_params` instead.",
 				Description:  `Params needed to access the source in the format of String-to-String (Key, Value) pairs.`,
 				Elem:         &schema.Schema{Type: schema.TypeString},
 				ExactlyOneOf: []string{"json_params", "params"},
@@ -634,7 +638,7 @@ func resourceDiscoveryEngineDataConnectorCreate(d *schema.ResourceData, meta int
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("json_params"); !tpgresource.IsEmptyValue(reflect.ValueOf(jsonParamsProp)) && (ok || !reflect.DeepEqual(v, jsonParamsProp)) {
-		obj["jsonParams"] = jsonParamsProp
+		obj["params"] = jsonParamsProp
 	}
 	refreshIntervalProp, err := expandDiscoveryEngineDataConnectorRefreshInterval(d.Get("refresh_interval"), d, config)
 	if err != nil {
@@ -940,7 +944,7 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("json_params"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, jsonParamsProp)) {
-		obj["jsonParams"] = jsonParamsProp
+		obj["params"] = jsonParamsProp
 	}
 	refreshIntervalProp, err := expandDiscoveryEngineDataConnectorRefreshInterval(d.Get("refresh_interval"), d, config)
 	if err != nil {
@@ -1021,7 +1025,7 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 	}
 
 	if d.HasChange("json_params") {
-		updateMask = append(updateMask, "jsonParams")
+		updateMask = append(updateMask, "params")
 	}
 
 	if d.HasChange("refresh_interval") {
@@ -1508,7 +1512,15 @@ func expandDiscoveryEngineDataConnectorParams(v interface{}, d tpgresource.Terra
 }
 
 func expandDiscoveryEngineDataConnectorJsonParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func expandDiscoveryEngineDataConnectorRefreshInterval(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
