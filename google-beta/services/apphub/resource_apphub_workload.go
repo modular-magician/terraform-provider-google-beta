@@ -428,12 +428,19 @@ When set to "DELETE", deleting the resource is allowed.
 
 func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
+
+	// STEP 1: GENERATE USER AGENT
+	// Constructs the HTTP User-Agent header (e.g., "HashiCorp/1.0 Terraform/1.5.0 Google/5.0.0")
+	// so Google Cloud can identify and track requests coming from Terraform.
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
+	// STEP 2: BUILD THE JSON REQUEST BODY ("obj")
+	// This map will be serialized to JSON and sent as the HTTP POST body.
 	obj := make(map[string]interface{})
+
 	displayNameProp, err := expandApphubWorkloadDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
@@ -459,6 +466,9 @@ func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) erro
 		obj["attributes"] = attributesProp
 	}
 
+	// STEP 3: CONSTRUCT THE TARGET API URL
+	// In YAML, CreateUri is parameterized (e.g. ".../locations/{location}/services").
+	// ReplaceVars substitutes those template markers with actual values from Terraform's state ('d').
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/applications/{{application_id}}/workloads?workloadId={{workload_id}}")
 	if err != nil {
 		return err
@@ -467,68 +477,103 @@ func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Creating new Workload: %#v", obj)
 	billingProject := ""
 
+	// STEP 4: RESOLVE PROJECT & BILLING PROJECT
+	// Google Cloud differentiates between the project hosting the resource and the
+	// project paying for API quota/billing. We check for a provider billing_project override.
 	project, err := tpgresource.GetProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Workload: %s", err)
 	}
 	billingProject = project
 
-	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
 	headers := make(http.Header)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+	var res map[string]interface{}
+
+	// STEP 5: THE RETRY LOOP (HANDLING LEASE CONFLICTS)
+	// transport_tpg.Retry repeats RetryFunc if an error matches ErrorRetryPredicates.
+	err = transport_tpg.Retry(transport_tpg.RetryOptions{
+		RetryFunc: func() error {
+			var reqErr error
+
+			// 5A: SEND HTTP POST
+			// NOTE: We deliberately DO NOT attach ErrorRetryPredicates here.
+			// App Hub's POST request returns 200/202 with an operation ID immediately;
+			// it does not fail here. Adding retry predicates here creates redundant,
+			// nested 20-minute retry loops.
+			res, reqErr = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "POST",
+				Project:   billingProject,
+				RawURL:    url,
+				UserAgent: userAgent,
+				Body:      obj,
+				Timeout:   d.Timeout(schema.TimeoutCreate),
+				Headers:   headers,
+			})
+			if reqErr != nil {
+				return reqErr // Network error or HTTP 4xx/5xx on the POST itself
+			}
+
+			// 5B: POLL THE LONG-RUNNING OPERATION (LRO)
+			// ApphubOperationWaitTime polls the GCP API until the operation completes.
+			// If the resource is under lease, this call returns an error:
+			//   "Error code 9, message: ... is under lease"
+			// Returning this error triggers the enclosing transport_tpg.Retry.
+			return ApphubOperationWaitTime(
+				config, res, project, "Creating Workload", userAgent,
+				d.Timeout(schema.TimeoutCreate))
+		},
+		Timeout: d.Timeout(schema.TimeoutCreate),
+		// If the error contains "is under lease", transport_tpg.Retry sleeps with backoff
+		// and invokes RetryFunc again from the beginning, issuing a fresh HTTP POST!
+		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApphubLeaseConflictError},
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating Workload: %s", err)
 	}
 
-	// Store the ID now
+	// STEP 6: SET THE TERRAFORM RESOURCE ID
+	// In Terraform, calling d.SetId() is the official signal that resource creation succeeded.
+	// If d.SetId() is not called, Terraform considers the resource failed and will not track it.
 	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/applications/{{application_id}}/workloads/{{workload_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
 
-	err = ApphubOperationWaitTime(
-		config, res, project, "Creating Workload", userAgent,
-		d.Timeout(schema.TimeoutCreate))
-
-	if err != nil {
-		// The resource didn't actually create
-		d.SetId("")
-		return fmt.Errorf("Error waiting to create Workload: %s", err)
-	}
-
 	log.Printf("[DEBUG] Finished creating Workload %q: %#v", d.Id(), res)
 
+	// STEP 7: POPULATE TERRAFORM IDENTITY KEYS
+	// WHAT IS "IDENTITY"?
+	// Modern Terraform tracks natural keys (e.g. project, location, service_id) in a
+	// structured identity store (d.Identity()) separate from the legacy combined ID string.
+	// This enables reliable cross-resource references and state migrations.
+	// Only generate this block if the resource YAML does not disable it.
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
+		// For each primary identity key, ensure it is non-empty before recording it:
 		if locationValue, ok := d.GetOk("location"); ok && locationValue.(string) != "" {
 			if err = identity.Set("location", locationValue.(string)); err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
+		// For each primary identity key, ensure it is non-empty before recording it:
 		if applicationIdValue, ok := d.GetOk("application_id"); ok && applicationIdValue.(string) != "" {
 			if err = identity.Set("application_id", applicationIdValue.(string)); err != nil {
 				return fmt.Errorf("Error setting application_id: %s", err)
 			}
 		}
+		// For each primary identity key, ensure it is non-empty before recording it:
 		if workloadIdValue, ok := d.GetOk("workload_id"); ok && workloadIdValue.(string) != "" {
 			if err = identity.Set("workload_id", workloadIdValue.(string)); err != nil {
 				return fmt.Errorf("Error setting workload_id: %s", err)
 			}
 		}
+		// For each primary identity key, ensure it is non-empty before recording it:
 		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
 			if err = identity.Set("project", projectValue.(string)); err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
@@ -538,6 +583,9 @@ func resourceApphubWorkloadCreate(d *schema.ResourceData, meta interface{}) erro
 		log.Printf("[DEBUG] (Create) identity not set: %s", err)
 	}
 
+	// STEP 8: POST-CREATE REFRESH ("READ")
+	// Calling Read fetches server-generated attributes (create_time, uid, status)
+	// that were not part of the initial POST request and stores them into terraform.tfstate.
 	return resourceApphubWorkloadRead(d, meta)
 }
 
