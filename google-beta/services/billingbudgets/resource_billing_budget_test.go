@@ -61,7 +61,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name    = "Example Billing Budget%{random_suffix}"
+  display_name    = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = ["projects/${data.google_project.project.number}"]
@@ -193,7 +193,7 @@ resource "google_billing_subaccount" "subaccount" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name    = "Example Billing Budget%{random_suffix}"
+  display_name    = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = ["projects/${data.google_project.project.number}"]
@@ -232,7 +232,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name    = "Example Billing Budget%{random_suffix}"
+  display_name    = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = ["projects/${data.google_project.project.number}"]
@@ -276,7 +276,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = ["projects/${data.google_project.project.number}"]
@@ -325,7 +325,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = []
@@ -371,7 +371,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = []
@@ -422,7 +422,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = []
@@ -470,7 +470,7 @@ data "google_project" "project" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "tf-test Example Billing Budget%{random_suffix}"
 
   budget_filter {
     projects = []
@@ -621,7 +621,7 @@ resource "google_project" "project2" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name    = "Example Billing Budget"
+  display_name    = "tf-test Example Billing Budget"
 
   budget_filter {
     projects = [
@@ -667,7 +667,7 @@ resource "google_project" "project2" {
 
 resource "google_billing_budget" "budget" {
   billing_account = data.google_billing_account.account.id
-  display_name    = "Example Billing Budget"
+  display_name    = "tf-test Example Billing Budget"
 
   budget_filter {
     projects = [

@@ -64,7 +64,7 @@ func TestAccBillingBudgetsBudget_billingBudgetBasicExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
-		"display_name":  "Example Billing Budget" + randomSuffix,
+		"display_name":  "tf-test Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -121,7 +121,7 @@ func TestAccBillingBudgetsBudget_billingBudgetLastperiodExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
-		"display_name":  "Example Billing Budget" + randomSuffix,
+		"display_name":  "tf-test Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -188,7 +188,7 @@ func TestAccBillingBudgetsBudget_billingBudgetFilterExample(t *testing.T) {
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"display_name":  "Example Billing Budget" + randomSuffix,
+		"display_name":  "tf-test Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -262,7 +262,7 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
-		"budget_name":   "Example Billing Budget" + randomSuffix,
+		"budget_name":   "tf-test Example Billing Budget" + randomSuffix,
 		"channel_name":  "Example Notification Channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -349,7 +349,7 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(t *t
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
-		"budget_name":   "Example Billing Budget" + randomSuffix,
+		"budget_name":   "tf-test Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -416,7 +416,7 @@ func TestAccBillingBudgetsBudget_billingBudgetCustomperiodExample(t *testing.T) 
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
-		"display_name":  "Example Billing Budget" + randomSuffix,
+		"display_name":  "tf-test Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -500,7 +500,7 @@ func TestAccBillingBudgetsBudget_billingBudgetOptionalExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
-		"display_name":  "Example Billing Budget" + randomSuffix,
+		"display_name":  "tf-test Example Billing Budget" + randomSuffix,
 		"topic_name":    "tf-test-example-topic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
