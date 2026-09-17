@@ -32,6 +32,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/certificatemanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dns"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/networkservices"
@@ -260,6 +261,19 @@ resource "google_dns_managed_zone" "default" {
   }
 }
 
+resource "google_certificate_manager_trust_config" "default" {
+  location    = "us-central1"
+
+  trust_stores {
+    trust_anchors { 
+      pem_certificate = file("test-fixtures/cert.pem")
+    }
+    intermediate_cas { 
+      pem_certificate = file("test-fixtures/cert.pem")
+    }
+  }
+}
+
 resource "google_network_services_agent_connectivity_template" "default" {
   agent_connectivity_template_id = "%{agent_connectivity_template_id}"
   location                       = "us-central1"
@@ -274,6 +288,10 @@ resource "google_network_services_agent_connectivity_template" "default" {
     dns_peering_config {
       domain         = google_dns_managed_zone.default.dns_name
       target_network = google_compute_network.default.id
+    }
+    tls_config {
+      trust_config = google_certificate_manager_trust_config.default.id
+      additionalRoots = "NO_ADDITIONAL_ROOTS"
     }
   }
 }
