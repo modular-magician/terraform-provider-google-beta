@@ -4346,6 +4346,30 @@ func TestAccComputeInstance_localSsdRecoveryTimeout_update(t *testing.T) {
 	})
 }
 
+func TestAccComputeInstance_preemptionNoticeDuration(t *testing.T) {
+	t.Parallel()
+
+	var instance map[string]interface{}
+	var instanceName = fmt.Sprintf("tf-test-%s", acctest.RandString(t, 10))
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeInstance_preemptionNoticeDuration(instanceName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeInstanceExists(
+						t, "google_compute_instance.foobar", &instance),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "scheduling.0.preemption_notice_duration.0.seconds", "120"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "scheduling.0.preemption_notice_duration.0.nanos", "0"),
+				),
+			},
+			computeInstanceImportStep("us-central1-a", instanceName, []string{}),
+		},
+	})
+}
+
 func TestAccComputeInstance_partnerMetadata(t *testing.T) {
 	t.Parallel()
 
@@ -4992,30 +5016,6 @@ func TestAccComputeInstance_schedulingSkipGuestOSShutdown(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
-				),
-			},
-			computeInstanceImportStep("us-central1-a", instanceName, []string{}),
-		},
-	})
-}
-
-func TestAccComputeInstance_preemptionNoticeDuration(t *testing.T) {
-	t.Parallel()
-
-	var instance map[string]interface{}
-	var instanceName = fmt.Sprintf("tf-test-%s", acctest.RandString(t, 10))
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckComputeInstanceDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeInstance_preemptionNoticeDuration(instanceName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeInstanceExists(
-						t, "google_compute_instance.foobar", &instance),
-					resource.TestCheckResourceAttr("google_compute_instance.foobar", "scheduling.0.preemption_notice_duration.0.seconds", "120"),
-					resource.TestCheckResourceAttr("google_compute_instance.foobar", "scheduling.0.preemption_notice_duration.0.nanos", "0"),
 				),
 			},
 			computeInstanceImportStep("us-central1-a", instanceName, []string{}),

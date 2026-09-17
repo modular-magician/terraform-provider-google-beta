@@ -260,7 +260,6 @@ func expandScheduling(v interface{}) (map[string]interface{}, error) {
 	if v, ok := original["skip_guest_os_shutdown"]; ok {
 		result["skipGuestOsShutdown"] = v.(bool)
 	}
-
 	if v, ok := original["preemption_notice_duration"]; ok {
 		transformedPreemptionNoticeDuration, err := expandComputePreemptionNoticeDuration(v)
 		if err != nil {
@@ -270,6 +269,7 @@ func expandScheduling(v interface{}) (map[string]interface{}, error) {
 			result["preemptionNoticeDuration"] = transformedPreemptionNoticeDuration
 		}
 	}
+
 	if v, ok := original["local_ssd_recovery_timeout"]; ok {
 		transformedLocalSsdRecoveryTimeout, err := expandComputeLocalSsdRecoveryTimeout(v)
 		if err != nil {
