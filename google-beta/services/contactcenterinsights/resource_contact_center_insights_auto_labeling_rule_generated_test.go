@@ -60,9 +60,10 @@ func TestAccContactCenterInsightsAutoLabelingRule_contactCenterInsightsAutoLabel
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"id_suffix":     strings.ToLower(acctest.RandString(t, 10)),
-		"resource_name": "autolabelingrulebasic" + randomSuffix,
-		"random_suffix": randomSuffix,
+		"auto_labeling_rule_id": "tf-test-autolabelingrulebasic" + randomSuffix,
+		"id_suffix":             strings.ToLower(acctest.RandString(t, 10)),
+		"resource_name":         "autolabelingrulebasic" + randomSuffix,
+		"random_suffix":         randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -93,7 +94,7 @@ func testAccContactCenterInsightsAutoLabelingRule_contactCenterInsightsAutoLabel
 	return acctest.Nprintf(`
 resource "google_contact_center_insights_auto_labeling_rule" "auto_labeling_rule_basic" {
   display_name = "%{resource_name}"
-  auto_labeling_rule_id = "autolabelingrulebasic%{id_suffix}"
+  auto_labeling_rule_id = "%{auto_labeling_rule_id}%{id_suffix}"
   description = "Example auto labeling rule"
   location = "us-central1"
   label_key_type = "LABEL_KEY_TYPE_CUSTOM"

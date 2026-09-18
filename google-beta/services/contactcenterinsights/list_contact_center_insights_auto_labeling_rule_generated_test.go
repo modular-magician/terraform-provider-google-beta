@@ -46,11 +46,12 @@ func TestAccContactCenterInsightsAutoLabelingRuleListQuery_generated(t *testing.
 
 	randomSuffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
-		"id_suffix":     strings.ToLower(acctest.RandString(t, 10)),
-		"resource_name": "autolabelingrulebasic" + randomSuffix,
-		"location":      envvar.GetTestRegionFromEnv(),
-		"project":       envvar.GetTestProjectFromEnv(),
-		"random_suffix": randomSuffix,
+		"auto_labeling_rule_id": "tf-test-autolabelingrulebasic" + randomSuffix,
+		"id_suffix":             strings.ToLower(acctest.RandString(t, 10)),
+		"resource_name":         "autolabelingrulebasic" + randomSuffix,
+		"location":              envvar.GetTestRegionFromEnv(),
+		"project":               envvar.GetTestProjectFromEnv(),
+		"random_suffix":         randomSuffix,
 	}
 
 	var listDisplayName acctest.ListDisplayName

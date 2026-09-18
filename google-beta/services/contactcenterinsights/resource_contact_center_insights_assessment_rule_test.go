@@ -105,7 +105,7 @@ func testAccContactCenterInsightsAssessmentRule_full(context map[string]interfac
 	return acctest.Nprintf(`
 resource "google_contact_center_insights_assessment_rule" "assessment_rule_full" {
   display_name = "assessment-rule-display-name-%{random_suffix}"
-  assessment_rule_id = "rule%{random_suffix}"
+  assessment_rule_id = "tf-test-rule%{random_suffix}"
   location = "us-central1"
   sample_rule {
     sample_percentage = 0.5
@@ -124,7 +124,7 @@ func testAccContactCenterInsightsAssessmentRule_update(context map[string]interf
 	return acctest.Nprintf(`
 resource "google_contact_center_insights_assessment_rule" "assessment_rule_full" {
   display_name = "assessment-rule-display-name-%{random_suffix}-updated"
-  assessment_rule_id = "rule%{random_suffix}"
+  assessment_rule_id = "tf-test-rule%{random_suffix}"
   location = "us-central1"
   sample_rule {
     sample_percentage = 0.5
@@ -143,7 +143,7 @@ func testAccContactCenterInsightsAssessmentRule_sampleRow(context map[string]int
 	return acctest.Nprintf(`
 resource "google_contact_center_insights_assessment_rule" "assessment_rule_sample_row" {
   display_name = "assessment-rule-sample-row-%{random_suffix}"
-  assessment_rule_id = "rowrule%{random_suffix}"
+  assessment_rule_id = "tf-test-rowrule%{random_suffix}"
   location = "us-central1"
   sample_rule {
     sample_row          = 10

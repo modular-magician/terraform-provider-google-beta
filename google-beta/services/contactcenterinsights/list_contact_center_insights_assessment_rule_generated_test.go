@@ -46,7 +46,7 @@ func TestAccContactCenterInsightsAssessmentRuleListQuery_generated(t *testing.T)
 
 	randomSuffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
-		"assessment_rule_id": "assessmentrulebasic" + randomSuffix,
+		"assessment_rule_id": "tf-test-assessmentrulebasic" + randomSuffix,
 		"id_suffix":          strings.ToLower(acctest.RandString(t, 10)),
 		"resource_name":      "assessmentrulebasic" + randomSuffix,
 		"location":           envvar.GetTestRegionFromEnv(),
