@@ -34,7 +34,7 @@ func TestAccRuntimeconfigVariable_basic(t *testing.T) {
 
 	var variable runtimeconfig.Variable
 
-	varName := fmt.Sprintf("variable-test-%s", acctest.RandString(t, 10))
+	varName := fmt.Sprintf("tf-test-variable-%s", acctest.RandString(t, 10))
 	varText := "this is my test value"
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -65,8 +65,8 @@ func TestAccRuntimeconfigVariable_basicUpdate(t *testing.T) {
 
 	var variable runtimeconfig.Variable
 
-	configName := fmt.Sprintf("some-name-%s", acctest.RandString(t, 10))
-	varName := fmt.Sprintf("variable-test-%s", acctest.RandString(t, 10))
+	configName := fmt.Sprintf("tf-test-config-%s", acctest.RandString(t, 10))
+	varName := fmt.Sprintf("tf-test-variable-%s", acctest.RandString(t, 10))
 	varText := "this is my test value"
 	varText2 := "this is my updated value"
 
@@ -99,7 +99,7 @@ func TestAccRuntimeconfigVariable_basicValue(t *testing.T) {
 
 	var variable runtimeconfig.Variable
 
-	varName := fmt.Sprintf("variable-test-%s", acctest.RandString(t, 10))
+	varName := fmt.Sprintf("tf-test-variable-%s", acctest.RandString(t, 10))
 	varValue := "Zm9vYmFyCg=="
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -216,7 +216,7 @@ func testAccCheckRuntimeconfigVariableDestroyProducer(t *testing.T) func(s *terr
 func testAccRuntimeconfigVariable_basicText(suffix, name, text string) string {
 	return fmt.Sprintf(`
 resource "google_runtimeconfig_config" "foobar" {
-  name = "some-config-%s"
+  name = "tf-test-config-%s"
 }
 
 resource "google_runtimeconfig_variable" "foobar" {
@@ -244,7 +244,7 @@ resource "google_runtimeconfig_variable" "foobar" {
 func testAccRuntimeconfigVariable_basicValue(suffix, name, value string) string {
 	return fmt.Sprintf(`
 resource "google_runtimeconfig_config" "foobar" {
-  name = "some-config-%s"
+  name = "tf-test-config-%s"
 }
 
 resource "google_runtimeconfig_variable" "foobar" {

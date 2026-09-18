@@ -45,7 +45,7 @@ func TestAccRuntimeconfigConfigDatasource_basic(t *testing.T) {
 func testAccRuntimeconfigDatasourceConfig(suffix string) string {
 	return fmt.Sprintf(`
 resource "google_runtimeconfig_config" "default" {
-	name        = "runtime-%s"
+	name        = "tf-test-runtime-%s"
 	description = "runtime-%s"
 }
 
