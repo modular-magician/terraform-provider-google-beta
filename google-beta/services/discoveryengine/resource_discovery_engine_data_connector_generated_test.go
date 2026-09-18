@@ -76,7 +76,7 @@ func TestAccDiscoveryEngineDataConnector_discoveryengineDataconnectorServicenowB
 				ResourceName:            "google_discovery_engine_data_connector.servicenow-basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"action_config.0.action_params", "action_config.0.create_bap_connection", "auto_run_disabled", "collection_display_name", "collection_id", "incremental_sync_disabled", "json_params", "location", "params", "sync_mode"},
+				ImportStateVerifyIgnore: []string{"action_config.0.action_params", "collection_display_name", "collection_id", "incremental_sync_disabled", "json_params", "location", "params", "sync_mode"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_connector.servicenow-basic",
@@ -164,7 +164,7 @@ func TestAccDiscoveryEngineDataConnector_discoveryengineDataconnectorJiraWithAct
 				ResourceName:            "google_discovery_engine_data_connector.jira-with-actions",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"action_config.0.action_params", "action_config.0.create_bap_connection", "action_state", "auto_run_disabled", "collection_display_name", "collection_id", "errors", "incremental_sync_disabled", "json_params", "location", "params", "state", "sync_mode", "update_time"},
+				ImportStateVerifyIgnore: []string{"action_config.0.action_params", "action_state", "collection_display_name", "collection_id", "errors", "incremental_sync_disabled", "json_params", "location", "params", "state", "sync_mode", "update_time"},
 			},
 			{
 				ResourceName:       "google_discovery_engine_data_connector.jira-with-actions",

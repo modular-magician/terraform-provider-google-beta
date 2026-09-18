@@ -266,6 +266,7 @@ credentials and configuration for the action connector.`,
 						},
 						"create_bap_connection": {
 							Type:     schema.TypeBool,
+							Computed: true,
 							Optional: true,
 							Description: `Whether to create a BAP (Business Application Platform) connection
 for this action connector.`,
@@ -281,6 +282,7 @@ after the action configuration is validated.`,
 			},
 			"auto_run_disabled": {
 				Type:        schema.TypeBool,
+				Computed:    true,
 				Optional:    true,
 				Description: `Indicates whether full syncs are paused for this connector`,
 			},
@@ -1099,7 +1101,8 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 	}
 
 	if d.HasChange("action_config") {
-		updateMask = append(updateMask, "actionConfig")
+		updateMask = append(updateMask, "actionConfig.actionParams",
+			"actionConfig.createBapConnection")
 	}
 
 	if d.HasChange("bap_config") {
@@ -1396,24 +1399,40 @@ func flattenDiscoveryEngineDataConnectorActionConfig(v interface{}, d *schema.Re
 		return nil
 	}
 	transformed := make(map[string]interface{})
-	transformed["action_params"] =
-		flattenDiscoveryEngineDataConnectorActionConfigActionParams(original["actionParams"], d, config)
-	transformed["is_action_configured"] =
-		flattenDiscoveryEngineDataConnectorActionConfigIsActionConfigured(original["isActionConfigured"], d, config)
-	transformed["create_bap_connection"] =
-		flattenDiscoveryEngineDataConnectorActionConfigCreateBapConnection(original["createBapConnection"], d, config)
+
+	// Hydrate non-secret actionParams from API on import; merge prior state secrets on read.
+	if apiParams, ok := original["actionParams"].(map[string]interface{}); ok {
+		merged := make(map[string]interface{}, len(apiParams))
+		for k, val := range apiParams {
+			merged[k] = val
+		}
+		if stateVal := d.Get("action_config.0.action_params"); stateVal != nil {
+			if stateMap, ok := stateVal.(map[string]interface{}); ok {
+				for k, val := range stateMap {
+					if _, existsInAPI := merged[k]; !existsInAPI {
+						merged[k] = val
+					}
+				}
+			}
+		}
+		transformed["action_params"] = merged
+	} else {
+		transformed["action_params"] = d.Get("action_config.0.action_params")
+	}
+
+	transformed["is_action_configured"] = original["isActionConfigured"]
+
+	createBap := original["createBapConnection"]
+	if createBap == nil {
+		if stateVal, ok := d.GetOkExists("action_config.0.create_bap_connection"); ok {
+			createBap = stateVal
+		} else if isConfigured, ok := original["isActionConfigured"].(bool); ok && isConfigured {
+			createBap = true
+		}
+	}
+	transformed["create_bap_connection"] = createBap
+
 	return []interface{}{transformed}
-}
-func flattenDiscoveryEngineDataConnectorActionConfigActionParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("action_config.0.action_params")
-}
-
-func flattenDiscoveryEngineDataConnectorActionConfigIsActionConfigured(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDiscoveryEngineDataConnectorActionConfigCreateBapConnection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("action_config.0.create_bap_connection")
 }
 
 func flattenDiscoveryEngineDataConnectorBapConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1550,6 +1569,10 @@ func flattenDiscoveryEngineDataConnectorConnectorModes(v interface{}, d *schema.
 }
 
 func flattenDiscoveryEngineDataConnectorIncrementalRefreshInterval(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataConnectorAutoRunDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2433,6 +2456,9 @@ func ResourceDiscoveryEngineDataConnectorFlatten(d *schema.ResourceData, meta in
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
 	if err = d.Set("incremental_refresh_interval", flattenDiscoveryEngineDataConnectorIncrementalRefreshInterval(res["incrementalRefreshInterval"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataConnector: %s", err)
+	}
+	if err = d.Set("auto_run_disabled", flattenDiscoveryEngineDataConnectorAutoRunDisabled(res["autoRunDisabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
 	if err = d.Set("tag", flattenDiscoveryEngineDataConnectorTag(res["tag"], d, config)); err != nil {
