@@ -370,7 +370,7 @@ The following arguments are supported:
   Whenever possible, content will be fetched from origin and cached in or
   near the specified origin. Best effort.
   You must specify exactly one FlexShieldingRegion.
-  Each value may be one of: `AFRICA_SOUTH1`, `ME_CENTRAL1`.
+  Each value may be one of: `AFRICA_SOUTH1`, `ME_CENTRAL1`, `EUROPE_WEST3`, `US_EAST5`.
 
 ## Attributes Reference
 

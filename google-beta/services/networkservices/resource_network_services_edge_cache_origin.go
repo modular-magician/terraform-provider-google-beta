@@ -213,12 +213,12 @@ If not set, defaults to a global caching layer in front of the origin.`,
 							Description: `Whenever possible, content will be fetched from origin and cached in or
 near the specified origin. Best effort.
 
-You must specify exactly one FlexShieldingRegion. Possible values: ["AFRICA_SOUTH1", "ME_CENTRAL1"]`,
+You must specify exactly one FlexShieldingRegion. Possible values: ["AFRICA_SOUTH1", "ME_CENTRAL1", "EUROPE_WEST3", "US_EAST5"]`,
 							MinItems: 1,
 							MaxItems: 1,
 							Elem: &schema.Schema{
 								Type:         schema.TypeString,
-								ValidateFunc: verify.ValidateEnum([]string{"AFRICA_SOUTH1", "ME_CENTRAL1"}),
+								ValidateFunc: verify.ValidateEnum([]string{"AFRICA_SOUTH1", "ME_CENTRAL1", "EUROPE_WEST3", "US_EAST5"}),
 							},
 						},
 					},
