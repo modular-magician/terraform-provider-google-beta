@@ -52,7 +52,7 @@ resource "google_alloydb_instance" "default" {
 
 resource "google_alloydb_cluster" "default" {
   cluster_id = "alloydb-cluster"
-  location   = "us-central1"
+  location   = "us-east1"
   network_config {
     network = google_compute_network.default.id
   }
@@ -90,7 +90,7 @@ resource "google_service_networking_connection" "vpc_connection" {
 ```hcl
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "alloydb-primary-cluster"
-  location   = "us-central1"
+  location   = "us-east1"
   network_config {
     network = google_compute_network.default.id
   }
