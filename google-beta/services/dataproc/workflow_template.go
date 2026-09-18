@@ -21,6 +21,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/registry"
@@ -837,6 +838,12 @@ func (r *WorkflowTemplatePlacementManagedClusterConfigMasterConfigDiskConfigAtta
 	} else {
 
 		r.DiskType = res.DiskType
+		if r.DiskType == nil {
+			if t, ok := m["type"].(string); ok && t != "" {
+				dt := strings.ToUpper(strings.ReplaceAll(t, "-", "_"))
+				r.DiskType = &dt
+			}
+		}
 
 		r.DiskSizeGb = res.DiskSizeGb
 
@@ -1283,6 +1290,12 @@ func (r *WorkflowTemplatePlacementManagedClusterConfigWorkerConfigDiskConfigAtta
 	} else {
 
 		r.DiskType = res.DiskType
+		if r.DiskType == nil {
+			if t, ok := m["type"].(string); ok && t != "" {
+				dt := strings.ToUpper(strings.ReplaceAll(t, "-", "_"))
+				r.DiskType = &dt
+			}
+		}
 
 		r.DiskSizeGb = res.DiskSizeGb
 
@@ -1729,6 +1742,12 @@ func (r *WorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerConfigDiskC
 	} else {
 
 		r.DiskType = res.DiskType
+		if r.DiskType == nil {
+			if t, ok := m["type"].(string); ok && t != "" {
+				dt := strings.ToUpper(strings.ReplaceAll(t, "-", "_"))
+				r.DiskType = &dt
+			}
+		}
 
 		r.DiskSizeGb = res.DiskSizeGb
 
