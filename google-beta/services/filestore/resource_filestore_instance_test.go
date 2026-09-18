@@ -95,7 +95,7 @@ func TestAccFilestoreInstance_update(t *testing.T) {
 func testAccFilestoreInstance_update(name string) string {
 	return fmt.Sprintf(`
 resource "google_filestore_instance" "instance" {
-  name        = "tf-instance-%s"
+  name        = "%s"
   zone        = "us-central1-b"
   tier        = "BASIC_HDD"
   description = "An instance created during testing."
@@ -120,7 +120,7 @@ resource "google_filestore_instance" "instance" {
 func testAccFilestoreInstance_update2(name string) string {
 	return fmt.Sprintf(`
 resource "google_filestore_instance" "instance" {
-  name        = "tf-instance-%s"
+  name        = "%s"
   zone        = "us-central1-b"
   tier        = "BASIC_HDD"
   description = "A modified instance created during testing."
@@ -173,7 +173,7 @@ func TestAccFilestoreInstance_reservedIpRange_update(t *testing.T) {
 func testAccFilestoreInstance_reservedIpRange_update(name string) string {
 	return fmt.Sprintf(`
 resource "google_filestore_instance" "instance" {
-  name = "tf-instance-%s"
+  name = "%s"
   zone = "us-central1-b"
   tier = "BASIC_HDD"
 
@@ -194,7 +194,7 @@ resource "google_filestore_instance" "instance" {
 func testAccFilestoreInstance_reservedIpRange_update2(name string) string {
 	return fmt.Sprintf(`
 resource "google_filestore_instance" "instance" {
-  name = "tf-instance-%s"
+  name = "%s"
   zone = "us-central1-b"
   tier = "BASIC_HDD"
 
