@@ -79,7 +79,7 @@ func TestAccVertexAIEndpoint_vertexAiEndpointPrivateServiceConnectExample(t *tes
 				ResourceName:            "google_vertex_ai_endpoint.endpoint",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"etag", "labels", "location", "name", "region", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"enable_private_service_connect", "etag", "labels", "location", "name", "region", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_vertex_ai_endpoint.endpoint",
@@ -145,7 +145,7 @@ func TestAccVertexAIEndpoint_vertexAiEndpointDedicatedEndpointExample(t *testing
 				ResourceName:            "google_vertex_ai_endpoint.endpoint",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"etag", "labels", "location", "name", "region", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"enable_private_service_connect", "etag", "labels", "location", "name", "region", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_vertex_ai_endpoint.endpoint",
@@ -169,6 +169,17 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     label-one = "value-one"
   }
   dedicated_endpoint_enabled = true
+  client_connection_config {
+    inference_timeout = "60s"
+  }
+  gdc_config {
+    zone = "us-central1-a"
+  }
+  gen_ai_advanced_features_config {
+    rag_config {
+      enable_rag = true
+    }
+  }
 }
 
 data "google_project" "project" {}

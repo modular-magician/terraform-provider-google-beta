@@ -159,16 +159,41 @@ func ResourceVertexAIEndpoint() *schema.Resource {
 				ForceNew:    true,
 				Description: `The resource name of the Endpoint. The name must be numeric with no leading zeros and can be at most 10 digits.`,
 			},
+			"client_connection_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Configurations that are applied to the endpoint for online prediction.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"inference_timeout": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Customizable online prediction request timeout.`,
+						},
+					},
+				},
+			},
 			"dedicated_endpoint_enabled": {
 				Type:          schema.TypeBool,
 				Optional:      true,
 				Description:   `If true, the endpoint will be exposed through a dedicated DNS [Endpoint.dedicated_endpoint_dns]. Your request to the dedicated DNS will be isolated from other users' traffic and will have better performance and reliability. Note: Once you enabled dedicated endpoint, you won't be able to send request to the shared DNS {region}-aiplatform.googleapis.com. The limitation will be removed soon.`,
-				ConflictsWith: []string{"private_service_connect_config"},
+				ConflictsWith: []string{"enable_private_service_connect", "private_service_connect_config"},
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `The description of the Endpoint.`,
+			},
+			"enable_private_service_connect": {
+				Type:          schema.TypeBool,
+				Optional:      true,
+				Deprecated:    "`enable_private_service_connect` is deprecated and will be removed in a future major release. Use `private_service_connect_config.enable_private_service_connect` instead.",
+				ForceNew:      true,
+				Description:   `Deprecated: If true, expose the Endpoint via private service connect. Only one of the fields, network or enable_private_service_connect, can be set.`,
+				ConflictsWith: []string{"dedicated_endpoint_enabled", "network", "private_service_connect_config"},
 			},
 			"encryption_spec": {
 				Type:        schema.TypeList,
@@ -187,6 +212,48 @@ func ResourceVertexAIEndpoint() *schema.Resource {
 					},
 				},
 			},
+			"gdc_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Configures the Google Distributed Cloud (GDC) environment for online prediction. Only set this field when the Endpoint is to be deployed in a GDC environment.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"zone": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `GDC zone. A cluster will be designated for the Vertex AI workload in this zone.`,
+						},
+					},
+				},
+			},
+			"gen_ai_advanced_features_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration for GenAiAdvancedFeatures. If the endpoint is serving GenAI models, advanced features like native RAG integration can be configured. Currently, only Model Garden models are supported.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rag_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for Retrieval Augmented Generation feature.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable_rag": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, enable Retrieval Augmented Generation in ChatCompletion request. Once enabled, the endpoint will be identified as GenAI endpoint and Arthedain router will be used.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -201,7 +268,7 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Optional:      true,
 				ForceNew:      true,
 				Description:   `The full name of the Google Compute Engine [network](https://cloud.google.com//compute/docs/networks-and-firewalls#networks) to which the Endpoint should be peered. Private services access must already be configured for the network. If left unspecified, the Endpoint is not peered with any network. Only one of the fields, network or enable_private_service_connect, can be set. [Format](https://cloud.google.com/compute/docs/reference/rest/v1/networks/insert): 'projects/{project}/global/networks/{network}'. Where '{project}' is a project number, as in '12345', and '{network}' is network name. Only one of the fields, 'network' or 'privateServiceConnectConfig', can be set.`,
-				ConflictsWith: []string{"private_service_connect_config"},
+				ConflictsWith: []string{"enable_private_service_connect", "private_service_connect_config"},
 			},
 			"predict_request_response_logging_config": {
 				Type:        schema.TypeList,
@@ -305,7 +372,7 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 						},
 					},
 				},
-				ConflictsWith: []string{"dedicated_endpoint_enabled", "network"},
+				ConflictsWith: []string{"dedicated_endpoint_enabled", "enable_private_service_connect", "network"},
 			},
 			"region": {
 				Type:        schema.TypeString,
@@ -590,6 +657,12 @@ func resourceVertexAIEndpointCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("network"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkProp)) && (ok || !reflect.DeepEqual(v, networkProp)) {
 		obj["network"] = networkProp
 	}
+	enablePrivateServiceConnectProp, err := expandVertexAIEndpointEnablePrivateServiceConnect(d.Get("enable_private_service_connect"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_private_service_connect"); !tpgresource.IsEmptyValue(reflect.ValueOf(enablePrivateServiceConnectProp)) && (ok || !reflect.DeepEqual(v, enablePrivateServiceConnectProp)) {
+		obj["enablePrivateServiceConnect"] = enablePrivateServiceConnectProp
+	}
 	privateServiceConnectConfigProp, err := expandVertexAIEndpointPrivateServiceConnectConfig(d.Get("private_service_connect_config"), d, config)
 	if err != nil {
 		return err
@@ -607,6 +680,24 @@ func resourceVertexAIEndpointCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("dedicated_endpoint_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(dedicatedEndpointEnabledProp)) && (ok || !reflect.DeepEqual(v, dedicatedEndpointEnabledProp)) {
 		obj["dedicatedEndpointEnabled"] = dedicatedEndpointEnabledProp
+	}
+	clientConnectionConfigProp, err := expandVertexAIEndpointClientConnectionConfig(d.Get("client_connection_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("client_connection_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(clientConnectionConfigProp)) && (ok || !reflect.DeepEqual(v, clientConnectionConfigProp)) {
+		obj["clientConnectionConfig"] = clientConnectionConfigProp
+	}
+	gdcConfigProp, err := expandVertexAIEndpointGdcConfig(d.Get("gdc_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("gdc_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(gdcConfigProp)) && (ok || !reflect.DeepEqual(v, gdcConfigProp)) {
+		obj["gdcConfig"] = gdcConfigProp
+	}
+	genAiAdvancedFeaturesConfigProp, err := expandVertexAIEndpointGenAiAdvancedFeaturesConfig(d.Get("gen_ai_advanced_features_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("gen_ai_advanced_features_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(genAiAdvancedFeaturesConfigProp)) && (ok || !reflect.DeepEqual(v, genAiAdvancedFeaturesConfigProp)) {
+		obj["genAiAdvancedFeaturesConfig"] = genAiAdvancedFeaturesConfigProp
 	}
 	effectiveLabelsProp, err := expandVertexAIEndpointEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -866,6 +957,12 @@ func resourceVertexAIEndpointUpdate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("dedicated_endpoint_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dedicatedEndpointEnabledProp)) {
 		obj["dedicatedEndpointEnabled"] = dedicatedEndpointEnabledProp
 	}
+	genAiAdvancedFeaturesConfigProp, err := expandVertexAIEndpointGenAiAdvancedFeaturesConfig(d.Get("gen_ai_advanced_features_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("gen_ai_advanced_features_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, genAiAdvancedFeaturesConfigProp)) {
+		obj["genAiAdvancedFeaturesConfig"] = genAiAdvancedFeaturesConfigProp
+	}
 	effectiveLabelsProp, err := expandVertexAIEndpointEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -904,6 +1001,10 @@ func resourceVertexAIEndpointUpdate(d *schema.ResourceData, meta interface{}) er
 
 	if d.HasChange("dedicated_endpoint_enabled") {
 		updateMask = append(updateMask, "dedicatedEndpointEnabled")
+	}
+
+	if d.HasChange("gen_ai_advanced_features_config") {
+		updateMask = append(updateMask, "genAiAdvancedFeaturesConfig")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -1510,6 +1611,67 @@ func flattenVertexAIEndpointDedicatedEndpointDns(v interface{}, d *schema.Resour
 	return v
 }
 
+func flattenVertexAIEndpointClientConnectionConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["inference_timeout"] =
+		flattenVertexAIEndpointClientConnectionConfigInferenceTimeout(original["inferenceTimeout"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVertexAIEndpointClientConnectionConfigInferenceTimeout(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenVertexAIEndpointGdcConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["zone"] =
+		flattenVertexAIEndpointGdcConfigZone(original["zone"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVertexAIEndpointGdcConfigZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenVertexAIEndpointGenAiAdvancedFeaturesConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["rag_config"] =
+		flattenVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfig(original["ragConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	transformed := make(map[string]interface{})
+	transformed["enable_rag"] =
+		flattenVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfigEnableRag(original["enableRag"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfigEnableRag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenVertexAIEndpointTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1576,6 +1738,10 @@ func expandVertexAIEndpointEncryptionSpecKmsKeyName(v interface{}, d tpgresource
 }
 
 func expandVertexAIEndpointNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVertexAIEndpointEnablePrivateServiceConnect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1792,6 +1958,111 @@ func expandVertexAIEndpointDedicatedEndpointEnabled(v interface{}, d tpgresource
 	return v, nil
 }
 
+func expandVertexAIEndpointClientConnectionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedInferenceTimeout, err := expandVertexAIEndpointClientConnectionConfigInferenceTimeout(original["inference_timeout"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInferenceTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inferenceTimeout"] = transformedInferenceTimeout
+	}
+
+	return transformed, nil
+}
+
+func expandVertexAIEndpointClientConnectionConfigInferenceTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVertexAIEndpointGdcConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedZone, err := expandVertexAIEndpointGdcConfigZone(original["zone"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedZone); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["zone"] = transformedZone
+	}
+
+	return transformed, nil
+}
+
+func expandVertexAIEndpointGdcConfigZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVertexAIEndpointGenAiAdvancedFeaturesConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRagConfig, err := expandVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfig(original["rag_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["ragConfig"] = transformedRagConfig
+	}
+
+	return transformed, nil
+}
+
+func expandVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnableRag, err := expandVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfigEnableRag(original["enable_rag"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["enableRag"] = transformedEnableRag
+	}
+
+	return transformed, nil
+}
+
+func expandVertexAIEndpointGenAiAdvancedFeaturesConfigRagConfigEnableRag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandVertexAIEndpointEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -1846,6 +2117,15 @@ func ResourceVertexAIEndpointFlatten(d *schema.ResourceData, meta interface{}, r
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
 	if err = d.Set("dedicated_endpoint_dns", flattenVertexAIEndpointDedicatedEndpointDns(res["dedicatedEndpointDns"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Endpoint: %s", err)
+	}
+	if err = d.Set("client_connection_config", flattenVertexAIEndpointClientConnectionConfig(res["clientConnectionConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Endpoint: %s", err)
+	}
+	if err = d.Set("gdc_config", flattenVertexAIEndpointGdcConfig(res["gdcConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Endpoint: %s", err)
+	}
+	if err = d.Set("gen_ai_advanced_features_config", flattenVertexAIEndpointGenAiAdvancedFeaturesConfig(res["genAiAdvancedFeaturesConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenVertexAIEndpointTerraformLabels(res["labels"], d, config)); err != nil {

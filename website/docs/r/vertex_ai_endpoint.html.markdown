@@ -153,6 +153,17 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     label-one = "value-one"
   }
   dedicated_endpoint_enabled = true
+  client_connection_config {
+    inference_timeout = "60s"
+  }
+  gdc_config {
+    zone = "us-central1-a"
+  }
+  gen_ai_advanced_features_config {
+    rag_config {
+      enable_rag = true
+    }
+  }
 }
 
 data "google_project" "project" {}
@@ -204,6 +215,12 @@ The following arguments are supported:
   (Optional)
   The full name of the Google Compute Engine [network](https://cloud.google.com//compute/docs/networks-and-firewalls#networks) to which the Endpoint should be peered. Private services access must already be configured for the network. If left unspecified, the Endpoint is not peered with any network. Only one of the fields, network or enable_private_service_connect, can be set. [Format](https://cloud.google.com/compute/docs/reference/rest/v1/networks/insert): `projects/{project}/global/networks/{network}`. Where `{project}` is a project number, as in `12345`, and `{network}` is network name. Only one of the fields, `network` or `privateServiceConnectConfig`, can be set.
 
+* `enable_private_service_connect` -
+  (Optional, Deprecated)
+  Deprecated: If true, expose the Endpoint via private service connect. Only one of the fields, network or enable_private_service_connect, can be set.
+
+  ~> **Warning:** `enable_private_service_connect` is deprecated and will be removed in a future major release. Use `private_service_connect_config.enable_private_service_connect` instead.
+
 * `private_service_connect_config` -
   (Optional)
   Configuration for private service connect. `network` and `privateServiceConnectConfig` are mutually exclusive.
@@ -217,6 +234,21 @@ The following arguments are supported:
 * `dedicated_endpoint_enabled` -
   (Optional)
   If true, the endpoint will be exposed through a dedicated DNS [Endpoint.dedicated_endpoint_dns]. Your request to the dedicated DNS will be isolated from other users' traffic and will have better performance and reliability. Note: Once you enabled dedicated endpoint, you won't be able to send request to the shared DNS {region}-aiplatform.googleapis.com. The limitation will be removed soon.
+
+* `client_connection_config` -
+  (Optional)
+  Configurations that are applied to the endpoint for online prediction.
+  Structure is [documented below](#nested_client_connection_config).
+
+* `gdc_config` -
+  (Optional)
+  Configures the Google Distributed Cloud (GDC) environment for online prediction. Only set this field when the Endpoint is to be deployed in a GDC environment.
+  Structure is [documented below](#nested_gdc_config).
+
+* `gen_ai_advanced_features_config` -
+  (Optional)
+  Configuration for GenAiAdvancedFeatures. If the endpoint is serving GenAI models, advanced features like native RAG integration can be configured. Currently, only Model Garden models are supported.
+  Structure is [documented below](#nested_gen_ai_advanced_features_config).
 
 * `region` -
   (Optional)
@@ -306,6 +338,32 @@ The following arguments are supported:
 * `output_uri` -
   (Optional)
   BigQuery URI to a project or table, up to 2000 characters long. When only the project is specified, the Dataset and Table is created. When the full table reference is specified, the Dataset must exist and table must not exist. Accepted forms: - BigQuery path. For example: `bq://projectId` or `bq://projectId.bqDatasetId` or `bq://projectId.bqDatasetId.bqTableId`.
+
+<a name="nested_client_connection_config"></a>The `client_connection_config` block supports:
+
+* `inference_timeout` -
+  (Optional)
+  Customizable online prediction request timeout.
+
+<a name="nested_gdc_config"></a>The `gdc_config` block supports:
+
+* `zone` -
+  (Optional)
+  GDC zone. A cluster will be designated for the Vertex AI workload in this zone.
+
+<a name="nested_gen_ai_advanced_features_config"></a>The `gen_ai_advanced_features_config` block supports:
+
+* `rag_config` -
+  (Optional)
+  Configuration for Retrieval Augmented Generation feature.
+  Structure is [documented below](#nested_gen_ai_advanced_features_config_rag_config).
+
+
+<a name="nested_gen_ai_advanced_features_config_rag_config"></a>The `rag_config` block supports:
+
+* `enable_rag` -
+  (Optional)
+  If true, enable Retrieval Augmented Generation in ChatCompletion request. Once enabled, the endpoint will be identified as GenAI endpoint and Arthedain router will be used.
 
 ## Attributes Reference
 
