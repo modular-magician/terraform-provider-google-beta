@@ -43,7 +43,7 @@ To get more information about RepositoryWorkflowConfig, see:
 ```hcl
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name     = "my/repository"
+  name     = "my-repository"
 }
 
 resource "google_secret_manager_secret" "secret" {
@@ -154,7 +154,7 @@ resource "google_dataform_repository_workflow_config" "workflow" {
 ```hcl
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name     = "my/repository"
+  name     = "my-repository"
 }
 
 resource "google_secret_manager_secret" "secret" {

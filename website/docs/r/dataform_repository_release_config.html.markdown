@@ -43,7 +43,7 @@ To get more information about RepositoryReleaseConfig, see:
 ```hcl
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name     = "my/repository"
+  name     = "my-repository"
 }
 
 resource "google_secret_manager_secret" "secret" {
@@ -117,7 +117,7 @@ resource "google_dataform_repository_release_config" "release" {
 ```hcl
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name     = "my/repository"
+  name     = "my-repository"
 }
 
 resource "google_secret_manager_secret" "secret" {
