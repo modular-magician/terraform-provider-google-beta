@@ -272,7 +272,7 @@ resource "google_network_services_agent_connectivity_template" "default" {
     vpc_egress = "ALL_TRAFFIC"
     network_attachment = google_compute_network_attachment.default.id
     dns_peering_config {
-      domain         = google_dns_managed_zone.default.dns_name
+      domains        = [google_dns_managed_zone.default.dns_name]
       target_network = google_compute_network.default.id
     }
   }
@@ -332,7 +332,9 @@ resource "google_network_services_agent_connectivity_template" "default" {
     vpc_egress = "PRIVATE_RANGES_ONLY"
     network_attachment = google_compute_network_attachment.default.id
     dns_peering_config {
+      # domain is deprecated but still supported; the API merges it with domains.
       domain         = google_dns_managed_zone.default.dns_name
+      domains        = ["sub.example.com."]
       target_network = google_compute_network.default.id
     }
   }
