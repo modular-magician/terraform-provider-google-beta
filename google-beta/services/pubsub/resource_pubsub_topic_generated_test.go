@@ -160,7 +160,7 @@ func TestAccPubsubTopic_pubsubTopicSchemaSettingsExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"project_name":  envvar.GetTestProjectFromEnv(),
-		"schema_name":   "example" + randomSuffix,
+		"schema_name":   "tf-test-example-schema" + randomSuffix,
 		"topic_name":    "tf-test-example-topic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
