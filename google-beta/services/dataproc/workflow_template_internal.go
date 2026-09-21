@@ -14507,7 +14507,8 @@ func expandWorkflowTemplatePlacementManagedClusterConfigMasterConfigDiskConfigAt
 
 	m := make(map[string]interface{})
 	if v := f.DiskType; !dcl.IsEmptyValueIndirect(v) {
-		m["diskType"] = v
+		t := normalizeAttachedDiskType(*v)
+		m["type"] = &t
 	}
 	if v := f.DiskSizeGb; !dcl.IsEmptyValueIndirect(v) {
 		m["diskSizeGb"] = v
@@ -14535,7 +14536,7 @@ func flattenWorkflowTemplatePlacementManagedClusterConfigMasterConfigDiskConfigA
 	if dcl.IsEmptyValueIndirect(i) {
 		return EmptyWorkflowTemplatePlacementManagedClusterConfigMasterConfigDiskConfigAttachedDiskConfig
 	}
-	r.DiskType = dcl.FlattenString(m["diskType"])
+	r.DiskType = dcl.FlattenString(m["type"])
 	r.DiskSizeGb = dcl.FlattenInteger(m["diskSizeGb"])
 	r.ProvisionedIops = dcl.FlattenInteger(m["provisionedIops"])
 	r.ProvisionedThroughput = dcl.FlattenInteger(m["provisionedThroughput"])
@@ -15544,7 +15545,8 @@ func expandWorkflowTemplatePlacementManagedClusterConfigWorkerConfigDiskConfigAt
 
 	m := make(map[string]interface{})
 	if v := f.DiskType; !dcl.IsEmptyValueIndirect(v) {
-		m["diskType"] = v
+		t := normalizeAttachedDiskType(*v)
+		m["type"] = &t
 	}
 	if v := f.DiskSizeGb; !dcl.IsEmptyValueIndirect(v) {
 		m["diskSizeGb"] = v
@@ -15572,7 +15574,7 @@ func flattenWorkflowTemplatePlacementManagedClusterConfigWorkerConfigDiskConfigA
 	if dcl.IsEmptyValueIndirect(i) {
 		return EmptyWorkflowTemplatePlacementManagedClusterConfigWorkerConfigDiskConfigAttachedDiskConfig
 	}
-	r.DiskType = dcl.FlattenString(m["diskType"])
+	r.DiskType = dcl.FlattenString(m["type"])
 	r.DiskSizeGb = dcl.FlattenInteger(m["diskSizeGb"])
 	r.ProvisionedIops = dcl.FlattenInteger(m["provisionedIops"])
 	r.ProvisionedThroughput = dcl.FlattenInteger(m["provisionedThroughput"])
@@ -16417,7 +16419,8 @@ func expandWorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerConfigDis
 
 	m := make(map[string]interface{})
 	if v := f.DiskType; !dcl.IsEmptyValueIndirect(v) {
-		m["diskType"] = v
+		t := normalizeAttachedDiskType(*v)
+		m["type"] = &t
 	}
 	if v := f.DiskSizeGb; !dcl.IsEmptyValueIndirect(v) {
 		m["diskSizeGb"] = v
@@ -16445,7 +16448,7 @@ func flattenWorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerConfigDi
 	if dcl.IsEmptyValueIndirect(i) {
 		return EmptyWorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerConfigDiskConfigAttachedDiskConfig
 	}
-	r.DiskType = dcl.FlattenString(m["diskType"])
+	r.DiskType = dcl.FlattenString(m["type"])
 	r.DiskSizeGb = dcl.FlattenInteger(m["diskSizeGb"])
 	r.ProvisionedIops = dcl.FlattenInteger(m["provisionedIops"])
 	r.ProvisionedThroughput = dcl.FlattenInteger(m["provisionedThroughput"])

@@ -1660,11 +1660,12 @@ func DataprocWorkflowTemplatePlacementManagedClusterConfigMasterConfigDiskConfig
 			},
 
 			"disk_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Optional. The disk type of the attached disk. Currently only supports Hyperdisks: `hyperdisk-balanced`, `hyperdisk-extreme`, `hyperdisk-ml`, `hyperdisk-throughput`.",
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: AttachedDiskTypeDiffSuppress,
+				Description:      "Optional. The disk type of the attached disk. Currently only supports Hyperdisks: `hyperdisk-balanced`, `hyperdisk-extreme`, `hyperdisk-ml`, `hyperdisk-throughput`.",
 			},
 
 			"provisioned_iops": {
@@ -1987,11 +1988,12 @@ func DataprocWorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerConfigD
 			},
 
 			"disk_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Optional. The disk type of the attached disk. Currently only supports Hyperdisks: `hyperdisk-balanced`, `hyperdisk-extreme`, `hyperdisk-ml`, `hyperdisk-throughput`.",
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: AttachedDiskTypeDiffSuppress,
+				Description:      "Optional. The disk type of the attached disk. Currently only supports Hyperdisks: `hyperdisk-balanced`, `hyperdisk-extreme`, `hyperdisk-ml`, `hyperdisk-throughput`.",
 			},
 
 			"provisioned_iops": {
@@ -2495,11 +2497,12 @@ func DataprocWorkflowTemplatePlacementManagedClusterConfigWorkerConfigDiskConfig
 			},
 
 			"disk_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Optional. The disk type of the attached disk. Currently only supports Hyperdisks: `hyperdisk-balanced`, `hyperdisk-extreme`, `hyperdisk-ml`, `hyperdisk-throughput`.",
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: AttachedDiskTypeDiffSuppress,
+				Description:      "Optional. The disk type of the attached disk. Currently only supports Hyperdisks: `hyperdisk-balanced`, `hyperdisk-extreme`, `hyperdisk-ml`, `hyperdisk-throughput`.",
 			},
 
 			"provisioned_iops": {
@@ -4307,7 +4310,7 @@ func expandDataprocWorkflowTemplatePlacementManagedClusterConfigMasterConfigDisk
 	obj := o.(map[string]interface{})
 	return &WorkflowTemplatePlacementManagedClusterConfigMasterConfigDiskConfigAttachedDiskConfig{
 		DiskSizeGb:            dcl.Int64OrNil(int64(obj["disk_size_gb"].(int))),
-		DiskType:              dcl.StringOrNil(obj["disk_type"].(string)),
+		DiskType:              dcl.StringOrNil(normalizeAttachedDiskType(obj["disk_type"].(string))),
 		ProvisionedIops:       dcl.Int64OrNil(int64(obj["provisioned_iops"].(int))),
 		ProvisionedThroughput: dcl.Int64OrNil(int64(obj["provisioned_throughput"].(int))),
 	}
@@ -4677,7 +4680,7 @@ func expandDataprocWorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerC
 	obj := o.(map[string]interface{})
 	return &WorkflowTemplatePlacementManagedClusterConfigSecondaryWorkerConfigDiskConfigAttachedDiskConfig{
 		DiskSizeGb:            dcl.Int64OrNil(int64(obj["disk_size_gb"].(int))),
-		DiskType:              dcl.StringOrNil(obj["disk_type"].(string)),
+		DiskType:              dcl.StringOrNil(normalizeAttachedDiskType(obj["disk_type"].(string))),
 		ProvisionedIops:       dcl.Int64OrNil(int64(obj["provisioned_iops"].(int))),
 		ProvisionedThroughput: dcl.Int64OrNil(int64(obj["provisioned_throughput"].(int))),
 	}
@@ -5161,7 +5164,7 @@ func expandDataprocWorkflowTemplatePlacementManagedClusterConfigWorkerConfigDisk
 	obj := o.(map[string]interface{})
 	return &WorkflowTemplatePlacementManagedClusterConfigWorkerConfigDiskConfigAttachedDiskConfig{
 		DiskSizeGb:            dcl.Int64OrNil(int64(obj["disk_size_gb"].(int))),
-		DiskType:              dcl.StringOrNil(obj["disk_type"].(string)),
+		DiskType:              dcl.StringOrNil(normalizeAttachedDiskType(obj["disk_type"].(string))),
 		ProvisionedIops:       dcl.Int64OrNil(int64(obj["provisioned_iops"].(int))),
 		ProvisionedThroughput: dcl.Int64OrNil(int64(obj["provisioned_throughput"].(int))),
 	}
