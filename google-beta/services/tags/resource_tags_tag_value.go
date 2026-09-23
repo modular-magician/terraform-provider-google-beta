@@ -600,21 +600,27 @@ func ResourceTagsTagValueFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("name", flattenTagsTagValueName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}
+
 	if err = d.Set("parent", flattenTagsTagValueParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}
+
 	if err = d.Set("short_name", flattenTagsTagValueShortName(res["shortName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}
+
 	if err = d.Set("namespaced_name", flattenTagsTagValueNamespacedName(res["namespacedName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}
+
 	if err = d.Set("description", flattenTagsTagValueDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenTagsTagValueCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenTagsTagValueUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagValue: %s", err)
 	}

@@ -1164,36 +1164,47 @@ func ResourceSecurityScannerScanConfigFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("name", flattenSecurityScannerScanConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityScannerScanConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("max_qps", flattenSecurityScannerScanConfigMaxQps(res["maxQps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("starting_urls", flattenSecurityScannerScanConfigStartingUrls(res["startingUrls"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("authentication", flattenSecurityScannerScanConfigAuthentication(res["authentication"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("user_agent", flattenSecurityScannerScanConfigUserAgent(res["userAgent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("blacklist_patterns", flattenSecurityScannerScanConfigBlacklistPatterns(res["blacklistPatterns"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("schedule", flattenSecurityScannerScanConfigSchedule(res["schedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("target_platforms", flattenSecurityScannerScanConfigTargetPlatforms(res["targetPlatforms"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("export_to_security_command_center", flattenSecurityScannerScanConfigExportToSecurityCommandCenter(res["exportToSecurityCommandCenter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("ignore_http_status_errors", flattenSecurityScannerScanConfigIgnoreHttpStatusErrors(res["ignoreHttpStatusErrors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+
 	if err = d.Set("static_ip_scan", flattenSecurityScannerScanConfigStaticIpScan(res["staticIpScan"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}

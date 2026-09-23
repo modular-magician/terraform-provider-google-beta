@@ -1779,36 +1779,47 @@ func ResourceMigrationCenterImportJobFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("asset_source", flattenMigrationCenterImportJobAssetSource(res["assetSource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("complete_time", flattenMigrationCenterImportJobCompleteTime(res["completeTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenMigrationCenterImportJobCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterImportJobDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("execution_report", flattenMigrationCenterImportJobExecutionReport(res["executionReport"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("labels", flattenMigrationCenterImportJobLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterImportJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("state", flattenMigrationCenterImportJobState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterImportJobUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("validation_report", flattenMigrationCenterImportJobValidationReport(res["validationReport"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenMigrationCenterImportJobTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenMigrationCenterImportJobEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportJob: %s", err)
 	}

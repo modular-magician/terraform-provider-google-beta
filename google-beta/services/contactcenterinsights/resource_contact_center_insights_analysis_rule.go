@@ -1197,24 +1197,31 @@ func ResourceContactCenterInsightsAnalysisRuleFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenContactCenterInsightsAnalysisRuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenContactCenterInsightsAnalysisRuleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenContactCenterInsightsAnalysisRuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenContactCenterInsightsAnalysisRuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("conversation_filter", flattenContactCenterInsightsAnalysisRuleConversationFilter(res["conversationFilter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("annotator_selector", flattenContactCenterInsightsAnalysisRuleAnnotatorSelector(res["annotatorSelector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("analysis_percentage", flattenContactCenterInsightsAnalysisRuleAnalysisPercentage(res["analysisPercentage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}
+
 	if err = d.Set("active", flattenContactCenterInsightsAnalysisRuleActive(res["active"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalysisRule: %s", err)
 	}

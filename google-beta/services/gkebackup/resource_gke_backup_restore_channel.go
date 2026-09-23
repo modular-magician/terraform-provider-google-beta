@@ -728,27 +728,35 @@ func ResourceGKEBackupRestoreChannelFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenGKEBackupRestoreChannelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEBackupRestoreChannelUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("destination_project", flattenGKEBackupRestoreChannelDestinationProject(res["destinationProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("description", flattenGKEBackupRestoreChannelDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEBackupRestoreChannelLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("etag", flattenGKEBackupRestoreChannelEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("destination_project_id", flattenGKEBackupRestoreChannelDestinationProjectId(res["destinationProjectId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEBackupRestoreChannelTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEBackupRestoreChannelEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RestoreChannel: %s", err)
 	}

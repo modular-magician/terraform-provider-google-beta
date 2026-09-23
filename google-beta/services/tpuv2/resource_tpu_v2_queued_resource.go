@@ -901,6 +901,7 @@ func ResourceTpuV2QueuedResourceFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenTpuV2QueuedResourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueuedResource: %s", err)
 	}
+
 	if err = d.Set("tpu", flattenTpuV2QueuedResourceTpu(res["tpu"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueuedResource: %s", err)
 	}

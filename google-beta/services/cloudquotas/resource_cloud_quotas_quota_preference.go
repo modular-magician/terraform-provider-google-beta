@@ -829,27 +829,35 @@ func ResourceCloudQuotasQuotaPreferenceFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("name", flattenCloudQuotasQuotaPreferenceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("service", flattenCloudQuotasQuotaPreferenceService(res["service"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("quota_id", flattenCloudQuotasQuotaPreferenceQuotaId(res["quotaId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("quota_config", flattenCloudQuotasQuotaPreferenceQuotaConfig(res["quotaConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("dimensions", flattenCloudQuotasQuotaPreferenceDimensions(res["dimensions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCloudQuotasQuotaPreferenceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCloudQuotasQuotaPreferenceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCloudQuotasQuotaPreferenceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenCloudQuotasQuotaPreferenceReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaPreference: %s", err)
 	}

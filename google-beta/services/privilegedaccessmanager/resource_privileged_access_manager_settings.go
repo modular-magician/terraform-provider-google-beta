@@ -1057,18 +1057,23 @@ func ResourcePrivilegedAccessManagerSettingsFlatten(d *schema.ResourceData, meta
 	if err = d.Set("name", flattenPrivilegedAccessManagerSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenPrivilegedAccessManagerSettingsCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenPrivilegedAccessManagerSettingsUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("etag", flattenPrivilegedAccessManagerSettingsEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("service_account_approver_settings", flattenPrivilegedAccessManagerSettingsServiceAccountApproverSettings(res["serviceAccountApproverSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("email_notification_settings", flattenPrivilegedAccessManagerSettingsEmailNotificationSettings(res["emailNotificationSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}

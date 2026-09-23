@@ -682,6 +682,7 @@ func ResourcePubsubLiteSubscriptionFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("topic", flattenPubsubLiteSubscriptionTopic(res["topic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+
 	if err = d.Set("delivery_config", flattenPubsubLiteSubscriptionDeliveryConfig(res["deliveryConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}

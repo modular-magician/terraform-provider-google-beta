@@ -699,15 +699,19 @@ func ResourceMonitoringServiceFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenMonitoringServiceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringServiceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("user_labels", flattenMonitoringServiceUserLabels(res["userLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("telemetry", flattenMonitoringServiceTelemetry(res["telemetry"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("service_id", flattenMonitoringServiceServiceId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}

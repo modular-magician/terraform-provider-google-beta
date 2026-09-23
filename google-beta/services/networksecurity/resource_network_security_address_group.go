@@ -779,30 +779,39 @@ func ResourceNetworkSecurityAddressGroupFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("description", flattenNetworkSecurityAddressGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityAddressGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityAddressGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityAddressGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("type", flattenNetworkSecurityAddressGroupType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("items", flattenNetworkSecurityAddressGroupItems(res["items"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("capacity", flattenNetworkSecurityAddressGroupCapacity(res["capacity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("purpose", flattenNetworkSecurityAddressGroupPurpose(res["purpose"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityAddressGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityAddressGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AddressGroup: %s", err)
 	}

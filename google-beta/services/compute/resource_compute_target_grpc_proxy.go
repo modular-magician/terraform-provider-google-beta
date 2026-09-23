@@ -654,21 +654,27 @@ func ResourceComputeTargetGrpcProxyFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("creation_timestamp", flattenComputeTargetGrpcProxyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeTargetGrpcProxyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeTargetGrpcProxyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeTargetGrpcProxySelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}
+
 	if err = d.Set("url_map", flattenComputeTargetGrpcProxyUrlMap(res["urlMap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}
+
 	if err = d.Set("validate_for_proxyless", flattenComputeTargetGrpcProxyValidateForProxyless(res["validateForProxyless"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeTargetGrpcProxyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetGrpcProxy: %s", err)
 	}

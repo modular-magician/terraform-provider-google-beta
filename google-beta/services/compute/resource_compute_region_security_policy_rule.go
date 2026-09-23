@@ -2278,24 +2278,31 @@ func ResourceComputeRegionSecurityPolicyRuleFlatten(d *schema.ResourceData, meta
 	if err = d.Set("description", flattenComputeRegionSecurityPolicyRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeRegionSecurityPolicyRulePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("match", flattenComputeRegionSecurityPolicyRuleMatch(res["match"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("preconfigured_waf_config", flattenComputeRegionSecurityPolicyRulePreconfiguredWafConfig(res["preconfiguredWafConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("action", flattenComputeRegionSecurityPolicyRuleAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("rate_limit_options", flattenComputeRegionSecurityPolicyRuleRateLimitOptions(res["rateLimitOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("preview", flattenComputeRegionSecurityPolicyRulePreview(res["preview"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("network_match", flattenComputeRegionSecurityPolicyRuleNetworkMatch(res["networkMatch"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSecurityPolicyRule: %s", err)
 	}

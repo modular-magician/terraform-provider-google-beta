@@ -1363,18 +1363,23 @@ func ResourceStorageInsightsReportConfigFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenStorageInsightsReportConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("frequency_options", flattenStorageInsightsReportConfigFrequencyOptions(res["frequencyOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("parquet_options", flattenStorageInsightsReportConfigParquetOptions(res["parquetOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("csv_options", flattenStorageInsightsReportConfigCsvOptions(res["csvOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("object_metadata_report_options", flattenStorageInsightsReportConfigObjectMetadataReportOptions(res["objectMetadataReportOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenStorageInsightsReportConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}

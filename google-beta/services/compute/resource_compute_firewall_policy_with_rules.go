@@ -2342,33 +2342,43 @@ func ResourceComputeFirewallPolicyWithRulesFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("creation_timestamp", flattenComputeFirewallPolicyWithRulesCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("short_name", flattenComputeFirewallPolicyWithRulesShortName(res["shortName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("policy_id", flattenComputeFirewallPolicyWithRulesPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeFirewallPolicyWithRulesDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("rule", flattenComputeFirewallPolicyWithRulesRule(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("predefined_rules", flattenComputeFirewallPolicyWithRulesPredefinedRules(res["predefinedRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeFirewallPolicyWithRulesFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenComputeFirewallPolicyWithRulesSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeFirewallPolicyWithRulesSelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("rule_tuple_count", flattenComputeFirewallPolicyWithRulesRuleTupleCount(res["ruleTupleCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}
+
 	if err = d.Set("parent", flattenComputeFirewallPolicyWithRulesParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicyWithRules: %s", err)
 	}

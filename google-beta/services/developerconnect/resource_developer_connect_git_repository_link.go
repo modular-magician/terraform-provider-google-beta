@@ -694,39 +694,51 @@ func ResourceDeveloperConnectGitRepositoryLinkFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenDeveloperConnectGitRepositoryLinkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("clone_uri", flattenDeveloperConnectGitRepositoryLinkCloneUri(res["cloneUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDeveloperConnectGitRepositoryLinkCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDeveloperConnectGitRepositoryLinkUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenDeveloperConnectGitRepositoryLinkDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDeveloperConnectGitRepositoryLinkLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("etag", flattenDeveloperConnectGitRepositoryLinkEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenDeveloperConnectGitRepositoryLinkReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenDeveloperConnectGitRepositoryLinkAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDeveloperConnectGitRepositoryLinkUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDeveloperConnectGitRepositoryLinkTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDeveloperConnectGitRepositoryLinkEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenDeveloperConnectGitRepositoryLinkEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}

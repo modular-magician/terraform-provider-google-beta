@@ -1640,6 +1640,7 @@ func ResourceIapSettingsFlatten(d *schema.ResourceData, meta interface{}, res ma
 	if err = d.Set("access_settings", flattenIapSettingsAccessSettings(res["accessSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("application_settings", flattenIapSettingsApplicationSettings(res["applicationSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}

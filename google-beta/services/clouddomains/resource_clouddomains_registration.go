@@ -2111,42 +2111,55 @@ func ResourceClouddomainsRegistrationFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenClouddomainsRegistrationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenClouddomainsRegistrationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenClouddomainsRegistrationExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("state", flattenClouddomainsRegistrationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("issues", flattenClouddomainsRegistrationIssues(res["issues"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("labels", flattenClouddomainsRegistrationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("supported_privacy", flattenClouddomainsRegistrationSupportedPrivacy(res["supportedPrivacy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("register_failure_reason", flattenClouddomainsRegistrationRegisterFailureReason(res["registerFailureReason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("management_settings", flattenClouddomainsRegistrationManagementSettings(res["managementSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("dns_settings", flattenClouddomainsRegistrationDnsSettings(res["dnsSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("contact_settings", flattenClouddomainsRegistrationContactSettings(res["contactSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenClouddomainsRegistrationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenClouddomainsRegistrationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}
+
 	if err = d.Set("domain_name", flattenClouddomainsRegistrationDomainName(res["domainName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Registration: %s", err)
 	}

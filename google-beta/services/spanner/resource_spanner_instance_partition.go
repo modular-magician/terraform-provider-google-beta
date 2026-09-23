@@ -1197,21 +1197,27 @@ func ResourceSpannerInstancePartitionFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenSpannerInstancePartitionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSpannerInstancePartitionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+
 	if err = d.Set("node_count", flattenSpannerInstancePartitionNodeCount(res["nodeCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+
 	if err = d.Set("processing_units", flattenSpannerInstancePartitionProcessingUnits(res["processingUnits"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+
 	if err = d.Set("autoscaling_config", flattenSpannerInstancePartitionAutoscalingConfig(res["autoscalingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+
 	if err = d.Set("config", flattenSpannerInstancePartitionConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+
 	if err = d.Set("state", flattenSpannerInstancePartitionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}

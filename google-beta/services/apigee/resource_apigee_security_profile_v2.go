@@ -547,15 +547,19 @@ func ResourceApigeeSecurityProfileV2Flatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenApigeeSecurityProfileV2Name(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileV2: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeSecurityProfileV2Description(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileV2: %s", err)
 	}
+
 	if err = d.Set("profile_assessment_configs", flattenApigeeSecurityProfileV2ProfileAssessmentConfigs(res["profileAssessmentConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileV2: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApigeeSecurityProfileV2CreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileV2: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApigeeSecurityProfileV2UpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileV2: %s", err)
 	}

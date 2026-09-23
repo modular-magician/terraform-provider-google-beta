@@ -505,15 +505,19 @@ func ResourceStorageManagedFolderFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("create_time", flattenStorageManagedFolderCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedFolder: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageManagedFolderUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedFolder: %s", err)
 	}
+
 	if err = d.Set("metageneration", flattenStorageManagedFolderMetageneration(res["metageneration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedFolder: %s", err)
 	}
+
 	if err = d.Set("bucket", flattenStorageManagedFolderBucket(res["bucket"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedFolder: %s", err)
 	}
+
 	if err = d.Set("name", flattenStorageManagedFolderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedFolder: %s", err)
 	}

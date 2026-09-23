@@ -633,12 +633,15 @@ func ResourceChronicleCaseCloseDefinitionFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("close_reason", flattenChronicleCaseCloseDefinitionCloseReason(res["closeReason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseCloseDefinition: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleCaseCloseDefinitionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseCloseDefinition: %s", err)
 	}
+
 	if err = d.Set("root_cause", flattenChronicleCaseCloseDefinitionRootCause(res["rootCause"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseCloseDefinition: %s", err)
 	}
+
 	if err = d.Set("case_close_definition_id", flattenChronicleCaseCloseDefinitionCaseCloseDefinitionId(res["caseCloseDefinitionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseCloseDefinition: %s", err)
 	}

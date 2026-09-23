@@ -1195,36 +1195,47 @@ func ResourceGkeonpremBareMetalNodePoolFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("display_name", flattenGkeonpremBareMetalNodePoolDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenGkeonpremBareMetalNodePoolAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("node_pool_config", flattenGkeonpremBareMetalNodePoolNodePoolConfig(res["nodePoolConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("status", flattenGkeonpremBareMetalNodePoolStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGkeonpremBareMetalNodePoolUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("state", flattenGkeonpremBareMetalNodePoolState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenGkeonpremBareMetalNodePoolReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGkeonpremBareMetalNodePoolCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGkeonpremBareMetalNodePoolUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGkeonpremBareMetalNodePoolDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("etag", flattenGkeonpremBareMetalNodePoolEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenGkeonpremBareMetalNodePoolEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BareMetalNodePool: %s", err)
 	}

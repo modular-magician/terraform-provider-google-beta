@@ -671,18 +671,23 @@ func ResourceChronicleDataTableRowFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("create_time", flattenChronicleDataTableRowCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataTableRow: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleDataTableRowName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataTableRow: %s", err)
 	}
+
 	if err = d.Set("row_time_to_live", flattenChronicleDataTableRowRowTimeToLive(res["rowTimeToLive"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataTableRow: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleDataTableRowUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataTableRow: %s", err)
 	}
+
 	if err = d.Set("values", flattenChronicleDataTableRowValues(res["values"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataTableRow: %s", err)
 	}
+
 	if err = d.Set("data_table_row", flattenChronicleDataTableRowDataTableRow(res["dataTableRow"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataTableRow: %s", err)
 	}

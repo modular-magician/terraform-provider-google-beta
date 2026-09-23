@@ -1035,15 +1035,19 @@ func ResourceDialogflowCXGeneratorFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenDialogflowCXGeneratorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXGeneratorDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
+
 	if err = d.Set("llm_model_settings", flattenDialogflowCXGeneratorLlmModelSettings(res["llmModelSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
+
 	if err = d.Set("model_parameter", flattenDialogflowCXGeneratorModelParameter(res["modelParameter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
+
 	if err = d.Set("placeholders", flattenDialogflowCXGeneratorPlaceholders(res["placeholders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}

@@ -597,21 +597,27 @@ func ResourceVmwareengineExternalAddressFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("create_time", flattenVmwareengineExternalAddressCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVmwareengineExternalAddressUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}
+
 	if err = d.Set("internal_ip", flattenVmwareengineExternalAddressInternalIp(res["internalIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}
+
 	if err = d.Set("external_ip", flattenVmwareengineExternalAddressExternalIp(res["externalIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}
+
 	if err = d.Set("state", flattenVmwareengineExternalAddressState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}
+
 	if err = d.Set("uid", flattenVmwareengineExternalAddressUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}
+
 	if err = d.Set("description", flattenVmwareengineExternalAddressDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalAddress: %s", err)
 	}

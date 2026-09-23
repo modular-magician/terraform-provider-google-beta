@@ -864,21 +864,27 @@ func ResourceCertificateManagerDnsAuthorizationFlatten(d *schema.ResourceData, m
 	if err = d.Set("description", flattenCertificateManagerDnsAuthorizationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}
+
 	if err = d.Set("labels", flattenCertificateManagerDnsAuthorizationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}
+
 	if err = d.Set("domain", flattenCertificateManagerDnsAuthorizationDomain(res["domain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}
+
 	if err = d.Set("type", flattenCertificateManagerDnsAuthorizationType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}
+
 	if err = d.Set("dns_resource_record", flattenCertificateManagerDnsAuthorizationDnsResourceRecord(res["dnsResourceRecord"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenCertificateManagerDnsAuthorizationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenCertificateManagerDnsAuthorizationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsAuthorization: %s", err)
 	}

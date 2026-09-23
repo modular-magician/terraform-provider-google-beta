@@ -540,6 +540,7 @@ func ResourceTagsTagBindingFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenTagsTagBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagBinding: %s", err)
 	}
+
 	if err = d.Set("parent", flattenTagsTagBindingParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagBinding: %s", err)
 	}

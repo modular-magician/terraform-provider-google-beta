@@ -640,12 +640,15 @@ func ResourceLoggingLogViewFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("description", flattenLoggingLogViewDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogView: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenLoggingLogViewCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogView: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenLoggingLogViewUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogView: %s", err)
 	}
+
 	if err = d.Set("filter", flattenLoggingLogViewFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogView: %s", err)
 	}

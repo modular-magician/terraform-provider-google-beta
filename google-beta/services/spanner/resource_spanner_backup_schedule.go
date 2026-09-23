@@ -1015,18 +1015,23 @@ func ResourceSpannerBackupScheduleFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenSpannerBackupScheduleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("retention_duration", flattenSpannerBackupScheduleRetentionDuration(res["retentionDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("spec", flattenSpannerBackupScheduleSpec(res["spec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("full_backup_spec", flattenSpannerBackupScheduleFullBackupSpec(res["fullBackupSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("incremental_backup_spec", flattenSpannerBackupScheduleIncrementalBackupSpec(res["incrementalBackupSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("encryption_config", flattenSpannerBackupScheduleEncryptionConfig(res["encryptionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}

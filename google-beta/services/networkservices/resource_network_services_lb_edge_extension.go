@@ -1073,21 +1073,27 @@ func ResourceNetworkServicesLbEdgeExtensionFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("description", flattenNetworkServicesLbEdgeExtensionDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesLbEdgeExtensionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}
+
 	if err = d.Set("forwarding_rules", flattenNetworkServicesLbEdgeExtensionForwardingRules(res["forwardingRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}
+
 	if err = d.Set("extension_chains", flattenNetworkServicesLbEdgeExtensionExtensionChains(res["extensionChains"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}
+
 	if err = d.Set("load_balancing_scheme", flattenNetworkServicesLbEdgeExtensionLoadBalancingScheme(res["loadBalancingScheme"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesLbEdgeExtensionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesLbEdgeExtensionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbEdgeExtension: %s", err)
 	}

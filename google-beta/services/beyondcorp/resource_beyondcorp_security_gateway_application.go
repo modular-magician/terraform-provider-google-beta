@@ -1523,21 +1523,27 @@ func ResourceBeyondcorpSecurityGatewayApplicationFlatten(d *schema.ResourceData,
 	if err = d.Set("create_time", flattenBeyondcorpSecurityGatewayApplicationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenBeyondcorpSecurityGatewayApplicationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}
+
 	if err = d.Set("endpoint_matchers", flattenBeyondcorpSecurityGatewayApplicationEndpointMatchers(res["endpointMatchers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}
+
 	if err = d.Set("upstreams", flattenBeyondcorpSecurityGatewayApplicationUpstreams(res["upstreams"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}
+
 	if err = d.Set("schema", flattenBeyondcorpSecurityGatewayApplicationSchema(res["schema"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}
+
 	if err = d.Set("name", flattenBeyondcorpSecurityGatewayApplicationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBeyondcorpSecurityGatewayApplicationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGatewayApplication: %s", err)
 	}

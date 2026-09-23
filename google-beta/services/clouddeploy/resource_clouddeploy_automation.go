@@ -1831,42 +1831,55 @@ func ResourceClouddeployAutomationFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("uid", flattenClouddeployAutomationUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("description", flattenClouddeployAutomationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenClouddeployAutomationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenClouddeployAutomationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenClouddeployAutomationAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenClouddeployAutomationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("etag", flattenClouddeployAutomationEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("suspended", flattenClouddeployAutomationSuspended(res["suspended"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenClouddeployAutomationServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("selector", flattenClouddeployAutomationSelector(res["selector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("rules", flattenClouddeployAutomationRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenClouddeployAutomationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenClouddeployAutomationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenClouddeployAutomationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Automation: %s", err)
 	}

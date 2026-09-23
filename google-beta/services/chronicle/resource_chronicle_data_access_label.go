@@ -658,24 +658,31 @@ func ResourceChronicleDataAccessLabelFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("author", flattenChronicleDataAccessLabelAuthor(res["author"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenChronicleDataAccessLabelLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("description", flattenChronicleDataAccessLabelDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("udm_query", flattenChronicleDataAccessLabelUdmQuery(res["udmQuery"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleDataAccessLabelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleDataAccessLabelDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenChronicleDataAccessLabelCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleDataAccessLabelUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessLabel: %s", err)
 	}

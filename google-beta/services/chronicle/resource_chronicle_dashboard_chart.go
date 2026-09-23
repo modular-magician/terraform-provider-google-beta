@@ -6426,9 +6426,11 @@ func ResourceChronicleDashboardChartFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenChronicleDashboardChartName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DashboardChart: %s", err)
 	}
+
 	if err = d.Set("chart_id", flattenChronicleDashboardChartChartId(res["chartId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DashboardChart: %s", err)
 	}
+
 	if err = d.Set("dashboard_chart", flattenChronicleDashboardChartDashboardChart(res["dashboardChart"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DashboardChart: %s", err)
 	}

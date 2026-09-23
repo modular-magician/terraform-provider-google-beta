@@ -768,33 +768,43 @@ func ResourceNetworkSecurityFirewallEndpointFlatten(d *schema.ResourceData, meta
 	if err = d.Set("labels", flattenNetworkSecurityFirewallEndpointLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenNetworkSecurityFirewallEndpointSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityFirewallEndpointCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityFirewallEndpointUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityFirewallEndpointReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("associated_networks", flattenNetworkSecurityFirewallEndpointAssociatedNetworks(res["associatedNetworks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityFirewallEndpointState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("billing_project_id", flattenNetworkSecurityFirewallEndpointBillingProjectId(res["billingProjectId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("endpoint_settings", flattenNetworkSecurityFirewallEndpointEndpointSettings(res["endpointSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityFirewallEndpointTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityFirewallEndpointEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}

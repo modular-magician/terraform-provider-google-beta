@@ -1200,21 +1200,27 @@ func ResourceSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomMo
 	if err = d.Set("name", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("enablement_state", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleEnablementState(res["enablementState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("ancestor_module", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleAncestorModule(res["ancestorModule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("custom_config", flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleCustomConfig(res["customConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityHealthAnalyticsCustomModule: %s", err)
 	}

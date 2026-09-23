@@ -958,48 +958,63 @@ func ResourceMigrationCenterDiscoveryClientFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("create_time", flattenMigrationCenterDiscoveryClientCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("description", flattenMigrationCenterDiscoveryClientDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterDiscoveryClientDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("errors", flattenMigrationCenterDiscoveryClientErrors(res["errors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenMigrationCenterDiscoveryClientExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("heartbeat_time", flattenMigrationCenterDiscoveryClientHeartbeatTime(res["heartbeatTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("labels", flattenMigrationCenterDiscoveryClientLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterDiscoveryClientName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenMigrationCenterDiscoveryClientServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("signals_endpoint", flattenMigrationCenterDiscoveryClientSignalsEndpoint(res["signalsEndpoint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("source", flattenMigrationCenterDiscoveryClientSource(res["source"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("state", flattenMigrationCenterDiscoveryClientState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterDiscoveryClientUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("version", flattenMigrationCenterDiscoveryClientVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenMigrationCenterDiscoveryClientTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenMigrationCenterDiscoveryClientEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryClient: %s", err)
 	}

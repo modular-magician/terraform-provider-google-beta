@@ -630,24 +630,31 @@ func ResourceGKEHub2MembershipRBACRoleBindingFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenGKEHub2MembershipRBACRoleBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEHub2MembershipRBACRoleBindingUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2MembershipRBACRoleBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2MembershipRBACRoleBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2MembershipRBACRoleBindingDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("state", flattenGKEHub2MembershipRBACRoleBindingState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("user", flattenGKEHub2MembershipRBACRoleBindingUser(res["user"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("role", flattenGKEHub2MembershipRBACRoleBindingRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipRBACRoleBinding: %s", err)
 	}

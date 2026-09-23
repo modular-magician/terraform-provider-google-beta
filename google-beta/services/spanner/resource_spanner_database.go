@@ -1235,21 +1235,27 @@ func ResourceSpannerDatabaseFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenSpannerDatabaseName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("version_retention_period", flattenSpannerDatabaseVersionRetentionPeriod(res["versionRetentionPeriod"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("state", flattenSpannerDatabaseState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("encryption_config", flattenSpannerDatabaseEncryptionConfig(res["encryptionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("database_dialect", flattenSpannerDatabaseDatabaseDialect(res["databaseDialect"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("enable_drop_protection", flattenSpannerDatabaseEnableDropProtection(res["enableDropProtection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("instance", flattenSpannerDatabaseInstance(res["instance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}

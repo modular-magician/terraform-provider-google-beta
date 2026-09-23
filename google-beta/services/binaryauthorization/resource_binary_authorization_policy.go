@@ -948,15 +948,19 @@ func ResourceBinaryAuthorizationPolicyFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("description", flattenBinaryAuthorizationPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("global_policy_evaluation_mode", flattenBinaryAuthorizationPolicyGlobalPolicyEvaluationMode(res["globalPolicyEvaluationMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("admission_whitelist_patterns", flattenBinaryAuthorizationPolicyAdmissionWhitelistPatterns(res["admissionWhitelistPatterns"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("cluster_admission_rules", flattenBinaryAuthorizationPolicyClusterAdmissionRules(res["clusterAdmissionRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("default_admission_rule", flattenBinaryAuthorizationPolicyDefaultAdmissionRule(res["defaultAdmissionRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}

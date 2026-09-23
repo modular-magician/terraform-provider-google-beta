@@ -1220,57 +1220,75 @@ func ResourceWorkstationsWorkstationClusterFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenWorkstationsWorkstationClusterName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("uid", flattenWorkstationsWorkstationClusterUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("labels", flattenWorkstationsWorkstationClusterLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("network", flattenWorkstationsWorkstationClusterNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("subnetwork", flattenWorkstationsWorkstationClusterSubnetwork(res["subnetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("control_plane_ip", flattenWorkstationsWorkstationClusterControlPlaneIp(res["controlPlaneIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenWorkstationsWorkstationClusterDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("workstation_authorization_url", flattenWorkstationsWorkstationClusterWorkstationAuthorizationUrl(res["workstationAuthorizationUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("workstation_launch_url", flattenWorkstationsWorkstationClusterWorkstationLaunchUrl(res["workstationLaunchUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("degraded", flattenWorkstationsWorkstationClusterDegraded(res["degraded"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenWorkstationsWorkstationClusterAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("etag", flattenWorkstationsWorkstationClusterEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenWorkstationsWorkstationClusterCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("private_cluster_config", flattenWorkstationsWorkstationClusterPrivateClusterConfig(res["privateClusterConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("domain_config", flattenWorkstationsWorkstationClusterDomainConfig(res["domainConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("conditions", flattenWorkstationsWorkstationClusterConditions(res["conditions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenWorkstationsWorkstationClusterTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenWorkstationsWorkstationClusterEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenWorkstationsWorkstationClusterEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationCluster: %s", err)
 	}

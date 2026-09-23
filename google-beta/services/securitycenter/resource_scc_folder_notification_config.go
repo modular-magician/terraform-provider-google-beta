@@ -649,15 +649,19 @@ func ResourceSecurityCenterFolderNotificationConfigFlatten(d *schema.ResourceDat
 	if err = d.Set("name", flattenSecurityCenterFolderNotificationConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterFolderNotificationConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("pubsub_topic", flattenSecurityCenterFolderNotificationConfigPubsubTopic(res["pubsubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenSecurityCenterFolderNotificationConfigServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("streaming_config", flattenSecurityCenterFolderNotificationConfigStreamingConfig(res["streamingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderNotificationConfig: %s", err)
 	}

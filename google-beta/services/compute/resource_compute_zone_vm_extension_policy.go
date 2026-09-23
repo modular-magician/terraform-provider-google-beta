@@ -886,30 +886,39 @@ func ResourceComputeZoneVmExtensionPolicyFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenComputeZoneVmExtensionPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeZoneVmExtensionPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("extension_policies", flattenComputeZoneVmExtensionPolicyExtensionPolicies(res["extensionPolicies"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("instance_selectors", flattenComputeZoneVmExtensionPolicyInstanceSelectors(res["instanceSelectors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeZoneVmExtensionPolicyPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeZoneVmExtensionPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("id", flattenComputeZoneVmExtensionPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("kind", flattenComputeZoneVmExtensionPolicyKind(res["kind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("managed_by_global", flattenComputeZoneVmExtensionPolicyManagedByGlobal(res["managedByGlobal"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("state", flattenComputeZoneVmExtensionPolicyState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ZoneVmExtensionPolicy: %s", err)
 	}

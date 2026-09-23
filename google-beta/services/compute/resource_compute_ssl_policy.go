@@ -764,27 +764,35 @@ func ResourceComputeSslPolicyFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("creation_timestamp", flattenComputeSslPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeSslPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeSslPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("profile", flattenComputeSslPolicyProfile(res["profile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("min_tls_version", flattenComputeSslPolicyMinTlsVersion(res["minTlsVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("enabled_features", flattenComputeSslPolicyEnabledFeatures(res["enabledFeatures"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("custom_features", flattenComputeSslPolicyCustomFeatures(res["customFeatures"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("post_quantum_key_exchange", flattenComputeSslPolicyPostQuantumKeyExchange(res["postQuantumKeyExchange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeSslPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}

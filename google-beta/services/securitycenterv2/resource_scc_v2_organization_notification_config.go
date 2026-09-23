@@ -650,15 +650,19 @@ func ResourceSecurityCenterV2OrganizationNotificationConfigFlatten(d *schema.Res
 	if err = d.Set("name", flattenSecurityCenterV2OrganizationNotificationConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterV2OrganizationNotificationConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("pubsub_topic", flattenSecurityCenterV2OrganizationNotificationConfigPubsubTopic(res["pubsubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenSecurityCenterV2OrganizationNotificationConfigServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("streaming_config", flattenSecurityCenterV2OrganizationNotificationConfigStreamingConfig(res["streamingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationNotificationConfig: %s", err)
 	}

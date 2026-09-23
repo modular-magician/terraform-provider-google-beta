@@ -673,18 +673,23 @@ func ResourceResourceManagerLienFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenNestedResourceManagerLienName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+
 	if err = d.Set("reason", flattenNestedResourceManagerLienReason(res["reason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+
 	if err = d.Set("origin", flattenNestedResourceManagerLienOrigin(res["origin"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNestedResourceManagerLienCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+
 	if err = d.Set("parent", flattenNestedResourceManagerLienParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+
 	if err = d.Set("restrictions", flattenNestedResourceManagerLienRestrictions(res["restrictions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}

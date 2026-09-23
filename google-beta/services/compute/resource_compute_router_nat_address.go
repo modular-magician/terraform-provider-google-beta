@@ -1043,9 +1043,11 @@ func ResourceComputeRouterNatAddressFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("nat_ips", flattenNestedComputeRouterNatAddressNatIps(res["natIps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNatAddress: %s", err)
 	}
+
 	if err = d.Set("drain_nat_ips", flattenNestedComputeRouterNatAddressDrainNatIps(res["drainNatIps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNatAddress: %s", err)
 	}
+
 	if err = d.Set("router_nat", flattenNestedComputeRouterNatAddressRouterNat(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNatAddress: %s", err)
 	}

@@ -740,21 +740,27 @@ func ResourceAccessApprovalFolderSettingsFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenAccessApprovalFolderSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("notification_emails", flattenAccessApprovalFolderSettingsNotificationEmails(res["notificationEmails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("enrolled_services", flattenAccessApprovalFolderSettingsEnrolledServices(res["enrolledServices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("enrolled_ancestor", flattenAccessApprovalFolderSettingsEnrolledAncestor(res["enrolledAncestor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("active_key_version", flattenAccessApprovalFolderSettingsActiveKeyVersion(res["activeKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("ancestor_has_active_key_version", flattenAccessApprovalFolderSettingsAncestorHasActiveKeyVersion(res["ancestorHasActiveKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("invalid_key_version", flattenAccessApprovalFolderSettingsInvalidKeyVersion(res["invalidKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}

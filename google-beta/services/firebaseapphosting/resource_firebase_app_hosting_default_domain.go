@@ -552,18 +552,23 @@ func ResourceFirebaseAppHostingDefaultDomainFlatten(d *schema.ResourceData, meta
 	if err = d.Set("disabled", flattenFirebaseAppHostingDefaultDomainDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultDomain: %s", err)
 	}
+
 	if err = d.Set("name", flattenFirebaseAppHostingDefaultDomainName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultDomain: %s", err)
 	}
+
 	if err = d.Set("uid", flattenFirebaseAppHostingDefaultDomainUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultDomain: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirebaseAppHostingDefaultDomainEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultDomain: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirebaseAppHostingDefaultDomainUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultDomain: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFirebaseAppHostingDefaultDomainCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultDomain: %s", err)
 	}

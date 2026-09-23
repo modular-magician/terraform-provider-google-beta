@@ -1236,24 +1236,31 @@ func ResourceApiGatewayApiConfigFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenApiGatewayApiConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApiGatewayApiConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("service_config_id", flattenApiGatewayApiConfigServiceConfigId(res["serviceConfigId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("labels", flattenApiGatewayApiConfigLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("openapi_documents", flattenApiGatewayApiConfigOpenapiDocuments(res["openapiDocuments"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("managed_service_configs", flattenApiGatewayApiConfigManagedServiceConfigs(res["managedServiceConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenApiGatewayApiConfigTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenApiGatewayApiConfigEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}

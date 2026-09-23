@@ -2075,18 +2075,23 @@ func ResourceDiscoveryEngineWidgetConfigFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenDiscoveryEngineWidgetConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WidgetConfig: %s", err)
 	}
+
 	if err = d.Set("config_id", flattenDiscoveryEngineWidgetConfigConfigId(res["configId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WidgetConfig: %s", err)
 	}
+
 	if err = d.Set("access_settings", flattenDiscoveryEngineWidgetConfigAccessSettings(res["accessSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WidgetConfig: %s", err)
 	}
+
 	if err = d.Set("ui_settings", flattenDiscoveryEngineWidgetConfigUiSettings(res["uiSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WidgetConfig: %s", err)
 	}
+
 	if err = d.Set("ui_branding", flattenDiscoveryEngineWidgetConfigUiBranding(res["uiBranding"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WidgetConfig: %s", err)
 	}
+
 	if err = d.Set("homepage_setting", flattenDiscoveryEngineWidgetConfigHomepageSetting(res["homepageSetting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WidgetConfig: %s", err)
 	}

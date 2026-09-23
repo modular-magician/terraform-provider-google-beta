@@ -864,18 +864,23 @@ func ResourceNetworkServicesEdgeCacheKeysetFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("description", flattenNetworkServicesEdgeCacheKeysetDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheKeyset: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesEdgeCacheKeysetLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheKeyset: %s", err)
 	}
+
 	if err = d.Set("public_key", flattenNetworkServicesEdgeCacheKeysetPublicKey(res["publicKeys"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheKeyset: %s", err)
 	}
+
 	if err = d.Set("validation_shared_keys", flattenNetworkServicesEdgeCacheKeysetValidationSharedKeys(res["validationSharedKeys"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheKeyset: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesEdgeCacheKeysetTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheKeyset: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesEdgeCacheKeysetEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheKeyset: %s", err)
 	}

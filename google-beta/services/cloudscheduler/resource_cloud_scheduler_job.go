@@ -1943,33 +1943,43 @@ func ResourceCloudSchedulerJobFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenCloudSchedulerJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("description", flattenCloudSchedulerJobDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("schedule", flattenCloudSchedulerJobSchedule(res["schedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("time_zone", flattenCloudSchedulerJobTimeZone(res["timeZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("state", flattenCloudSchedulerJobState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("paused", flattenCloudSchedulerJobPaused(res["paused"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("attempt_deadline", flattenCloudSchedulerJobAttemptDeadline(res["attemptDeadline"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("retry_config", flattenCloudSchedulerJobRetryConfig(res["retryConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("pubsub_target", flattenCloudSchedulerJobPubsubTarget(res["pubsubTarget"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("app_engine_http_target", flattenCloudSchedulerJobAppEngineHttpTarget(res["appEngineHttpTarget"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("http_target", flattenCloudSchedulerJobHttpTarget(res["httpTarget"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}

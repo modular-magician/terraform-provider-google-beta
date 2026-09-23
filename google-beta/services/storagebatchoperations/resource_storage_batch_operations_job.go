@@ -1232,33 +1232,43 @@ func ResourceStorageBatchOperationsJobFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("create_time", flattenStorageBatchOperationsJobCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageBatchOperationsJobUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("schedule_time", flattenStorageBatchOperationsJobScheduleTime(res["scheduleTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("complete_time", flattenStorageBatchOperationsJobCompleteTime(res["completeTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("state", flattenStorageBatchOperationsJobState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("bucket_list", flattenStorageBatchOperationsJobBucketList(res["bucketList"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("delete_object", flattenStorageBatchOperationsJobDeleteObject(res["deleteObject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("put_metadata", flattenStorageBatchOperationsJobPutMetadata(res["putMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("rewrite_object", flattenStorageBatchOperationsJobRewriteObject(res["rewriteObject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("put_object_hold", flattenStorageBatchOperationsJobPutObjectHold(res["putObjectHold"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("description", flattenStorageBatchOperationsJobDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}

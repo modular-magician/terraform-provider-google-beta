@@ -1510,24 +1510,31 @@ func ResourceComputeResizeRequestFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("creation_timestamp", flattenComputeResizeRequestCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("state", flattenComputeResizeRequestState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeResizeRequestName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeResizeRequestDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("resize_by", flattenComputeResizeRequestResizeBy(res["resizeBy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("requested_run_duration", flattenComputeResizeRequestRequestedRunDuration(res["requestedRunDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("status", flattenComputeResizeRequestStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}
+
 	if err = d.Set("zone", flattenComputeResizeRequestZone(res["zone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResizeRequest: %s", err)
 	}

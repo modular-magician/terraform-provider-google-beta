@@ -536,6 +536,7 @@ func ResourceAppEngineServiceNetworkSettingsFlatten(d *schema.ResourceData, meta
 	if err = d.Set("service", flattenAppEngineServiceNetworkSettingsService(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceNetworkSettings: %s", err)
 	}
+
 	if err = d.Set("network_settings", flattenAppEngineServiceNetworkSettingsNetworkSettings(res["networkSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceNetworkSettings: %s", err)
 	}

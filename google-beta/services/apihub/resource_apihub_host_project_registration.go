@@ -394,9 +394,11 @@ func ResourceApihubHostProjectRegistrationFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenApihubHostProjectRegistrationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostProjectRegistration: %s", err)
 	}
+
 	if err = d.Set("gcp_project", flattenApihubHostProjectRegistrationGcpProject(res["gcpProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostProjectRegistration: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApihubHostProjectRegistrationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostProjectRegistration: %s", err)
 	}

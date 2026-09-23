@@ -690,12 +690,15 @@ func ResourceBigqueryReservationBiReservationFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenBigqueryReservationBiReservationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BiReservation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBigqueryReservationBiReservationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BiReservation: %s", err)
 	}
+
 	if err = d.Set("size", flattenBigqueryReservationBiReservationSize(res["size"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BiReservation: %s", err)
 	}
+
 	if err = d.Set("preferred_tables", flattenBigqueryReservationBiReservationPreferredTables(res["preferredTables"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BiReservation: %s", err)
 	}

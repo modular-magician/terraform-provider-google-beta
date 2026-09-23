@@ -737,24 +737,31 @@ func ResourceAccessApprovalProjectSettingsFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenAccessApprovalProjectSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("notification_emails", flattenAccessApprovalProjectSettingsNotificationEmails(res["notificationEmails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("enrolled_services", flattenAccessApprovalProjectSettingsEnrolledServices(res["enrolledServices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("enrolled_ancestor", flattenAccessApprovalProjectSettingsEnrolledAncestor(res["enrolledAncestor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("active_key_version", flattenAccessApprovalProjectSettingsActiveKeyVersion(res["activeKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("ancestor_has_active_key_version", flattenAccessApprovalProjectSettingsAncestorHasActiveKeyVersion(res["ancestorHasActiveKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("invalid_key_version", flattenAccessApprovalProjectSettingsInvalidKeyVersion(res["invalidKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("project", flattenAccessApprovalProjectSettingsProject(res["project"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}

@@ -728,27 +728,35 @@ func ResourceGKEBackupBackupChannelFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenGKEBackupBackupChannelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEBackupBackupChannelUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("destination_project", flattenGKEBackupBackupChannelDestinationProject(res["destinationProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("description", flattenGKEBackupBackupChannelDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEBackupBackupChannelLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("etag", flattenGKEBackupBackupChannelEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("destination_project_id", flattenGKEBackupBackupChannelDestinationProjectId(res["destinationProjectId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEBackupBackupChannelTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEBackupBackupChannelEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupChannel: %s", err)
 	}

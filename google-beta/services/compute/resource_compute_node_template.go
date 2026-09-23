@@ -1042,33 +1042,43 @@ func ResourceComputeNodeTemplateFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("creation_timestamp", flattenComputeNodeTemplateCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeNodeTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeNodeTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("node_affinity_labels", flattenComputeNodeTemplateNodeAffinityLabels(res["nodeAffinityLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("node_type", flattenComputeNodeTemplateNodeType(res["nodeType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("node_type_flexibility", flattenComputeNodeTemplateNodeTypeFlexibility(res["nodeTypeFlexibility"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("server_binding", flattenComputeNodeTemplateServerBinding(res["serverBinding"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("accelerators", flattenComputeNodeTemplateAccelerators(res["accelerators"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("cpu_overcommit_type", flattenComputeNodeTemplateCpuOvercommitType(res["cpuOvercommitType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("disks", flattenComputeNodeTemplateDisks(res["disks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeNodeTemplateRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}

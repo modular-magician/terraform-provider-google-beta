@@ -2029,21 +2029,27 @@ func ResourceComputeResourcePolicyFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenComputeResourcePolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeResourcePolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("snapshot_schedule_policy", flattenComputeResourcePolicySnapshotSchedulePolicy(res["snapshotSchedulePolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("group_placement_policy", flattenComputeResourcePolicyGroupPlacementPolicy(res["groupPlacementPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("instance_schedule_policy", flattenComputeResourcePolicyInstanceSchedulePolicy(res["instanceSchedulePolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("disk_consistency_group_policy", flattenComputeResourcePolicyDiskConsistencyGroupPolicy(res["diskConsistencyGroupPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("workload_policy", flattenComputeResourcePolicyWorkloadPolicy(res["workloadPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}

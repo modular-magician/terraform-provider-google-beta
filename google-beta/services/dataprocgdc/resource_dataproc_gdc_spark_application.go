@@ -1546,72 +1546,95 @@ func ResourceDataprocGdcSparkApplicationFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("pyspark_application_config", flattenDataprocGdcSparkApplicationPysparkApplicationConfig(res["pysparkApplicationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("spark_application_config", flattenDataprocGdcSparkApplicationSparkApplicationConfig(res["sparkApplicationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("spark_r_application_config", flattenDataprocGdcSparkApplicationSparkRApplicationConfig(res["sparkRApplicationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("spark_sql_application_config", flattenDataprocGdcSparkApplicationSparkSqlApplicationConfig(res["sparkSqlApplicationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("name", flattenDataprocGdcSparkApplicationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDataprocGdcSparkApplicationUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataprocGdcSparkApplicationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataprocGdcSparkApplicationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataprocGdcSparkApplicationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("state", flattenDataprocGdcSparkApplicationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenDataprocGdcSparkApplicationReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataprocGdcSparkApplicationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenDataprocGdcSparkApplicationAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("output_uri", flattenDataprocGdcSparkApplicationOutputUri(res["outputUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("monitoring_endpoint", flattenDataprocGdcSparkApplicationMonitoringEndpoint(res["monitoringEndpoint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("properties", flattenDataprocGdcSparkApplicationProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("state_message", flattenDataprocGdcSparkApplicationStateMessage(res["stateMessage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("version", flattenDataprocGdcSparkApplicationVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("application_environment", flattenDataprocGdcSparkApplicationApplicationEnvironment(res["applicationEnvironment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("namespace", flattenDataprocGdcSparkApplicationNamespace(res["namespace"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("dependency_images", flattenDataprocGdcSparkApplicationDependencyImages(res["dependencyImages"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataprocGdcSparkApplicationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataprocGdcSparkApplicationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenDataprocGdcSparkApplicationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SparkApplication: %s", err)
 	}

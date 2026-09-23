@@ -514,12 +514,15 @@ func ResourceFirebaseAppCheckDeviceCheckConfigFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenFirebaseAppCheckDeviceCheckConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeviceCheckConfig: %s", err)
 	}
+
 	if err = d.Set("token_ttl", flattenFirebaseAppCheckDeviceCheckConfigTokenTtl(res["tokenTtl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeviceCheckConfig: %s", err)
 	}
+
 	if err = d.Set("key_id", flattenFirebaseAppCheckDeviceCheckConfigKeyId(res["keyId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeviceCheckConfig: %s", err)
 	}
+
 	if err = d.Set("private_key_set", flattenFirebaseAppCheckDeviceCheckConfigPrivateKeySet(res["privateKeySet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeviceCheckConfig: %s", err)
 	}

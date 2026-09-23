@@ -1344,15 +1344,19 @@ func ResourceFirebaseRemoteConfigRemoteConfigFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenFirebaseRemoteConfigRemoteConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RemoteConfig: %s", err)
 	}
+
 	if err = d.Set("conditions", flattenFirebaseRemoteConfigRemoteConfigConditions(res["conditions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RemoteConfig: %s", err)
 	}
+
 	if err = d.Set("parameter_groups", flattenFirebaseRemoteConfigRemoteConfigParameterGroups(res["parameterGroups"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RemoteConfig: %s", err)
 	}
+
 	if err = d.Set("parameters", flattenFirebaseRemoteConfigRemoteConfigParameters(res["parameters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RemoteConfig: %s", err)
 	}
+
 	if err = d.Set("version", flattenFirebaseRemoteConfigRemoteConfigVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RemoteConfig: %s", err)
 	}

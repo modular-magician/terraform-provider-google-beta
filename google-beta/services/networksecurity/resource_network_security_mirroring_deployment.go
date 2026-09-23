@@ -759,33 +759,43 @@ func ResourceNetworkSecurityMirroringDeploymentFlatten(d *schema.ResourceData, m
 	if err = d.Set("name", flattenNetworkSecurityMirroringDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityMirroringDeploymentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityMirroringDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityMirroringDeploymentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("forwarding_rule", flattenNetworkSecurityMirroringDeploymentForwardingRule(res["forwardingRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("mirroring_deployment_group", flattenNetworkSecurityMirroringDeploymentMirroringDeploymentGroup(res["mirroringDeploymentGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityMirroringDeploymentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityMirroringDeploymentReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityMirroringDeploymentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityMirroringDeploymentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityMirroringDeploymentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringDeployment: %s", err)
 	}

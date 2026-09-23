@@ -749,24 +749,31 @@ func ResourceFirestoreChangeStreamFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenFirestoreChangeStreamName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("retention_period", flattenFirestoreChangeStreamRetentionPeriod(res["retentionPeriod"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("database_scope", flattenFirestoreChangeStreamDatabaseScope(res["databaseScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("collection_group_scope", flattenFirestoreChangeStreamCollectionGroupScope(res["collectionGroupScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFirestoreChangeStreamCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirestoreChangeStreamUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("start_time", flattenFirestoreChangeStreamStartTime(res["startTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirestoreChangeStreamEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ChangeStream: %s", err)
 	}

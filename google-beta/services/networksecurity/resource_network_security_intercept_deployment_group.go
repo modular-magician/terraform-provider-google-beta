@@ -830,36 +830,47 @@ func ResourceNetworkSecurityInterceptDeploymentGroupFlatten(d *schema.ResourceDa
 	if err = d.Set("name", flattenNetworkSecurityInterceptDeploymentGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityInterceptDeploymentGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityInterceptDeploymentGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityInterceptDeploymentGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkSecurityInterceptDeploymentGroupNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("connected_endpoint_groups", flattenNetworkSecurityInterceptDeploymentGroupConnectedEndpointGroups(res["connectedEndpointGroups"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityInterceptDeploymentGroupState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityInterceptDeploymentGroupReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityInterceptDeploymentGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("locations", flattenNetworkSecurityInterceptDeploymentGroupLocations(res["locations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityInterceptDeploymentGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityInterceptDeploymentGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeploymentGroup: %s", err)
 	}

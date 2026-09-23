@@ -1231,33 +1231,43 @@ func ResourceDialogflowCXIntentFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenDialogflowCXIntentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXIntentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("training_phrases", flattenDialogflowCXIntentTrainingPhrases(res["trainingPhrases"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("parameters", flattenDialogflowCXIntentParameters(res["parameters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("priority", flattenDialogflowCXIntentPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("is_fallback", flattenDialogflowCXIntentIsFallback(res["isFallback"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDialogflowCXIntentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowCXIntentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDialogflowCXIntentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDialogflowCXIntentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}
+
 	if err = d.Set("language_code", flattenDialogflowCXIntentLanguageCode(res["languageCode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Intent: %s", err)
 	}

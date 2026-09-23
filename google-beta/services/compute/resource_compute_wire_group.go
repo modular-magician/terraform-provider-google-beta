@@ -1242,27 +1242,35 @@ func ResourceComputeWireGroupFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("description", flattenComputeWireGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeWireGroupCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeWireGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("endpoints", flattenComputeWireGroupEndpoints(res["endpoints"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("admin_enabled", flattenComputeWireGroupAdminEnabled(res["adminEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("wire_group_properties", flattenComputeWireGroupWireGroupProperties(res["wireGroupProperties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("wire_properties", flattenComputeWireGroupWireProperties(res["wireProperties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("wires", flattenComputeWireGroupWires(res["wires"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
+
 	if err = d.Set("topology", flattenComputeWireGroupTopology(res["topology"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}

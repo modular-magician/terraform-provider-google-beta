@@ -694,36 +694,47 @@ func ResourceNetworkConnectivityRegionalEndpointFlatten(d *schema.ResourceData, 
 	if err = d.Set("create_time", flattenNetworkConnectivityRegionalEndpointCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkConnectivityRegionalEndpointUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkConnectivityRegionalEndpointLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkConnectivityRegionalEndpointDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("target_google_api", flattenNetworkConnectivityRegionalEndpointTargetGoogleApi(res["targetGoogleApi"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkConnectivityRegionalEndpointNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("subnetwork", flattenNetworkConnectivityRegionalEndpointSubnetwork(res["subnetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("access_type", flattenNetworkConnectivityRegionalEndpointAccessType(res["accessType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("psc_forwarding_rule", flattenNetworkConnectivityRegionalEndpointPscForwardingRule(res["pscForwardingRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("address", flattenNetworkConnectivityRegionalEndpointAddress(res["address"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkConnectivityRegionalEndpointTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkConnectivityRegionalEndpointEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalEndpoint: %s", err)
 	}

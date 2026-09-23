@@ -5613,30 +5613,39 @@ func ResourceDialogflowCXFlowFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenDialogflowCXFlowName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXFlowDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowCXFlowDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("transition_routes", flattenDialogflowCXFlowTransitionRoutes(res["transitionRoutes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("event_handlers", flattenDialogflowCXFlowEventHandlers(res["eventHandlers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("transition_route_groups", flattenDialogflowCXFlowTransitionRouteGroups(res["transitionRouteGroups"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("nlu_settings", flattenDialogflowCXFlowNluSettings(res["nluSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("advanced_settings", flattenDialogflowCXFlowAdvancedSettings(res["advancedSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("knowledge_connector_settings", flattenDialogflowCXFlowKnowledgeConnectorSettings(res["knowledgeConnectorSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}
+
 	if err = d.Set("language_code", flattenDialogflowCXFlowLanguageCode(res["languageCode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Flow: %s", err)
 	}

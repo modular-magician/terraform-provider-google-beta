@@ -440,6 +440,7 @@ func ResourceApigeeEnvgroupAttachmentFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("environment", flattenApigeeEnvgroupAttachmentEnvironment(res["environment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvgroupAttachment: %s", err)
 	}
+
 	if err = d.Set("name", flattenApigeeEnvgroupAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvgroupAttachment: %s", err)
 	}

@@ -594,18 +594,23 @@ func ResourceMigrationCenterImportDataFileFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("create_time", flattenMigrationCenterImportDataFileCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportDataFile: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterImportDataFileDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportDataFile: %s", err)
 	}
+
 	if err = d.Set("format", flattenMigrationCenterImportDataFileFormat(res["format"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportDataFile: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterImportDataFileName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportDataFile: %s", err)
 	}
+
 	if err = d.Set("state", flattenMigrationCenterImportDataFileState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportDataFile: %s", err)
 	}
+
 	if err = d.Set("upload_file_info", flattenMigrationCenterImportDataFileUploadFileInfo(res["uploadFileInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ImportDataFile: %s", err)
 	}

@@ -721,21 +721,27 @@ func ResourceNetappkmsconfigFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("description", flattenNetappkmsconfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappkmsconfigLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}
+
 	if err = d.Set("crypto_key_name", flattenNetappkmsconfigCryptoKeyName(res["cryptoKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}
+
 	if err = d.Set("instructions", flattenNetappkmsconfigInstructions(res["instructions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenNetappkmsconfigServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappkmsconfigTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappkmsconfigEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading kmsconfig: %s", err)
 	}

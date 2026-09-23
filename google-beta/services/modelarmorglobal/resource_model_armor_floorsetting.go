@@ -1441,27 +1441,35 @@ func ResourceModelArmorGlobalFloorsettingFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenModelArmorGlobalFloorsettingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenModelArmorGlobalFloorsettingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenModelArmorGlobalFloorsettingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("filter_config", flattenModelArmorGlobalFloorsettingFilterConfig(res["filterConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("enable_floor_setting_enforcement", flattenModelArmorGlobalFloorsettingEnableFloorSettingEnforcement(res["enableFloorSettingEnforcement"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("integrated_services", flattenModelArmorGlobalFloorsettingIntegratedServices(res["integratedServices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("ai_platform_floor_setting", flattenModelArmorGlobalFloorsettingAiPlatformFloorSetting(res["aiPlatformFloorSetting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("google_mcp_server_floor_setting", flattenModelArmorGlobalFloorsettingGoogleMcpServerFloorSetting(res["googleMcpServerFloorSetting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}
+
 	if err = d.Set("floor_setting_metadata", flattenModelArmorGlobalFloorsettingFloorSettingMetadata(res["floorSettingMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Floorsetting: %s", err)
 	}

@@ -447,18 +447,23 @@ func ResourceLoggingFolderSettingsFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenLoggingFolderSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenLoggingFolderSettingsKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("kms_service_account_id", flattenLoggingFolderSettingsKmsServiceAccountId(res["kmsServiceAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("storage_location", flattenLoggingFolderSettingsStorageLocation(res["storageLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("disable_default_sink", flattenLoggingFolderSettingsDisableDefaultSink(res["disableDefaultSink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}
+
 	if err = d.Set("logging_service_account_id", flattenLoggingFolderSettingsLoggingServiceAccountId(res["loggingServiceAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSettings: %s", err)
 	}

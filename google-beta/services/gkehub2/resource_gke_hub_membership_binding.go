@@ -761,30 +761,39 @@ func ResourceGKEHub2MembershipBindingFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenGKEHub2MembershipBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEHub2MembershipBindingUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("scope", flattenGKEHub2MembershipBindingScope(res["scope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2MembershipBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2MembershipBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2MembershipBindingDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("state", flattenGKEHub2MembershipBindingState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEHub2MembershipBindingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHub2MembershipBindingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHub2MembershipBindingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MembershipBinding: %s", err)
 	}

@@ -888,21 +888,27 @@ func ResourceLoggingSavedQueryFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("display_name", flattenLoggingSavedQueryDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}
+
 	if err = d.Set("description", flattenLoggingSavedQueryDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenLoggingSavedQueryCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenLoggingSavedQueryUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}
+
 	if err = d.Set("visibility", flattenLoggingSavedQueryVisibility(res["visibility"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}
+
 	if err = d.Set("logging_query", flattenLoggingSavedQueryLoggingQuery(res["loggingQuery"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}
+
 	if err = d.Set("ops_analytics_query", flattenLoggingSavedQueryOpsAnalyticsQuery(res["opsAnalyticsQuery"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SavedQuery: %s", err)
 	}

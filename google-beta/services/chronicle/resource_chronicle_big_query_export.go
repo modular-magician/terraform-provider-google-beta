@@ -1368,24 +1368,31 @@ func ResourceChronicleBigQueryExportFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("big_query_export_package", flattenChronicleBigQueryExportBigQueryExportPackage(res["bigQueryExportPackage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("entity_graph_settings", flattenChronicleBigQueryExportEntityGraphSettings(res["entityGraphSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("ioc_matches_settings", flattenChronicleBigQueryExportIocMatchesSettings(res["iocMatchesSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleBigQueryExportName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("provisioned", flattenChronicleBigQueryExportProvisioned(res["provisioned"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("rule_detections_settings", flattenChronicleBigQueryExportRuleDetectionsSettings(res["ruleDetectionsSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("udm_events_aggregates_settings", flattenChronicleBigQueryExportUdmEventsAggregatesSettings(res["udmEventsAggregatesSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}
+
 	if err = d.Set("udm_events_settings", flattenChronicleBigQueryExportUdmEventsSettings(res["udmEventsSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BigQueryExport: %s", err)
 	}

@@ -541,12 +541,15 @@ func ResourceDialogflowVersionFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenDialogflowVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("version_number", flattenDialogflowVersionVersionNumber(res["versionNumber"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowVersionDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("status", flattenDialogflowVersionStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}

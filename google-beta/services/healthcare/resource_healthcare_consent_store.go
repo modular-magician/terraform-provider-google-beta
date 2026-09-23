@@ -620,15 +620,19 @@ func ResourceHealthcareConsentStoreFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("default_consent_ttl", flattenHealthcareConsentStoreDefaultConsentTtl(res["defaultConsentTtl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsentStore: %s", err)
 	}
+
 	if err = d.Set("enable_consent_create_on_update", flattenHealthcareConsentStoreEnableConsentCreateOnUpdate(res["enableConsentCreateOnUpdate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsentStore: %s", err)
 	}
+
 	if err = d.Set("labels", flattenHealthcareConsentStoreLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsentStore: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenHealthcareConsentStoreTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsentStore: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenHealthcareConsentStoreEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsentStore: %s", err)
 	}

@@ -3678,27 +3678,35 @@ func ResourceOSConfigGuestPoliciesFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenOSConfigGuestPoliciesName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("description", flattenOSConfigGuestPoliciesDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("assignment", flattenOSConfigGuestPoliciesAssignment(res["assignment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("packages", flattenOSConfigGuestPoliciesPackages(res["packages"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("package_repositories", flattenOSConfigGuestPoliciesPackageRepositories(res["packageRepositories"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("recipes", flattenOSConfigGuestPoliciesRecipes(res["recipes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenOSConfigGuestPoliciesCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenOSConfigGuestPoliciesUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}
+
 	if err = d.Set("etag", flattenOSConfigGuestPoliciesEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GuestPolicies: %s", err)
 	}

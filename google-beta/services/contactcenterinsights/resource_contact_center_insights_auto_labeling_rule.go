@@ -817,27 +817,35 @@ func ResourceContactCenterInsightsAutoLabelingRuleFlatten(d *schema.ResourceData
 	if err = d.Set("active", flattenContactCenterInsightsAutoLabelingRuleActive(res["active"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenContactCenterInsightsAutoLabelingRuleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenContactCenterInsightsAutoLabelingRuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("description", flattenContactCenterInsightsAutoLabelingRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("name", flattenContactCenterInsightsAutoLabelingRuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("label_key_type", flattenContactCenterInsightsAutoLabelingRuleLabelKeyType(res["labelKeyType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("label_key", flattenContactCenterInsightsAutoLabelingRuleLabelKey(res["labelKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("conditions", flattenContactCenterInsightsAutoLabelingRuleConditions(res["conditions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenContactCenterInsightsAutoLabelingRuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoLabelingRule: %s", err)
 	}

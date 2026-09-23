@@ -793,21 +793,27 @@ func ResourceComputeOrganizationSecurityPolicyFlatten(d *schema.ResourceData, me
 	if err = d.Set("description", flattenComputeOrganizationSecurityPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("short_name", flattenComputeOrganizationSecurityPolicyShortName(res["shortName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeOrganizationSecurityPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("policy_id", flattenComputeOrganizationSecurityPolicyPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("type", flattenComputeOrganizationSecurityPolicyType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("advanced_options_config", flattenComputeOrganizationSecurityPolicyAdvancedOptionsConfig(res["advancedOptionsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("parent", flattenComputeOrganizationSecurityPolicyParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}

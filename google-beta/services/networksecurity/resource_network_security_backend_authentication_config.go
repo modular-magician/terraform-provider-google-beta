@@ -748,27 +748,35 @@ func ResourceNetworkSecurityBackendAuthenticationConfigFlatten(d *schema.Resourc
 	if err = d.Set("create_time", flattenNetworkSecurityBackendAuthenticationConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityBackendAuthenticationConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityBackendAuthenticationConfigLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityBackendAuthenticationConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("client_certificate", flattenNetworkSecurityBackendAuthenticationConfigClientCertificate(res["clientCertificate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("trust_config", flattenNetworkSecurityBackendAuthenticationConfigTrustConfig(res["trustConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("well_known_roots", flattenNetworkSecurityBackendAuthenticationConfigWellKnownRoots(res["wellKnownRoots"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityBackendAuthenticationConfigTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityBackendAuthenticationConfigEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendAuthenticationConfig: %s", err)
 	}

@@ -1281,42 +1281,55 @@ func ResourceNetworkServicesAgentGatewayFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("create_time", flattenNetworkServicesAgentGatewayCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesAgentGatewayUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesAgentGatewayLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesAgentGatewayDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNetworkServicesAgentGatewayEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("protocols", flattenNetworkServicesAgentGatewayProtocols(res["protocols"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("google_managed", flattenNetworkServicesAgentGatewayGoogleManaged(res["googleManaged"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("self_managed", flattenNetworkServicesAgentGatewaySelfManaged(res["selfManaged"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("registries", flattenNetworkServicesAgentGatewayRegistries(res["registries"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("agent_connectivity_template", flattenNetworkServicesAgentGatewayAgentConnectivityTemplate(res["agentConnectivityTemplate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("network_config", flattenNetworkServicesAgentGatewayNetworkConfig(res["networkConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("agent_gateway_card", flattenNetworkServicesAgentGatewayAgentGatewayCard(res["agentGatewayCard"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesAgentGatewayTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesAgentGatewayEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentGateway: %s", err)
 	}

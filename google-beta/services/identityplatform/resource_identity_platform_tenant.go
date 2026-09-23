@@ -768,18 +768,23 @@ func ResourceIdentityPlatformTenantFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenIdentityPlatformTenantName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIdentityPlatformTenantDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
+
 	if err = d.Set("allow_password_signup", flattenIdentityPlatformTenantAllowPasswordSignup(res["allowPasswordSignup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
+
 	if err = d.Set("enable_email_link_signin", flattenIdentityPlatformTenantEnableEmailLinkSignin(res["enableEmailLinkSignin"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
+
 	if err = d.Set("disable_auth", flattenIdentityPlatformTenantDisableAuth(res["disableAuth"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
+
 	if err = d.Set("client", flattenIdentityPlatformTenantClient(res["client"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}

@@ -466,9 +466,11 @@ func ResourceSecurityCenterSourceFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenSecurityCenterSourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterSourceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterSourceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}

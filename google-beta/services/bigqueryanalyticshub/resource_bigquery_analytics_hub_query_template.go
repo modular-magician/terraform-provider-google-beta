@@ -842,27 +842,35 @@ func ResourceBigqueryAnalyticsHubQueryTemplateFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenBigqueryAnalyticsHubQueryTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenBigqueryAnalyticsHubQueryTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenBigqueryAnalyticsHubQueryTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("primary_contact", flattenBigqueryAnalyticsHubQueryTemplatePrimaryContact(res["primaryContact"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("documentation", flattenBigqueryAnalyticsHubQueryTemplateDocumentation(res["documentation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("state", flattenBigqueryAnalyticsHubQueryTemplateState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("routine", flattenBigqueryAnalyticsHubQueryTemplateRoutine(res["routine"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBigqueryAnalyticsHubQueryTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBigqueryAnalyticsHubQueryTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueryTemplate: %s", err)
 	}

@@ -3566,45 +3566,59 @@ func ResourceDatabaseMigrationServiceConnectionProfileFlatten(d *schema.Resource
 	if err = d.Set("name", flattenDatabaseMigrationServiceConnectionProfileName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDatabaseMigrationServiceConnectionProfileDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDatabaseMigrationServiceConnectionProfileCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDatabaseMigrationServiceConnectionProfileLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("state", flattenDatabaseMigrationServiceConnectionProfileState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("error", flattenDatabaseMigrationServiceConnectionProfileError(res["error"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("dbprovider", flattenDatabaseMigrationServiceConnectionProfileDbprovider(res["provider"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("role", flattenDatabaseMigrationServiceConnectionProfileRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("mysql", flattenDatabaseMigrationServiceConnectionProfileMysql(res["mysql"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("postgresql", flattenDatabaseMigrationServiceConnectionProfilePostgresql(res["postgresql"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("oracle", flattenDatabaseMigrationServiceConnectionProfileOracle(res["oracle"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("cloudsql", flattenDatabaseMigrationServiceConnectionProfileCloudsql(res["cloudsql"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("alloydb", flattenDatabaseMigrationServiceConnectionProfileAlloydb(res["alloydb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDatabaseMigrationServiceConnectionProfileTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDatabaseMigrationServiceConnectionProfileEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}

@@ -547,12 +547,15 @@ func ResourceApigeeEnvReferencesFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenApigeeEnvReferencesName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvReferences: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeEnvReferencesDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvReferences: %s", err)
 	}
+
 	if err = d.Set("resource_type", flattenApigeeEnvReferencesResourceType(res["resourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvReferences: %s", err)
 	}
+
 	if err = d.Set("refers", flattenApigeeEnvReferencesRefers(res["refers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvReferences: %s", err)
 	}

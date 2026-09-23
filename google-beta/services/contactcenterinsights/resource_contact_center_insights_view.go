@@ -613,15 +613,19 @@ func ResourceContactCenterInsightsViewFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("name", flattenContactCenterInsightsViewName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading View: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenContactCenterInsightsViewDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading View: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenContactCenterInsightsViewCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading View: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenContactCenterInsightsViewUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading View: %s", err)
 	}
+
 	if err = d.Set("value", flattenContactCenterInsightsViewValue(res["value"], d, config)); err != nil {
 		return fmt.Errorf("Error reading View: %s", err)
 	}

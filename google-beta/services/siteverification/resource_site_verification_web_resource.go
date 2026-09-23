@@ -501,9 +501,11 @@ func ResourceSiteVerificationWebResourceFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("web_resource_id", flattenSiteVerificationWebResourceWebResourceId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebResource: %s", err)
 	}
+
 	if err = d.Set("site", flattenSiteVerificationWebResourceSite(res["site"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebResource: %s", err)
 	}
+
 	if err = d.Set("owners", flattenSiteVerificationWebResourceOwners(res["owners"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebResource: %s", err)
 	}

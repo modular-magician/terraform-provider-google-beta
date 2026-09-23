@@ -1033,12 +1033,15 @@ func ResourceComputeRouterRoutePolicyFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("type", flattenComputeRouterRoutePolicyType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterRoutePolicy: %s", err)
 	}
+
 	if err = d.Set("terms", flattenComputeRouterRoutePolicyTerms(res["terms"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterRoutePolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeRouterRoutePolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterRoutePolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRouterRoutePolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterRoutePolicy: %s", err)
 	}

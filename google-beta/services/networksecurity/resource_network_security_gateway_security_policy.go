@@ -628,12 +628,15 @@ func ResourceNetworkSecurityGatewaySecurityPolicyFlatten(d *schema.ResourceData,
 	if err = d.Set("self_link", flattenNetworkSecurityGatewaySecurityPolicySelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityGatewaySecurityPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityGatewaySecurityPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityGatewaySecurityPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicy: %s", err)
 	}

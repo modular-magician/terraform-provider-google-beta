@@ -1416,18 +1416,23 @@ func ResourceDataLossPreventionStoredInfoTypeFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenDataLossPreventionStoredInfoTypeName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoredInfoType: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataLossPreventionStoredInfoTypeDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoredInfoType: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataLossPreventionStoredInfoTypeDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoredInfoType: %s", err)
 	}
+
 	if err = d.Set("regex", flattenDataLossPreventionStoredInfoTypeRegex(res["regex"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoredInfoType: %s", err)
 	}
+
 	if err = d.Set("dictionary", flattenDataLossPreventionStoredInfoTypeDictionary(res["dictionary"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoredInfoType: %s", err)
 	}
+
 	if err = d.Set("large_custom_dictionary", flattenDataLossPreventionStoredInfoTypeLargeCustomDictionary(res["largeCustomDictionary"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoredInfoType: %s", err)
 	}

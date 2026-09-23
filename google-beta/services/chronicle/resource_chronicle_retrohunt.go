@@ -619,18 +619,23 @@ func ResourceChronicleRetrohuntFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("progress_percentage", flattenChronicleRetrohuntProgressPercentage(res["progressPercentage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Retrohunt: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleRetrohuntName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Retrohunt: %s", err)
 	}
+
 	if err = d.Set("process_interval", flattenChronicleRetrohuntProcessInterval(res["processInterval"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Retrohunt: %s", err)
 	}
+
 	if err = d.Set("execution_interval", flattenChronicleRetrohuntExecutionInterval(res["executionInterval"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Retrohunt: %s", err)
 	}
+
 	if err = d.Set("state", flattenChronicleRetrohuntState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Retrohunt: %s", err)
 	}
+
 	if err = d.Set("retrohunt", flattenChronicleRetrohuntRetrohunt(res["retrohunt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Retrohunt: %s", err)
 	}

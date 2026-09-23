@@ -545,12 +545,15 @@ func ResourceParameterManagerRegionalRegionalParameterVersionFlatten(d *schema.R
 	if err = d.Set("name", flattenParameterManagerRegionalRegionalParameterVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameterVersion: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenParameterManagerRegionalRegionalParameterVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameterVersion: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenParameterManagerRegionalRegionalParameterVersionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameterVersion: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenParameterManagerRegionalRegionalParameterVersionDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameterVersion: %s", err)
 	}
@@ -569,6 +572,7 @@ func ResourceParameterManagerRegionalRegionalParameterVersionFlatten(d *schema.R
 			}
 		}
 	}
+
 	if err = d.Set("kms_key_version", flattenParameterManagerRegionalRegionalParameterVersionKmsKeyVersion(res["kmsKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameterVersion: %s", err)
 	}

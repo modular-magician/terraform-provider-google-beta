@@ -3454,30 +3454,39 @@ func ResourceGKEHub2FeatureFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("labels", flattenGKEHub2FeatureLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("resource_state", flattenGKEHub2FeatureResourceState(res["resourceState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("spec", flattenGKEHub2FeatureSpec(res["spec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("fleet_default_member_config", flattenGKEHub2FeatureFleetDefaultMemberConfig(res["fleetDefaultMemberConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("state", flattenGKEHub2FeatureState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2FeatureCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2FeatureUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2FeatureDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHub2FeatureTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHub2FeatureEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feature: %s", err)
 	}

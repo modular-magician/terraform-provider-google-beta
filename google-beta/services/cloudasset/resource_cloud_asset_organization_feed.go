@@ -888,18 +888,23 @@ func ResourceCloudAssetOrganizationFeedFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("name", flattenCloudAssetOrganizationFeedName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationFeed: %s", err)
 	}
+
 	if err = d.Set("asset_names", flattenCloudAssetOrganizationFeedAssetNames(res["assetNames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationFeed: %s", err)
 	}
+
 	if err = d.Set("asset_types", flattenCloudAssetOrganizationFeedAssetTypes(res["assetTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationFeed: %s", err)
 	}
+
 	if err = d.Set("content_type", flattenCloudAssetOrganizationFeedContentType(res["contentType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationFeed: %s", err)
 	}
+
 	if err = d.Set("feed_output_config", flattenCloudAssetOrganizationFeedFeedOutputConfig(res["feedOutputConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationFeed: %s", err)
 	}
+
 	if err = d.Set("condition", flattenCloudAssetOrganizationFeedCondition(res["condition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationFeed: %s", err)
 	}

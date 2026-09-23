@@ -502,9 +502,11 @@ func ResourceKMSAutokeyConfigFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("key_project", flattenKMSAutokeyConfigKeyProject(res["keyProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutokeyConfig: %s", err)
 	}
+
 	if err = d.Set("etag", flattenKMSAutokeyConfigEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutokeyConfig: %s", err)
 	}
+
 	if err = d.Set("key_project_resolution_mode", flattenKMSAutokeyConfigKeyProjectResolutionMode(res["keyProjectResolutionMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutokeyConfig: %s", err)
 	}

@@ -790,12 +790,15 @@ func ResourceAppEngineDomainMappingFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenAppEngineDomainMappingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}
+
 	if err = d.Set("ssl_settings", flattenAppEngineDomainMappingSslSettings(res["sslSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}
+
 	if err = d.Set("resource_records", flattenAppEngineDomainMappingResourceRecords(res["resourceRecords"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}
+
 	if err = d.Set("domain_name", flattenAppEngineDomainMappingDomainName(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}

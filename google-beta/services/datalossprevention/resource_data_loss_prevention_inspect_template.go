@@ -3654,15 +3654,19 @@ func ResourceDataLossPreventionInspectTemplateFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenDataLossPreventionInspectTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InspectTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataLossPreventionInspectTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InspectTemplate: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataLossPreventionInspectTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InspectTemplate: %s", err)
 	}
+
 	if err = d.Set("inspect_config", flattenDataLossPreventionInspectTemplateInspectConfig(res["inspectConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InspectTemplate: %s", err)
 	}
+
 	if err = d.Set("allow_limited_availability_info_types", flattenDataLossPreventionInspectTemplateAllowLimitedAvailabilityInfoTypes(res["allowLimitedAvailabilityInfoTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InspectTemplate: %s", err)
 	}

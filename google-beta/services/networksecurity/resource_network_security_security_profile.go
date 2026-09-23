@@ -1508,39 +1508,51 @@ func ResourceNetworkSecuritySecurityProfileFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("self_link", flattenNetworkSecuritySecurityProfileSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecuritySecurityProfileCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecuritySecurityProfileUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNetworkSecuritySecurityProfileEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecuritySecurityProfileDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecuritySecurityProfileLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("threat_prevention_profile", flattenNetworkSecuritySecurityProfileThreatPreventionProfile(res["threatPreventionProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("url_filtering_profile", flattenNetworkSecuritySecurityProfileUrlFilteringProfile(res["urlFilteringProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("custom_mirroring_profile", flattenNetworkSecuritySecurityProfileCustomMirroringProfile(res["customMirroringProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("custom_intercept_profile", flattenNetworkSecuritySecurityProfileCustomInterceptProfile(res["customInterceptProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("type", flattenNetworkSecuritySecurityProfileType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecuritySecurityProfileTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecuritySecurityProfileEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}

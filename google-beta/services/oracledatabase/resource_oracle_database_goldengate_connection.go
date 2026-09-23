@@ -9593,33 +9593,43 @@ func ResourceOracleDatabaseGoldengateConnectionFlatten(d *schema.ResourceData, m
 	if err = d.Set("create_time", flattenOracleDatabaseGoldengateConnectionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("entitlement_id", flattenOracleDatabaseGoldengateConnectionEntitlementId(res["entitlementId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("gcp_oracle_zone", flattenOracleDatabaseGoldengateConnectionGcpOracleZone(res["gcpOracleZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseGoldengateConnectionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("name", flattenOracleDatabaseGoldengateConnectionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("oci_url", flattenOracleDatabaseGoldengateConnectionOciUrl(res["ociUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("odb_network", flattenOracleDatabaseGoldengateConnectionOdbNetwork(res["odbNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("odb_subnet", flattenOracleDatabaseGoldengateConnectionOdbSubnet(res["odbSubnet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("properties", flattenOracleDatabaseGoldengateConnectionProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseGoldengateConnectionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseGoldengateConnectionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnection: %s", err)
 	}

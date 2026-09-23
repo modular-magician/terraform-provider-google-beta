@@ -1680,9 +1680,11 @@ func ResourceOrgPolicyPolicyFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("spec", flattenOrgPolicyPolicySpec(res["spec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("dry_run_spec", flattenOrgPolicyPolicyDryRunSpec(res["dryRunSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenOrgPolicyPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}

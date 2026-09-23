@@ -674,15 +674,19 @@ func ResourceIAMWorkforcePoolWorkforcePoolProviderKeyFlatten(d *schema.ResourceD
 	if err = d.Set("name", flattenIAMWorkforcePoolWorkforcePoolProviderKeyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderKey: %s", err)
 	}
+
 	if err = d.Set("key_data", flattenIAMWorkforcePoolWorkforcePoolProviderKeyKeyData(res["keyData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderKey: %s", err)
 	}
+
 	if err = d.Set("state", flattenIAMWorkforcePoolWorkforcePoolProviderKeyState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderKey: %s", err)
 	}
+
 	if err = d.Set("use", flattenIAMWorkforcePoolWorkforcePoolProviderKeyUse(res["use"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderKey: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenIAMWorkforcePoolWorkforcePoolProviderKeyExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderKey: %s", err)
 	}

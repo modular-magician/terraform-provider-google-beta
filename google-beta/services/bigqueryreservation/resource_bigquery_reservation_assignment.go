@@ -635,15 +635,19 @@ func ResourceBigqueryReservationReservationAssignmentFlatten(d *schema.ResourceD
 	if err = d.Set("name", flattenNestedBigqueryReservationReservationAssignmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReservationAssignment: %s", err)
 	}
+
 	if err = d.Set("assignee", flattenNestedBigqueryReservationReservationAssignmentAssignee(res["assignee"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReservationAssignment: %s", err)
 	}
+
 	if err = d.Set("job_type", flattenNestedBigqueryReservationReservationAssignmentJobType(res["jobType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReservationAssignment: %s", err)
 	}
+
 	if err = d.Set("principal", flattenNestedBigqueryReservationReservationAssignmentPrincipal(res["principal"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReservationAssignment: %s", err)
 	}
+
 	if err = d.Set("state", flattenNestedBigqueryReservationReservationAssignmentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReservationAssignment: %s", err)
 	}

@@ -862,27 +862,35 @@ func ResourceIAM3PrincipalAccessBoundaryPolicyFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenIAM3PrincipalAccessBoundaryPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("uid", flattenIAM3PrincipalAccessBoundaryPolicyUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenIAM3PrincipalAccessBoundaryPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIAM3PrincipalAccessBoundaryPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenIAM3PrincipalAccessBoundaryPolicyAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenIAM3PrincipalAccessBoundaryPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenIAM3PrincipalAccessBoundaryPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("details", flattenIAM3PrincipalAccessBoundaryPolicyDetails(res["details"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenIAM3PrincipalAccessBoundaryPolicyEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}

@@ -886,18 +886,23 @@ func ResourceVectorSearchDataObjectFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenVectorSearchDataObjectName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataObject: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVectorSearchDataObjectCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataObject: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVectorSearchDataObjectUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataObject: %s", err)
 	}
+
 	if err = d.Set("data", flattenVectorSearchDataObjectData(res["data"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataObject: %s", err)
 	}
+
 	if err = d.Set("vectors", flattenVectorSearchDataObjectVectors(res["vectors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataObject: %s", err)
 	}
+
 	if err = d.Set("etag", flattenVectorSearchDataObjectEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataObject: %s", err)
 	}

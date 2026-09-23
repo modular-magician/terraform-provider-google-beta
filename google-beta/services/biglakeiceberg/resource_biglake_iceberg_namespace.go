@@ -634,6 +634,7 @@ func ResourceBiglakeIcebergIcebergNamespaceFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("namespace_id", flattenBiglakeIcebergIcebergNamespaceNamespaceId(res["namespace"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergNamespace: %s", err)
 	}
+
 	if err = d.Set("properties", flattenBiglakeIcebergIcebergNamespaceProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergNamespace: %s", err)
 	}

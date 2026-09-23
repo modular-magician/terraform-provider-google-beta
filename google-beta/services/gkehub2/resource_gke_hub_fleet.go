@@ -1102,30 +1102,39 @@ func ResourceGKEHub2FleetFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("display_name", flattenGKEHub2FleetDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEHub2FleetLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2FleetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2FleetUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2FleetDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEHub2FleetUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("state", flattenGKEHub2FleetState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("default_cluster_config", flattenGKEHub2FleetDefaultClusterConfig(res["defaultClusterConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHub2FleetTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHub2FleetEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fleet: %s", err)
 	}

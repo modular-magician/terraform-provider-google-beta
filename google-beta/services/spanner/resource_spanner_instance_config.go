@@ -966,24 +966,31 @@ func ResourceSpannerInstanceConfigFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenSpannerInstanceConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSpannerInstanceConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("base_config", flattenSpannerInstanceConfigBaseConfig(res["baseConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("config_type", flattenSpannerInstanceConfigConfigType(res["configType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("replicas", flattenSpannerInstanceConfigReplicas(res["replicas"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("labels", flattenSpannerInstanceConfigLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenSpannerInstanceConfigTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenSpannerInstanceConfigEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceConfig: %s", err)
 	}

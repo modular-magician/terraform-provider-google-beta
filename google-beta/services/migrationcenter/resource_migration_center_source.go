@@ -794,33 +794,43 @@ func ResourceMigrationCenterSourceFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("create_time", flattenMigrationCenterSourceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("description", flattenMigrationCenterSourceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterSourceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("error_frame_count", flattenMigrationCenterSourceErrorFrameCount(res["errorFrameCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("managed", flattenMigrationCenterSourceManaged(res["managed"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterSourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("pending_frame_count", flattenMigrationCenterSourcePendingFrameCount(res["pendingFrameCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("priority", flattenMigrationCenterSourcePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("state", flattenMigrationCenterSourceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("type", flattenMigrationCenterSourceType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterSourceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Source: %s", err)
 	}

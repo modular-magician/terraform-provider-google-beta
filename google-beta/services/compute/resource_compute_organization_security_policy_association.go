@@ -527,15 +527,19 @@ func ResourceComputeOrganizationSecurityPolicyAssociationFlatten(d *schema.Resou
 	if err = d.Set("name", flattenComputeOrganizationSecurityPolicyAssociationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("attachment_id", flattenComputeOrganizationSecurityPolicyAssociationAttachmentId(res["attachmentId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenComputeOrganizationSecurityPolicyAssociationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("excluded_projects", flattenComputeOrganizationSecurityPolicyAssociationExcludedProjects(res["excludedProjects"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("excluded_folders", flattenComputeOrganizationSecurityPolicyAssociationExcludedFolders(res["excludedFolders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
 	}

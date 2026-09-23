@@ -676,24 +676,31 @@ func ResourceComputeRegionNetworkPolicyFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("creation_timestamp", flattenComputeRegionNetworkPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionNetworkPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("region_network_policy_id", flattenComputeRegionNetworkPolicyRegionNetworkPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionNetworkPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenComputeRegionNetworkPolicySelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeRegionNetworkPolicySelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("associations", flattenComputeRegionNetworkPolicyAssociations(res["associations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("rule_tuple_count", flattenComputeRegionNetworkPolicyRuleTupleCount(res["ruleTupleCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicy: %s", err)
 	}

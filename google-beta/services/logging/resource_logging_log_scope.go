@@ -609,12 +609,15 @@ func ResourceLoggingLogScopeFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("resource_names", flattenLoggingLogScopeResourceNames(res["resourceNames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogScope: %s", err)
 	}
+
 	if err = d.Set("description", flattenLoggingLogScopeDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogScope: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenLoggingLogScopeCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogScope: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenLoggingLogScopeUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogScope: %s", err)
 	}

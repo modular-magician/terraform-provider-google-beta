@@ -587,12 +587,15 @@ func ResourceServiceDirectoryNamespaceFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("name", flattenServiceDirectoryNamespaceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Namespace: %s", err)
 	}
+
 	if err = d.Set("labels", flattenServiceDirectoryNamespaceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Namespace: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenServiceDirectoryNamespaceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Namespace: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenServiceDirectoryNamespaceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Namespace: %s", err)
 	}

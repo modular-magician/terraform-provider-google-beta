@@ -1901,51 +1901,67 @@ func ResourceOracleDatabaseCloudVmClusterFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenOracleDatabaseCloudVmClusterName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("exadata_infrastructure", flattenOracleDatabaseCloudVmClusterExadataInfrastructure(res["exadataInfrastructure"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenOracleDatabaseCloudVmClusterDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("gcp_oracle_zone", flattenOracleDatabaseCloudVmClusterGcpOracleZone(res["gcpOracleZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("properties", flattenOracleDatabaseCloudVmClusterProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseCloudVmClusterLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenOracleDatabaseCloudVmClusterCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("cidr", flattenOracleDatabaseCloudVmClusterCidr(res["cidr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("backup_subnet_cidr", flattenOracleDatabaseCloudVmClusterBackupSubnetCidr(res["backupSubnetCidr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("network", flattenOracleDatabaseCloudVmClusterNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("odb_network", flattenOracleDatabaseCloudVmClusterOdbNetwork(res["odbNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("odb_subnet", flattenOracleDatabaseCloudVmClusterOdbSubnet(res["odbSubnet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("backup_odb_subnet", flattenOracleDatabaseCloudVmClusterBackupOdbSubnet(res["backupOdbSubnet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("identity_connector", flattenOracleDatabaseCloudVmClusterIdentityConnector(res["identityConnector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("exascale_db_storage_vault", flattenOracleDatabaseCloudVmClusterExascaleDbStorageVault(res["exascaleDbStorageVault"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseCloudVmClusterTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseCloudVmClusterEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudVmCluster: %s", err)
 	}

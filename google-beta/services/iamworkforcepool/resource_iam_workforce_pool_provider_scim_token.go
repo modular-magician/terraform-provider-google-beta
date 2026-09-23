@@ -626,9 +626,11 @@ func ResourceIAMWorkforcePoolWorkforcePoolProviderScimTokenFlatten(d *schema.Res
 	if err = d.Set("name", flattenIAMWorkforcePoolWorkforcePoolProviderScimTokenName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderScimToken: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIAMWorkforcePoolWorkforcePoolProviderScimTokenDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderScimToken: %s", err)
 	}
+
 	if err = d.Set("state", flattenIAMWorkforcePoolWorkforcePoolProviderScimTokenState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProviderScimToken: %s", err)
 	}

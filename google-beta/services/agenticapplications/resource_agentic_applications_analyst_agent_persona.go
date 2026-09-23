@@ -5681,54 +5681,71 @@ func ResourceAgenticApplicationsAnalystAgentPersonaFlatten(d *schema.ResourceDat
 	if err = d.Set("artifact_examples", flattenAgenticApplicationsAnalystAgentPersonaArtifactExamples(res["artifactExamples"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("artifacts_config", flattenAgenticApplicationsAnalystAgentPersonaArtifactsConfig(res["artifactsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenAgenticApplicationsAnalystAgentPersonaCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("customer_context", flattenAgenticApplicationsAnalystAgentPersonaCustomerContext(res["customerContext"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("display_description", flattenAgenticApplicationsAnalystAgentPersonaDisplayDescription(res["displayDescription"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenAgenticApplicationsAnalystAgentPersonaDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("external_data_sources", flattenAgenticApplicationsAnalystAgentPersonaExternalDataSources(res["externalDataSources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("gemini_enterprise_engine", flattenAgenticApplicationsAnalystAgentPersonaGeminiEnterpriseEngine(res["geminiEnterpriseEngine"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("math_rendering_mode", flattenAgenticApplicationsAnalystAgentPersonaMathRenderingMode(res["mathRenderingMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("mcp_data_sources", flattenAgenticApplicationsAnalystAgentPersonaMcpDataSources(res["mcpDataSources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("model_description", flattenAgenticApplicationsAnalystAgentPersonaModelDescription(res["modelDescription"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("name", flattenAgenticApplicationsAnalystAgentPersonaName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("resources", flattenAgenticApplicationsAnalystAgentPersonaResources(res["resources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("role", flattenAgenticApplicationsAnalystAgentPersonaRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("skills", flattenAgenticApplicationsAnalystAgentPersonaSkills(res["skills"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("tables", flattenAgenticApplicationsAnalystAgentPersonaTables(res["tables"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenAgenticApplicationsAnalystAgentPersonaUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}
+
 	if err = d.Set("web_search_config", flattenAgenticApplicationsAnalystAgentPersonaWebSearchConfig(res["webSearchConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AnalystAgentPersona: %s", err)
 	}

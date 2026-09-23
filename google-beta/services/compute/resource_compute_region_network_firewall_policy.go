@@ -678,27 +678,35 @@ func ResourceComputeRegionNetworkFirewallPolicyFlatten(d *schema.ResourceData, m
 	if err = d.Set("creation_timestamp", flattenComputeRegionNetworkFirewallPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionNetworkFirewallPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("region_network_firewall_policy_id", flattenComputeRegionNetworkFirewallPolicyRegionNetworkFirewallPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionNetworkFirewallPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("policy_type", flattenComputeRegionNetworkFirewallPolicyPolicyType(res["policyType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeRegionNetworkFirewallPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenComputeRegionNetworkFirewallPolicySelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeRegionNetworkFirewallPolicySelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("rule_tuple_count", flattenComputeRegionNetworkFirewallPolicyRuleTupleCount(res["ruleTupleCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicy: %s", err)
 	}

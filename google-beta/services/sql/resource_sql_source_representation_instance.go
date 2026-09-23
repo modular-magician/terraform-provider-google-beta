@@ -746,9 +746,11 @@ func ResourceSQLSourceRepresentationInstanceFlatten(d *schema.ResourceData, meta
 	if err = d.Set("name", flattenSQLSourceRepresentationInstanceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SourceRepresentationInstance: %s", err)
 	}
+
 	if err = d.Set("region", flattenSQLSourceRepresentationInstanceRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SourceRepresentationInstance: %s", err)
 	}
+
 	if err = d.Set("database_version", flattenSQLSourceRepresentationInstanceDatabaseVersion(res["databaseVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SourceRepresentationInstance: %s", err)
 	}

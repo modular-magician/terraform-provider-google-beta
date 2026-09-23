@@ -801,36 +801,47 @@ func ResourceFirebaseDataConnectServiceFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("display_name", flattenFirebaseDataConnectServiceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenFirebaseDataConnectServiceAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenFirebaseDataConnectServiceReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirebaseDataConnectServiceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("name", flattenFirebaseDataConnectServiceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFirebaseDataConnectServiceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirebaseDataConnectServiceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("labels", flattenFirebaseDataConnectServiceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("uid", flattenFirebaseDataConnectServiceUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenFirebaseDataConnectServiceEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenFirebaseDataConnectServiceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenFirebaseDataConnectServiceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}

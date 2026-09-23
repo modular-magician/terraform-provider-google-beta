@@ -1645,57 +1645,75 @@ func ResourceStorageInsightsDatasetConfigFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenStorageInsightsDatasetConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenStorageInsightsDatasetConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageInsightsDatasetConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("uid", flattenStorageInsightsDatasetConfigUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("organization_number", flattenStorageInsightsDatasetConfigOrganizationNumber(res["organizationNumber"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("include_newly_created_buckets", flattenStorageInsightsDatasetConfigIncludeNewlyCreatedBuckets(res["includeNewlyCreatedBuckets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("retention_period_days", flattenStorageInsightsDatasetConfigRetentionPeriodDays(res["retentionPeriodDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("activity_data_retention_period_days", flattenStorageInsightsDatasetConfigActivityDataRetentionPeriodDays(res["activityDataRetentionPeriodDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("link", flattenStorageInsightsDatasetConfigLink(res["link"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("identity", flattenStorageInsightsDatasetConfigIdentity(res["identity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("dataset_config_state", flattenStorageInsightsDatasetConfigDatasetConfigState(res["datasetConfigState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenStorageInsightsDatasetConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("source_projects", flattenStorageInsightsDatasetConfigSourceProjects(res["sourceProjects"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("source_folders", flattenStorageInsightsDatasetConfigSourceFolders(res["sourceFolders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("organization_scope", flattenStorageInsightsDatasetConfigOrganizationScope(res["organizationScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("include_cloud_storage_locations", flattenStorageInsightsDatasetConfigIncludeCloudStorageLocations(res["includeCloudStorageLocations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("exclude_cloud_storage_locations", flattenStorageInsightsDatasetConfigExcludeCloudStorageLocations(res["excludeCloudStorageLocations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("include_cloud_storage_buckets", flattenStorageInsightsDatasetConfigIncludeCloudStorageBuckets(res["includeCloudStorageBuckets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}
+
 	if err = d.Set("exclude_cloud_storage_buckets", flattenStorageInsightsDatasetConfigExcludeCloudStorageBuckets(res["excludeCloudStorageBuckets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DatasetConfig: %s", err)
 	}

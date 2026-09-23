@@ -931,18 +931,23 @@ func ResourceBigtableAppProfileFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenBigtableAppProfileName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
+
 	if err = d.Set("description", flattenBigtableAppProfileDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
+
 	if err = d.Set("multi_cluster_routing_use_any", flattenBigtableAppProfileMultiClusterRoutingUseAny(res["multiClusterRoutingUseAny"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
+
 	if err = d.Set("single_cluster_routing", flattenBigtableAppProfileSingleClusterRouting(res["singleClusterRouting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
+
 	if err = d.Set("standard_isolation", flattenBigtableAppProfileStandardIsolation(res["standardIsolation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
+
 	if err = d.Set("data_boost_isolation_read_only", flattenBigtableAppProfileDataBoostIsolationReadOnly(res["dataBoostIsolationReadOnly"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}

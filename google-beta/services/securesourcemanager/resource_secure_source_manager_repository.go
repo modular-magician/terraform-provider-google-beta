@@ -958,27 +958,35 @@ func ResourceSecureSourceManagerRepositoryFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenSecureSourceManagerRepositoryName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecureSourceManagerRepositoryDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("instance", flattenSecureSourceManagerRepositoryInstance(res["instance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("uid", flattenSecureSourceManagerRepositoryUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecureSourceManagerRepositoryCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecureSourceManagerRepositoryUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("uris", flattenSecureSourceManagerRepositoryUris(res["uris"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenSecureSourceManagerRepositoryServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("scan_config", flattenSecureSourceManagerRepositoryScanConfig(res["scanConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}

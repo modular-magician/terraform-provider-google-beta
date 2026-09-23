@@ -1269,18 +1269,23 @@ func ResourceDialogflowEnvironmentFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenDialogflowEnvironmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowEnvironmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("agent_version", flattenDialogflowEnvironmentAgentVersion(res["agentVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("state", flattenDialogflowEnvironmentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("text_to_speech_settings", flattenDialogflowEnvironmentTextToSpeechSettings(res["textToSpeechSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("fulfillment", flattenDialogflowEnvironmentFulfillment(res["fulfillment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}

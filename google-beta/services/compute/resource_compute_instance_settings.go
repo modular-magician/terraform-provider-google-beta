@@ -612,9 +612,11 @@ func ResourceComputeInstanceSettingsFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("fingerprint", flattenComputeInstanceSettingsFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceSettings: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenComputeInstanceSettingsMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceSettings: %s", err)
 	}
+
 	if err = d.Set("zone", flattenComputeInstanceSettingsZone(res["zone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceSettings: %s", err)
 	}

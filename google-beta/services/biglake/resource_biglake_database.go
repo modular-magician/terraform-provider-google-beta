@@ -640,18 +640,23 @@ func ResourceBiglakeDatabaseFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("create_time", flattenBiglakeDatabaseCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBiglakeDatabaseUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenBiglakeDatabaseDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenBiglakeDatabaseExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("type", flattenBiglakeDatabaseType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("hive_options", flattenBiglakeDatabaseHiveOptions(res["hiveOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}

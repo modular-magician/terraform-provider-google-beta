@@ -1260,36 +1260,47 @@ func ResourceDiscoveryEngineSearchEngineFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenDiscoveryEngineSearchEngineName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("industry_vertical", flattenDiscoveryEngineSearchEngineIndustryVertical(res["industryVertical"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDiscoveryEngineSearchEngineDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("data_store_ids", flattenDiscoveryEngineSearchEngineDataStoreIds(res["dataStoreIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDiscoveryEngineSearchEngineCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDiscoveryEngineSearchEngineUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("search_engine_config", flattenDiscoveryEngineSearchEngineSearchEngineConfig(res["searchEngineConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("common_config", flattenDiscoveryEngineSearchEngineCommonConfig(res["commonConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("app_type", flattenDiscoveryEngineSearchEngineAppType(res["appType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("disable_analytics", flattenDiscoveryEngineSearchEngineDisableAnalytics(res["disableAnalytics"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("features", flattenDiscoveryEngineSearchEngineFeatures(res["features"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+
 	if err = d.Set("knowledge_graph_config", flattenDiscoveryEngineSearchEngineKnowledgeGraphConfig(res["knowledgeGraphConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}

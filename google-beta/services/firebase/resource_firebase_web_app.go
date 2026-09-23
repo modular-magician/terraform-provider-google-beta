@@ -621,15 +621,19 @@ func ResourceFirebaseWebAppFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenFirebaseWebAppName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebApp: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenFirebaseWebAppDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebApp: %s", err)
 	}
+
 	if err = d.Set("app_id", flattenFirebaseWebAppAppId(res["appId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebApp: %s", err)
 	}
+
 	if err = d.Set("app_urls", flattenFirebaseWebAppAppUrls(res["appUrls"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebApp: %s", err)
 	}
+
 	if err = d.Set("api_key_id", flattenFirebaseWebAppApiKeyId(res["apiKeyId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WebApp: %s", err)
 	}

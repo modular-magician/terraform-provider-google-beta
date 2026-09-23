@@ -688,30 +688,39 @@ func ResourceApihubApiHubInstanceFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("description", flattenApihubApiHubInstanceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("name", flattenApihubApiHubInstanceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApihubApiHubInstanceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApihubApiHubInstanceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("state", flattenApihubApiHubInstanceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("state_message", flattenApihubApiHubInstanceStateMessage(res["stateMessage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("config", flattenApihubApiHubInstanceConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("labels", flattenApihubApiHubInstanceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenApihubApiHubInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenApihubApiHubInstanceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}

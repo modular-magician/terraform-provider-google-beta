@@ -769,21 +769,27 @@ func ResourceGeminiGibqObservabilitySettingFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("conversational_analytics_setting", flattenGeminiGibqObservabilitySettingConversationalAnalyticsSetting(res["conversationalAnalyticsSetting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiGibqObservabilitySettingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}
+
 	if err = d.Set("name", flattenGeminiGibqObservabilitySettingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiGibqObservabilitySettingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiGibqObservabilitySettingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiGibqObservabilitySettingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiGibqObservabilitySettingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GibqObservabilitySetting: %s", err)
 	}

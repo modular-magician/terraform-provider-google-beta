@@ -720,12 +720,15 @@ func ResourceDialogflowSipTrunkFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenDialogflowSipTrunkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SipTrunk: %s", err)
 	}
+
 	if err = d.Set("expected_hostname", flattenDialogflowSipTrunkExpectedHostname(res["expectedHostname"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SipTrunk: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowSipTrunkDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SipTrunk: %s", err)
 	}
+
 	if err = d.Set("connections", flattenDialogflowSipTrunkConnections(res["connections"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SipTrunk: %s", err)
 	}

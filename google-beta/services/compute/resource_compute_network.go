@@ -1248,18 +1248,23 @@ func ResourceComputeNetworkFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("description", flattenComputeNetworkDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("gateway_ipv4", flattenComputeNetworkGatewayIpv4(res["gatewayIPv4"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeNetworkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("network_id", flattenComputeNetworkNetworkId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("numeric_id", flattenComputeNetworkNumericId(res["numericId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("auto_create_subnetworks", flattenComputeNetworkAutoCreateSubnetworks(res["autoCreateSubnetworks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
@@ -1278,18 +1283,23 @@ func ResourceComputeNetworkFlatten(d *schema.ResourceData, meta interface{}, res
 			}
 		}
 	}
+
 	if err = d.Set("mtu", flattenComputeNetworkMtu(res["mtu"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("enable_ula_internal_ipv6", flattenComputeNetworkEnableUlaInternalIpv6(res["enableUlaInternalIpv6"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("internal_ipv6_range", flattenComputeNetworkInternalIpv6Range(res["internalIpv6Range"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("network_firewall_policy_enforcement_order", flattenComputeNetworkNetworkFirewallPolicyEnforcementOrder(res["networkFirewallPolicyEnforcementOrder"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
+
 	if err = d.Set("network_profile", flattenComputeNetworkNetworkProfile(res["networkProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}

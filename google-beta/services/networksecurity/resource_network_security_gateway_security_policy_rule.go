@@ -837,30 +837,39 @@ func ResourceNetworkSecurityGatewaySecurityPolicyRuleFlatten(d *schema.ResourceD
 	if err = d.Set("self_link", flattenNetworkSecurityGatewaySecurityPolicyRuleSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityGatewaySecurityPolicyRuleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityGatewaySecurityPolicyRuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenNetworkSecurityGatewaySecurityPolicyRuleEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("priority", flattenNetworkSecurityGatewaySecurityPolicyRulePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityGatewaySecurityPolicyRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("session_matcher", flattenNetworkSecurityGatewaySecurityPolicyRuleSessionMatcher(res["sessionMatcher"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("application_matcher", flattenNetworkSecurityGatewaySecurityPolicyRuleApplicationMatcher(res["applicationMatcher"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("tls_inspection_enabled", flattenNetworkSecurityGatewaySecurityPolicyRuleTlsInspectionEnabled(res["tlsInspectionEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("basic_profile", flattenNetworkSecurityGatewaySecurityPolicyRuleBasicProfile(res["basicProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GatewaySecurityPolicyRule: %s", err)
 	}

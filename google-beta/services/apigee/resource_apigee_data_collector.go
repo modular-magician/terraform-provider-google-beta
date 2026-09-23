@@ -564,15 +564,19 @@ func ResourceApigeeDataCollectorFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenApigeeDataCollectorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataCollector: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeDataCollectorDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataCollector: %s", err)
 	}
+
 	if err = d.Set("type", flattenApigeeDataCollectorType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataCollector: %s", err)
 	}
+
 	if err = d.Set("created_at", flattenApigeeDataCollectorCreatedAt(res["createdAt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataCollector: %s", err)
 	}
+
 	if err = d.Set("last_modified_at", flattenApigeeDataCollectorLastModifiedAt(res["lastModifiedAt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataCollector: %s", err)
 	}

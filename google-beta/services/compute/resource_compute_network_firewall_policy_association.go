@@ -488,9 +488,11 @@ func ResourceComputeNetworkFirewallPolicyAssociationFlatten(d *schema.ResourceDa
 	if err = d.Set("name", flattenComputeNetworkFirewallPolicyAssociationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("attachment_target", flattenComputeNetworkFirewallPolicyAssociationAttachmentTarget(res["attachmentTarget"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("short_name", flattenComputeNetworkFirewallPolicyAssociationShortName(res["shortName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyAssociation: %s", err)
 	}

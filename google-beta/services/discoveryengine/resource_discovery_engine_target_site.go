@@ -704,27 +704,35 @@ func ResourceDiscoveryEngineTargetSiteFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("name", flattenDiscoveryEngineTargetSiteName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("type", flattenDiscoveryEngineTargetSiteType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("exact_match", flattenDiscoveryEngineTargetSiteExactMatch(res["exactMatch"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("generated_uri_pattern", flattenDiscoveryEngineTargetSiteGeneratedUriPattern(res["generatedUriPattern"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("root_domain_uri", flattenDiscoveryEngineTargetSiteRootDomainUri(res["rootDomainUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("site_verification_info", flattenDiscoveryEngineTargetSiteSiteVerificationInfo(res["siteVerificationInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("indexing_status", flattenDiscoveryEngineTargetSiteIndexingStatus(res["indexingStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDiscoveryEngineTargetSiteUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
+
 	if err = d.Set("failure_reason", flattenDiscoveryEngineTargetSiteFailureReason(res["failureReason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}

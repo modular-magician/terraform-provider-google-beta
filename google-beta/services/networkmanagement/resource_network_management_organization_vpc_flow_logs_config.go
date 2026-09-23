@@ -885,42 +885,55 @@ func ResourceNetworkManagementOrganizationVpcFlowLogsConfigFlatten(d *schema.Res
 	if err = d.Set("name", flattenNetworkManagementOrganizationVpcFlowLogsConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkManagementOrganizationVpcFlowLogsConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkManagementOrganizationVpcFlowLogsConfigState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("aggregation_interval", flattenNetworkManagementOrganizationVpcFlowLogsConfigAggregationInterval(res["aggregationInterval"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("flow_sampling", flattenNetworkManagementOrganizationVpcFlowLogsConfigFlowSampling(res["flowSampling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenNetworkManagementOrganizationVpcFlowLogsConfigMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("metadata_fields", flattenNetworkManagementOrganizationVpcFlowLogsConfigMetadataFields(res["metadataFields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("filter_expr", flattenNetworkManagementOrganizationVpcFlowLogsConfigFilterExpr(res["filterExpr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkManagementOrganizationVpcFlowLogsConfigLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkManagementOrganizationVpcFlowLogsConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkManagementOrganizationVpcFlowLogsConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("cross_project_metadata", flattenNetworkManagementOrganizationVpcFlowLogsConfigCrossProjectMetadata(res["crossProjectMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkManagementOrganizationVpcFlowLogsConfigTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkManagementOrganizationVpcFlowLogsConfigEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationVpcFlowLogsConfig: %s", err)
 	}

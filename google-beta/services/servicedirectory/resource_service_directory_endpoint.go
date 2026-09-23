@@ -628,15 +628,19 @@ func ResourceServiceDirectoryEndpointFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenServiceDirectoryEndpointName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("address", flattenServiceDirectoryEndpointAddress(res["address"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("port", flattenServiceDirectoryEndpointPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenServiceDirectoryEndpointMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("network", flattenServiceDirectoryEndpointNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}

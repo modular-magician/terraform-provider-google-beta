@@ -642,15 +642,19 @@ func ResourceHealthcareWorkspaceFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenHealthcareWorkspaceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workspace: %s", err)
 	}
+
 	if err = d.Set("settings", flattenHealthcareWorkspaceSettings(res["settings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workspace: %s", err)
 	}
+
 	if err = d.Set("labels", flattenHealthcareWorkspaceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workspace: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenHealthcareWorkspaceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workspace: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenHealthcareWorkspaceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workspace: %s", err)
 	}

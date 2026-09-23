@@ -560,6 +560,7 @@ func ResourceApigeeEnvgroupFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenApigeeEnvgroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Envgroup: %s", err)
 	}
+
 	if err = d.Set("hostnames", flattenApigeeEnvgroupHostnames(res["hostnames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Envgroup: %s", err)
 	}

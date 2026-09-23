@@ -6527,9 +6527,11 @@ func ResourceCloudRunServiceFlatten(d *schema.ResourceData, meta interface{}, re
 			}
 		}
 	}
+
 	if err = d.Set("status", flattenCloudRunServiceStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenCloudRunServiceMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}

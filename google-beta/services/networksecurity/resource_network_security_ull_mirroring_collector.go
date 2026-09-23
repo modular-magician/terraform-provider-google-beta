@@ -724,30 +724,39 @@ func ResourceNetworkSecurityUllMirroringCollectorFlatten(d *schema.ResourceData,
 	if err = d.Set("name", flattenNetworkSecurityUllMirroringCollectorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityUllMirroringCollectorCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityUllMirroringCollectorUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("engine", flattenNetworkSecurityUllMirroringCollectorEngine(res["engine"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("forwarding_rule", flattenNetworkSecurityUllMirroringCollectorForwardingRule(res["forwardingRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityUllMirroringCollectorLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityUllMirroringCollectorReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityUllMirroringCollectorState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityUllMirroringCollectorTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityUllMirroringCollectorEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollector: %s", err)
 	}

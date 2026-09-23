@@ -716,30 +716,39 @@ func ResourceGKEHub2ScopeFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("name", flattenGKEHub2ScopeName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEHub2ScopeUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2ScopeCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2ScopeUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2ScopeDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("state", flattenGKEHub2ScopeState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("namespace_labels", flattenGKEHub2ScopeNamespaceLabels(res["namespaceLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEHub2ScopeLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHub2ScopeTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHub2ScopeEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Scope: %s", err)
 	}

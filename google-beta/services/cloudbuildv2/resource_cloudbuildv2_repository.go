@@ -608,18 +608,23 @@ func ResourceCloudbuildv2RepositoryFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("remote_uri", flattenCloudbuildv2RepositoryRemoteUri(res["remoteUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCloudbuildv2RepositoryCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCloudbuildv2RepositoryUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenCloudbuildv2RepositoryAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCloudbuildv2RepositoryEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenCloudbuildv2RepositoryEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}

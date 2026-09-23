@@ -825,39 +825,51 @@ func ResourceFilestoreBackupFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("description", flattenFilestoreBackupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("state", flattenFilestoreBackupState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFilestoreBackupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenFilestoreBackupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("capacity_gb", flattenFilestoreBackupCapacityGb(res["capacityGb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("storage_bytes", flattenFilestoreBackupStorageBytes(res["storageBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("source_instance", flattenFilestoreBackupSourceInstance(res["sourceInstance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("source_file_share", flattenFilestoreBackupSourceFileShare(res["sourceFileShare"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("source_instance_tier", flattenFilestoreBackupSourceInstanceTier(res["sourceInstanceTier"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("download_bytes", flattenFilestoreBackupDownloadBytes(res["downloadBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenFilestoreBackupKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenFilestoreBackupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenFilestoreBackupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}

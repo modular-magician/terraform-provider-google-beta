@@ -908,27 +908,35 @@ func ResourceComputeTargetSslProxyFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("creation_timestamp", flattenComputeTargetSslProxyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeTargetSslProxyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_id", flattenComputeTargetSslProxyProxyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeTargetSslProxyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_header", flattenComputeTargetSslProxyProxyHeader(res["proxyHeader"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("backend_service", flattenComputeTargetSslProxyBackendService(res["service"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("ssl_certificates", flattenComputeTargetSslProxySslCertificates(res["sslCertificates"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("certificate_map", flattenComputeTargetSslProxyCertificateMap(res["certificateMap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}
+
 	if err = d.Set("ssl_policy", flattenComputeTargetSslProxySslPolicy(res["sslPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetSslProxy: %s", err)
 	}

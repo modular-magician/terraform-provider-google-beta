@@ -541,12 +541,15 @@ func ResourceAlloydbUserFlatten(d *schema.ResourceData, meta interface{}, res ma
 	if err = d.Set("name", flattenAlloydbUserName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("database_roles", flattenAlloydbUserDatabaseRoles(res["databaseRoles"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("password_wo_version", flattenAlloydbUserPasswordWoVersion(res["passwordWoVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("user_type", flattenAlloydbUserUserType(res["userType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}

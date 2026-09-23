@@ -1483,15 +1483,19 @@ func ResourceAccessContextManagerAccessLevelFlatten(d *schema.ResourceData, meta
 	if err = d.Set("title", flattenAccessContextManagerAccessLevelTitle(res["title"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+
 	if err = d.Set("description", flattenAccessContextManagerAccessLevelDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+
 	if err = d.Set("basic", flattenAccessContextManagerAccessLevelBasic(res["basic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+
 	if err = d.Set("custom", flattenAccessContextManagerAccessLevelCustom(res["custom"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+
 	if err = d.Set("name", flattenAccessContextManagerAccessLevelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}

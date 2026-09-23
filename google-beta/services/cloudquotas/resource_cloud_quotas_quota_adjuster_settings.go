@@ -410,15 +410,19 @@ func ResourceCloudQuotasQuotaAdjusterSettingsFlatten(d *schema.ResourceData, met
 	if err = d.Set("enablement", flattenCloudQuotasQuotaAdjusterSettingsEnablement(res["enablement"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaAdjusterSettings: %s", err)
 	}
+
 	if err = d.Set("effective_container", flattenCloudQuotasQuotaAdjusterSettingsEffectiveContainer(res["effectiveContainer"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaAdjusterSettings: %s", err)
 	}
+
 	if err = d.Set("effective_enablement", flattenCloudQuotasQuotaAdjusterSettingsEffectiveEnablement(res["effectiveEnablement"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaAdjusterSettings: %s", err)
 	}
+
 	if err = d.Set("inherited", flattenCloudQuotasQuotaAdjusterSettingsInherited(res["inherited"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaAdjusterSettings: %s", err)
 	}
+
 	if err = d.Set("inherited_from", flattenCloudQuotasQuotaAdjusterSettingsInheritedFrom(res["inheritedFrom"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QuotaAdjusterSettings: %s", err)
 	}

@@ -2692,18 +2692,23 @@ func ResourceMonitoringSloFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("name", flattenMonitoringSloName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringSloDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}
+
 	if err = d.Set("goal", flattenMonitoringSloGoal(res["goal"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}
+
 	if err = d.Set("rolling_period_days", flattenMonitoringSloRollingPeriodDays(res["rollingPeriod"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}
+
 	if err = d.Set("calendar_period", flattenMonitoringSloCalendarPeriod(res["calendarPeriod"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}
+
 	if err = d.Set("user_labels", flattenMonitoringSloUserLabels(res["userLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}
@@ -2722,6 +2727,7 @@ func ResourceMonitoringSloFlatten(d *schema.ResourceData, meta interface{}, res 
 			}
 		}
 	}
+
 	if err = d.Set("slo_id", flattenMonitoringSloSloId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Slo: %s", err)
 	}

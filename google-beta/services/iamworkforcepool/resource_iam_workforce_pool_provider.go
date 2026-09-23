@@ -2219,39 +2219,51 @@ func ResourceIAMWorkforcePoolWorkforcePoolProviderFlatten(d *schema.ResourceData
 	if err = d.Set("name", flattenIAMWorkforcePoolWorkforcePoolProviderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIAMWorkforcePoolWorkforcePoolProviderDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("description", flattenIAMWorkforcePoolWorkforcePoolProviderDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("state", flattenIAMWorkforcePoolWorkforcePoolProviderState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenIAMWorkforcePoolWorkforcePoolProviderDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("attribute_mapping", flattenIAMWorkforcePoolWorkforcePoolProviderAttributeMapping(res["attributeMapping"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("attribute_condition", flattenIAMWorkforcePoolWorkforcePoolProviderAttributeCondition(res["attributeCondition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("saml", flattenIAMWorkforcePoolWorkforcePoolProviderSaml(res["saml"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("oidc", flattenIAMWorkforcePoolWorkforcePoolProviderOidc(res["oidc"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("extra_attributes_oauth2_client", flattenIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2Client(res["extraAttributesOauth2Client"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("extended_attributes_oauth2_client", flattenIAMWorkforcePoolWorkforcePoolProviderExtendedAttributesOauth2Client(res["extendedAttributesOauth2Client"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("scim_usage", flattenIAMWorkforcePoolWorkforcePoolProviderScimUsage(res["scimUsage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}
+
 	if err = d.Set("detailed_audit_logging", flattenIAMWorkforcePoolWorkforcePoolProviderDetailedAuditLogging(res["detailedAuditLogging"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkforcePoolProvider: %s", err)
 	}

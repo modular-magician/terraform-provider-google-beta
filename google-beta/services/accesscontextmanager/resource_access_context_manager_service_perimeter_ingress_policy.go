@@ -1600,12 +1600,15 @@ func ResourceAccessContextManagerServicePerimeterIngressPolicyFlatten(d *schema.
 	if err = d.Set("ingress_from", flattenNestedAccessContextManagerServicePerimeterIngressPolicyIngressFrom(res["ingressFrom"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterIngressPolicy: %s", err)
 	}
+
 	if err = d.Set("ingress_to", flattenNestedAccessContextManagerServicePerimeterIngressPolicyIngressTo(res["ingressTo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterIngressPolicy: %s", err)
 	}
+
 	if err = d.Set("title", flattenNestedAccessContextManagerServicePerimeterIngressPolicyTitle(res["title"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterIngressPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNestedAccessContextManagerServicePerimeterIngressPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterIngressPolicy: %s", err)
 	}

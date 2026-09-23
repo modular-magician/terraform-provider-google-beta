@@ -1364,6 +1364,7 @@ func ResourceComputeRegionPerInstanceConfigFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenNestedComputeRegionPerInstanceConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionPerInstanceConfig: %s", err)
 	}
+
 	if err = d.Set("preserved_state", flattenNestedComputeRegionPerInstanceConfigPreservedState(res["preservedState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionPerInstanceConfig: %s", err)
 	}

@@ -747,36 +747,47 @@ func ResourceEventarcChannelFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenEventarcChannelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEventarcChannelLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("uid", flattenEventarcChannelUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEventarcChannelCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEventarcChannelUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("third_party_provider", flattenEventarcChannelThirdPartyProvider(res["provider"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("pubsub_topic", flattenEventarcChannelPubsubTopic(res["pubsubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("state", flattenEventarcChannelState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("activation_token", flattenEventarcChannelActivationToken(res["activationToken"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("crypto_key_name", flattenEventarcChannelCryptoKeyName(res["cryptoKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEventarcChannelTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEventarcChannelEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}

@@ -977,45 +977,59 @@ func ResourceNetworkConnectivityPolicyBasedRouteFlatten(d *schema.ResourceData, 
 	if err = d.Set("description", flattenNetworkConnectivityPolicyBasedRouteDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkConnectivityPolicyBasedRouteLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkConnectivityPolicyBasedRouteNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("filter", flattenNetworkConnectivityPolicyBasedRouteFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("next_hop_other_routes", flattenNetworkConnectivityPolicyBasedRouteNextHopOtherRoutes(res["nextHopOtherRoutes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("next_hop_ilb_ip", flattenNetworkConnectivityPolicyBasedRouteNextHopIlbIp(res["nextHopIlbIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("priority", flattenNetworkConnectivityPolicyBasedRoutePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("virtual_machine", flattenNetworkConnectivityPolicyBasedRouteVirtualMachine(res["virtualMachine"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("interconnect_attachment", flattenNetworkConnectivityPolicyBasedRouteInterconnectAttachment(res["interconnectAttachment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkConnectivityPolicyBasedRouteCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkConnectivityPolicyBasedRouteUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("kind", flattenNetworkConnectivityPolicyBasedRouteKind(res["kind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("warnings", flattenNetworkConnectivityPolicyBasedRouteWarnings(res["warnings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkConnectivityPolicyBasedRouteTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkConnectivityPolicyBasedRouteEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyBasedRoute: %s", err)
 	}

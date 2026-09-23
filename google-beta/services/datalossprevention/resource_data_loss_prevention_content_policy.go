@@ -6607,36 +6607,47 @@ func ResourceDataLossPreventionContentPolicyFlatten(d *schema.ResourceData, meta
 	if err = d.Set("name", flattenDataLossPreventionContentPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataLossPreventionContentPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("inspect_config", flattenDataLossPreventionContentPolicyInspectConfig(res["inspectConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("rules", flattenDataLossPreventionContentPolicyRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("unsupported_file_type", flattenDataLossPreventionContentPolicyUnsupportedFileType(res["unsupportedFileType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("input_too_large", flattenDataLossPreventionContentPolicyInputTooLarge(res["inputTooLarge"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("failed_to_scan_supported_file_type", flattenDataLossPreventionContentPolicyFailedToScanSupportedFileType(res["failedToScanSupportedFileType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("default_action", flattenDataLossPreventionContentPolicyDefaultAction(res["defaultAction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("logging_configs", flattenDataLossPreventionContentPolicyLoggingConfigs(res["loggingConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("errors", flattenDataLossPreventionContentPolicyErrors(res["errors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataLossPreventionContentPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataLossPreventionContentPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ContentPolicy: %s", err)
 	}

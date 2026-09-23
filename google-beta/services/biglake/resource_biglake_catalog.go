@@ -471,12 +471,15 @@ func ResourceBiglakeCatalogFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("create_time", flattenBiglakeCatalogCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Catalog: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBiglakeCatalogUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Catalog: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenBiglakeCatalogDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Catalog: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenBiglakeCatalogExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Catalog: %s", err)
 	}

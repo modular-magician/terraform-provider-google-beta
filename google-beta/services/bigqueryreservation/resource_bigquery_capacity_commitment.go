@@ -701,24 +701,31 @@ func ResourceBigqueryReservationCapacityCommitmentFlatten(d *schema.ResourceData
 	if err = d.Set("name", flattenBigqueryReservationCapacityCommitmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("slot_count", flattenBigqueryReservationCapacityCommitmentSlotCount(res["slotCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("plan", flattenBigqueryReservationCapacityCommitmentPlan(res["plan"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("state", flattenBigqueryReservationCapacityCommitmentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("commitment_start_time", flattenBigqueryReservationCapacityCommitmentCommitmentStartTime(res["commitmentStartTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("commitment_end_time", flattenBigqueryReservationCapacityCommitmentCommitmentEndTime(res["commitmentEndTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("renewal_plan", flattenBigqueryReservationCapacityCommitmentRenewalPlan(res["renewalPlan"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}
+
 	if err = d.Set("edition", flattenBigqueryReservationCapacityCommitmentEdition(res["edition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapacityCommitment: %s", err)
 	}

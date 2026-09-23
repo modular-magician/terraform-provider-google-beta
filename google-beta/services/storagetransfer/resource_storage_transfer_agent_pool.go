@@ -643,9 +643,11 @@ func ResourceStorageTransferAgentPoolFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("display_name", flattenStorageTransferAgentPoolDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentPool: %s", err)
 	}
+
 	if err = d.Set("state", flattenStorageTransferAgentPoolState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentPool: %s", err)
 	}
+
 	if err = d.Set("bandwidth_limit", flattenStorageTransferAgentPoolBandwidthLimit(res["bandwidthLimit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentPool: %s", err)
 	}

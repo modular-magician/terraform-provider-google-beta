@@ -450,9 +450,11 @@ func ResourceFirebaseStorageDefaultBucketFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenFirebaseStorageDefaultBucketName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultBucket: %s", err)
 	}
+
 	if err = d.Set("bucket", flattenFirebaseStorageDefaultBucketBucket(res["bucket"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultBucket: %s", err)
 	}
+
 	if err = d.Set("location", flattenFirebaseStorageDefaultBucketLocation(res["location"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultBucket: %s", err)
 	}

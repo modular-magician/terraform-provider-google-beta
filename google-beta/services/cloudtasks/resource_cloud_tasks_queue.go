@@ -1932,21 +1932,27 @@ func ResourceCloudTasksQueueFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenCloudTasksQueueName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+
 	if err = d.Set("app_engine_routing_override", flattenCloudTasksQueueAppEngineRoutingOverride(res["appEngineRoutingOverride"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+
 	if err = d.Set("rate_limits", flattenCloudTasksQueueRateLimits(res["rateLimits"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+
 	if err = d.Set("retry_config", flattenCloudTasksQueueRetryConfig(res["retryConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+
 	if err = d.Set("stackdriver_logging_config", flattenCloudTasksQueueStackdriverLoggingConfig(res["stackdriverLoggingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+
 	if err = d.Set("state", flattenCloudTasksQueueState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+
 	if err = d.Set("http_target", flattenCloudTasksQueueHttpTarget(res["httpTarget"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}

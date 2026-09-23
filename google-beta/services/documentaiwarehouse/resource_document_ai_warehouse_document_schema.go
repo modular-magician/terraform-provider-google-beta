@@ -1876,12 +1876,15 @@ func ResourceDocumentAIWarehouseDocumentSchemaFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenDocumentAIWarehouseDocumentSchemaName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DocumentSchema: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDocumentAIWarehouseDocumentSchemaDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DocumentSchema: %s", err)
 	}
+
 	if err = d.Set("document_is_folder", flattenDocumentAIWarehouseDocumentSchemaDocumentIsFolder(res["documentIsFolder"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DocumentSchema: %s", err)
 	}
+
 	if err = d.Set("property_definitions", flattenDocumentAIWarehouseDocumentSchemaPropertyDefinitions(res["propertyDefinitions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DocumentSchema: %s", err)
 	}

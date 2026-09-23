@@ -779,18 +779,23 @@ func ResourceManagedKafkaAclFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenManagedKafkaAclName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Acl: %s", err)
 	}
+
 	if err = d.Set("acl_entries", flattenManagedKafkaAclAclEntries(res["aclEntries"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Acl: %s", err)
 	}
+
 	if err = d.Set("etag", flattenManagedKafkaAclEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Acl: %s", err)
 	}
+
 	if err = d.Set("resource_type", flattenManagedKafkaAclResourceType(res["resourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Acl: %s", err)
 	}
+
 	if err = d.Set("resource_name", flattenManagedKafkaAclResourceName(res["resourceName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Acl: %s", err)
 	}
+
 	if err = d.Set("pattern_type", flattenManagedKafkaAclPatternType(res["patternType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Acl: %s", err)
 	}

@@ -977,60 +977,79 @@ func ResourceNetworkConnectivityTransportFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("description", flattenNetworkConnectivityTransportDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkConnectivityTransportName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("remote_profile", flattenNetworkConnectivityTransportRemoteProfile(res["remoteProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("provided_activation_key", flattenNetworkConnectivityTransportProvidedActivationKey(res["providedActivationKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("generated_activation_key", flattenNetworkConnectivityTransportGeneratedActivationKey(res["generatedActivationKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("bandwidth", flattenNetworkConnectivityTransportBandwidth(res["bandwidth"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkConnectivityTransportLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("stack_type", flattenNetworkConnectivityTransportStackType(res["stackType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkConnectivityTransportState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("mtu_limit", flattenNetworkConnectivityTransportMtuLimit(res["mtuLimit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("admin_enabled", flattenNetworkConnectivityTransportAdminEnabled(res["adminEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkConnectivityTransportNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("advertised_routes", flattenNetworkConnectivityTransportAdvertisedRoutes(res["advertisedRoutes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("remote_account_id", flattenNetworkConnectivityTransportRemoteAccountId(res["remoteAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("peering_network", flattenNetworkConnectivityTransportPeeringNetwork(res["peeringNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("hub", flattenNetworkConnectivityTransportHub(res["hub"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("psc_routing_enabled", flattenNetworkConnectivityTransportPscRoutingEnabled(res["pscRoutingEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("auto_accept", flattenNetworkConnectivityTransportAutoAccept(res["autoAccept"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkConnectivityTransportTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkConnectivityTransportEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Transport: %s", err)
 	}

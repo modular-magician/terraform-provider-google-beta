@@ -640,21 +640,27 @@ func ResourceNetworkServicesServiceBindingFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("create_time", flattenNetworkServicesServiceBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesServiceBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesServiceBindingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesServiceBindingDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}
+
 	if err = d.Set("service", flattenNetworkServicesServiceBindingService(res["service"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesServiceBindingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesServiceBindingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceBinding: %s", err)
 	}

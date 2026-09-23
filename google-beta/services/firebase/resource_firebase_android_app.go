@@ -724,24 +724,31 @@ func ResourceFirebaseAndroidAppFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenFirebaseAndroidAppName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenFirebaseAndroidAppDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("app_id", flattenFirebaseAndroidAppAppId(res["appId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("package_name", flattenFirebaseAndroidAppPackageName(res["packageName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("sha1_hashes", flattenFirebaseAndroidAppSha1Hashes(res["sha1Hashes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("sha256_hashes", flattenFirebaseAndroidAppSha256Hashes(res["sha256Hashes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("api_key_id", flattenFirebaseAndroidAppApiKeyId(res["apiKeyId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirebaseAndroidAppEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AndroidApp: %s", err)
 	}

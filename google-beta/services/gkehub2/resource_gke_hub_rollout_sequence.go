@@ -1539,48 +1539,63 @@ func ResourceGKEHub2RolloutSequenceFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenGKEHub2RolloutSequenceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenGKEHub2RolloutSequenceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEHub2RolloutSequenceUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("etag", flattenGKEHub2RolloutSequenceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2RolloutSequenceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2RolloutSequenceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2RolloutSequenceDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEHub2RolloutSequenceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("ignored_clusters_selector", flattenGKEHub2RolloutSequenceIgnoredClustersSelector(res["ignoredClustersSelector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("stages", flattenGKEHub2RolloutSequenceStages(res["stages"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("auto_upgrade_config", flattenGKEHub2RolloutSequenceAutoUpgradeConfig(res["autoUpgradeConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("target_control_plane_version", flattenGKEHub2RolloutSequenceTargetControlPlaneVersion(res["targetControlPlaneVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("target_node_version", flattenGKEHub2RolloutSequenceTargetNodeVersion(res["targetNodeVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("operational_state", flattenGKEHub2RolloutSequenceOperationalState(res["operationalState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHub2RolloutSequenceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHub2RolloutSequenceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutSequence: %s", err)
 	}

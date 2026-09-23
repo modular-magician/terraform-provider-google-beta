@@ -671,12 +671,15 @@ func ResourceManagedKafkaTopicFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenManagedKafkaTopicName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("partition_count", flattenManagedKafkaTopicPartitionCount(res["partitionCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("replication_factor", flattenManagedKafkaTopicReplicationFactor(res["replicationFactor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("configs", flattenManagedKafkaTopicConfigs(res["configs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}

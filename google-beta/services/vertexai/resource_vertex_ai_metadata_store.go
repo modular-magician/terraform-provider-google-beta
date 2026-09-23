@@ -581,15 +581,19 @@ func ResourceVertexAIMetadataStoreFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("description", flattenVertexAIMetadataStoreDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataStore: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAIMetadataStoreCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataStore: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAIMetadataStoreUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataStore: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenVertexAIMetadataStoreEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataStore: %s", err)
 	}
+
 	if err = d.Set("state", flattenVertexAIMetadataStoreState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataStore: %s", err)
 	}

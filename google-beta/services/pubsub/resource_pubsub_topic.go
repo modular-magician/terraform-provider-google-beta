@@ -2443,30 +2443,39 @@ func ResourcePubsubTopicFlatten(d *schema.ResourceData, meta interface{}, res ma
 	if err = d.Set("name", flattenPubsubTopicName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenPubsubTopicKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("labels", flattenPubsubTopicLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("message_storage_policy", flattenPubsubTopicMessageStoragePolicy(res["messageStoragePolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("schema_settings", flattenPubsubTopicSchemaSettings(res["schemaSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("message_retention_duration", flattenPubsubTopicMessageRetentionDuration(res["messageRetentionDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("ingestion_data_source_settings", flattenPubsubTopicIngestionDataSourceSettings(res["ingestionDataSourceSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("message_transforms", flattenPubsubTopicMessageTransforms(res["messageTransforms"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenPubsubTopicTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenPubsubTopicEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}

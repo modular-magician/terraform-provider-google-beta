@@ -1531,27 +1531,35 @@ func ResourceVertexAIRagCorpusFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenVertexAIRagCorpusName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenVertexAIRagCorpusDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("description", flattenVertexAIRagCorpusDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAIRagCorpusCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAIRagCorpusUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("corpus_status", flattenVertexAIRagCorpusCorpusStatus(res["corpusStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("vector_db_config", flattenVertexAIRagCorpusVectorDbConfig(res["vectorDbConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("vertex_ai_search_config", flattenVertexAIRagCorpusVertexAiSearchConfig(res["vertexAiSearchConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenVertexAIRagCorpusEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagCorpus: %s", err)
 	}

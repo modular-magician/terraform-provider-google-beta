@@ -2067,69 +2067,91 @@ func ResourceDatabaseMigrationServiceMigrationJobFlatten(d *schema.ResourceData,
 	if err = d.Set("name", flattenDatabaseMigrationServiceMigrationJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDatabaseMigrationServiceMigrationJobDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDatabaseMigrationServiceMigrationJobCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDatabaseMigrationServiceMigrationJobLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("stop_on_warnings", flattenDatabaseMigrationServiceMigrationJobStopOnWarnings(res["stopOnWarnings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("state", flattenDatabaseMigrationServiceMigrationJobState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("desired_state", flattenDatabaseMigrationServiceMigrationJobDesiredState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("phase", flattenDatabaseMigrationServiceMigrationJobPhase(res["phase"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("error", flattenDatabaseMigrationServiceMigrationJobError(res["error"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("type", flattenDatabaseMigrationServiceMigrationJobType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("source", flattenDatabaseMigrationServiceMigrationJobSource(res["source"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("destination", flattenDatabaseMigrationServiceMigrationJobDestination(res["destination"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("dump_flags", flattenDatabaseMigrationServiceMigrationJobDumpFlags(res["dumpFlags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("performance_config", flattenDatabaseMigrationServiceMigrationJobPerformanceConfig(res["performanceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("postgres_homogeneous_config", flattenDatabaseMigrationServiceMigrationJobPostgresHomogeneousConfig(res["postgresHomogeneousConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("dump_path", flattenDatabaseMigrationServiceMigrationJobDumpPath(res["dumpPath"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("dump_type", flattenDatabaseMigrationServiceMigrationJobDumpType(res["dumpType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("static_ip_connectivity", flattenDatabaseMigrationServiceMigrationJobStaticIpConnectivity(res["staticIpConnectivity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("reverse_ssh_connectivity", flattenDatabaseMigrationServiceMigrationJobReverseSshConnectivity(res["reverseSshConnectivity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("vpc_peering_connectivity", flattenDatabaseMigrationServiceMigrationJobVpcPeeringConnectivity(res["vpcPeeringConnectivity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("objects_config", flattenDatabaseMigrationServiceMigrationJobObjectsConfig(res["objectsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDatabaseMigrationServiceMigrationJobTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDatabaseMigrationServiceMigrationJobEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MigrationJob: %s", err)
 	}

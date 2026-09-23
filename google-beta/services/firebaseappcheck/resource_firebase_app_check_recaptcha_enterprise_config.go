@@ -480,9 +480,11 @@ func ResourceFirebaseAppCheckRecaptchaEnterpriseConfigFlatten(d *schema.Resource
 	if err = d.Set("name", flattenFirebaseAppCheckRecaptchaEnterpriseConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecaptchaEnterpriseConfig: %s", err)
 	}
+
 	if err = d.Set("token_ttl", flattenFirebaseAppCheckRecaptchaEnterpriseConfigTokenTtl(res["tokenTtl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecaptchaEnterpriseConfig: %s", err)
 	}
+
 	if err = d.Set("site_key", flattenFirebaseAppCheckRecaptchaEnterpriseConfigSiteKey(res["siteKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecaptchaEnterpriseConfig: %s", err)
 	}

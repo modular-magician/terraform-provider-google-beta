@@ -775,12 +775,15 @@ func ResourceDNSResponsePolicyRuleFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("rule_name", flattenDNSResponsePolicyRuleRuleName(res["ruleName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicyRule: %s", err)
 	}
+
 	if err = d.Set("dns_name", flattenDNSResponsePolicyRuleDnsName(res["dnsName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicyRule: %s", err)
 	}
+
 	if err = d.Set("local_data", flattenDNSResponsePolicyRuleLocalData(res["localData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicyRule: %s", err)
 	}
+
 	if err = d.Set("behavior", flattenDNSResponsePolicyRuleBehavior(res["behavior"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicyRule: %s", err)
 	}

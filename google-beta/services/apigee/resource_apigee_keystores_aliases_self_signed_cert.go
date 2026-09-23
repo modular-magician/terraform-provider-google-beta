@@ -889,12 +889,15 @@ func ResourceApigeeKeystoresAliasesSelfSignedCertFlatten(d *schema.ResourceData,
 	if err = d.Set("certs_info", flattenApigeeKeystoresAliasesSelfSignedCertCertsInfo(res["certsInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeystoresAliasesSelfSignedCert: %s", err)
 	}
+
 	if err = d.Set("type", flattenApigeeKeystoresAliasesSelfSignedCertType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeystoresAliasesSelfSignedCert: %s", err)
 	}
+
 	if err = d.Set("alias", flattenApigeeKeystoresAliasesSelfSignedCertAlias(res["alias"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeystoresAliasesSelfSignedCert: %s", err)
 	}
+
 	if err = d.Set("subject_alternative_dns_names", flattenApigeeKeystoresAliasesSelfSignedCertSubjectAlternativeDnsNames(res["subjectAlternativeDnsNames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeystoresAliasesSelfSignedCert: %s", err)
 	}

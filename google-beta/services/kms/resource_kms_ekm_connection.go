@@ -925,18 +925,23 @@ func ResourceKMSEkmConnectionFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenKMSEkmConnectionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EkmConnection: %s", err)
 	}
+
 	if err = d.Set("service_resolvers", flattenKMSEkmConnectionServiceResolvers(res["serviceResolvers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EkmConnection: %s", err)
 	}
+
 	if err = d.Set("key_management_mode", flattenKMSEkmConnectionKeyManagementMode(res["keyManagementMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EkmConnection: %s", err)
 	}
+
 	if err = d.Set("etag", flattenKMSEkmConnectionEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EkmConnection: %s", err)
 	}
+
 	if err = d.Set("crypto_space_path", flattenKMSEkmConnectionCryptoSpacePath(res["cryptoSpacePath"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EkmConnection: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenKMSEkmConnectionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EkmConnection: %s", err)
 	}

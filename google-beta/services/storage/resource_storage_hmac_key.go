@@ -735,15 +735,19 @@ func ResourceStorageHmacKeyFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("service_account_email", flattenStorageHmacKeyServiceAccountEmail(res["serviceAccountEmail"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HmacKey: %s", err)
 	}
+
 	if err = d.Set("state", flattenStorageHmacKeyState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HmacKey: %s", err)
 	}
+
 	if err = d.Set("access_id", flattenStorageHmacKeyAccessId(res["accessId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HmacKey: %s", err)
 	}
+
 	if err = d.Set("time_created", flattenStorageHmacKeyTimeCreated(res["timeCreated"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HmacKey: %s", err)
 	}
+
 	if err = d.Set("updated", flattenStorageHmacKeyUpdated(res["updated"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HmacKey: %s", err)
 	}

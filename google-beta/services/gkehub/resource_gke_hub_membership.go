@@ -947,18 +947,23 @@ func ResourceGKEHubMembershipFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenGKEHubMembershipName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEHubMembershipLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
+
 	if err = d.Set("endpoint", flattenGKEHubMembershipEndpoint(res["endpoint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
+
 	if err = d.Set("authority", flattenGKEHubMembershipAuthority(res["authority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHubMembershipTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHubMembershipEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}

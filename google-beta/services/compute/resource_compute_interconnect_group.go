@@ -1053,21 +1053,27 @@ func ResourceComputeInterconnectGroupFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("description", flattenComputeInterconnectGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeInterconnectGroupCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeInterconnectGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}
+
 	if err = d.Set("interconnects", flattenComputeInterconnectGroupInterconnects(res["interconnects"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}
+
 	if err = d.Set("intent", flattenComputeInterconnectGroupIntent(res["intent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}
+
 	if err = d.Set("physical_structure", flattenComputeInterconnectGroupPhysicalStructure(res["physicalStructure"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}
+
 	if err = d.Set("configured", flattenComputeInterconnectGroupConfigured(res["configured"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectGroup: %s", err)
 	}

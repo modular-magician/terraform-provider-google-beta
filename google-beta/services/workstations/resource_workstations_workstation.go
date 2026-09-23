@@ -872,39 +872,51 @@ func ResourceWorkstationsWorkstationFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenWorkstationsWorkstationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("uid", flattenWorkstationsWorkstationUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenWorkstationsWorkstationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenWorkstationsWorkstationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenWorkstationsWorkstationAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("env", flattenWorkstationsWorkstationEnv(res["env"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenWorkstationsWorkstationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("host", flattenWorkstationsWorkstationHost(res["host"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("state", flattenWorkstationsWorkstationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("source_workstation", flattenWorkstationsWorkstationSourceWorkstation(res["sourceWorkstation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenWorkstationsWorkstationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenWorkstationsWorkstationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenWorkstationsWorkstationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}

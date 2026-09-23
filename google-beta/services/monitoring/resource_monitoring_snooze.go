@@ -699,12 +699,15 @@ func ResourceMonitoringSnoozeFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenMonitoringSnoozeName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snooze: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringSnoozeDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snooze: %s", err)
 	}
+
 	if err = d.Set("criteria", flattenMonitoringSnoozeCriteria(res["criteria"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snooze: %s", err)
 	}
+
 	if err = d.Set("interval", flattenMonitoringSnoozeInterval(res["interval"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snooze: %s", err)
 	}

@@ -548,6 +548,7 @@ func ResourceComputeCrossSiteNetworkFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenComputeCrossSiteNetworkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CrossSiteNetwork: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeCrossSiteNetworkDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CrossSiteNetwork: %s", err)
 	}

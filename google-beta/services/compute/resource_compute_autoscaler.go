@@ -1919,15 +1919,19 @@ func ResourceComputeAutoscalerFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("creation_timestamp", flattenComputeAutoscalerCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Autoscaler: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeAutoscalerName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Autoscaler: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeAutoscalerDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Autoscaler: %s", err)
 	}
+
 	if err = d.Set("autoscaling_policy", flattenComputeAutoscalerAutoscalingPolicy(res["autoscalingPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Autoscaler: %s", err)
 	}
+
 	if err = d.Set("target", flattenComputeAutoscalerTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Autoscaler: %s", err)
 	}

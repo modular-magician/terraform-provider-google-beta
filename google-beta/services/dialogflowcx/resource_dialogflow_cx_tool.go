@@ -2356,24 +2356,31 @@ func ResourceDialogflowCXToolFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenDialogflowCXToolName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXToolDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowCXToolDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("tool_type", flattenDialogflowCXToolToolType(res["toolType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("open_api_spec", flattenDialogflowCXToolOpenApiSpec(res["openApiSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("data_store_spec", flattenDialogflowCXToolDataStoreSpec(res["dataStoreSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("function_spec", flattenDialogflowCXToolFunctionSpec(res["functionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("connector_spec", flattenDialogflowCXToolConnectorSpec(res["connectorSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}

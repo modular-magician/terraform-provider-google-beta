@@ -1451,30 +1451,39 @@ func ResourceColabNotebookExecutionFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("display_name", flattenColabNotebookExecutionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("dataform_repository_source", flattenColabNotebookExecutionDataformRepositorySource(res["dataformRepositorySource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("gcs_notebook_source", flattenColabNotebookExecutionGcsNotebookSource(res["gcsNotebookSource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("direct_notebook_source", flattenColabNotebookExecutionDirectNotebookSource(res["directNotebookSource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("execution_timeout", flattenColabNotebookExecutionExecutionTimeout(res["executionTimeout"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("notebook_runtime_template_resource_name", flattenColabNotebookExecutionNotebookRuntimeTemplateResourceName(res["notebookRuntimeTemplateResourceName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("custom_environment_spec", flattenColabNotebookExecutionCustomEnvironmentSpec(res["customEnvironmentSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("gcs_output_uri", flattenColabNotebookExecutionGcsOutputUri(res["gcsOutputUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("execution_user", flattenColabNotebookExecutionExecutionUser(res["executionUser"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenColabNotebookExecutionServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotebookExecution: %s", err)
 	}

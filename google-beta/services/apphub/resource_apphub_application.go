@@ -1222,27 +1222,35 @@ func ResourceApphubApplicationFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenApphubApplicationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApphubApplicationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("description", flattenApphubApplicationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("attributes", flattenApphubApplicationAttributes(res["attributes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApphubApplicationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApphubApplicationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("scope", flattenApphubApplicationScope(res["scope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("uid", flattenApphubApplicationUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}
+
 	if err = d.Set("state", flattenApphubApplicationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Application: %s", err)
 	}

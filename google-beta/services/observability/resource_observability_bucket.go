@@ -699,24 +699,31 @@ func ResourceObservabilityBucketFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("cmek_settings", flattenObservabilityBucketCmekSettings(res["cmekSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenObservabilityBucketCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenObservabilityBucketDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("description", flattenObservabilityBucketDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenObservabilityBucketDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("name", flattenObservabilityBucketName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("purge_time", flattenObservabilityBucketPurgeTime(res["purgeTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenObservabilityBucketUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Bucket: %s", err)
 	}

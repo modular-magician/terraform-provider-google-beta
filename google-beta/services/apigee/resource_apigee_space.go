@@ -468,12 +468,15 @@ func ResourceApigeeSpaceFlatten(d *schema.ResourceData, meta interface{}, res ma
 	if err = d.Set("display_name", flattenApigeeSpaceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Space: %s", err)
 	}
+
 	if err = d.Set("name", flattenApigeeSpaceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Space: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApigeeSpaceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Space: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApigeeSpaceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Space: %s", err)
 	}

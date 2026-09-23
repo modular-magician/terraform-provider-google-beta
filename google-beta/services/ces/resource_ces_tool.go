@@ -7945,63 +7945,83 @@ func ResourceCESToolFlatten(d *schema.ResourceData, meta interface{}, res map[st
 	if err = d.Set("agent_tool", flattenCESToolAgentTool(res["agentTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("client_function", flattenCESToolClientFunction(res["clientFunction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("connector_tool", flattenCESToolConnectorTool(res["connectorTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCESToolCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("data_store_tool", flattenCESToolDataStoreTool(res["dataStoreTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESToolDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESToolEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("execution_type", flattenCESToolExecutionType(res["executionType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("file_search_tool", flattenCESToolFileSearchTool(res["fileSearchTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("generated_summary", flattenCESToolGeneratedSummary(res["generatedSummary"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("google_search_tool", flattenCESToolGoogleSearchTool(res["googleSearchTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("mcp_tool", flattenCESToolMcpTool(res["mcpTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("name", flattenCESToolName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("open_api_tool", flattenCESToolOpenApiTool(res["openApiTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("python_function", flattenCESToolPythonFunction(res["pythonFunction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESToolUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("remote_agent_tool", flattenCESToolRemoteAgentTool(res["remoteAgentTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("system_tool", flattenCESToolSystemTool(res["systemTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("timeout", flattenCESToolTimeout(res["timeout"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("tool_fake_config", flattenCESToolToolFakeConfig(res["toolFakeConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}
+
 	if err = d.Set("widget_tool", flattenCESToolWidgetTool(res["widgetTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tool: %s", err)
 	}

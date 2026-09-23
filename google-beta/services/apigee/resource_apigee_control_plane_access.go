@@ -444,6 +444,7 @@ func ResourceApigeeControlPlaneAccessFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("synchronizer_identities", flattenApigeeControlPlaneAccessSynchronizerIdentities(res["synchronizerIdentities"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ControlPlaneAccess: %s", err)
 	}
+
 	if err = d.Set("analytics_publisher_identities", flattenApigeeControlPlaneAccessAnalyticsPublisherIdentities(res["analyticsPublisherIdentities"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ControlPlaneAccess: %s", err)
 	}

@@ -2598,27 +2598,35 @@ func ResourceComputeSecurityPolicyRuleFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("description", flattenComputeSecurityPolicyRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeSecurityPolicyRulePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("match", flattenComputeSecurityPolicyRuleMatch(res["match"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("preconfigured_waf_config", flattenComputeSecurityPolicyRulePreconfiguredWafConfig(res["preconfiguredWafConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("action", flattenComputeSecurityPolicyRuleAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("rate_limit_options", flattenComputeSecurityPolicyRuleRateLimitOptions(res["rateLimitOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("redirect_options", flattenComputeSecurityPolicyRuleRedirectOptions(res["redirectOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("header_action", flattenComputeSecurityPolicyRuleHeaderAction(res["headerAction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+
 	if err = d.Set("preview", flattenComputeSecurityPolicyRulePreview(res["preview"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}

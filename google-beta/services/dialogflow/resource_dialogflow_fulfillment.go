@@ -780,15 +780,19 @@ func ResourceDialogflowFulfillmentFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenDialogflowFulfillmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fulfillment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowFulfillmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fulfillment: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenDialogflowFulfillmentEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fulfillment: %s", err)
 	}
+
 	if err = d.Set("features", flattenDialogflowFulfillmentFeatures(res["features"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fulfillment: %s", err)
 	}
+
 	if err = d.Set("generic_web_service", flattenDialogflowFulfillmentGenericWebService(res["genericWebService"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Fulfillment: %s", err)
 	}

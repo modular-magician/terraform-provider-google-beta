@@ -12434,36 +12434,47 @@ func ResourceDatastreamStreamFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenDatastreamStreamName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDatastreamStreamLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDatastreamStreamDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("source_config", flattenDatastreamStreamSourceConfig(res["sourceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("destination_config", flattenDatastreamStreamDestinationConfig(res["destinationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("state", flattenDatastreamStreamState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("backfill_all", flattenDatastreamStreamBackfillAll(res["backfillAll"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("backfill_none", flattenDatastreamStreamBackfillNone(res["backfillNone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("customer_managed_encryption_key", flattenDatastreamStreamCustomerManagedEncryptionKey(res["customerManagedEncryptionKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("rule_sets", flattenDatastreamStreamRuleSets(res["ruleSets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDatastreamStreamTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDatastreamStreamEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}

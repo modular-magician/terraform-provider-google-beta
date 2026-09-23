@@ -703,18 +703,23 @@ func ResourceChronicleSoarNetworkFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("address", flattenChronicleSoarNetworkAddress(res["address"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarNetwork: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleSoarNetworkDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarNetwork: %s", err)
 	}
+
 	if err = d.Set("environments_json", flattenChronicleSoarNetworkEnvironmentsJson(res["environmentsJson"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarNetwork: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleSoarNetworkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarNetwork: %s", err)
 	}
+
 	if err = d.Set("priority", flattenChronicleSoarNetworkPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarNetwork: %s", err)
 	}
+
 	if err = d.Set("soar_network_id", flattenChronicleSoarNetworkSoarNetworkId(res["soarNetworkId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarNetwork: %s", err)
 	}

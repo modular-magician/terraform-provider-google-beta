@@ -684,18 +684,23 @@ func ResourceSecretManagerRegionalRegionalSecretVersionFlatten(d *schema.Resourc
 	if err = d.Set("name", flattenSecretManagerRegionalRegionalSecretVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalSecretVersion: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecretManagerRegionalRegionalSecretVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalSecretVersion: %s", err)
 	}
+
 	if err = d.Set("destroy_time", flattenSecretManagerRegionalRegionalSecretVersionDestroyTime(res["destroyTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalSecretVersion: %s", err)
 	}
+
 	if err = d.Set("customer_managed_encryption", flattenSecretManagerRegionalRegionalSecretVersionCustomerManagedEncryption(res["customerManagedEncryption"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalSecretVersion: %s", err)
 	}
+
 	if err = d.Set("version", flattenSecretManagerRegionalRegionalSecretVersionVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalSecretVersion: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenSecretManagerRegionalRegionalSecretVersionEnabled(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalSecretVersion: %s", err)
 	}

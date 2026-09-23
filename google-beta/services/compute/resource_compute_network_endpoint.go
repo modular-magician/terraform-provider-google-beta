@@ -745,9 +745,11 @@ func ResourceComputeNetworkEndpointFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("instance", flattenNestedComputeNetworkEndpointInstance(res["instance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("port", flattenNestedComputeNetworkEndpointPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("ip_address", flattenNestedComputeNetworkEndpointIpAddress(res["ipAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpoint: %s", err)
 	}

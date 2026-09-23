@@ -10,6 +10,10 @@ fields:
     - api_field: certificate
     - api_field: id
       field: certificate_id
+    - api_field: certificate
+      field: certificate_wo
+    - field: certificate_wo_version
+      provider_only: true
     - api_field: creationTimestamp
     - api_field: description
     - api_field: expireTime

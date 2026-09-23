@@ -1137,18 +1137,23 @@ func ResourceDiscoveryEngineRecommendationEngineFlatten(d *schema.ResourceData, 
 	if err = d.Set("name", flattenDiscoveryEngineRecommendationEngineName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecommendationEngine: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDiscoveryEngineRecommendationEngineDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecommendationEngine: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDiscoveryEngineRecommendationEngineCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecommendationEngine: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDiscoveryEngineRecommendationEngineUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecommendationEngine: %s", err)
 	}
+
 	if err = d.Set("data_store_ids", flattenDiscoveryEngineRecommendationEngineDataStoreIds(res["dataStoreIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecommendationEngine: %s", err)
 	}
+
 	if err = d.Set("media_recommendation_engine_config", flattenDiscoveryEngineRecommendationEngineMediaRecommendationEngineConfig(res["mediaRecommendationEngineConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecommendationEngine: %s", err)
 	}

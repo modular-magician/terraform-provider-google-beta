@@ -701,21 +701,27 @@ func ResourceAccessApprovalOrganizationSettingsFlatten(d *schema.ResourceData, m
 	if err = d.Set("name", flattenAccessApprovalOrganizationSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("notification_emails", flattenAccessApprovalOrganizationSettingsNotificationEmails(res["notificationEmails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("enrolled_services", flattenAccessApprovalOrganizationSettingsEnrolledServices(res["enrolledServices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("enrolled_ancestor", flattenAccessApprovalOrganizationSettingsEnrolledAncestor(res["enrolledAncestor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("active_key_version", flattenAccessApprovalOrganizationSettingsActiveKeyVersion(res["activeKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("ancestor_has_active_key_version", flattenAccessApprovalOrganizationSettingsAncestorHasActiveKeyVersion(res["ancestorHasActiveKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("invalid_key_version", flattenAccessApprovalOrganizationSettingsInvalidKeyVersion(res["invalidKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}

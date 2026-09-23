@@ -402,6 +402,7 @@ func ResourceApigeeSyncAuthorizationFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("identities", flattenApigeeSyncAuthorizationIdentities(res["identities"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SyncAuthorization: %s", err)
 	}
+
 	if err = d.Set("etag", flattenApigeeSyncAuthorizationEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SyncAuthorization: %s", err)
 	}

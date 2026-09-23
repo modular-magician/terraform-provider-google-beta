@@ -485,9 +485,11 @@ func ResourceFirebaseAppCheckRecaptchaV3ConfigFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenFirebaseAppCheckRecaptchaV3ConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecaptchaV3Config: %s", err)
 	}
+
 	if err = d.Set("token_ttl", flattenFirebaseAppCheckRecaptchaV3ConfigTokenTtl(res["tokenTtl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecaptchaV3Config: %s", err)
 	}
+
 	if err = d.Set("site_secret_set", flattenFirebaseAppCheckRecaptchaV3ConfigSiteSecretSet(res["siteSecretSet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RecaptchaV3Config: %s", err)
 	}

@@ -2368,15 +2368,19 @@ func ResourceDialogflowCXToolVersionFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenDialogflowCXToolVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ToolVersion: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXToolVersionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ToolVersion: %s", err)
 	}
+
 	if err = d.Set("tool", flattenDialogflowCXToolVersionTool(res["tool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ToolVersion: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDialogflowCXToolVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ToolVersion: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDialogflowCXToolVersionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ToolVersion: %s", err)
 	}

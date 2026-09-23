@@ -1355,24 +1355,31 @@ func ResourceHealthcarePipelineJobFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenHealthcarePipelineJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("disable_lineage", flattenHealthcarePipelineJobDisableLineage(res["disableLineage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("labels", flattenHealthcarePipelineJobLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("mapping_pipeline_job", flattenHealthcarePipelineJobMappingPipelineJob(res["mappingPipelineJob"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("reconciliation_pipeline_job", flattenHealthcarePipelineJobReconciliationPipelineJob(res["reconciliationPipelineJob"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("backfill_pipeline_job", flattenHealthcarePipelineJobBackfillPipelineJob(res["backfillPipelineJob"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenHealthcarePipelineJobTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenHealthcarePipelineJobEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PipelineJob: %s", err)
 	}

@@ -1363,6 +1363,7 @@ func ResourceComputePerInstanceConfigFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenNestedComputePerInstanceConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PerInstanceConfig: %s", err)
 	}
+
 	if err = d.Set("preserved_state", flattenNestedComputePerInstanceConfigPreservedState(res["preservedState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PerInstanceConfig: %s", err)
 	}

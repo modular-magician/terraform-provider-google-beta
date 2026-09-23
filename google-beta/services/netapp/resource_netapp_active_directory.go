@@ -1158,66 +1158,87 @@ func ResourceNetappActiveDirectoryFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("create_time", flattenNetappActiveDirectoryCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetappActiveDirectoryState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("domain", flattenNetappActiveDirectoryDomain(res["domain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("site", flattenNetappActiveDirectorySite(res["site"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("dns", flattenNetappActiveDirectoryDns(res["dns"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("net_bios_prefix", flattenNetappActiveDirectoryNetBiosPrefix(res["netBiosPrefix"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("organizational_unit", flattenNetappActiveDirectoryOrganizationalUnit(res["organizationalUnit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("aes_encryption", flattenNetappActiveDirectoryAesEncryption(res["aesEncryption"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("username", flattenNetappActiveDirectoryUsername(res["username"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("backup_operators", flattenNetappActiveDirectoryBackupOperators(res["backupOperators"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("administrators", flattenNetappActiveDirectoryAdministrators(res["administrators"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("security_operators", flattenNetappActiveDirectorySecurityOperators(res["securityOperators"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("kdc_hostname", flattenNetappActiveDirectoryKdcHostname(res["kdcHostname"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("kdc_ip", flattenNetappActiveDirectoryKdcIp(res["kdcIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("nfs_users_with_ldap", flattenNetappActiveDirectoryNfsUsersWithLdap(res["nfsUsersWithLdap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetappActiveDirectoryDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("ldap_signing", flattenNetappActiveDirectoryLdapSigning(res["ldapSigning"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("encrypt_dc_connections", flattenNetappActiveDirectoryEncryptDcConnections(res["encryptDcConnections"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappActiveDirectoryLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("state_details", flattenNetappActiveDirectoryStateDetails(res["stateDetails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappActiveDirectoryTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappActiveDirectoryEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ActiveDirectory: %s", err)
 	}

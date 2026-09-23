@@ -507,6 +507,7 @@ func ResourceDiscoveryEngineSchemaFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenDiscoveryEngineSchemaName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("json_schema", flattenDiscoveryEngineSchemaJsonSchema(res["jsonSchema"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}

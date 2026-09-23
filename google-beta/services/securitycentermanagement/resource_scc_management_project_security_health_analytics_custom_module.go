@@ -1232,21 +1232,27 @@ func ResourceSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleF
 	if err = d.Set("name", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("enablement_state", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleEnablementState(res["enablementState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("ancestor_module", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleAncestorModule(res["ancestorModule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}
+
 	if err = d.Set("custom_config", flattenSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModuleCustomConfig(res["customConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSecurityHealthAnalyticsCustomModule: %s", err)
 	}

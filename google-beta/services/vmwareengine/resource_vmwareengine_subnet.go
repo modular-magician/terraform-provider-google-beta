@@ -574,33 +574,43 @@ func ResourceVmwareengineSubnetFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("create_time", flattenVmwareengineSubnetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVmwareengineSubnetUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("ip_cidr_range", flattenVmwareengineSubnetIpCidrRange(res["ipCidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("gateway_ip", flattenVmwareengineSubnetGatewayIp(res["gatewayIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("gateway_id", flattenVmwareengineSubnetGatewayId(res["gatewayId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("dhcp_address_ranges", flattenVmwareengineSubnetDhcpAddressRanges(res["dhcpAddressRanges"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("type", flattenVmwareengineSubnetType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("standard_config", flattenVmwareengineSubnetStandardConfig(res["standardConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("state", flattenVmwareengineSubnetState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("uid", flattenVmwareengineSubnetUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("vlan_id", flattenVmwareengineSubnetVlanId(res["vlanId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}

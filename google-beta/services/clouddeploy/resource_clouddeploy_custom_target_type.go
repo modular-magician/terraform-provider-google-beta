@@ -1683,39 +1683,51 @@ func ResourceClouddeployCustomTargetTypeFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("custom_target_type_id", flattenClouddeployCustomTargetTypeCustomTargetTypeId(res["customTargetTypeId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("uid", flattenClouddeployCustomTargetTypeUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("description", flattenClouddeployCustomTargetTypeDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenClouddeployCustomTargetTypeAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("labels", flattenClouddeployCustomTargetTypeLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenClouddeployCustomTargetTypeCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenClouddeployCustomTargetTypeUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("etag", flattenClouddeployCustomTargetTypeEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("custom_actions", flattenClouddeployCustomTargetTypeCustomActions(res["customActions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("tasks", flattenClouddeployCustomTargetTypeTasks(res["tasks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenClouddeployCustomTargetTypeEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenClouddeployCustomTargetTypeTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenClouddeployCustomTargetTypeEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomTargetType: %s", err)
 	}

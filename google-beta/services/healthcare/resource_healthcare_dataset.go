@@ -665,9 +665,11 @@ func ResourceHealthcareDatasetFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenHealthcareDatasetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
+
 	if err = d.Set("time_zone", flattenHealthcareDatasetTimeZone(res["timeZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenHealthcareDatasetEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}

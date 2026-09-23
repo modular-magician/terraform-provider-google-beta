@@ -561,6 +561,7 @@ func ResourceFirebaseAppCheckServiceConfigFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenFirebaseAppCheckServiceConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConfig: %s", err)
 	}
+
 	if err = d.Set("enforcement_mode", flattenFirebaseAppCheckServiceConfigEnforcementMode(res["enforcementMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConfig: %s", err)
 	}

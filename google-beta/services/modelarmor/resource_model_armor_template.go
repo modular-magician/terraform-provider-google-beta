@@ -1581,24 +1581,31 @@ func ResourceModelArmorTemplateFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenModelArmorTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenModelArmorTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenModelArmorTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("labels", flattenModelArmorTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("filter_config", flattenModelArmorTemplateFilterConfig(res["filterConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("template_metadata", flattenModelArmorTemplateTemplateMetadata(res["templateMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenModelArmorTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenModelArmorTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}

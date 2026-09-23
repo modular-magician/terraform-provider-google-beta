@@ -704,27 +704,35 @@ func ResourceApigeeDeveloperFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("email", flattenApigeeDeveloperEmail(res["email"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("first_name", flattenApigeeDeveloperFirstName(res["firstName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("last_name", flattenApigeeDeveloperLastName(res["lastName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("user_name", flattenApigeeDeveloperUserName(res["userName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("attributes", flattenApigeeDeveloperAttributes(res["attributes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("organizatio_name", flattenApigeeDeveloperOrganizatioName(res["organizatioName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("status", flattenApigeeDeveloperStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("created_at", flattenApigeeDeveloperCreatedAt(res["createdAt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}
+
 	if err = d.Set("last_modified_at", flattenApigeeDeveloperLastModifiedAt(res["lastModifiedAt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Developer: %s", err)
 	}

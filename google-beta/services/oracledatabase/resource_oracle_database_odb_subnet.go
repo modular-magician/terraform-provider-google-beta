@@ -638,24 +638,31 @@ func ResourceOracleDatabaseOdbSubnetFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("cidr_range", flattenOracleDatabaseOdbSubnetCidrRange(res["cidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenOracleDatabaseOdbSubnetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseOdbSubnetLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("name", flattenOracleDatabaseOdbSubnetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("purpose", flattenOracleDatabaseOdbSubnetPurpose(res["purpose"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("state", flattenOracleDatabaseOdbSubnetState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseOdbSubnetTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseOdbSubnetEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbSubnet: %s", err)
 	}

@@ -723,24 +723,31 @@ func ResourceGeminiCodeRepositoryIndexFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("update_time", flattenGeminiCodeRepositoryIndexUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("state", flattenGeminiCodeRepositoryIndexState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiCodeRepositoryIndexLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("kms_key", flattenGeminiCodeRepositoryIndexKmsKey(res["kmsKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("name", flattenGeminiCodeRepositoryIndexName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiCodeRepositoryIndexCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiCodeRepositoryIndexTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiCodeRepositoryIndexEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeRepositoryIndex: %s", err)
 	}

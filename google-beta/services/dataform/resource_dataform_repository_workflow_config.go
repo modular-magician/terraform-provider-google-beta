@@ -1029,21 +1029,27 @@ func ResourceDataformRepositoryWorkflowConfigFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenDataformRepositoryWorkflowConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}
+
 	if err = d.Set("release_config", flattenDataformRepositoryWorkflowConfigReleaseConfig(res["releaseConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}
+
 	if err = d.Set("invocation_config", flattenDataformRepositoryWorkflowConfigInvocationConfig(res["invocationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}
+
 	if err = d.Set("cron_schedule", flattenDataformRepositoryWorkflowConfigCronSchedule(res["cronSchedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}
+
 	if err = d.Set("time_zone", flattenDataformRepositoryWorkflowConfigTimeZone(res["timeZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}
+
 	if err = d.Set("recent_scheduled_execution_records", flattenDataformRepositoryWorkflowConfigRecentScheduledExecutionRecords(res["recentScheduledExecutionRecords"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenDataformRepositoryWorkflowConfigDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryWorkflowConfig: %s", err)
 	}

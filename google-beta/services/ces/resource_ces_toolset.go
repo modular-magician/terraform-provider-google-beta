@@ -3258,36 +3258,47 @@ func ResourceCESToolsetFlatten(d *schema.ResourceData, meta interface{}, res map
 	if err = d.Set("connector_toolset", flattenCESToolsetConnectorToolset(res["connectorToolset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCESToolsetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("description", flattenCESToolsetDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESToolsetDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESToolsetEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("execution_type", flattenCESToolsetExecutionType(res["executionType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("name", flattenCESToolsetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("open_api_toolset", flattenCESToolsetOpenApiToolset(res["openApiToolset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("mcp_toolset", flattenCESToolsetMcpToolset(res["mcpToolset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("timeout", flattenCESToolsetTimeout(res["timeout"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("tool_fake_config", flattenCESToolsetToolFakeConfig(res["toolFakeConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESToolsetUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Toolset: %s", err)
 	}

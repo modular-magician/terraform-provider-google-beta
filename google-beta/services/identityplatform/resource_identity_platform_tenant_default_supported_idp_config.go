@@ -631,12 +631,15 @@ func ResourceIdentityPlatformTenantDefaultSupportedIdpConfigFlatten(d *schema.Re
 	if err = d.Set("name", flattenIdentityPlatformTenantDefaultSupportedIdpConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantDefaultSupportedIdpConfig: %s", err)
 	}
+
 	if err = d.Set("client_id", flattenIdentityPlatformTenantDefaultSupportedIdpConfigClientId(res["clientId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantDefaultSupportedIdpConfig: %s", err)
 	}
+
 	if err = d.Set("client_secret", flattenIdentityPlatformTenantDefaultSupportedIdpConfigClientSecret(res["clientSecret"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantDefaultSupportedIdpConfig: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenIdentityPlatformTenantDefaultSupportedIdpConfigEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantDefaultSupportedIdpConfig: %s", err)
 	}

@@ -1103,27 +1103,35 @@ func ResourceIAM3ProjectAccessPolicyFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("annotations", flattenIAM3ProjectAccessPolicyAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenIAM3ProjectAccessPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("details", flattenIAM3ProjectAccessPolicyDetails(res["details"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIAM3ProjectAccessPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenIAM3ProjectAccessPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenIAM3ProjectAccessPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("uid", flattenIAM3ProjectAccessPolicyUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenIAM3ProjectAccessPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenIAM3ProjectAccessPolicyEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAccessPolicy: %s", err)
 	}

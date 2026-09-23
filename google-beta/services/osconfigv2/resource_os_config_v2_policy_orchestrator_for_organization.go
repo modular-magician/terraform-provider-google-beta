@@ -6232,42 +6232,55 @@ func ResourceOSConfigV2PolicyOrchestratorForOrganizationFlatten(d *schema.Resour
 	if err = d.Set("orchestration_state", flattenOSConfigV2PolicyOrchestratorForOrganizationOrchestrationState(res["orchestrationState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenOSConfigV2PolicyOrchestratorForOrganizationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("state", flattenOSConfigV2PolicyOrchestratorForOrganizationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("orchestration_scope", flattenOSConfigV2PolicyOrchestratorForOrganizationOrchestrationScope(res["orchestrationScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenOSConfigV2PolicyOrchestratorForOrganizationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOSConfigV2PolicyOrchestratorForOrganizationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("name", flattenOSConfigV2PolicyOrchestratorForOrganizationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("description", flattenOSConfigV2PolicyOrchestratorForOrganizationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("etag", flattenOSConfigV2PolicyOrchestratorForOrganizationEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenOSConfigV2PolicyOrchestratorForOrganizationReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("action", flattenOSConfigV2PolicyOrchestratorForOrganizationAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("orchestrated_resource", flattenOSConfigV2PolicyOrchestratorForOrganizationOrchestratedResource(res["orchestratedResource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOSConfigV2PolicyOrchestratorForOrganizationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOSConfigV2PolicyOrchestratorForOrganizationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}

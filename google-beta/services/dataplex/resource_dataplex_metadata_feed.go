@@ -942,30 +942,39 @@ func ResourceDataplexMetadataFeedFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("create_time", flattenDataplexMetadataFeedCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("filters", flattenDataplexMetadataFeedFilters(res["filters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataplexMetadataFeedLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("name", flattenDataplexMetadataFeedName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("pubsub_topic", flattenDataplexMetadataFeedPubsubTopic(res["pubsubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("scope", flattenDataplexMetadataFeedScope(res["scope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDataplexMetadataFeedUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataplexMetadataFeedUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataplexMetadataFeedTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataplexMetadataFeedEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MetadataFeed: %s", err)
 	}

@@ -1099,30 +1099,39 @@ func ResourceApigeeEnvironmentFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenApigeeEnvironmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApigeeEnvironmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeEnvironmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("deployment_type", flattenApigeeEnvironmentDeploymentType(res["deploymentType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("api_proxy_type", flattenApigeeEnvironmentApiProxyType(res["apiProxyType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("node_config", flattenApigeeEnvironmentNodeConfig(res["nodeConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("type", flattenApigeeEnvironmentType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("forward_proxy_uri", flattenApigeeEnvironmentForwardProxyUri(res["forwardProxyUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("properties", flattenApigeeEnvironmentProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("client_ip_resolution_config", flattenApigeeEnvironmentClientIpResolutionConfig(res["clientIpResolutionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}

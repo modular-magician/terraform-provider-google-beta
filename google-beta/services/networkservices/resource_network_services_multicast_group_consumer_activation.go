@@ -858,36 +858,47 @@ func ResourceNetworkServicesMulticastGroupConsumerActivationFlatten(d *schema.Re
 	if err = d.Set("create_time", flattenNetworkServicesMulticastGroupConsumerActivationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesMulticastGroupConsumerActivationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesMulticastGroupConsumerActivationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("log_config", flattenNetworkServicesMulticastGroupConsumerActivationLogConfig(res["logConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("multicast_consumer_association", flattenNetworkServicesMulticastGroupConsumerActivationMulticastConsumerAssociation(res["multicastConsumerAssociation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("multicast_group_range_activation", flattenNetworkServicesMulticastGroupConsumerActivationMulticastGroupRangeActivation(res["multicastGroupRangeActivation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkServicesMulticastGroupConsumerActivationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkServicesMulticastGroupConsumerActivationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("unique_id", flattenNetworkServicesMulticastGroupConsumerActivationUniqueId(res["uniqueId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesMulticastGroupConsumerActivationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesMulticastGroupConsumerActivationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesMulticastGroupConsumerActivationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastGroupConsumerActivation: %s", err)
 	}

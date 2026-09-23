@@ -893,15 +893,19 @@ func ResourceComputeRouterNamedSetFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("type", flattenNestedComputeRouterNamedSetType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNamedSet: %s", err)
 	}
+
 	if err = d.Set("elements", flattenNestedComputeRouterNamedSetElements(res["elements"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNamedSet: %s", err)
 	}
+
 	if err = d.Set("description", flattenNestedComputeRouterNamedSetDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNamedSet: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenNestedComputeRouterNamedSetFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNamedSet: %s", err)
 	}
+
 	if err = d.Set("name", flattenNestedComputeRouterNamedSetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNamedSet: %s", err)
 	}

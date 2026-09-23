@@ -620,15 +620,19 @@ func ResourceBiglakeHiveHiveCatalogFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("location_uri", flattenBiglakeHiveHiveCatalogLocationUri(res["locationUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveCatalog: %s", err)
 	}
+
 	if err = d.Set("description", flattenBiglakeHiveHiveCatalogDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveCatalog: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBiglakeHiveHiveCatalogCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveCatalog: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBiglakeHiveHiveCatalogUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveCatalog: %s", err)
 	}
+
 	if err = d.Set("replicas", flattenBiglakeHiveHiveCatalogReplicas(res["replicas"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveCatalog: %s", err)
 	}

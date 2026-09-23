@@ -864,15 +864,19 @@ func ResourceDataCatalogTagFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenNestedDataCatalogTagName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tag: %s", err)
 	}
+
 	if err = d.Set("template", flattenNestedDataCatalogTagTemplate(res["template"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tag: %s", err)
 	}
+
 	if err = d.Set("template_displayname", flattenNestedDataCatalogTagTemplateDisplayname(res["templateDisplayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tag: %s", err)
 	}
+
 	if err = d.Set("fields", flattenNestedDataCatalogTagFields(res["fields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tag: %s", err)
 	}
+
 	if err = d.Set("column", flattenNestedDataCatalogTagColumn(res["column"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tag: %s", err)
 	}

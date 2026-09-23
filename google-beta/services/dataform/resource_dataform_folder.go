@@ -610,12 +610,15 @@ func ResourceDataformFolderFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenDataformFolderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}
+
 	if err = d.Set("folder_id", flattenDataformFolderFolderId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataformFolderDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}
+
 	if err = d.Set("containing_folder", flattenDataformFolderContainingFolder(res["containingFolder"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}

@@ -1325,27 +1325,35 @@ func ResourceVertexAIFeatureOnlineStoreFeatureviewFlatten(d *schema.ResourceData
 	if err = d.Set("create_time", flattenVertexAIFeatureOnlineStoreFeatureviewCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAIFeatureOnlineStoreFeatureviewUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("labels", flattenVertexAIFeatureOnlineStoreFeatureviewLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("sync_config", flattenVertexAIFeatureOnlineStoreFeatureviewSyncConfig(res["syncConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("big_query_source", flattenVertexAIFeatureOnlineStoreFeatureviewBigQuerySource(res["bigQuerySource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("feature_registry_source", flattenVertexAIFeatureOnlineStoreFeatureviewFeatureRegistrySource(res["featureRegistrySource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("vector_search_config", flattenVertexAIFeatureOnlineStoreFeatureviewVectorSearchConfig(res["vectorSearchConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenVertexAIFeatureOnlineStoreFeatureviewTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenVertexAIFeatureOnlineStoreFeatureviewEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FeatureOnlineStoreFeatureview: %s", err)
 	}

@@ -957,15 +957,19 @@ func ResourceIdentityPlatformTenantInboundSamlConfigFlatten(d *schema.ResourceDa
 	if err = d.Set("name", flattenIdentityPlatformTenantInboundSamlConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantInboundSamlConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIdentityPlatformTenantInboundSamlConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantInboundSamlConfig: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenIdentityPlatformTenantInboundSamlConfigEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantInboundSamlConfig: %s", err)
 	}
+
 	if err = d.Set("idp_config", flattenIdentityPlatformTenantInboundSamlConfigIdpConfig(res["idpConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantInboundSamlConfig: %s", err)
 	}
+
 	if err = d.Set("sp_config", flattenIdentityPlatformTenantInboundSamlConfigSpConfig(res["spConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TenantInboundSamlConfig: %s", err)
 	}

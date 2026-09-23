@@ -652,18 +652,23 @@ func ResourceFirebaseHostingChannelFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenFirebaseHostingChannelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("retained_release_count", flattenFirebaseHostingChannelRetainedReleaseCount(res["retainedReleaseCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("labels", flattenFirebaseHostingChannelLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenFirebaseHostingChannelExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenFirebaseHostingChannelTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenFirebaseHostingChannelEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}

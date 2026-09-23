@@ -939,36 +939,47 @@ func ResourceEdgecontainerVpnConnectionFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("create_time", flattenEdgecontainerVpnConnectionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEdgecontainerVpnConnectionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEdgecontainerVpnConnectionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("nat_gateway_ip", flattenEdgecontainerVpnConnectionNatGatewayIp(res["natGatewayIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("cluster", flattenEdgecontainerVpnConnectionCluster(res["cluster"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("vpc", flattenEdgecontainerVpnConnectionVpc(res["vpc"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("vpc_project", flattenEdgecontainerVpnConnectionVpcProject(res["vpcProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("enable_high_availability", flattenEdgecontainerVpnConnectionEnableHighAvailability(res["enableHighAvailability"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("router", flattenEdgecontainerVpnConnectionRouter(res["router"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("details", flattenEdgecontainerVpnConnectionDetails(res["details"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEdgecontainerVpnConnectionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEdgecontainerVpnConnectionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnConnection: %s", err)
 	}

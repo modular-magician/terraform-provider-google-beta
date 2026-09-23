@@ -661,15 +661,19 @@ func ResourceChronicleCustomListFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("category", flattenChronicleCustomListCategory(res["category"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomList: %s", err)
 	}
+
 	if err = d.Set("entity_identifier", flattenChronicleCustomListEntityIdentifier(res["entityIdentifier"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomList: %s", err)
 	}
+
 	if err = d.Set("environments", flattenChronicleCustomListEnvironments(res["environments"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomList: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleCustomListName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomList: %s", err)
 	}
+
 	if err = d.Set("custom_list_id", flattenChronicleCustomListCustomListId(res["customListId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomList: %s", err)
 	}

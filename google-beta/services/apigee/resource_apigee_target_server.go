@@ -953,21 +953,27 @@ func ResourceApigeeTargetServerFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenApigeeTargetServerName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeTargetServerDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}
+
 	if err = d.Set("host", flattenApigeeTargetServerHost(res["host"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}
+
 	if err = d.Set("port", flattenApigeeTargetServerPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}
+
 	if err = d.Set("is_enabled", flattenApigeeTargetServerIsEnabled(res["isEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}
+
 	if err = d.Set("s_sl_info", flattenApigeeTargetServerSSLInfo(res["sSLInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}
+
 	if err = d.Set("protocol", flattenApigeeTargetServerProtocol(res["protocol"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetServer: %s", err)
 	}

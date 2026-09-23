@@ -1514,36 +1514,47 @@ func ResourceBiglakeIcebergIcebergCatalogFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("credential_mode", flattenBiglakeIcebergIcebergCatalogCredentialMode(res["credential-mode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("biglake_service_account", flattenBiglakeIcebergIcebergCatalogBiglakeServiceAccount(res["biglake-service-account"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("biglake_service_account_id", flattenBiglakeIcebergIcebergCatalogBiglakeServiceAccountId(res["biglake-service-account-id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("catalog_type", flattenBiglakeIcebergIcebergCatalogCatalogType(res["catalog-type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("default_location", flattenBiglakeIcebergIcebergCatalogDefaultLocation(res["default-location"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("storage_regions", flattenBiglakeIcebergIcebergCatalogStorageRegions(res["storage-regions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBiglakeIcebergIcebergCatalogCreateTime(res["create-time"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBiglakeIcebergIcebergCatalogUpdateTime(res["update-time"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("description", flattenBiglakeIcebergIcebergCatalogDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("replicas", flattenBiglakeIcebergIcebergCatalogReplicas(res["replicas"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("restricted_locations_config", flattenBiglakeIcebergIcebergCatalogRestrictedLocationsConfig(res["restricted-locations-config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+
 	if err = d.Set("federated_catalog_options", flattenBiglakeIcebergIcebergCatalogFederatedCatalogOptions(res["federated-catalog-options"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}

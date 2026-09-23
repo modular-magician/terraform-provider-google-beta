@@ -769,27 +769,35 @@ func ResourceDatabaseMigrationServicePrivateConnectionFlatten(d *schema.Resource
 	if err = d.Set("name", flattenDatabaseMigrationServicePrivateConnectionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDatabaseMigrationServicePrivateConnectionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDatabaseMigrationServicePrivateConnectionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("state", flattenDatabaseMigrationServicePrivateConnectionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("error", flattenDatabaseMigrationServicePrivateConnectionError(res["error"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("vpc_peering_config", flattenDatabaseMigrationServicePrivateConnectionVpcPeeringConfig(res["vpcPeeringConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("psc_interface_config", flattenDatabaseMigrationServicePrivateConnectionPscInterfaceConfig(res["pscInterfaceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDatabaseMigrationServicePrivateConnectionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDatabaseMigrationServicePrivateConnectionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}

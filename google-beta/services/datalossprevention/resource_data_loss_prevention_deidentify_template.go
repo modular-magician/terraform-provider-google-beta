@@ -19284,18 +19284,23 @@ func ResourceDataLossPreventionDeidentifyTemplateFlatten(d *schema.ResourceData,
 	if err = d.Set("name", flattenDataLossPreventionDeidentifyTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataLossPreventionDeidentifyTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataLossPreventionDeidentifyTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataLossPreventionDeidentifyTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataLossPreventionDeidentifyTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
 	}
+
 	if err = d.Set("deidentify_config", flattenDataLossPreventionDeidentifyTemplateDeidentifyConfig(res["deidentifyConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeidentifyTemplate: %s", err)
 	}

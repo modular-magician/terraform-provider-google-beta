@@ -622,12 +622,15 @@ func ResourceNetworkSecurityUrlListsFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("create_time", flattenNetworkSecurityUrlListsCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UrlLists: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityUrlListsUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UrlLists: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityUrlListsDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UrlLists: %s", err)
 	}
+
 	if err = d.Set("values", flattenNetworkSecurityUrlListsValues(res["values"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UrlLists: %s", err)
 	}

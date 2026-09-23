@@ -847,30 +847,39 @@ func ResourceApihubCurationFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenApihubCurationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApihubCurationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("endpoint", flattenApihubCurationEndpoint(res["endpoint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("last_execution_state", flattenApihubCurationLastExecutionState(res["lastExecutionState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("last_execution_error_message", flattenApihubCurationLastExecutionErrorMessage(res["lastExecutionErrorMessage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("description", flattenApihubCurationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("plugin_instance_actions", flattenApihubCurationPluginInstanceActions(res["pluginInstanceActions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("last_execution_error_code", flattenApihubCurationLastExecutionErrorCode(res["lastExecutionErrorCode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApihubCurationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApihubCurationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Curation: %s", err)
 	}

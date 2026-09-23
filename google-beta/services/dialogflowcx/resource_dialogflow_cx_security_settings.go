@@ -1030,33 +1030,43 @@ func ResourceDialogflowCXSecuritySettingsFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenDialogflowCXSecuritySettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXSecuritySettingsDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("redaction_strategy", flattenDialogflowCXSecuritySettingsRedactionStrategy(res["redactionStrategy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("redaction_scope", flattenDialogflowCXSecuritySettingsRedactionScope(res["redactionScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("inspect_template", flattenDialogflowCXSecuritySettingsInspectTemplate(res["inspectTemplate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("deidentify_template", flattenDialogflowCXSecuritySettingsDeidentifyTemplate(res["deidentifyTemplate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("purge_data_types", flattenDialogflowCXSecuritySettingsPurgeDataTypes(res["purgeDataTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("audio_export_settings", flattenDialogflowCXSecuritySettingsAudioExportSettings(res["audioExportSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("insights_export_settings", flattenDialogflowCXSecuritySettingsInsightsExportSettings(res["insightsExportSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("retention_window_days", flattenDialogflowCXSecuritySettingsRetentionWindowDays(res["retentionWindowDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("retention_strategy", flattenDialogflowCXSecuritySettingsRetentionStrategy(res["retentionStrategy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}

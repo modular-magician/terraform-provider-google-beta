@@ -942,9 +942,11 @@ func ResourcePubsubLiteTopicFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("partition_config", flattenPubsubLiteTopicPartitionConfig(res["partitionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("retention_config", flattenPubsubLiteTopicRetentionConfig(res["retentionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}
+
 	if err = d.Set("reservation_config", flattenPubsubLiteTopicReservationConfig(res["reservationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Topic: %s", err)
 	}

@@ -513,12 +513,15 @@ func ResourceObservabilityProjectSettingsFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("default_storage_location", flattenObservabilityProjectSettingsDefaultStorageLocation(res["defaultStorageLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenObservabilityProjectSettingsKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("name", flattenObservabilityProjectSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}
+
 	if err = d.Set("service_account_id", flattenObservabilityProjectSettingsServiceAccountId(res["serviceAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectSettings: %s", err)
 	}

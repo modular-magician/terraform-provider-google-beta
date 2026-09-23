@@ -2191,33 +2191,43 @@ func ResourceIdentityPlatformConfigFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenIdentityPlatformConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("autodelete_anonymous_users", flattenIdentityPlatformConfigAutodeleteAnonymousUsers(res["autodeleteAnonymousUsers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("sign_in", flattenIdentityPlatformConfigSignIn(res["signIn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("blocking_functions", flattenIdentityPlatformConfigBlockingFunctions(res["blockingFunctions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("quota", flattenIdentityPlatformConfigQuota(res["quota"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("authorized_domains", flattenIdentityPlatformConfigAuthorizedDomains(res["authorizedDomains"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("sms_region_config", flattenIdentityPlatformConfigSmsRegionConfig(res["smsRegionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("client", flattenIdentityPlatformConfigClient(res["client"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("mfa", flattenIdentityPlatformConfigMfa(res["mfa"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("multi_tenant", flattenIdentityPlatformConfigMultiTenant(res["multiTenant"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("monitoring", flattenIdentityPlatformConfigMonitoring(res["monitoring"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}

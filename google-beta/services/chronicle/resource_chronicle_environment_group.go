@@ -666,15 +666,19 @@ func ResourceChronicleEnvironmentGroupFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("description", flattenChronicleEnvironmentGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentGroup: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleEnvironmentGroupDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentGroup: %s", err)
 	}
+
 	if err = d.Set("environments_ids", flattenChronicleEnvironmentGroupEnvironmentsIds(res["environmentsIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentGroup: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleEnvironmentGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentGroup: %s", err)
 	}
+
 	if err = d.Set("environment_group_id", flattenChronicleEnvironmentGroupEnvironmentGroupId(res["environmentGroupId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentGroup: %s", err)
 	}

@@ -620,15 +620,19 @@ func ResourceMonitoringGroupFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("parent_name", flattenMonitoringGroupParentName(res["parentName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("name", flattenMonitoringGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("is_cluster", flattenMonitoringGroupIsCluster(res["isCluster"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringGroupDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("filter", flattenMonitoringGroupFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}

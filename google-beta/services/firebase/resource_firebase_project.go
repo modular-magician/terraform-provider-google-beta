@@ -372,6 +372,7 @@ func ResourceFirebaseProjectFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("project_number", flattenFirebaseProjectProjectNumber(res["projectNumber"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Project: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenFirebaseProjectDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Project: %s", err)
 	}

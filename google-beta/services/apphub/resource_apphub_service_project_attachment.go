@@ -489,15 +489,19 @@ func ResourceApphubServiceProjectAttachmentFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenApphubServiceProjectAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceProjectAttachment: %s", err)
 	}
+
 	if err = d.Set("service_project", flattenApphubServiceProjectAttachmentServiceProject(res["serviceProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceProjectAttachment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApphubServiceProjectAttachmentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceProjectAttachment: %s", err)
 	}
+
 	if err = d.Set("uid", flattenApphubServiceProjectAttachmentUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceProjectAttachment: %s", err)
 	}
+
 	if err = d.Set("state", flattenApphubServiceProjectAttachmentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceProjectAttachment: %s", err)
 	}

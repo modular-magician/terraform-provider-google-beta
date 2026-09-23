@@ -841,24 +841,31 @@ func ResourceNetworkSecurityUllMirroringCollectorRuleFlatten(d *schema.ResourceD
 	if err = d.Set("create_time", flattenNetworkSecurityUllMirroringCollectorRuleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityUllMirroringCollectorRuleLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("match", flattenNetworkSecurityUllMirroringCollectorRuleMatch(res["match"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkSecurityUllMirroringCollectorRuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityUllMirroringCollectorRuleReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityUllMirroringCollectorRuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityUllMirroringCollectorRuleTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityUllMirroringCollectorRuleEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UllMirroringCollectorRule: %s", err)
 	}

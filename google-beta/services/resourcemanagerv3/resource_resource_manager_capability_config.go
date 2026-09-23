@@ -622,24 +622,31 @@ func ResourceResourceManagerV3CapabilityConfigFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenResourceManagerV3CapabilityConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenResourceManagerV3CapabilityConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("types", flattenResourceManagerV3CapabilityConfigTypes(res["types"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("management_project", flattenResourceManagerV3CapabilityConfigManagementProject(res["managementProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("state", flattenResourceManagerV3CapabilityConfigState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("etag", flattenResourceManagerV3CapabilityConfigEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenResourceManagerV3CapabilityConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenResourceManagerV3CapabilityConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CapabilityConfig: %s", err)
 	}

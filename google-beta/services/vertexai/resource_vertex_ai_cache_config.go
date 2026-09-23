@@ -420,6 +420,7 @@ func ResourceVertexAICacheConfigFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenVertexAICacheConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CacheConfig: %s", err)
 	}
+
 	if err = d.Set("disable_cache", flattenVertexAICacheConfigDisableCache(res["disableCache"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CacheConfig: %s", err)
 	}

@@ -629,18 +629,23 @@ func ResourceComputeVpnGatewayFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("creation_timestamp", flattenComputeVpnGatewayCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnGateway: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeVpnGatewayDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnGateway: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeVpnGatewayName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnGateway: %s", err)
 	}
+
 	if err = d.Set("gateway_id", flattenComputeVpnGatewayGatewayId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnGateway: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeVpnGatewayNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnGateway: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeVpnGatewayRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnGateway: %s", err)
 	}

@@ -834,27 +834,35 @@ func ResourceVmwareengineNetworkPolicyFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("create_time", flattenVmwareengineNetworkPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVmwareengineNetworkPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("uid", flattenVmwareengineNetworkPolicyUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("vmware_engine_network_canonical", flattenVmwareengineNetworkPolicyVmwareEngineNetworkCanonical(res["vmwareEngineNetworkCanonical"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("edge_services_cidr", flattenVmwareengineNetworkPolicyEdgeServicesCidr(res["edgeServicesCidr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenVmwareengineNetworkPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("vmware_engine_network", flattenVmwareengineNetworkPolicyVmwareEngineNetwork(res["vmwareEngineNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("internet_access", flattenVmwareengineNetworkPolicyInternetAccess(res["internetAccess"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}
+
 	if err = d.Set("external_ip", flattenVmwareengineNetworkPolicyExternalIp(res["externalIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPolicy: %s", err)
 	}

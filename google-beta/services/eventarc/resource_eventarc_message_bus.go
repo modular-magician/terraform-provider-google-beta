@@ -878,39 +878,51 @@ func ResourceEventarcMessageBusFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenEventarcMessageBusName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("logging_config", flattenEventarcMessageBusLoggingConfig(res["loggingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEventarcMessageBusUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEventarcMessageBusLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenEventarcMessageBusAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("uid", flattenEventarcMessageBusUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("etag", flattenEventarcMessageBusEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEventarcMessageBusCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenEventarcMessageBusDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("crypto_key_name", flattenEventarcMessageBusCryptoKeyName(res["cryptoKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEventarcMessageBusTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEventarcMessageBusEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenEventarcMessageBusEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MessageBus: %s", err)
 	}

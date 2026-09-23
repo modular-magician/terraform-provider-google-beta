@@ -1476,36 +1476,47 @@ func ResourceBigqueryDataTransferConfigFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("display_name", flattenBigqueryDataTransferConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("name", flattenBigqueryDataTransferConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("destination_dataset_id", flattenBigqueryDataTransferConfigDestinationDatasetId(res["destinationDatasetId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("data_source_id", flattenBigqueryDataTransferConfigDataSourceId(res["dataSourceId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("schedule", flattenBigqueryDataTransferConfigSchedule(res["schedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("schedule_options", flattenBigqueryDataTransferConfigScheduleOptions(res["scheduleOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("email_preferences", flattenBigqueryDataTransferConfigEmailPreferences(res["emailPreferences"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("notification_pubsub_topic", flattenBigqueryDataTransferConfigNotificationPubsubTopic(res["notificationPubsubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("data_refresh_window_days", flattenBigqueryDataTransferConfigDataRefreshWindowDays(res["dataRefreshWindowDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("encryption_configuration", flattenBigqueryDataTransferConfigEncryptionConfiguration(res["encryptionConfiguration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenBigqueryDataTransferConfigDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("params", flattenBigqueryDataTransferConfigParams(res["params"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}

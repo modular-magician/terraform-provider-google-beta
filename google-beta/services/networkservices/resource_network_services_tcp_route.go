@@ -1083,30 +1083,39 @@ func ResourceNetworkServicesTcpRouteFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("self_link", flattenNetworkServicesTcpRouteSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkServicesTcpRouteCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesTcpRouteUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesTcpRouteLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesTcpRouteDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("meshes", flattenNetworkServicesTcpRouteMeshes(res["meshes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("gateways", flattenNetworkServicesTcpRouteGateways(res["gateways"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("rules", flattenNetworkServicesTcpRouteRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesTcpRouteTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesTcpRouteEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TcpRoute: %s", err)
 	}

@@ -7726,21 +7726,27 @@ func ResourceCESAppVersionFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("create_time", flattenCESAppVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}
+
 	if err = d.Set("creator", flattenCESAppVersionCreator(res["creator"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}
+
 	if err = d.Set("description", flattenCESAppVersionDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESAppVersionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESAppVersionEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}
+
 	if err = d.Set("name", flattenCESAppVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}
+
 	if err = d.Set("snapshot", flattenCESAppVersionSnapshot(res["snapshot"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppVersion: %s", err)
 	}

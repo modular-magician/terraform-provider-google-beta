@@ -803,15 +803,19 @@ func ResourceArtifactRegistryRuleFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenArtifactRegistryRuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
+
 	if err = d.Set("action", flattenArtifactRegistryRuleAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
+
 	if err = d.Set("operation", flattenArtifactRegistryRuleOperation(res["operation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
+
 	if err = d.Set("condition", flattenArtifactRegistryRuleCondition(res["condition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
+
 	if err = d.Set("package_id", flattenArtifactRegistryRulePackageId(res["packageId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}

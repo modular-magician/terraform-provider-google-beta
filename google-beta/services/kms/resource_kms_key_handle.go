@@ -429,9 +429,11 @@ func ResourceKMSKeyHandleFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("name", flattenKMSKeyHandleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyHandle: %s", err)
 	}
+
 	if err = d.Set("kms_key", flattenKMSKeyHandleKmsKey(res["kmsKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyHandle: %s", err)
 	}
+
 	if err = d.Set("resource_type_selector", flattenKMSKeyHandleResourceTypeSelector(res["resourceTypeSelector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyHandle: %s", err)
 	}

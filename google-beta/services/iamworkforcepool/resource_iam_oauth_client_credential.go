@@ -666,12 +666,15 @@ func ResourceIAMWorkforcePoolOauthClientCredentialFlatten(d *schema.ResourceData
 	if err = d.Set("disabled", flattenIAMWorkforcePoolOauthClientCredentialDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OauthClientCredential: %s", err)
 	}
+
 	if err = d.Set("client_secret", flattenIAMWorkforcePoolOauthClientCredentialClientSecret(res["clientSecret"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OauthClientCredential: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIAMWorkforcePoolOauthClientCredentialDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OauthClientCredential: %s", err)
 	}
+
 	if err = d.Set("name", flattenIAMWorkforcePoolOauthClientCredentialName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OauthClientCredential: %s", err)
 	}

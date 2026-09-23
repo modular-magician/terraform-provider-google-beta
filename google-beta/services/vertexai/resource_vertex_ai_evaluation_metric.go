@@ -718,27 +718,35 @@ func ResourceVertexAIEvaluationMetricFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenVertexAIEvaluationMetricName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenVertexAIEvaluationMetricDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("description", flattenVertexAIEvaluationMetricDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAIEvaluationMetricCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAIEvaluationMetricUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("labels", flattenVertexAIEvaluationMetricLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenVertexAIEvaluationMetricEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenVertexAIEvaluationMetricTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenVertexAIEvaluationMetricEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EvaluationMetric: %s", err)
 	}

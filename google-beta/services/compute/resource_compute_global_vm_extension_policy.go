@@ -1555,36 +1555,47 @@ func ResourceComputeGlobalVmExtensionPolicyFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenComputeGlobalVmExtensionPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeGlobalVmExtensionPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("extension_policies", flattenComputeGlobalVmExtensionPolicyExtensionPolicies(res["extensionPolicies"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("instance_selectors", flattenComputeGlobalVmExtensionPolicyInstanceSelectors(res["instanceSelectors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeGlobalVmExtensionPolicyPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("rollout_operation", flattenComputeGlobalVmExtensionPolicyRolloutOperation(res["rolloutOperation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("scoped_resource_status", flattenComputeGlobalVmExtensionPolicyScopedResourceStatus(res["scopedResourceStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeGlobalVmExtensionPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("id", flattenComputeGlobalVmExtensionPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("kind", flattenComputeGlobalVmExtensionPolicyKind(res["kind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenComputeGlobalVmExtensionPolicySelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}
+
 	if err = d.Set("update_timestamp", flattenComputeGlobalVmExtensionPolicyUpdateTimestamp(res["updateTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalVmExtensionPolicy: %s", err)
 	}

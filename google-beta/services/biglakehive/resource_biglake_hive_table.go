@@ -1758,27 +1758,35 @@ func ResourceBiglakeHiveHiveTableFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("description", flattenBiglakeHiveHiveTableDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("storage_descriptor", flattenBiglakeHiveHiveTableStorageDescriptor(res["storageDescriptor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBiglakeHiveHiveTableCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("last_access_time", flattenBiglakeHiveHiveTableLastAccessTime(res["lastAccessTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("partition_keys", flattenBiglakeHiveHiveTablePartitionKeys(res["partitionKeys"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("view_original_text", flattenBiglakeHiveHiveTableViewOriginalText(res["viewOriginalText"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("view_expanded_text", flattenBiglakeHiveHiveTableViewExpandedText(res["viewExpandedText"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("table_type", flattenBiglakeHiveHiveTableTableType(res["tableType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBiglakeHiveHiveTableUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HiveTable: %s", err)
 	}

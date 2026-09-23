@@ -1188,24 +1188,31 @@ func ResourceComputeRouterFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("creation_timestamp", flattenComputeRouterCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRouterName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRouterDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeRouterNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("bgp", flattenComputeRouterBgp(res["bgp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("encrypted_interconnect_router", flattenComputeRouterEncryptedInterconnectRouter(res["encryptedInterconnectRouter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("ncc_gateway", flattenComputeRouterNccGateway(res["nccGateway"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRouterRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}

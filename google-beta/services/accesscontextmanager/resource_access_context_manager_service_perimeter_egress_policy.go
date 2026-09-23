@@ -1621,12 +1621,15 @@ func ResourceAccessContextManagerServicePerimeterEgressPolicyFlatten(d *schema.R
 	if err = d.Set("egress_from", flattenNestedAccessContextManagerServicePerimeterEgressPolicyEgressFrom(res["egressFrom"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterEgressPolicy: %s", err)
 	}
+
 	if err = d.Set("egress_to", flattenNestedAccessContextManagerServicePerimeterEgressPolicyEgressTo(res["egressTo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterEgressPolicy: %s", err)
 	}
+
 	if err = d.Set("title", flattenNestedAccessContextManagerServicePerimeterEgressPolicyTitle(res["title"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterEgressPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNestedAccessContextManagerServicePerimeterEgressPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterEgressPolicy: %s", err)
 	}

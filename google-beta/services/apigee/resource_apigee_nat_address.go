@@ -562,12 +562,15 @@ func ResourceApigeeNatAddressFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenApigeeNatAddressName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NatAddress: %s", err)
 	}
+
 	if err = d.Set("activate", flattenApigeeNatAddressActivate(res["activate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NatAddress: %s", err)
 	}
+
 	if err = d.Set("ip_address", flattenApigeeNatAddressIpAddress(res["ipAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NatAddress: %s", err)
 	}
+
 	if err = d.Set("state", flattenApigeeNatAddressState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NatAddress: %s", err)
 	}

@@ -827,9 +827,11 @@ func ResourceIAM2AccessBoundaryPolicyFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("display_name", flattenIAM2AccessBoundaryPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenIAM2AccessBoundaryPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessBoundaryPolicy: %s", err)
 	}
+
 	if err = d.Set("rules", flattenIAM2AccessBoundaryPolicyRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessBoundaryPolicy: %s", err)
 	}

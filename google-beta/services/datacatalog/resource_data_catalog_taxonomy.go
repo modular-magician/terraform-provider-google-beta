@@ -592,12 +592,15 @@ func ResourceDataCatalogTaxonomyFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenDataCatalogTaxonomyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Taxonomy: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataCatalogTaxonomyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Taxonomy: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataCatalogTaxonomyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Taxonomy: %s", err)
 	}
+
 	if err = d.Set("activated_policy_types", flattenDataCatalogTaxonomyActivatedPolicyTypes(res["activatedPolicyTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Taxonomy: %s", err)
 	}

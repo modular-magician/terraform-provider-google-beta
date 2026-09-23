@@ -731,15 +731,19 @@ func ResourceIAMBetaWorkloadIdentityPoolNamespaceFlatten(d *schema.ResourceData,
 	if err = d.Set("name", flattenIAMBetaWorkloadIdentityPoolNamespaceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolNamespace: %s", err)
 	}
+
 	if err = d.Set("description", flattenIAMBetaWorkloadIdentityPoolNamespaceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolNamespace: %s", err)
 	}
+
 	if err = d.Set("state", flattenIAMBetaWorkloadIdentityPoolNamespaceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolNamespace: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenIAMBetaWorkloadIdentityPoolNamespaceDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolNamespace: %s", err)
 	}
+
 	if err = d.Set("owner_service", flattenIAMBetaWorkloadIdentityPoolNamespaceOwnerService(res["ownerService"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolNamespace: %s", err)
 	}

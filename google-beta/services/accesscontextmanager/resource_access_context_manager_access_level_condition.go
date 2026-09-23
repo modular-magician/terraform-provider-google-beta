@@ -1220,21 +1220,27 @@ func ResourceAccessContextManagerAccessLevelConditionFlatten(d *schema.ResourceD
 	if err = d.Set("ip_subnetworks", flattenNestedAccessContextManagerAccessLevelConditionIpSubnetworks(res["ipSubnetworks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}
+
 	if err = d.Set("required_access_levels", flattenNestedAccessContextManagerAccessLevelConditionRequiredAccessLevels(res["requiredAccessLevels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}
+
 	if err = d.Set("members", flattenNestedAccessContextManagerAccessLevelConditionMembers(res["members"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}
+
 	if err = d.Set("negate", flattenNestedAccessContextManagerAccessLevelConditionNegate(res["negate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}
+
 	if err = d.Set("device_policy", flattenNestedAccessContextManagerAccessLevelConditionDevicePolicy(res["devicePolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}
+
 	if err = d.Set("regions", flattenNestedAccessContextManagerAccessLevelConditionRegions(res["regions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}
+
 	if err = d.Set("vpc_network_sources", flattenNestedAccessContextManagerAccessLevelConditionVpcNetworkSources(res["vpcNetworkSources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AccessLevelCondition: %s", err)
 	}

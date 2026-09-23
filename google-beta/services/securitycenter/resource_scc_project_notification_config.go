@@ -618,15 +618,19 @@ func ResourceSecurityCenterProjectNotificationConfigFlatten(d *schema.ResourceDa
 	if err = d.Set("name", flattenSecurityCenterProjectNotificationConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterProjectNotificationConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("pubsub_topic", flattenSecurityCenterProjectNotificationConfigPubsubTopic(res["pubsubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenSecurityCenterProjectNotificationConfigServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectNotificationConfig: %s", err)
 	}
+
 	if err = d.Set("streaming_config", flattenSecurityCenterProjectNotificationConfigStreamingConfig(res["streamingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectNotificationConfig: %s", err)
 	}

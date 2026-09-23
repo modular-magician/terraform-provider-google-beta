@@ -1466,9 +1466,11 @@ func ResourceCloudRunDomainMappingFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("status", flattenCloudRunDomainMappingStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}
+
 	if err = d.Set("spec", flattenCloudRunDomainMappingSpec(res["spec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenCloudRunDomainMappingMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}

@@ -1497,15 +1497,19 @@ func ResourceChronicleNativeDashboardFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenChronicleNativeDashboardName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("dashboard_id", flattenChronicleNativeDashboardDashboardId(res["dashboardId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("access", flattenChronicleNativeDashboardAccess(res["access"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenChronicleNativeDashboardCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("create_user_id", flattenChronicleNativeDashboardCreateUserId(res["createUserId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
@@ -1539,21 +1543,27 @@ func ResourceChronicleNativeDashboardFlatten(d *schema.ResourceData, meta interf
 			}
 		}
 	}
+
 	if err = d.Set("description", flattenChronicleNativeDashboardDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleNativeDashboardDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("etag", flattenChronicleNativeDashboardEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("type", flattenChronicleNativeDashboardType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleNativeDashboardUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}
+
 	if err = d.Set("update_user_id", flattenChronicleNativeDashboardUpdateUserId(res["updateUserId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NativeDashboard: %s", err)
 	}

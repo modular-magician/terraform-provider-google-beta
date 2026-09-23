@@ -642,27 +642,35 @@ func ResourceComputeRegionTargetTcpProxyFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("creation_timestamp", flattenComputeRegionTargetTcpProxyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionTargetTcpProxyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_id", flattenComputeRegionTargetTcpProxyProxyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionTargetTcpProxyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_header", flattenComputeRegionTargetTcpProxyProxyHeader(res["proxyHeader"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("backend_service", flattenComputeRegionTargetTcpProxyBackendService(res["service"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_bind", flattenComputeRegionTargetTcpProxyProxyBind(res["proxyBind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("load_balancing_scheme", flattenComputeRegionTargetTcpProxyLoadBalancingScheme(res["loadBalancingScheme"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRegionTargetTcpProxyRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetTcpProxy: %s", err)
 	}

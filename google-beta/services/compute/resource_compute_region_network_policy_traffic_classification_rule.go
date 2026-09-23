@@ -1198,33 +1198,43 @@ func ResourceComputeRegionNetworkPolicyTrafficClassificationRuleFlatten(d *schem
 	if err = d.Set("creation_timestamp", flattenComputeRegionNetworkPolicyTrafficClassificationRuleCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("kind", flattenComputeRegionNetworkPolicyTrafficClassificationRuleKind(res["kind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("rule_name", flattenComputeRegionNetworkPolicyTrafficClassificationRuleRuleName(res["ruleName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionNetworkPolicyTrafficClassificationRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeRegionNetworkPolicyTrafficClassificationRulePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("match", flattenComputeRegionNetworkPolicyTrafficClassificationRuleMatch(res["match"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("action", flattenComputeRegionNetworkPolicyTrafficClassificationRuleAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("rule_tuple_count", flattenComputeRegionNetworkPolicyTrafficClassificationRuleRuleTupleCount(res["ruleTupleCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("target_service_accounts", flattenComputeRegionNetworkPolicyTrafficClassificationRuleTargetServiceAccounts(res["targetServiceAccounts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("target_secure_tags", flattenComputeRegionNetworkPolicyTrafficClassificationRuleTargetSecureTags(res["targetSecureTags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenComputeRegionNetworkPolicyTrafficClassificationRuleDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkPolicyTrafficClassificationRule: %s", err)
 	}

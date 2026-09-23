@@ -1110,60 +1110,79 @@ func ResourceComputeAddressFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("address", flattenComputeAddressAddress(res["address"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("address_type", flattenComputeAddressAddressType(res["addressType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeAddressCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeAddressDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeAddressName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("purpose", flattenComputeAddressPurpose(res["purpose"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("network_tier", flattenComputeAddressNetworkTier(res["networkTier"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("subnetwork", flattenComputeAddressSubnetwork(res["subnetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("users", flattenComputeAddressUsers(res["users"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("labels", flattenComputeAddressLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("label_fingerprint", flattenComputeAddressLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeAddressNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("prefix_length", flattenComputeAddressPrefixLength(res["prefixLength"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("ip_version", flattenComputeAddressIpVersion(res["ipVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("ipv6_endpoint_type", flattenComputeAddressIpv6EndpointType(res["ipv6EndpointType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("ip_collection", flattenComputeAddressIpCollection(res["ipCollection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("address_id", flattenComputeAddressAddressId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenComputeAddressTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenComputeAddressEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeAddressRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}

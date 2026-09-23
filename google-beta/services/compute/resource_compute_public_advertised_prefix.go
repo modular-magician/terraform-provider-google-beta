@@ -568,21 +568,27 @@ func ResourceComputePublicAdvertisedPrefixFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("description", flattenComputePublicAdvertisedPrefixDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputePublicAdvertisedPrefixName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+
 	if err = d.Set("dns_verification_ip", flattenComputePublicAdvertisedPrefixDnsVerificationIp(res["dnsVerificationIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+
 	if err = d.Set("ip_cidr_range", flattenComputePublicAdvertisedPrefixIpCidrRange(res["ipCidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+
 	if err = d.Set("pdp_scope", flattenComputePublicAdvertisedPrefixPdpScope(res["pdpScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+
 	if err = d.Set("ipv6_access_type", flattenComputePublicAdvertisedPrefixIpv6AccessType(res["ipv6AccessType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+
 	if err = d.Set("shared_secret", flattenComputePublicAdvertisedPrefixSharedSecret(res["sharedSecret"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}

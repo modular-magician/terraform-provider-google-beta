@@ -572,24 +572,31 @@ func ResourceCloudSupportSupportEventSubscriptionFlatten(d *schema.ResourceData,
 	if err = d.Set("create_time", flattenCloudSupportSupportEventSubscriptionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenCloudSupportSupportEventSubscriptionDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("failure_reason", flattenCloudSupportSupportEventSubscriptionFailureReason(res["failureReason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("name", flattenCloudSupportSupportEventSubscriptionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("pub_sub_topic", flattenCloudSupportSupportEventSubscriptionPubSubTopic(res["pubSubTopic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("purge_time", flattenCloudSupportSupportEventSubscriptionPurgeTime(res["purgeTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("state", flattenCloudSupportSupportEventSubscriptionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCloudSupportSupportEventSubscriptionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SupportEventSubscription: %s", err)
 	}

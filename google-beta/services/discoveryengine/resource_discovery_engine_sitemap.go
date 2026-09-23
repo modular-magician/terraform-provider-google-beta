@@ -526,9 +526,11 @@ func ResourceDiscoveryEngineSitemapFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenDiscoveryEngineSitemapName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Sitemap: %s", err)
 	}
+
 	if err = d.Set("uri", flattenDiscoveryEngineSitemapUri(res["uri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Sitemap: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDiscoveryEngineSitemapCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Sitemap: %s", err)
 	}

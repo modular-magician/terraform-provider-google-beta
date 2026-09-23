@@ -894,18 +894,23 @@ func ResourceCloudAssetFolderFeedFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenCloudAssetFolderFeedName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderFeed: %s", err)
 	}
+
 	if err = d.Set("asset_names", flattenCloudAssetFolderFeedAssetNames(res["assetNames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderFeed: %s", err)
 	}
+
 	if err = d.Set("asset_types", flattenCloudAssetFolderFeedAssetTypes(res["assetTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderFeed: %s", err)
 	}
+
 	if err = d.Set("content_type", flattenCloudAssetFolderFeedContentType(res["contentType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderFeed: %s", err)
 	}
+
 	if err = d.Set("feed_output_config", flattenCloudAssetFolderFeedFeedOutputConfig(res["feedOutputConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderFeed: %s", err)
 	}
+
 	if err = d.Set("condition", flattenCloudAssetFolderFeedCondition(res["condition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderFeed: %s", err)
 	}

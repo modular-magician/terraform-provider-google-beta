@@ -718,18 +718,23 @@ func ResourceDialogflowCXVersionFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenDialogflowCXVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXVersionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowCXVersionDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("nlu_settings", flattenDialogflowCXVersionNluSettings(res["nluSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDialogflowCXVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("state", flattenDialogflowCXVersionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}

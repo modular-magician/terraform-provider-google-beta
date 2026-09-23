@@ -1044,21 +1044,27 @@ func ResourceStorageFtpServerFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("display_name", flattenStorageFtpServerDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}
+
 	if err = d.Set("labels", flattenStorageFtpServerLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}
+
 	if err = d.Set("access_type", flattenStorageFtpServerAccessType(res["accessType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}
+
 	if err = d.Set("internal_config", flattenStorageFtpServerInternalConfig(res["internalConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}
+
 	if err = d.Set("external_config", flattenStorageFtpServerExternalConfig(res["externalConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenStorageFtpServerTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenStorageFtpServerEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Server: %s", err)
 	}

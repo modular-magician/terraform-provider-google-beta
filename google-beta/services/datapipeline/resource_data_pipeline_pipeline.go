@@ -2367,33 +2367,43 @@ func ResourceDataPipelinePipelineFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenDataPipelinePipelineName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataPipelinePipelineDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("type", flattenDataPipelinePipelineType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("state", flattenDataPipelinePipelineState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataPipelinePipelineCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("last_update_time", flattenDataPipelinePipelineLastUpdateTime(res["lastUpdateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("workload", flattenDataPipelinePipelineWorkload(res["workload"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("schedule_info", flattenDataPipelinePipelineScheduleInfo(res["scheduleInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("job_count", flattenDataPipelinePipelineJobCount(res["jobCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("scheduler_service_account_email", flattenDataPipelinePipelineSchedulerServiceAccountEmail(res["schedulerServiceAccountEmail"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}
+
 	if err = d.Set("pipeline_sources", flattenDataPipelinePipelinePipelineSources(res["pipelineSources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Pipeline: %s", err)
 	}

@@ -708,15 +708,19 @@ func ResourceMonitoringGenericServiceFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenMonitoringGenericServiceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringGenericServiceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}
+
 	if err = d.Set("user_labels", flattenMonitoringGenericServiceUserLabels(res["userLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}
+
 	if err = d.Set("telemetry", flattenMonitoringGenericServiceTelemetry(res["telemetry"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}
+
 	if err = d.Set("basic_service", flattenMonitoringGenericServiceBasicService(res["basicService"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}

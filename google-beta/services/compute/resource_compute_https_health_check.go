@@ -824,30 +824,39 @@ func ResourceComputeHttpsHealthCheckFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("check_interval_sec", flattenComputeHttpsHealthCheckCheckIntervalSec(res["checkIntervalSec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeHttpsHealthCheckCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeHttpsHealthCheckDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("healthy_threshold", flattenComputeHttpsHealthCheckHealthyThreshold(res["healthyThreshold"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("host", flattenComputeHttpsHealthCheckHost(res["host"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeHttpsHealthCheckName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("port", flattenComputeHttpsHealthCheckPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("request_path", flattenComputeHttpsHealthCheckRequestPath(res["requestPath"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("timeout_sec", flattenComputeHttpsHealthCheckTimeoutSec(res["timeoutSec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}
+
 	if err = d.Set("unhealthy_threshold", flattenComputeHttpsHealthCheckUnhealthyThreshold(res["unhealthyThreshold"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HttpsHealthCheck: %s", err)
 	}

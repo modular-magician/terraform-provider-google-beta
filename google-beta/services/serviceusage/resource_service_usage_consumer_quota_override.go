@@ -739,9 +739,11 @@ func ResourceServiceUsageConsumerQuotaOverrideFlatten(d *schema.ResourceData, me
 	if err = d.Set("override_value", flattenNestedServiceUsageConsumerQuotaOverrideOverrideValue(res["overrideValue"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}
+
 	if err = d.Set("dimensions", flattenNestedServiceUsageConsumerQuotaOverrideDimensions(res["dimensions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}
+
 	if err = d.Set("name", flattenNestedServiceUsageConsumerQuotaOverrideName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}

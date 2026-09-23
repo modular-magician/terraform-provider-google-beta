@@ -860,36 +860,47 @@ func ResourceDataprocMetastoreFederationFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenDataprocMetastoreFederationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataprocMetastoreFederationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataprocMetastoreFederationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataprocMetastoreFederationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("endpoint_uri", flattenDataprocMetastoreFederationEndpointUri(res["endpointUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("state", flattenDataprocMetastoreFederationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("state_message", flattenDataprocMetastoreFederationStateMessage(res["stateMessage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDataprocMetastoreFederationUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("version", flattenDataprocMetastoreFederationVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("backend_metastores", flattenDataprocMetastoreFederationBackendMetastores(res["backendMetastores"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataprocMetastoreFederationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataprocMetastoreFederationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}

@@ -627,12 +627,15 @@ func ResourceChronicleCaseStageDefinitionFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("display_name", flattenChronicleCaseStageDefinitionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseStageDefinition: %s", err)
 	}
+
 	if err = d.Set("order", flattenChronicleCaseStageDefinitionOrder(res["order"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseStageDefinition: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleCaseStageDefinitionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseStageDefinition: %s", err)
 	}
+
 	if err = d.Set("case_stage_definition_id", flattenChronicleCaseStageDefinitionCaseStageDefinitionId(res["caseStageDefinitionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseStageDefinition: %s", err)
 	}

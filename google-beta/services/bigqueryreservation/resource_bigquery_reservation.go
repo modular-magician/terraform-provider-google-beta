@@ -1208,45 +1208,59 @@ func ResourceBigqueryReservationReservationFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("slot_capacity", flattenBigqueryReservationReservationSlotCapacity(res["slotCapacity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("ignore_idle_slots", flattenBigqueryReservationReservationIgnoreIdleSlots(res["ignoreIdleSlots"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("concurrency", flattenBigqueryReservationReservationConcurrency(res["concurrency"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("edition", flattenBigqueryReservationReservationEdition(res["edition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("autoscale", flattenBigqueryReservationReservationAutoscale(res["autoscale"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("primary_location", flattenBigqueryReservationReservationPrimaryLocation(res["primaryLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("secondary_location", flattenBigqueryReservationReservationSecondaryLocation(res["secondaryLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("original_primary_location", flattenBigqueryReservationReservationOriginalPrimaryLocation(res["originalPrimaryLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("replication_status", flattenBigqueryReservationReservationReplicationStatus(res["replicationStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("scaling_mode", flattenBigqueryReservationReservationScalingMode(res["scalingMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("max_slots", flattenBigqueryReservationReservationMaxSlots(res["maxSlots"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("reservation_group", flattenBigqueryReservationReservationReservationGroup(res["reservationGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenBigqueryReservationReservationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenBigqueryReservationReservationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenBigqueryReservationReservationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}

@@ -628,12 +628,15 @@ func ResourcePubsubSchemaFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("type", flattenPubsubSchemaType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("definition", flattenPubsubSchemaDefinition(res["definition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("revision_id", flattenPubsubSchemaRevisionId(res["revisionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("name", flattenPubsubSchemaName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}

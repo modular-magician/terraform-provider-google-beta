@@ -654,24 +654,31 @@ func ResourceSecurityCenterV2FolderSccBigQueryExportFlatten(d *schema.ResourceDa
 	if err = d.Set("name", flattenSecurityCenterV2FolderSccBigQueryExportName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterV2FolderSccBigQueryExportDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("dataset", flattenSecurityCenterV2FolderSccBigQueryExportDataset(res["dataset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecurityCenterV2FolderSccBigQueryExportCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterV2FolderSccBigQueryExportUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("most_recent_editor", flattenSecurityCenterV2FolderSccBigQueryExportMostRecentEditor(res["mostRecentEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("principal", flattenSecurityCenterV2FolderSccBigQueryExportPrincipal(res["principal"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("filter", flattenSecurityCenterV2FolderSccBigQueryExportFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderSccBigQueryExport: %s", err)
 	}

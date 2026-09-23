@@ -5045,75 +5045,99 @@ func ResourceIntegrationConnectorsConnectionFlatten(d *schema.ResourceData, meta
 	if err = d.Set("create_time", flattenIntegrationConnectorsConnectionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenIntegrationConnectorsConnectionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("description", flattenIntegrationConnectorsConnectionDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("labels", flattenIntegrationConnectorsConnectionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("connector_version", flattenIntegrationConnectorsConnectionConnectorVersion(res["connectorVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("status", flattenIntegrationConnectorsConnectionStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("config_variable", flattenIntegrationConnectorsConnectionConfigVariable(res["configVariables"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("auth_config", flattenIntegrationConnectorsConnectionAuthConfig(res["authConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("lock_config", flattenIntegrationConnectorsConnectionLockConfig(res["lockConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("destination_config", flattenIntegrationConnectorsConnectionDestinationConfig(res["destinationConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenIntegrationConnectorsConnectionServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("service_directory", flattenIntegrationConnectorsConnectionServiceDirectory(res["serviceDirectory"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("suspended", flattenIntegrationConnectorsConnectionSuspended(res["suspended"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("node_config", flattenIntegrationConnectorsConnectionNodeConfig(res["nodeConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("log_config", flattenIntegrationConnectorsConnectionLogConfig(res["logConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("ssl_config", flattenIntegrationConnectorsConnectionSslConfig(res["sslConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("subscription_type", flattenIntegrationConnectorsConnectionSubscriptionType(res["subscriptionType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("connection_revision", flattenIntegrationConnectorsConnectionConnectionRevision(res["connectionRevision"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("eventing_enablement_type", flattenIntegrationConnectorsConnectionEventingEnablementType(res["eventingEnablementType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("eventing_config", flattenIntegrationConnectorsConnectionEventingConfig(res["eventingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("connector_version_launch_stage", flattenIntegrationConnectorsConnectionConnectorVersionLaunchStage(res["connectorVersionLaunchStage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("eventing_runtime_data", flattenIntegrationConnectorsConnectionEventingRuntimeData(res["eventingRuntimeData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("connector_version_infra_config", flattenIntegrationConnectorsConnectionConnectorVersionInfraConfig(res["connectorVersionInfraConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenIntegrationConnectorsConnectionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenIntegrationConnectorsConnectionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connection: %s", err)
 	}

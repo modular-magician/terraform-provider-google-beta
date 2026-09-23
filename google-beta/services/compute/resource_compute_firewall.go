@@ -1422,48 +1422,63 @@ func ResourceComputeFirewallFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("allow", flattenComputeFirewallAllow(res["allowed"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeFirewallCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("deny", flattenComputeFirewallDeny(res["denied"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeFirewallDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("destination_ranges", flattenComputeFirewallDestinationRanges(res["destinationRanges"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("direction", flattenComputeFirewallDirection(res["direction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenComputeFirewallDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("log_config", flattenComputeFirewallLogConfig(res["logConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeFirewallName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeFirewallNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeFirewallPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("source_ranges", flattenComputeFirewallSourceRanges(res["sourceRanges"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("source_service_accounts", flattenComputeFirewallSourceServiceAccounts(res["sourceServiceAccounts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("source_tags", flattenComputeFirewallSourceTags(res["sourceTags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("target_service_accounts", flattenComputeFirewallTargetServiceAccounts(res["targetServiceAccounts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+
 	if err = d.Set("target_tags", flattenComputeFirewallTargetTags(res["targetTags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}

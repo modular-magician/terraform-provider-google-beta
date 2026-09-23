@@ -707,21 +707,27 @@ func ResourceApiGatewayGatewayFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenApiGatewayGatewayName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApiGatewayGatewayDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("api_config", flattenApiGatewayGatewayApiConfig(res["apiConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("default_hostname", flattenApiGatewayGatewayDefaultHostname(res["defaultHostname"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("labels", flattenApiGatewayGatewayLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenApiGatewayGatewayTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenApiGatewayGatewayEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}

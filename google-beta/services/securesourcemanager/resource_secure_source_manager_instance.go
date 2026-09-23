@@ -1022,36 +1022,47 @@ func ResourceSecureSourceManagerInstanceFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenSecureSourceManagerInstanceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecureSourceManagerInstanceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecureSourceManagerInstanceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("labels", flattenSecureSourceManagerInstanceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("state", flattenSecureSourceManagerInstanceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("host_config", flattenSecureSourceManagerInstanceHostConfig(res["hostConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("state_note", flattenSecureSourceManagerInstanceStateNote(res["stateNote"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("kms_key", flattenSecureSourceManagerInstanceKmsKey(res["kmsKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("private_config", flattenSecureSourceManagerInstancePrivateConfig(res["privateConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("workforce_identity_federation_config", flattenSecureSourceManagerInstanceWorkforceIdentityFederationConfig(res["workforceIdentityFederationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenSecureSourceManagerInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenSecureSourceManagerInstanceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

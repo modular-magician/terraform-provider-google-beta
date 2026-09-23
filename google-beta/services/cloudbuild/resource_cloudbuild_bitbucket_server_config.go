@@ -1098,27 +1098,35 @@ func ResourceCloudBuildBitbucketServerConfigFlatten(d *schema.ResourceData, meta
 	if err = d.Set("name", flattenCloudBuildBitbucketServerConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("host_uri", flattenCloudBuildBitbucketServerConfigHostUri(res["hostUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("secrets", flattenCloudBuildBitbucketServerConfigSecrets(res["secrets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("username", flattenCloudBuildBitbucketServerConfigUsername(res["username"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("webhook_key", flattenCloudBuildBitbucketServerConfigWebhookKey(res["webhookKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("api_key", flattenCloudBuildBitbucketServerConfigApiKey(res["apiKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("connected_repositories", flattenCloudBuildBitbucketServerConfigConnectedRepositories(res["connectedRepositories"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("peered_network", flattenCloudBuildBitbucketServerConfigPeeredNetwork(res["peeredNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}
+
 	if err = d.Set("ssl_ca", flattenCloudBuildBitbucketServerConfigSslCa(res["sslCa"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BitbucketServerConfig: %s", err)
 	}

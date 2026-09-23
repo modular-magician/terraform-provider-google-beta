@@ -1352,39 +1352,51 @@ func ResourceMigrationCenterAssetsExportJobFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("condition", flattenMigrationCenterAssetsExportJobCondition(res["condition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenMigrationCenterAssetsExportJobCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("inventory", flattenMigrationCenterAssetsExportJobInventory(res["inventory"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("labels", flattenMigrationCenterAssetsExportJobLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterAssetsExportJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("network_dependencies", flattenMigrationCenterAssetsExportJobNetworkDependencies(res["networkDependencies"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("performance_data", flattenMigrationCenterAssetsExportJobPerformanceData(res["performanceData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("recent_executions", flattenMigrationCenterAssetsExportJobRecentExecutions(res["recentExecutions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("show_hidden", flattenMigrationCenterAssetsExportJobShowHidden(res["showHidden"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("signed_uri_destination", flattenMigrationCenterAssetsExportJobSignedUriDestination(res["signedUriDestination"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterAssetsExportJobUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenMigrationCenterAssetsExportJobTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenMigrationCenterAssetsExportJobEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssetsExportJob: %s", err)
 	}

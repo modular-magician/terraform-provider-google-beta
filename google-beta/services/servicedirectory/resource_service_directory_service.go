@@ -534,6 +534,7 @@ func ResourceServiceDirectoryServiceFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenServiceDirectoryServiceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenServiceDirectoryServiceMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}

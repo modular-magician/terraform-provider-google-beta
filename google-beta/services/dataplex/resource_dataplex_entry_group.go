@@ -729,30 +729,39 @@ func ResourceDataplexEntryGroupFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenDataplexEntryGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDataplexEntryGroupUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataplexEntryGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataplexEntryGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataplexEntryGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataplexEntryGroupDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataplexEntryGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("transfer_status", flattenDataplexEntryGroupTransferStatus(res["transferStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataplexEntryGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataplexEntryGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}

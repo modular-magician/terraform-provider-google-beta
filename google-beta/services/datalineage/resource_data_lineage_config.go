@@ -721,9 +721,11 @@ func ResourceDataLineageConfigFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenDataLineageConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("etag", flattenDataLineageConfigEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("ingestion", flattenDataLineageConfigIngestion(res["ingestion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}

@@ -1126,9 +1126,11 @@ func ResourceDataCatalogTagTemplateFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenDataCatalogTagTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataCatalogTagTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}
+
 	if err = d.Set("fields", flattenDataCatalogTagTemplateFields(res["fields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}

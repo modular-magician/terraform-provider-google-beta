@@ -1171,36 +1171,47 @@ func ResourceChronicleParserExtensionFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("cbn_snippet", flattenChronicleParserExtensionCbnSnippet(res["cbnSnippet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenChronicleParserExtensionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("dynamic_parsing", flattenChronicleParserExtensionDynamicParsing(res["dynamicParsing"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("extension_validation_report", flattenChronicleParserExtensionExtensionValidationReport(res["extensionValidationReport"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("field_extractors", flattenChronicleParserExtensionFieldExtractors(res["fieldExtractors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("last_live_time", flattenChronicleParserExtensionLastLiveTime(res["lastLiveTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("log", flattenChronicleParserExtensionLog(res["log"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleParserExtensionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("state", flattenChronicleParserExtensionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("state_last_changed_time", flattenChronicleParserExtensionStateLastChangedTime(res["stateLastChangedTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("validation_report", flattenChronicleParserExtensionValidationReport(res["validationReport"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}
+
 	if err = d.Set("parserextension", flattenChronicleParserExtensionParserextension(res["parserextension"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParserExtension: %s", err)
 	}

@@ -470,9 +470,11 @@ func ResourceApihubRuntimeProjectAttachmentFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenApihubRuntimeProjectAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeProjectAttachment: %s", err)
 	}
+
 	if err = d.Set("runtime_project", flattenApihubRuntimeProjectAttachmentRuntimeProject(res["runtimeProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeProjectAttachment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApihubRuntimeProjectAttachmentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeProjectAttachment: %s", err)
 	}

@@ -688,6 +688,7 @@ func ResourceAccessContextManagerServicePerimeterResourceFlatten(d *schema.Resou
 	if err = d.Set("resource", flattenNestedAccessContextManagerServicePerimeterResourceResource(res["resource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterResource: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNestedAccessContextManagerServicePerimeterResourceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterResource: %s", err)
 	}

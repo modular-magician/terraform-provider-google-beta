@@ -1096,33 +1096,43 @@ func ResourceFirebaseExtensionsInstanceFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("name", flattenFirebaseExtensionsInstanceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFirebaseExtensionsInstanceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirebaseExtensionsInstanceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("config", flattenFirebaseExtensionsInstanceConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("state", flattenFirebaseExtensionsInstanceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("error_status", flattenFirebaseExtensionsInstanceErrorStatus(res["errorStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("service_account_email", flattenFirebaseExtensionsInstanceServiceAccountEmail(res["serviceAccountEmail"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("last_operation_name", flattenFirebaseExtensionsInstanceLastOperationName(res["lastOperationName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("last_operation_type", flattenFirebaseExtensionsInstanceLastOperationType(res["lastOperationType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirebaseExtensionsInstanceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("runtime_data", flattenFirebaseExtensionsInstanceRuntimeData(res["runtimeData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

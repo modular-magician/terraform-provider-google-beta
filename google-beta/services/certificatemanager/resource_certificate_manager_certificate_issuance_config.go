@@ -900,30 +900,39 @@ func ResourceCertificateManagerCertificateIssuanceConfigFlatten(d *schema.Resour
 	if err = d.Set("description", flattenCertificateManagerCertificateIssuanceConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("rotation_window_percentage", flattenCertificateManagerCertificateIssuanceConfigRotationWindowPercentage(res["rotationWindowPercentage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("key_algorithm", flattenCertificateManagerCertificateIssuanceConfigKeyAlgorithm(res["keyAlgorithm"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("lifetime", flattenCertificateManagerCertificateIssuanceConfigLifetime(res["lifetime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCertificateManagerCertificateIssuanceConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCertificateManagerCertificateIssuanceConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("labels", flattenCertificateManagerCertificateIssuanceConfigLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("certificate_authority_config", flattenCertificateManagerCertificateIssuanceConfigCertificateAuthorityConfig(res["certificateAuthorityConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenCertificateManagerCertificateIssuanceConfigTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenCertificateManagerCertificateIssuanceConfigEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateIssuanceConfig: %s", err)
 	}

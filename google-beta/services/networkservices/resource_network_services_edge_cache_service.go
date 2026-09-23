@@ -3879,42 +3879,55 @@ func ResourceNetworkServicesEdgeCacheServiceFlatten(d *schema.ResourceData, meta
 	if err = d.Set("description", flattenNetworkServicesEdgeCacheServiceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesEdgeCacheServiceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("disable_quic", flattenNetworkServicesEdgeCacheServiceDisableQuic(res["disableQuic"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("disable_http2", flattenNetworkServicesEdgeCacheServiceDisableHttp2(res["disableHttp2"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("require_tls", flattenNetworkServicesEdgeCacheServiceRequireTls(res["requireTls"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("edge_ssl_certificates", flattenNetworkServicesEdgeCacheServiceEdgeSslCertificates(res["edgeSslCertificates"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("ssl_policy", flattenNetworkServicesEdgeCacheServiceSslPolicy(res["sslPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("ipv4_addresses", flattenNetworkServicesEdgeCacheServiceIpv4Addresses(res["ipv4Addresses"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("ipv6_addresses", flattenNetworkServicesEdgeCacheServiceIpv6Addresses(res["ipv6Addresses"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("routing", flattenNetworkServicesEdgeCacheServiceRouting(res["routing"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("log_config", flattenNetworkServicesEdgeCacheServiceLogConfig(res["logConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("edge_security_policy", flattenNetworkServicesEdgeCacheServiceEdgeSecurityPolicy(res["edgeSecurityPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesEdgeCacheServiceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesEdgeCacheServiceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EdgeCacheService: %s", err)
 	}

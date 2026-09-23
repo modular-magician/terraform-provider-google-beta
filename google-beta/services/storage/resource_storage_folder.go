@@ -571,12 +571,15 @@ func ResourceStorageFolderFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("create_time", flattenStorageFolderCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageFolderUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}
+
 	if err = d.Set("metageneration", flattenStorageFolderMetageneration(res["metageneration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}
+
 	if err = d.Set("name", flattenStorageFolderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Folder: %s", err)
 	}

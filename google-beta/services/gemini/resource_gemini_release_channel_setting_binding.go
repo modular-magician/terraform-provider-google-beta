@@ -759,24 +759,31 @@ func ResourceGeminiReleaseChannelSettingBindingFlatten(d *schema.ResourceData, m
 	if err = d.Set("name", flattenGeminiReleaseChannelSettingBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiReleaseChannelSettingBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiReleaseChannelSettingBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiReleaseChannelSettingBindingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("target", flattenGeminiReleaseChannelSettingBindingTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("product", flattenGeminiReleaseChannelSettingBindingProduct(res["product"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiReleaseChannelSettingBindingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiReleaseChannelSettingBindingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReleaseChannelSettingBinding: %s", err)
 	}

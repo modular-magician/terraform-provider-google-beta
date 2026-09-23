@@ -5441,42 +5441,55 @@ func ResourceCESEvaluationFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("name", flattenCESEvaluationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESEvaluationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("description", flattenCESEvaluationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("tags", flattenCESEvaluationTags(res["tags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("evaluation_datasets", flattenCESEvaluationEvaluationDatasets(res["evaluationDatasets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCESEvaluationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("created_by", flattenCESEvaluationCreatedBy(res["createdBy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESEvaluationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("last_updated_by", flattenCESEvaluationLastUpdatedBy(res["lastUpdatedBy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("evaluation_runs", flattenCESEvaluationEvaluationRuns(res["evaluationRuns"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESEvaluationEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("invalid", flattenCESEvaluationInvalid(res["invalid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("golden", flattenCESEvaluationGolden(res["golden"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}
+
 	if err = d.Set("scenario", flattenCESEvaluationScenario(res["scenario"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Evaluation: %s", err)
 	}

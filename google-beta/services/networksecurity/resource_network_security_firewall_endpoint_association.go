@@ -765,36 +765,47 @@ func ResourceNetworkSecurityFirewallEndpointAssociationFlatten(d *schema.Resourc
 	if err = d.Set("firewall_endpoint", flattenNetworkSecurityFirewallEndpointAssociationFirewallEndpoint(res["firewallEndpoint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkSecurityFirewallEndpointAssociationNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("tls_inspection_policy", flattenNetworkSecurityFirewallEndpointAssociationTlsInspectionPolicy(res["tlsInspectionPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityFirewallEndpointAssociationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenNetworkSecurityFirewallEndpointAssociationDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenNetworkSecurityFirewallEndpointAssociationSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityFirewallEndpointAssociationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityFirewallEndpointAssociationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityFirewallEndpointAssociationReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityFirewallEndpointAssociationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityFirewallEndpointAssociationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityFirewallEndpointAssociationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}

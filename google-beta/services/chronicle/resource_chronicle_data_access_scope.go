@@ -1154,30 +1154,39 @@ func ResourceChronicleDataAccessScopeFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenChronicleDataAccessScopeName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("allowed_data_access_labels", flattenChronicleDataAccessScopeAllowedDataAccessLabels(res["allowedDataAccessLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("allow_all", flattenChronicleDataAccessScopeAllowAll(res["allowAll"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("denied_data_access_labels", flattenChronicleDataAccessScopeDeniedDataAccessLabels(res["deniedDataAccessLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleDataAccessScopeDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenChronicleDataAccessScopeCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("author", flattenChronicleDataAccessScopeAuthor(res["author"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenChronicleDataAccessScopeLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("description", flattenChronicleDataAccessScopeDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleDataAccessScopeUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAccessScope: %s", err)
 	}

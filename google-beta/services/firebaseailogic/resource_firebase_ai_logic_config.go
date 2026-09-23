@@ -808,12 +808,15 @@ func ResourceFirebaseAILogicConfigFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("generative_language_config", flattenFirebaseAILogicConfigGenerativeLanguageConfig(res["generativeLanguageConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("name", flattenFirebaseAILogicConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("telemetry_config", flattenFirebaseAILogicConfigTelemetryConfig(res["telemetryConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+
 	if err = d.Set("traffic_filter", flattenFirebaseAILogicConfigTrafficFilter(res["trafficFilter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}

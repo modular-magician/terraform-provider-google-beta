@@ -2314,57 +2314,75 @@ func ResourceApigeeApiProductFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenApigeeApiProductName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApigeeApiProductDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeApiProductDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("approval_type", flattenApigeeApiProductApprovalType(res["approvalType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("attributes", flattenApigeeApiProductAttributes(res["attributes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("api_resources", flattenApigeeApiProductApiResources(res["apiResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("environments", flattenApigeeApiProductEnvironments(res["environments"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("proxies", flattenApigeeApiProductProxies(res["proxies"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("scopes", flattenApigeeApiProductScopes(res["scopes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("quota", flattenApigeeApiProductQuota(res["quota"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("quota_interval", flattenApigeeApiProductQuotaInterval(res["quotaInterval"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("quota_time_unit", flattenApigeeApiProductQuotaTimeUnit(res["quotaTimeUnit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("created_at", flattenApigeeApiProductCreatedAt(res["createdAt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("last_modified_at", flattenApigeeApiProductLastModifiedAt(res["lastModifiedAt"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("operation_group", flattenApigeeApiProductOperationGroup(res["operationGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("graphql_operation_group", flattenApigeeApiProductGraphqlOperationGroup(res["graphqlOperationGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("grpc_operation_group", flattenApigeeApiProductGrpcOperationGroup(res["grpcOperationGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("quota_counter_scope", flattenApigeeApiProductQuotaCounterScope(res["quotaCounterScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}
+
 	if err = d.Set("space", flattenApigeeApiProductSpace(res["space"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiProduct: %s", err)
 	}

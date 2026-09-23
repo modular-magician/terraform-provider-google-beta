@@ -946,9 +946,11 @@ func ResourceFirebaseHostingVersionFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenFirebaseHostingVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("version_id", flattenFirebaseHostingVersionVersionId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}
+
 	if err = d.Set("config", flattenFirebaseHostingVersionConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Version: %s", err)
 	}

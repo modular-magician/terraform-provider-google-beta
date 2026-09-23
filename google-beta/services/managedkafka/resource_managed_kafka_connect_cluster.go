@@ -1007,30 +1007,39 @@ func ResourceManagedKafkaConnectClusterFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("name", flattenManagedKafkaConnectClusterName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("kafka_cluster", flattenManagedKafkaConnectClusterKafkaCluster(res["kafkaCluster"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenManagedKafkaConnectClusterCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenManagedKafkaConnectClusterUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("labels", flattenManagedKafkaConnectClusterLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("capacity_config", flattenManagedKafkaConnectClusterCapacityConfig(res["capacityConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("gcp_config", flattenManagedKafkaConnectClusterGcpConfig(res["gcpConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("state", flattenManagedKafkaConnectClusterState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenManagedKafkaConnectClusterTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenManagedKafkaConnectClusterEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}

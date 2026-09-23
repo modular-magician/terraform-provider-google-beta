@@ -794,27 +794,35 @@ func ResourceComputeRegionHealthAggregationPolicyFlatten(d *schema.ResourceData,
 	if err = d.Set("description", flattenComputeRegionHealthAggregationPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("policy_type", flattenComputeRegionHealthAggregationPolicyPolicyType(res["policyType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("healthy_percent_threshold", flattenComputeRegionHealthAggregationPolicyHealthyPercentThreshold(res["healthyPercentThreshold"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("min_healthy_threshold", flattenComputeRegionHealthAggregationPolicyMinHealthyThreshold(res["minHealthyThreshold"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("id", flattenComputeRegionHealthAggregationPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeRegionHealthAggregationPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeRegionHealthAggregationPolicySelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeRegionHealthAggregationPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionHealthAggregationPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthAggregationPolicy: %s", err)
 	}

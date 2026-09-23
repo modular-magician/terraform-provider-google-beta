@@ -679,27 +679,35 @@ func ResourceStorageObjectAccessControlFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("bucket", flattenStorageObjectAccessControlBucket(res["bucket"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("domain", flattenStorageObjectAccessControlDomain(res["domain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("email", flattenStorageObjectAccessControlEmail(res["email"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("entity", flattenStorageObjectAccessControlEntity(res["entity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("entity_id", flattenStorageObjectAccessControlEntityId(res["entityId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("generation", flattenStorageObjectAccessControlGeneration(res["generation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("object", flattenStorageObjectAccessControlObject(res["object"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("project_team", flattenStorageObjectAccessControlProjectTeam(res["projectTeam"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("role", flattenStorageObjectAccessControlRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}

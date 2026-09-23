@@ -1196,48 +1196,63 @@ func ResourceSaasRuntimeReleaseFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("annotations", flattenSaasRuntimeReleaseAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("blueprint", flattenSaasRuntimeReleaseBlueprint(res["blueprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSaasRuntimeReleaseCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("etag", flattenSaasRuntimeReleaseEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("input_variable_defaults", flattenSaasRuntimeReleaseInputVariableDefaults(res["inputVariableDefaults"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("input_variables", flattenSaasRuntimeReleaseInputVariables(res["inputVariables"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("labels", flattenSaasRuntimeReleaseLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("name", flattenSaasRuntimeReleaseName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("output_variables", flattenSaasRuntimeReleaseOutputVariables(res["outputVariables"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("release_requirements", flattenSaasRuntimeReleaseReleaseRequirements(res["releaseRequirements"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("uid", flattenSaasRuntimeReleaseUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("unit_kind", flattenSaasRuntimeReleaseUnitKind(res["unitKind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSaasRuntimeReleaseUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenSaasRuntimeReleaseEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenSaasRuntimeReleaseTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenSaasRuntimeReleaseEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Release: %s", err)
 	}

@@ -514,15 +514,19 @@ func ResourceDataCatalogPolicyTagFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenDataCatalogPolicyTagName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyTag: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataCatalogPolicyTagDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyTag: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataCatalogPolicyTagDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyTag: %s", err)
 	}
+
 	if err = d.Set("parent_policy_tag", flattenDataCatalogPolicyTagParentPolicyTag(res["parentPolicyTag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyTag: %s", err)
 	}
+
 	if err = d.Set("child_policy_tags", flattenDataCatalogPolicyTagChildPolicyTags(res["childPolicyTags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PolicyTag: %s", err)
 	}

@@ -768,30 +768,39 @@ func ResourceGeminiGeminiGcpEnablementSettingFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenGeminiGeminiGcpEnablementSettingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiGeminiGcpEnablementSettingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiGeminiGcpEnablementSettingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiGeminiGcpEnablementSettingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("enable_customer_data_sharing", flattenGeminiGeminiGcpEnablementSettingEnableCustomerDataSharing(res["enableCustomerDataSharing"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("disable_web_grounding", flattenGeminiGeminiGcpEnablementSettingDisableWebGrounding(res["disableWebGrounding"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("web_grounding_type", flattenGeminiGeminiGcpEnablementSettingWebGroundingType(res["webGroundingType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("mutations_enabled", flattenGeminiGeminiGcpEnablementSettingMutationsEnabled(res["mutationsEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiGeminiGcpEnablementSettingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiGeminiGcpEnablementSettingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GeminiGcpEnablementSetting: %s", err)
 	}

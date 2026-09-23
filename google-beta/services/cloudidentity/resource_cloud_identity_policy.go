@@ -824,12 +824,15 @@ func ResourceCloudIdentityPolicyFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenCloudIdentityPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("customer", flattenCloudIdentityPolicyCustomer(res["customer"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("policy_query", flattenCloudIdentityPolicyPolicyQuery(res["policyQuery"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+
 	if err = d.Set("setting", flattenCloudIdentityPolicySetting(res["setting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}

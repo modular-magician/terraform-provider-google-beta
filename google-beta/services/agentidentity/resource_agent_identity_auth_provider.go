@@ -1365,39 +1365,51 @@ func ResourceAgentIdentityAuthProviderFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("allowed_scopes", flattenAgentIdentityAuthProviderAllowedScopes(res["allowedScopes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("auth_provider_type_params", flattenAgentIdentityAuthProviderAuthProviderTypeParams(res["authProviderTypeParams"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("blocked_scopes", flattenAgentIdentityAuthProviderBlockedScopes(res["blockedScopes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenAgentIdentityAuthProviderCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("deleted", flattenAgentIdentityAuthProviderDeleted(res["deleted"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("description", flattenAgentIdentityAuthProviderDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenAgentIdentityAuthProviderExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("labels", flattenAgentIdentityAuthProviderLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("name", flattenAgentIdentityAuthProviderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("state", flattenAgentIdentityAuthProviderState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenAgentIdentityAuthProviderUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenAgentIdentityAuthProviderTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenAgentIdentityAuthProviderEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthProvider: %s", err)
 	}

@@ -1433,33 +1433,43 @@ func ResourceBeyondcorpSecurityGatewayFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("state", flattenBeyondcorpSecurityGatewayState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBeyondcorpSecurityGatewayUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBeyondcorpSecurityGatewayCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("hubs", flattenBeyondcorpSecurityGatewayHubs(res["hubs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenBeyondcorpSecurityGatewayDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("external_ips", flattenBeyondcorpSecurityGatewayExternalIps(res["externalIps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("name", flattenBeyondcorpSecurityGatewayName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("delegating_service_account", flattenBeyondcorpSecurityGatewayDelegatingServiceAccount(res["delegatingServiceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("proxy_protocol_config", flattenBeyondcorpSecurityGatewayProxyProtocolConfig(res["proxyProtocolConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("service_discovery", flattenBeyondcorpSecurityGatewayServiceDiscovery(res["serviceDiscovery"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}
+
 	if err = d.Set("logging", flattenBeyondcorpSecurityGatewayLogging(res["logging"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityGateway: %s", err)
 	}

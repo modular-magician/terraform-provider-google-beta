@@ -765,30 +765,39 @@ func ResourceNetappHostGroupFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenNetappHostGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetappHostGroupState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetappHostGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetappHostGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappHostGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("type", flattenNetappHostGroupType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("hosts", flattenNetappHostGroupHosts(res["hosts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("os_type", flattenNetappHostGroupOsType(res["osType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappHostGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappHostGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HostGroup: %s", err)
 	}

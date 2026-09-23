@@ -909,9 +909,11 @@ func ResourceBinaryAuthorizationAttestorFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenBinaryAuthorizationAttestorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}
+
 	if err = d.Set("description", flattenBinaryAuthorizationAttestorDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}
+
 	if err = d.Set("attestation_authority_note", flattenBinaryAuthorizationAttestorAttestationAuthorityNote(res["userOwnedGrafeasNote"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}

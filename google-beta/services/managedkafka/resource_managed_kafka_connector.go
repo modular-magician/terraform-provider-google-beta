@@ -694,12 +694,15 @@ func ResourceManagedKafkaConnectorFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenManagedKafkaConnectorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connector: %s", err)
 	}
+
 	if err = d.Set("configs", flattenManagedKafkaConnectorConfigs(res["configs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connector: %s", err)
 	}
+
 	if err = d.Set("state", flattenManagedKafkaConnectorState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connector: %s", err)
 	}
+
 	if err = d.Set("task_restart_policy", flattenManagedKafkaConnectorTaskRestartPolicy(res["taskRestartPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connector: %s", err)
 	}

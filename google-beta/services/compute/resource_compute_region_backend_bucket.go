@@ -657,15 +657,19 @@ func ResourceComputeRegionBackendBucketFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("bucket_name", flattenComputeRegionBackendBucketBucketName(res["bucketName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionBackendBucket: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeRegionBackendBucketCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionBackendBucket: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionBackendBucketDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionBackendBucket: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionBackendBucketName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionBackendBucket: %s", err)
 	}
+
 	if err = d.Set("load_balancing_scheme", flattenComputeRegionBackendBucketLoadBalancingScheme(res["loadBalancingScheme"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionBackendBucket: %s", err)
 	}

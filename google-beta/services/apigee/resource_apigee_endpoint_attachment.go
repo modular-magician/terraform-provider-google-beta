@@ -487,15 +487,19 @@ func ResourceApigeeEndpointAttachmentFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenApigeeEndpointAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointAttachment: %s", err)
 	}
+
 	if err = d.Set("location", flattenApigeeEndpointAttachmentLocation(res["location"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointAttachment: %s", err)
 	}
+
 	if err = d.Set("host", flattenApigeeEndpointAttachmentHost(res["host"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointAttachment: %s", err)
 	}
+
 	if err = d.Set("service_attachment", flattenApigeeEndpointAttachmentServiceAttachment(res["serviceAttachment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointAttachment: %s", err)
 	}
+
 	if err = d.Set("connection_state", flattenApigeeEndpointAttachmentConnectionState(res["connectionState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointAttachment: %s", err)
 	}

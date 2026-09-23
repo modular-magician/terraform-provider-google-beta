@@ -566,24 +566,31 @@ func ResourceApigeeSecurityMonitoringConditionFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenApigeeSecurityMonitoringConditionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("profile", flattenApigeeSecurityMonitoringConditionProfile(res["profile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("scope", flattenApigeeSecurityMonitoringConditionScope(res["scope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("include_all_resources", flattenApigeeSecurityMonitoringConditionIncludeAllResources(res["includeAllResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApigeeSecurityMonitoringConditionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApigeeSecurityMonitoringConditionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("total_monitored_resources", flattenApigeeSecurityMonitoringConditionTotalMonitoredResources(res["totalMonitoredResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}
+
 	if err = d.Set("total_deployed_resources", flattenApigeeSecurityMonitoringConditionTotalDeployedResources(res["totalDeployedResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityMonitoringCondition: %s", err)
 	}

@@ -2459,45 +2459,59 @@ func ResourceDataplexTaskFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("name", flattenDataplexTaskName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDataplexTaskUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataplexTaskCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataplexTaskUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataplexTaskDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataplexTaskDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("state", flattenDataplexTaskState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataplexTaskLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("trigger_spec", flattenDataplexTaskTriggerSpec(res["triggerSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("execution_spec", flattenDataplexTaskExecutionSpec(res["executionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("execution_status", flattenDataplexTaskExecutionStatus(res["executionStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("spark", flattenDataplexTaskSpark(res["spark"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("notebook", flattenDataplexTaskNotebook(res["notebook"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataplexTaskTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataplexTaskEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Task: %s", err)
 	}

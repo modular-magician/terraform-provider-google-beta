@@ -2237,90 +2237,119 @@ func ResourceComputeRegionDiskFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("disk_encryption_key", flattenComputeRegionDiskDiskEncryptionKey(res["diskEncryptionKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("source_image_id", flattenComputeRegionDiskSourceImageId(res["sourceImageId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("source_snapshot_encryption_key", flattenComputeRegionDiskSourceSnapshotEncryptionKey(res["sourceSnapshotEncryptionKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("source_snapshot_id", flattenComputeRegionDiskSourceSnapshotId(res["sourceSnapshotId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("label_fingerprint", flattenComputeRegionDiskLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeRegionDiskCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionDiskDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("last_attach_timestamp", flattenComputeRegionDiskLastAttachTimestamp(res["lastAttachTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("last_detach_timestamp", flattenComputeRegionDiskLastDetachTimestamp(res["lastDetachTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("labels", flattenComputeRegionDiskLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionDiskName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("size", flattenComputeRegionDiskSize(res["sizeGb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("users", flattenComputeRegionDiskUsers(res["users"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("physical_block_size_bytes", flattenComputeRegionDiskPhysicalBlockSizeBytes(res["physicalBlockSizeBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("replica_zones", flattenComputeRegionDiskReplicaZones(res["replicaZones"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("type", flattenComputeRegionDiskType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("source_disk", flattenComputeRegionDiskSourceDisk(res["sourceDisk"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("disk_id", flattenComputeRegionDiskDiskId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("source_disk_id", flattenComputeRegionDiskSourceDiskId(res["sourceDiskId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("async_primary_disk", flattenComputeRegionDiskAsyncPrimaryDisk(res["asyncPrimaryDisk"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("guest_os_features", flattenComputeRegionDiskGuestOsFeatures(res["guestOsFeatures"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("licenses", flattenComputeRegionDiskLicenses(res["licenses"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("access_mode", flattenComputeRegionDiskAccessMode(res["accessMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("provisioned_iops", flattenComputeRegionDiskProvisionedIops(res["provisionedIops"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("provisioned_throughput", flattenComputeRegionDiskProvisionedThroughput(res["provisionedThroughput"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenComputeRegionDiskTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenComputeRegionDiskEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRegionDiskRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("snapshot", flattenComputeRegionDiskSnapshot(res["sourceSnapshot"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}
+
 	if err = d.Set("image", flattenComputeRegionDiskImage(res["sourceImage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDisk: %s", err)
 	}

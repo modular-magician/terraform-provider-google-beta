@@ -1358,36 +1358,47 @@ func ResourceDataprocSessionTemplateFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenDataprocSessionTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("uuid", flattenDataprocSessionTemplateUuid(res["uuid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataprocSessionTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataprocSessionTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("creator", flattenDataprocSessionTemplateCreator(res["creator"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataprocSessionTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("runtime_config", flattenDataprocSessionTemplateRuntimeConfig(res["runtimeConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("environment_config", flattenDataprocSessionTemplateEnvironmentConfig(res["environmentConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("jupyter_session", flattenDataprocSessionTemplateJupyterSession(res["jupyterSession"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("spark_connect_session", flattenDataprocSessionTemplateSparkConnectSession(res["sparkConnectSession"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataprocSessionTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataprocSessionTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SessionTemplate: %s", err)
 	}

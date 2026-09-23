@@ -1693,27 +1693,35 @@ func ResourceCESExampleFlatten(d *schema.ResourceData, meta interface{}, res map
 	if err = d.Set("create_time", flattenCESExampleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("description", flattenCESExampleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESExampleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("entry_agent", flattenCESExampleEntryAgent(res["entryAgent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESExampleEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("invalid", flattenCESExampleInvalid(res["invalid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("messages", flattenCESExampleMessages(res["messages"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("name", flattenCESExampleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESExampleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Example: %s", err)
 	}

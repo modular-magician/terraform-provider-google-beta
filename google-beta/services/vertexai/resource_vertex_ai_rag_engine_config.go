@@ -696,6 +696,7 @@ func ResourceVertexAIRagEngineConfigFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("rag_managed_db_config", flattenVertexAIRagEngineConfigRagManagedDbConfig(res["ragManagedDbConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagEngineConfig: %s", err)
 	}
+
 	if err = d.Set("name", flattenVertexAIRagEngineConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RagEngineConfig: %s", err)
 	}

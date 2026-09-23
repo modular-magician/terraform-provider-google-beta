@@ -713,36 +713,47 @@ func ResourceEdgenetworkSubnetFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenEdgenetworkSubnetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEdgenetworkSubnetLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("description", flattenEdgenetworkSubnetDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEdgenetworkSubnetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEdgenetworkSubnetUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("network", flattenEdgenetworkSubnetNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("ipv4_cidr", flattenEdgenetworkSubnetIpv4Cidr(res["ipv4Cidr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("ipv6_cidr", flattenEdgenetworkSubnetIpv6Cidr(res["ipv6Cidr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("vlan_id", flattenEdgenetworkSubnetVlanId(res["vlanId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("state", flattenEdgenetworkSubnetState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEdgenetworkSubnetTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEdgenetworkSubnetEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnet: %s", err)
 	}

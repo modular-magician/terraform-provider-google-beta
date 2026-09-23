@@ -1101,42 +1101,55 @@ func ResourceVectorSearchIndexFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenVectorSearchIndexName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVectorSearchIndexCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVectorSearchIndexUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenVectorSearchIndexDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("description", flattenVectorSearchIndexDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("labels", flattenVectorSearchIndexLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("distance_metric", flattenVectorSearchIndexDistanceMetric(res["distanceMetric"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("index_field", flattenVectorSearchIndexIndexField(res["indexField"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("filter_fields", flattenVectorSearchIndexFilterFields(res["filterFields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("store_fields", flattenVectorSearchIndexStoreFields(res["storeFields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("dedicated_infrastructure", flattenVectorSearchIndexDedicatedInfrastructure(res["dedicatedInfrastructure"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("dense_scann", flattenVectorSearchIndexDenseScann(res["denseScann"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenVectorSearchIndexTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenVectorSearchIndexEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}

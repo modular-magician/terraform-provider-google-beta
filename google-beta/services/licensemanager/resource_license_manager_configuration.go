@@ -879,24 +879,31 @@ func ResourceLicenseManagerConfigurationFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("create_time", flattenLicenseManagerConfigurationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("name", flattenLicenseManagerConfigurationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("state", flattenLicenseManagerConfigurationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenLicenseManagerConfigurationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("labels", flattenLicenseManagerConfigurationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("product", flattenLicenseManagerConfigurationProduct(res["product"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenLicenseManagerConfigurationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenLicenseManagerConfigurationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Configuration: %s", err)
 	}

@@ -4529,6 +4529,7 @@ func ResourceBigQueryJobFlatten(d *schema.ResourceData, meta interface{}, res ma
 			}
 		}
 	}
+
 	if err = d.Set("status", flattenBigQueryJobStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}

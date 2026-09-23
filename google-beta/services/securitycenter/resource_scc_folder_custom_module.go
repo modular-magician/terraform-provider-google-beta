@@ -1173,21 +1173,27 @@ func ResourceSecurityCenterFolderCustomModuleFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenSecurityCenterFolderCustomModuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterFolderCustomModuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}
+
 	if err = d.Set("enablement_state", flattenSecurityCenterFolderCustomModuleEnablementState(res["enablementState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterFolderCustomModuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenSecurityCenterFolderCustomModuleLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}
+
 	if err = d.Set("ancestor_module", flattenSecurityCenterFolderCustomModuleAncestorModule(res["ancestorModule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}
+
 	if err = d.Set("custom_config", flattenSecurityCenterFolderCustomModuleCustomConfig(res["customConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderCustomModule: %s", err)
 	}

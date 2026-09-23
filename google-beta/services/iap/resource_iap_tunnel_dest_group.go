@@ -573,9 +573,11 @@ func ResourceIapTunnelDestGroupFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenIapTunnelDestGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TunnelDestGroup: %s", err)
 	}
+
 	if err = d.Set("cidrs", flattenIapTunnelDestGroupCidrs(res["cidrs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TunnelDestGroup: %s", err)
 	}
+
 	if err = d.Set("fqdns", flattenIapTunnelDestGroupFqdns(res["fqdns"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TunnelDestGroup: %s", err)
 	}

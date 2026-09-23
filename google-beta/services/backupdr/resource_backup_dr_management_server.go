@@ -614,12 +614,15 @@ func ResourceBackupDRManagementServerFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("type", flattenBackupDRManagementServerType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}
+
 	if err = d.Set("networks", flattenBackupDRManagementServerNetworks(res["networks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}
+
 	if err = d.Set("oauth2_client_id", flattenBackupDRManagementServerOauth2ClientId(res["oauth2ClientId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}
+
 	if err = d.Set("management_uri", flattenBackupDRManagementServerManagementUri(res["managementUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}

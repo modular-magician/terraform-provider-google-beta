@@ -759,24 +759,31 @@ func ResourceGeminiLoggingSettingBindingFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("labels", flattenGeminiLoggingSettingBindingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("target", flattenGeminiLoggingSettingBindingTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("product", flattenGeminiLoggingSettingBindingProduct(res["product"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("name", flattenGeminiLoggingSettingBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiLoggingSettingBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiLoggingSettingBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiLoggingSettingBindingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiLoggingSettingBindingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}

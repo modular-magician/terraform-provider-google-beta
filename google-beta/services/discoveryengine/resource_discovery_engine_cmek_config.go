@@ -723,24 +723,31 @@ func ResourceDiscoveryEngineCmekConfigFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("name", flattenDiscoveryEngineCmekConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("kms_key", flattenDiscoveryEngineCmekConfigKmsKey(res["kmsKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("kms_key_version", flattenDiscoveryEngineCmekConfigKmsKeyVersion(res["kmsKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("state", flattenDiscoveryEngineCmekConfigState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("is_default", flattenDiscoveryEngineCmekConfigIsDefault(res["isDefault"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("last_rotation_timestamp_micros", flattenDiscoveryEngineCmekConfigLastRotationTimestampMicros(res["lastRotationTimestampMicros"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("single_region_keys", flattenDiscoveryEngineCmekConfigSingleRegionKeys(res["singleRegionKeys"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}
+
 	if err = d.Set("notebooklm_state", flattenDiscoveryEngineCmekConfigNotebooklmState(res["notebooklmState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CmekConfig: %s", err)
 	}

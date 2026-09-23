@@ -1113,45 +1113,59 @@ func ResourceChronicleEnvironmentFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("display_name", flattenChronicleEnvironmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("description", flattenChronicleEnvironmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("contact", flattenChronicleEnvironmentContact(res["contact"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("contact_emails", flattenChronicleEnvironmentContactEmails(res["contactEmails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("contact_phone", flattenChronicleEnvironmentContactPhone(res["contactPhone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("aliases_json", flattenChronicleEnvironmentAliasesJson(res["aliasesJson"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("data_access_scopes_json", flattenChronicleEnvironmentDataAccessScopesJson(res["dataAccessScopesJson"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleEnvironmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("retention_duration", flattenChronicleEnvironmentRetentionDuration(res["retentionDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("base64_image", flattenChronicleEnvironmentBase64Image(res["base64Image"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("dynamic_parameters", flattenChronicleEnvironmentDynamicParameters(res["dynamicParameters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("instance_uri", flattenChronicleEnvironmentInstanceUri(res["instanceUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("parallel_instance", flattenChronicleEnvironmentParallelInstance(res["instance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("weight", flattenChronicleEnvironmentWeight(res["weight"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("environment_id", flattenChronicleEnvironmentEnvironmentId(res["environmentId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}

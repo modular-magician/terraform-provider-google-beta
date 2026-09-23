@@ -1127,33 +1127,43 @@ func ResourceComputeHaVpnGatewayFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("description", flattenComputeHaVpnGatewayDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeHaVpnGatewayName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeHaVpnGatewayNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("stack_type", flattenComputeHaVpnGatewayStackType(res["stackType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("gateway_ip_version", flattenComputeHaVpnGatewayGatewayIpVersion(res["gatewayIpVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("vpn_interfaces", flattenComputeHaVpnGatewayVpnInterfaces(res["vpnInterfaces"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("labels", flattenComputeHaVpnGatewayLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("label_fingerprint", flattenComputeHaVpnGatewayLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenComputeHaVpnGatewayTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenComputeHaVpnGatewayEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeHaVpnGatewayRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading HaVpnGateway: %s", err)
 	}

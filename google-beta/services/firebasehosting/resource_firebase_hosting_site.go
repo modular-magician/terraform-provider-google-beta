@@ -586,12 +586,15 @@ func ResourceFirebaseHostingSiteFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenFirebaseHostingSiteName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Site: %s", err)
 	}
+
 	if err = d.Set("app_id", flattenFirebaseHostingSiteAppId(res["appId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Site: %s", err)
 	}
+
 	if err = d.Set("default_url", flattenFirebaseHostingSiteDefaultUrl(res["defaultUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Site: %s", err)
 	}
+
 	if err = d.Set("type", flattenFirebaseHostingSiteType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Site: %s", err)
 	}

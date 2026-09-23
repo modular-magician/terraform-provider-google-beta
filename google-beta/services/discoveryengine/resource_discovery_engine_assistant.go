@@ -1108,18 +1108,23 @@ func ResourceDiscoveryEngineAssistantFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenDiscoveryEngineAssistantName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Assistant: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDiscoveryEngineAssistantDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Assistant: %s", err)
 	}
+
 	if err = d.Set("description", flattenDiscoveryEngineAssistantDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Assistant: %s", err)
 	}
+
 	if err = d.Set("generation_config", flattenDiscoveryEngineAssistantGenerationConfig(res["generationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Assistant: %s", err)
 	}
+
 	if err = d.Set("customer_policy", flattenDiscoveryEngineAssistantCustomerPolicy(res["customerPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Assistant: %s", err)
 	}
+
 	if err = d.Set("web_grounding_type", flattenDiscoveryEngineAssistantWebGroundingType(res["webGroundingType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Assistant: %s", err)
 	}

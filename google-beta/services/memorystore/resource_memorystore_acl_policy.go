@@ -659,12 +659,15 @@ func ResourceMemorystoreAclPolicyFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("etag", flattenMemorystoreAclPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AclPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenMemorystoreAclPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AclPolicy: %s", err)
 	}
+
 	if err = d.Set("rules", flattenMemorystoreAclPolicyRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AclPolicy: %s", err)
 	}
+
 	if err = d.Set("state", flattenMemorystoreAclPolicyState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AclPolicy: %s", err)
 	}

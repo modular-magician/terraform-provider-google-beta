@@ -1262,81 +1262,107 @@ func ResourceNetappStoragePoolFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("service_level", flattenNetappStoragePoolServiceLevel(res["serviceLevel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("capacity_gib", flattenNetappStoragePoolCapacityGib(res["capacityGib"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("volume_capacity_gib", flattenNetappStoragePoolVolumeCapacityGib(res["volumeCapacityGib"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("volume_count", flattenNetappStoragePoolVolumeCount(res["volumeCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetappStoragePoolDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappStoragePoolLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetappStoragePoolNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("active_directory", flattenNetappStoragePoolActiveDirectory(res["activeDirectory"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("kms_config", flattenNetappStoragePoolKmsConfig(res["kmsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("ldap_enabled", flattenNetappStoragePoolLdapEnabled(res["ldapEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("encryption_type", flattenNetappStoragePoolEncryptionType(res["encryptionType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("zone", flattenNetappStoragePoolZone(res["zone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("replica_zone", flattenNetappStoragePoolReplicaZone(res["replicaZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("allow_auto_tiering", flattenNetappStoragePoolAllowAutoTiering(res["allowAutoTiering"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("custom_performance_enabled", flattenNetappStoragePoolCustomPerformanceEnabled(res["customPerformanceEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("total_throughput_mibps", flattenNetappStoragePoolTotalThroughputMibps(res["totalThroughputMibps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("total_iops", flattenNetappStoragePoolTotalIops(res["totalIops"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("hot_tier_size_gib", flattenNetappStoragePoolHotTierSizeGib(res["hotTierSizeGib"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("qos_type", flattenNetappStoragePoolQosType(res["qosType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("available_throughput_mibps", flattenNetappStoragePoolAvailableThroughputMibps(res["availableThroughputMibps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("cold_tier_size_used_gib", flattenNetappStoragePoolColdTierSizeUsedGib(res["coldTierSizeUsedGib"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("hot_tier_size_used_gib", flattenNetappStoragePoolHotTierSizeUsedGib(res["hotTierSizeUsedGib"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("type", flattenNetappStoragePoolType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("scale_type", flattenNetappStoragePoolScaleType(res["scaleType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("mode", flattenNetappStoragePoolMode(res["mode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappStoragePoolTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappStoragePoolEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StoragePool: %s", err)
 	}

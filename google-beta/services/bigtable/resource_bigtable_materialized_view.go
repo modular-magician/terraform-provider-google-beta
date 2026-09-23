@@ -574,9 +574,11 @@ func ResourceBigtableMaterializedViewFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenBigtableMaterializedViewName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MaterializedView: %s", err)
 	}
+
 	if err = d.Set("query", flattenBigtableMaterializedViewQuery(res["query"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MaterializedView: %s", err)
 	}
+
 	if err = d.Set("deletion_protection", flattenBigtableMaterializedViewDeletionProtection(res["deletionProtection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MaterializedView: %s", err)
 	}

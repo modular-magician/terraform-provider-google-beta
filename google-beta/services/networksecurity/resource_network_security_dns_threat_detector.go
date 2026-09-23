@@ -694,24 +694,31 @@ func ResourceNetworkSecurityDnsThreatDetectorFlatten(d *schema.ResourceData, met
 	if err = d.Set("threat_detector_provider", flattenNetworkSecurityDnsThreatDetectorThreatDetectorProvider(res["provider"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("excluded_networks", flattenNetworkSecurityDnsThreatDetectorExcludedNetworks(res["excludedNetworks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityDnsThreatDetectorCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityDnsThreatDetectorUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityDnsThreatDetectorLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityDnsThreatDetectorTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityDnsThreatDetectorEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkSecurityDnsThreatDetectorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsThreatDetector: %s", err)
 	}

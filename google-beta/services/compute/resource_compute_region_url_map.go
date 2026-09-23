@@ -10918,39 +10918,51 @@ func ResourceComputeRegionUrlMapFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("creation_timestamp", flattenComputeRegionUrlMapCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("default_service", flattenComputeRegionUrlMapDefaultService(res["defaultService"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionUrlMapDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("host_rule", flattenComputeRegionUrlMapHostRule(res["hostRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("map_id", flattenComputeRegionUrlMapMapId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeRegionUrlMapFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionUrlMapName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("path_matcher", flattenComputeRegionUrlMapPathMatcher(res["pathMatchers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("test", flattenComputeRegionUrlMapTest(res["tests"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("default_url_redirect", flattenComputeRegionUrlMapDefaultUrlRedirect(res["defaultUrlRedirect"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("default_route_action", flattenComputeRegionUrlMapDefaultRouteAction(res["defaultRouteAction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("header_action", flattenComputeRegionUrlMapHeaderAction(res["headerAction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRegionUrlMapRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionUrlMap: %s", err)
 	}

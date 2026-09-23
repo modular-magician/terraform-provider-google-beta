@@ -819,45 +819,59 @@ func ResourceBigqueryDataTransferDataSourceEnrollmentFlatten(d *schema.ResourceD
 	if err = d.Set("name", flattenBigqueryDataTransferDataSourceEnrollmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenBigqueryDataTransferDataSourceEnrollmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("description", flattenBigqueryDataTransferDataSourceEnrollmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("client_id", flattenBigqueryDataTransferDataSourceEnrollmentClientId(res["clientId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("scopes", flattenBigqueryDataTransferDataSourceEnrollmentScopes(res["scopes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("update_deadline_seconds", flattenBigqueryDataTransferDataSourceEnrollmentUpdateDeadlineSeconds(res["updateDeadlineSeconds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("default_schedule", flattenBigqueryDataTransferDataSourceEnrollmentDefaultSchedule(res["defaultSchedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("supports_custom_schedule", flattenBigqueryDataTransferDataSourceEnrollmentSupportsCustomSchedule(res["supportsCustomSchedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("parameters", flattenBigqueryDataTransferDataSourceEnrollmentParameters(res["parameters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("help_url", flattenBigqueryDataTransferDataSourceEnrollmentHelpUrl(res["helpUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("authorization_type", flattenBigqueryDataTransferDataSourceEnrollmentAuthorizationType(res["authorizationType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("data_refresh_type", flattenBigqueryDataTransferDataSourceEnrollmentDataRefreshType(res["dataRefreshType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("default_data_refresh_window_days", flattenBigqueryDataTransferDataSourceEnrollmentDefaultDataRefreshWindowDays(res["defaultDataRefreshWindowDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("manual_runs_disabled", flattenBigqueryDataTransferDataSourceEnrollmentManualRunsDisabled(res["manualRunsDisabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}
+
 	if err = d.Set("minimum_schedule_interval", flattenBigqueryDataTransferDataSourceEnrollmentMinimumScheduleInterval(res["minimumScheduleInterval"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataSourceEnrollment: %s", err)
 	}

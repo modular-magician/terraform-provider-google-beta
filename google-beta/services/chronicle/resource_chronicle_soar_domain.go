@@ -632,12 +632,15 @@ func ResourceChronicleSoarDomainFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("display_name", flattenChronicleSoarDomainDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarDomain: %s", err)
 	}
+
 	if err = d.Set("environments_json", flattenChronicleSoarDomainEnvironmentsJson(res["environmentsJson"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarDomain: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleSoarDomainName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarDomain: %s", err)
 	}
+
 	if err = d.Set("soar_domain_id", flattenChronicleSoarDomainSoarDomainId(res["soarDomainId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SoarDomain: %s", err)
 	}

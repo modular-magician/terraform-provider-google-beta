@@ -723,18 +723,23 @@ func ResourceComputeMachineImageFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenComputeMachineImageName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MachineImage: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeMachineImageDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MachineImage: %s", err)
 	}
+
 	if err = d.Set("source_instance", flattenComputeMachineImageSourceInstance(res["sourceInstance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MachineImage: %s", err)
 	}
+
 	if err = d.Set("storage_locations", flattenComputeMachineImageStorageLocations(res["storageLocations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MachineImage: %s", err)
 	}
+
 	if err = d.Set("guest_flush", flattenComputeMachineImageGuestFlush(res["guestFlush"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MachineImage: %s", err)
 	}
+
 	if err = d.Set("machine_image_encryption_key", flattenComputeMachineImageMachineImageEncryptionKey(res["machineImageEncryptionKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MachineImage: %s", err)
 	}

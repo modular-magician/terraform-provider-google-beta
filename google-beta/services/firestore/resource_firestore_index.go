@@ -1168,21 +1168,27 @@ func ResourceFirestoreIndexFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenFirestoreIndexName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("query_scope", flattenFirestoreIndexQueryScope(res["queryScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("api_scope", flattenFirestoreIndexApiScope(res["apiScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("density", flattenFirestoreIndexDensity(res["density"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("multikey", flattenFirestoreIndexMultikey(res["multikey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("unique", flattenFirestoreIndexUnique(res["unique"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+
 	if err = d.Set("fields", flattenFirestoreIndexFields(res["fields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}

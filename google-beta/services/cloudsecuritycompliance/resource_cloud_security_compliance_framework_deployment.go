@@ -1767,36 +1767,47 @@ func ResourceCloudSecurityComplianceFrameworkDeploymentFlatten(d *schema.Resourc
 	if err = d.Set("cloud_control_deployment_references", flattenCloudSecurityComplianceFrameworkDeploymentCloudControlDeploymentReferences(res["cloudControlDeploymentReferences"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("cloud_control_metadata", flattenCloudSecurityComplianceFrameworkDeploymentCloudControlMetadata(res["cloudControlMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("computed_target_resource", flattenCloudSecurityComplianceFrameworkDeploymentComputedTargetResource(res["computedTargetResource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCloudSecurityComplianceFrameworkDeploymentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("deployment_state", flattenCloudSecurityComplianceFrameworkDeploymentDeploymentState(res["deploymentState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("description", flattenCloudSecurityComplianceFrameworkDeploymentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCloudSecurityComplianceFrameworkDeploymentEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("framework", flattenCloudSecurityComplianceFrameworkDeploymentFramework(res["framework"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("name", flattenCloudSecurityComplianceFrameworkDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("target_resource_config", flattenCloudSecurityComplianceFrameworkDeploymentTargetResourceConfig(res["targetResourceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("target_resource_display_name", flattenCloudSecurityComplianceFrameworkDeploymentTargetResourceDisplayName(res["targetResourceDisplayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCloudSecurityComplianceFrameworkDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FrameworkDeployment: %s", err)
 	}

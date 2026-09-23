@@ -453,6 +453,7 @@ func ResourceApigeeInstanceAttachmentFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("environment", flattenApigeeInstanceAttachmentEnvironment(res["environment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceAttachment: %s", err)
 	}
+
 	if err = d.Set("name", flattenApigeeInstanceAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceAttachment: %s", err)
 	}

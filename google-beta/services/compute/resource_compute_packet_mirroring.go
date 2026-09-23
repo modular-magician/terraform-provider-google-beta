@@ -1198,27 +1198,35 @@ func ResourceComputePacketMirroringFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenComputePacketMirroringName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputePacketMirroringDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputePacketMirroringRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputePacketMirroringNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputePacketMirroringPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("collector_ilb", flattenComputePacketMirroringCollectorIlb(res["collectorIlb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("filter", flattenComputePacketMirroringFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("mirrored_resources", flattenComputePacketMirroringMirroredResources(res["mirroredResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}
+
 	if err = d.Set("enable", flattenComputePacketMirroringEnable(res["enable"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PacketMirroring: %s", err)
 	}

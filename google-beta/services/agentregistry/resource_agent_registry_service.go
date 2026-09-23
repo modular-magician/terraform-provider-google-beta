@@ -1044,30 +1044,39 @@ func ResourceAgentRegistryServiceFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenAgentRegistryServiceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenAgentRegistryServiceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("description", flattenAgentRegistryServiceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("interfaces", flattenAgentRegistryServiceInterfaces(res["interfaces"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("agent_spec", flattenAgentRegistryServiceAgentSpec(res["agentSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("mcp_server_spec", flattenAgentRegistryServiceMcpServerSpec(res["mcpServerSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("endpoint_spec", flattenAgentRegistryServiceEndpointSpec(res["endpointSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("registry_resource", flattenAgentRegistryServiceRegistryResource(res["registryResource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenAgentRegistryServiceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenAgentRegistryServiceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}

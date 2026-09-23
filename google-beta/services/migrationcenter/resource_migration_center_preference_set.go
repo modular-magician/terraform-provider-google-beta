@@ -1342,18 +1342,23 @@ func ResourceMigrationCenterPreferenceSetFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenMigrationCenterPreferenceSetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PreferenceSet: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenMigrationCenterPreferenceSetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PreferenceSet: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterPreferenceSetUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PreferenceSet: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterPreferenceSetDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PreferenceSet: %s", err)
 	}
+
 	if err = d.Set("description", flattenMigrationCenterPreferenceSetDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PreferenceSet: %s", err)
 	}
+
 	if err = d.Set("virtual_machine_preferences", flattenMigrationCenterPreferenceSetVirtualMachinePreferences(res["virtualMachinePreferences"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PreferenceSet: %s", err)
 	}

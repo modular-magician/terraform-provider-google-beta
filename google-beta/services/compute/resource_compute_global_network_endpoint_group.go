@@ -523,12 +523,15 @@ func ResourceComputeGlobalNetworkEndpointGroupFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenComputeGlobalNetworkEndpointGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeGlobalNetworkEndpointGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("network_endpoint_type", flattenComputeGlobalNetworkEndpointGroupNetworkEndpointType(res["networkEndpointType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("default_port", flattenComputeGlobalNetworkEndpointGroupDefaultPort(res["defaultPort"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpointGroup: %s", err)
 	}

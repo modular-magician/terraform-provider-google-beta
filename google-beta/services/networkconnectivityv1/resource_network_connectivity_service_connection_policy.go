@@ -1147,36 +1147,47 @@ func ResourceNetworkConnectivityv1ServiceConnectionPolicyFlatten(d *schema.Resou
 	if err = d.Set("create_time", flattenNetworkConnectivityv1ServiceConnectionPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkConnectivityv1ServiceConnectionPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("service_class", flattenNetworkConnectivityv1ServiceConnectionPolicyServiceClass(res["serviceClass"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkConnectivityv1ServiceConnectionPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkConnectivityv1ServiceConnectionPolicyNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("psc_config", flattenNetworkConnectivityv1ServiceConnectionPolicyPscConfig(res["pscConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNetworkConnectivityv1ServiceConnectionPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("psc_connections", flattenNetworkConnectivityv1ServiceConnectionPolicyPscConnections(res["pscConnections"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("infrastructure", flattenNetworkConnectivityv1ServiceConnectionPolicyInfrastructure(res["infrastructure"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkConnectivityv1ServiceConnectionPolicyLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkConnectivityv1ServiceConnectionPolicyTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkConnectivityv1ServiceConnectionPolicyEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceConnectionPolicy: %s", err)
 	}

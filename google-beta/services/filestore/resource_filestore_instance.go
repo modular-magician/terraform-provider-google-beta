@@ -2433,48 +2433,63 @@ func ResourceFilestoreInstanceFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("description", flattenFilestoreInstanceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFilestoreInstanceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("tier", flattenFilestoreInstanceTier(res["tier"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("protocol", flattenFilestoreInstanceProtocol(res["protocol"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("labels", flattenFilestoreInstanceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("file_shares", flattenFilestoreInstanceFileShares(res["fileShares"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("networks", flattenFilestoreInstanceNetworks(res["networks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFilestoreInstanceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenFilestoreInstanceKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("deletion_protection_enabled", flattenFilestoreInstanceDeletionProtectionEnabled(res["deletionProtectionEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("deletion_protection_reason", flattenFilestoreInstanceDeletionProtectionReason(res["deletionProtectionReason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("performance_config", flattenFilestoreInstancePerformanceConfig(res["performanceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("effective_replication", flattenFilestoreInstanceEffectiveReplication(res["replication"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("directory_services", flattenFilestoreInstanceDirectoryServices(res["directoryServices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenFilestoreInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenFilestoreInstanceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

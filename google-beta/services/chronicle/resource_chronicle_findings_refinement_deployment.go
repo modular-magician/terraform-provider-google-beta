@@ -701,15 +701,19 @@ func ResourceChronicleFindingsRefinementDeploymentFlatten(d *schema.ResourceData
 	if err = d.Set("archived", flattenChronicleFindingsRefinementDeploymentArchived(res["archived"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinementDeployment: %s", err)
 	}
+
 	if err = d.Set("detection_exclusion_application", flattenChronicleFindingsRefinementDeploymentDetectionExclusionApplication(res["detectionExclusionApplication"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinementDeployment: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenChronicleFindingsRefinementDeploymentEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinementDeployment: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleFindingsRefinementDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinementDeployment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleFindingsRefinementDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinementDeployment: %s", err)
 	}

@@ -739,21 +739,27 @@ func ResourceFilestoreSnapshotFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("description", flattenFilestoreSnapshotDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+
 	if err = d.Set("state", flattenFilestoreSnapshotState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFilestoreSnapshotCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+
 	if err = d.Set("labels", flattenFilestoreSnapshotLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+
 	if err = d.Set("filesystem_used_bytes", flattenFilestoreSnapshotFilesystemUsedBytes(res["filesystemUsedBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenFilestoreSnapshotTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenFilestoreSnapshotEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}

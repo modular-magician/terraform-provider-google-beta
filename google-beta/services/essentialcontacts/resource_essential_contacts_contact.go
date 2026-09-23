@@ -542,12 +542,15 @@ func ResourceEssentialContactsContactFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenEssentialContactsContactName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Contact: %s", err)
 	}
+
 	if err = d.Set("email", flattenEssentialContactsContactEmail(res["email"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Contact: %s", err)
 	}
+
 	if err = d.Set("notification_category_subscriptions", flattenEssentialContactsContactNotificationCategorySubscriptions(res["notificationCategorySubscriptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Contact: %s", err)
 	}
+
 	if err = d.Set("language_tag", flattenEssentialContactsContactLanguageTag(res["languageTag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Contact: %s", err)
 	}

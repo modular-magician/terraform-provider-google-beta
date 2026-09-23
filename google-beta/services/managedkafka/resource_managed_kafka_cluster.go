@@ -1426,42 +1426,55 @@ func ResourceManagedKafkaClusterFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("gcp_config", flattenManagedKafkaClusterGcpConfig(res["gcpConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("name", flattenManagedKafkaClusterName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenManagedKafkaClusterCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenManagedKafkaClusterUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("labels", flattenManagedKafkaClusterLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("capacity_config", flattenManagedKafkaClusterCapacityConfig(res["capacityConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("broker_capacity_config", flattenManagedKafkaClusterBrokerCapacityConfig(res["brokerCapacityConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("rebalance_config", flattenManagedKafkaClusterRebalanceConfig(res["rebalanceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("state", flattenManagedKafkaClusterState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("public_cluster_details", flattenManagedKafkaClusterPublicClusterDetails(res["publicClusterDetails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("bootstrap_address", flattenManagedKafkaClusterBootstrapAddress(res["bootstrapAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("tls_config", flattenManagedKafkaClusterTlsConfig(res["tlsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenManagedKafkaClusterTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenManagedKafkaClusterEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}

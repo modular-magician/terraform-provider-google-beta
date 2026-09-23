@@ -733,39 +733,51 @@ func ResourceChronicleDataExportFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenChronicleDataExportName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("data_export_id", flattenChronicleDataExportDataExportId(res["dataExportId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("start_time", flattenChronicleDataExportStartTime(res["startTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("end_time", flattenChronicleDataExportEndTime(res["endTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("gcs_bucket", flattenChronicleDataExportGcsBucket(res["gcsBucket"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("include_log_types", flattenChronicleDataExportIncludeLogTypes(res["includeLogTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("estimated_volume", flattenChronicleDataExportEstimatedVolume(res["estimatedVolume"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("exported_volume", flattenChronicleDataExportExportedVolume(res["exportedVolume"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenChronicleDataExportCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleDataExportUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("namespaces", flattenChronicleDataExportNamespaces(res["namespaces"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("ingestion_labels", flattenChronicleDataExportIngestionLabels(res["ingestionLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}
+
 	if err = d.Set("data_export_status", flattenChronicleDataExportDataExportStatus(res["dataExportStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExport: %s", err)
 	}

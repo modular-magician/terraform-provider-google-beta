@@ -750,30 +750,39 @@ func ResourceNetworkServicesMulticastDomainGroupFlatten(d *schema.ResourceData, 
 	if err = d.Set("create_time", flattenNetworkServicesMulticastDomainGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesMulticastDomainGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesMulticastDomainGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("multicast_domains", flattenNetworkServicesMulticastDomainGroupMulticastDomains(res["multicastDomains"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkServicesMulticastDomainGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkServicesMulticastDomainGroupState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("unique_id", flattenNetworkServicesMulticastDomainGroupUniqueId(res["uniqueId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesMulticastDomainGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesMulticastDomainGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesMulticastDomainGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomainGroup: %s", err)
 	}

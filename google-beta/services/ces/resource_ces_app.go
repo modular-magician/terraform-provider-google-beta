@@ -4577,78 +4577,103 @@ func ResourceCESAppFlatten(d *schema.ResourceData, meta interface{}, res map[str
 	if err = d.Set("audio_processing_config", flattenCESAppAudioProcessingConfig(res["audioProcessingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCESAppCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("pinned", flattenCESAppPinned(res["pinned"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("data_store_settings", flattenCESAppDataStoreSettings(res["dataStoreSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("default_channel_profile", flattenCESAppDefaultChannelProfile(res["defaultChannelProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("deployment_count", flattenCESAppDeploymentCount(res["deploymentCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("description", flattenCESAppDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESAppDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESAppEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("evaluation_metrics_thresholds", flattenCESAppEvaluationMetricsThresholds(res["evaluationMetricsThresholds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("global_instruction", flattenCESAppGlobalInstruction(res["globalInstruction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("guardrails", flattenCESAppGuardrails(res["guardrails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("language_settings", flattenCESAppLanguageSettings(res["languageSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("logging_settings", flattenCESAppLoggingSettings(res["loggingSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("locked", flattenCESAppLocked(res["locked"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("metadata", flattenCESAppMetadata(res["metadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("model_settings", flattenCESAppModelSettings(res["modelSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("name", flattenCESAppName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("root_agent", flattenCESAppRootAgent(res["rootAgent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("time_zone_settings", flattenCESAppTimeZoneSettings(res["timeZoneSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("tool_execution_mode", flattenCESAppToolExecutionMode(res["toolExecutionMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESAppUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("variable_declarations", flattenCESAppVariableDeclarations(res["variableDeclarations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("client_certificate_settings", flattenCESAppClientCertificateSettings(res["clientCertificateSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("vpc_sc_settings", flattenCESAppVpcScSettings(res["vpcScSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}
+
 	if err = d.Set("error_handling_settings", flattenCESAppErrorHandlingSettings(res["errorHandlingSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading App: %s", err)
 	}

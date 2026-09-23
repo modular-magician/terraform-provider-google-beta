@@ -447,18 +447,23 @@ func ResourceLoggingOrganizationSettingsFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenLoggingOrganizationSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenLoggingOrganizationSettingsKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("kms_service_account_id", flattenLoggingOrganizationSettingsKmsServiceAccountId(res["kmsServiceAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("storage_location", flattenLoggingOrganizationSettingsStorageLocation(res["storageLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("disable_default_sink", flattenLoggingOrganizationSettingsDisableDefaultSink(res["disableDefaultSink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("logging_service_account_id", flattenLoggingOrganizationSettingsLoggingServiceAccountId(res["loggingServiceAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}

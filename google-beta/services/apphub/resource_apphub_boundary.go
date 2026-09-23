@@ -477,15 +477,19 @@ func ResourceApphubBoundaryFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenApphubBoundaryName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Boundary: %s", err)
 	}
+
 	if err = d.Set("crm_node", flattenApphubBoundaryCrmNode(res["crmNode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Boundary: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApphubBoundaryCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Boundary: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApphubBoundaryUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Boundary: %s", err)
 	}
+
 	if err = d.Set("type", flattenApphubBoundaryType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Boundary: %s", err)
 	}

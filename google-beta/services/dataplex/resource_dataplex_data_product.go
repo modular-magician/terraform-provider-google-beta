@@ -1103,45 +1103,59 @@ func ResourceDataplexDataProductFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenDataplexDataProductName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("uid", flattenDataplexDataProductUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("access_approval_config", flattenDataplexDataProductAccessApprovalConfig(res["accessApprovalConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataplexDataProductDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataplexDataProductCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataplexDataProductUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("etag", flattenDataplexDataProductEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataplexDataProductLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataplexDataProductDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("icon", flattenDataplexDataProductIcon(res["icon"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("owner_emails", flattenDataplexDataProductOwnerEmails(res["ownerEmails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("asset_count", flattenDataplexDataProductAssetCount(res["assetCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("access_groups", flattenDataplexDataProductAccessGroups(res["accessGroups"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataplexDataProductTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataplexDataProductEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProduct: %s", err)
 	}

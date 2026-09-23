@@ -660,21 +660,27 @@ func ResourceAccessContextManagerAuthorizedOrgsDescFlatten(d *schema.ResourceDat
 	if err = d.Set("create_time", flattenAccessContextManagerAuthorizedOrgsDescCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenAccessContextManagerAuthorizedOrgsDescUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}
+
 	if err = d.Set("name", flattenAccessContextManagerAuthorizedOrgsDescName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}
+
 	if err = d.Set("orgs", flattenAccessContextManagerAuthorizedOrgsDescOrgs(res["orgs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}
+
 	if err = d.Set("asset_type", flattenAccessContextManagerAuthorizedOrgsDescAssetType(res["assetType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}
+
 	if err = d.Set("authorization_direction", flattenAccessContextManagerAuthorizedOrgsDescAuthorizationDirection(res["authorizationDirection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}
+
 	if err = d.Set("authorization_type", flattenAccessContextManagerAuthorizedOrgsDescAuthorizationType(res["authorizationType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthorizedOrgsDesc: %s", err)
 	}

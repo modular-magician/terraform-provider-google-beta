@@ -907,15 +907,19 @@ func ResourceSecretManagerSecretVersionFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("enabled", flattenSecretManagerSecretVersionEnabled(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecretVersion: %s", err)
 	}
+
 	if err = d.Set("name", flattenSecretManagerSecretVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecretVersion: %s", err)
 	}
+
 	if err = d.Set("version", flattenSecretManagerSecretVersionVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecretVersion: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecretManagerSecretVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecretVersion: %s", err)
 	}
+
 	if err = d.Set("destroy_time", flattenSecretManagerSecretVersionDestroyTime(res["destroyTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecretVersion: %s", err)
 	}

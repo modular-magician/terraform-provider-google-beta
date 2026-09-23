@@ -908,42 +908,55 @@ func ResourceEventarcGoogleApiSourceFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("update_time", flattenEventarcGoogleApiSourceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEventarcGoogleApiSourceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("crypto_key_name", flattenEventarcGoogleApiSourceCryptoKeyName(res["cryptoKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("etag", flattenEventarcGoogleApiSourceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenEventarcGoogleApiSourceAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenEventarcGoogleApiSourceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("destination", flattenEventarcGoogleApiSourceDestination(res["destination"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("logging_config", flattenEventarcGoogleApiSourceLoggingConfig(res["loggingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("name", flattenEventarcGoogleApiSourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("uid", flattenEventarcGoogleApiSourceUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEventarcGoogleApiSourceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEventarcGoogleApiSourceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEventarcGoogleApiSourceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenEventarcGoogleApiSourceEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleApiSource: %s", err)
 	}

@@ -1240,63 +1240,83 @@ func ResourceNetworkServicesGatewayFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("self_link", flattenNetworkServicesGatewaySelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkServicesGatewayCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesGatewayUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesGatewayLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesGatewayDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("type", flattenNetworkServicesGatewayType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("addresses", flattenNetworkServicesGatewayAddresses(res["addresses"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("all_ports", flattenNetworkServicesGatewayAllPorts(res["allPorts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("ports", flattenNetworkServicesGatewayPorts(res["ports"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("scope", flattenNetworkServicesGatewayScope(res["scope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("server_tls_policy", flattenNetworkServicesGatewayServerTlsPolicy(res["serverTlsPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("certificate_urls", flattenNetworkServicesGatewayCertificateUrls(res["certificateUrls"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("gateway_security_policy", flattenNetworkServicesGatewayGatewaySecurityPolicy(res["gatewaySecurityPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkServicesGatewayNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("subnetwork", flattenNetworkServicesGatewaySubnetwork(res["subnetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("ip_version", flattenNetworkServicesGatewayIpVersion(res["ipVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("envoy_headers", flattenNetworkServicesGatewayEnvoyHeaders(res["envoyHeaders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("routing_mode", flattenNetworkServicesGatewayRoutingMode(res["routingMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("allow_global_access", flattenNetworkServicesGatewayAllowGlobalAccess(res["allowGlobalAccess"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesGatewayTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesGatewayEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}

@@ -1001,36 +1001,47 @@ func ResourceVertexAIIndexEndpointFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenVertexAIIndexEndpointName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenVertexAIIndexEndpointDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("description", flattenVertexAIIndexEndpointDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("labels", flattenVertexAIIndexEndpointLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAIIndexEndpointCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAIIndexEndpointUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("network", flattenVertexAIIndexEndpointNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("private_service_connect_config", flattenVertexAIIndexEndpointPrivateServiceConnectConfig(res["privateServiceConnectConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("public_endpoint_domain_name", flattenVertexAIIndexEndpointPublicEndpointDomainName(res["publicEndpointDomainName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenVertexAIIndexEndpointEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenVertexAIIndexEndpointTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenVertexAIIndexEndpointEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IndexEndpoint: %s", err)
 	}

@@ -2841,39 +2841,51 @@ func ResourceCloudfunctions2functionFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenCloudfunctions2functionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("description", flattenCloudfunctions2functionDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("environment", flattenCloudfunctions2functionEnvironment(res["environment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("url", flattenCloudfunctions2functionUrl(res["url"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("state", flattenCloudfunctions2functionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("build_config", flattenCloudfunctions2functionBuildConfig(res["buildConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("service_config", flattenCloudfunctions2functionServiceConfig(res["serviceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("event_trigger", flattenCloudfunctions2functionEventTrigger(res["eventTrigger"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCloudfunctions2functionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("labels", flattenCloudfunctions2functionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenCloudfunctions2functionKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenCloudfunctions2functionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenCloudfunctions2functionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading function: %s", err)
 	}

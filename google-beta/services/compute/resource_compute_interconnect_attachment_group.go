@@ -1114,24 +1114,31 @@ func ResourceComputeInterconnectAttachmentGroupFlatten(d *schema.ResourceData, m
 	if err = d.Set("description", flattenComputeInterconnectAttachmentGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeInterconnectAttachmentGroupCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeInterconnectAttachmentGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("attachments", flattenComputeInterconnectAttachmentGroupAttachments(res["attachments"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("interconnect_group", flattenComputeInterconnectAttachmentGroupInterconnectGroup(res["interconnectGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("intent", flattenComputeInterconnectAttachmentGroupIntent(res["intent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("logical_structure", flattenComputeInterconnectAttachmentGroupLogicalStructure(res["logicalStructure"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}
+
 	if err = d.Set("configured", flattenComputeInterconnectAttachmentGroupConfigured(res["configured"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachmentGroup: %s", err)
 	}

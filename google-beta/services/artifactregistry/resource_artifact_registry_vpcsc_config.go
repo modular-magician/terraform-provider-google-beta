@@ -485,6 +485,7 @@ func ResourceArtifactRegistryVPCSCConfigFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("vpcsc_policy", flattenArtifactRegistryVPCSCConfigVpcscPolicy(res["vpcscPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VPCSCConfig: %s", err)
 	}
+
 	if err = d.Set("name", flattenArtifactRegistryVPCSCConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VPCSCConfig: %s", err)
 	}

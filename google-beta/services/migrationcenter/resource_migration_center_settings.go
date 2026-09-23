@@ -574,9 +574,11 @@ func ResourceMigrationCenterSettingsFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("disable_cloud_logging", flattenMigrationCenterSettingsDisableCloudLogging(res["disableCloudLogging"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}
+
 	if err = d.Set("preference_set", flattenMigrationCenterSettingsPreferenceSet(res["preferenceSet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Settings: %s", err)
 	}

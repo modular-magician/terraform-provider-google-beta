@@ -911,42 +911,55 @@ func ResourceNetappBackupFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("state", flattenNetappBackupState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetappBackupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("volume_usage_bytes", flattenNetappBackupVolumeUsageBytes(res["volumeUsageBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("backup_type", flattenNetappBackupBackupType(res["backupType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("source_volume", flattenNetappBackupSourceVolume(res["sourceVolume"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetappBackupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappBackupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("chain_storage_bytes", flattenNetappBackupChainStorageBytes(res["chainStorageBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("source_snapshot", flattenNetappBackupSourceSnapshot(res["sourceSnapshot"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("ontap_source", flattenNetappBackupOntapSource(res["ontapSource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("volume_region", flattenNetappBackupVolumeRegion(res["volumeRegion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("backup_region", flattenNetappBackupBackupRegion(res["backupRegion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappBackupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappBackupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backup: %s", err)
 	}

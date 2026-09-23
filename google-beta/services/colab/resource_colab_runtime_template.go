@@ -1665,45 +1665,59 @@ func ResourceColabRuntimeTemplateFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenColabRuntimeTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenColabRuntimeTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenColabRuntimeTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("machine_spec", flattenColabRuntimeTemplateMachineSpec(res["machineSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("data_persistent_disk_spec", flattenColabRuntimeTemplateDataPersistentDiskSpec(res["dataPersistentDiskSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("network_spec", flattenColabRuntimeTemplateNetworkSpec(res["networkSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("labels", flattenColabRuntimeTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("idle_shutdown_config", flattenColabRuntimeTemplateIdleShutdownConfig(res["idleShutdownConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("euc_config", flattenColabRuntimeTemplateEucConfig(res["eucConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("shielded_vm_config", flattenColabRuntimeTemplateShieldedVmConfig(res["shieldedVmConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("network_tags", flattenColabRuntimeTemplateNetworkTags(res["networkTags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenColabRuntimeTemplateEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("software_config", flattenColabRuntimeTemplateSoftwareConfig(res["softwareConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenColabRuntimeTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenColabRuntimeTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RuntimeTemplate: %s", err)
 	}

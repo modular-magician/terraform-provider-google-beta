@@ -505,12 +505,15 @@ func ResourceDocumentAIProcessorFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenDocumentAIProcessorName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Processor: %s", err)
 	}
+
 	if err = d.Set("type", flattenDocumentAIProcessorType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Processor: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDocumentAIProcessorDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Processor: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenDocumentAIProcessorKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Processor: %s", err)
 	}

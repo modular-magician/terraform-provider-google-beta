@@ -2007,39 +2007,51 @@ func ResourceSpannerInstanceFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenSpannerInstanceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("config", flattenSpannerInstanceConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSpannerInstanceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("num_nodes", flattenSpannerInstanceNumNodes(res["nodeCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("processing_units", flattenSpannerInstanceProcessingUnits(res["processingUnits"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("labels", flattenSpannerInstanceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("state", flattenSpannerInstanceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("autoscaling_config", flattenSpannerInstanceAutoscalingConfig(res["autoscalingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("edition", flattenSpannerInstanceEdition(res["edition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("instance_type", flattenSpannerInstanceInstanceType(res["instanceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("default_backup_schedule_type", flattenSpannerInstanceDefaultBackupScheduleType(res["defaultBackupScheduleType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenSpannerInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenSpannerInstanceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

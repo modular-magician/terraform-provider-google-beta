@@ -1088,57 +1088,75 @@ func ResourceFirebaseAppHostingBackendFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("serving_locality", flattenFirebaseAppHostingBackendServingLocality(res["servingLocality"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("app_id", flattenFirebaseAppHostingBackendAppId(res["appId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenFirebaseAppHostingBackendServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenFirebaseAppHostingBackendAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenFirebaseAppHostingBackendDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("environment", flattenFirebaseAppHostingBackendEnvironment(res["environment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("labels", flattenFirebaseAppHostingBackendLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirebaseAppHostingBackendEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("name", flattenFirebaseAppHostingBackendName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFirebaseAppHostingBackendCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenFirebaseAppHostingBackendDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirebaseAppHostingBackendUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("uid", flattenFirebaseAppHostingBackendUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("uri", flattenFirebaseAppHostingBackendUri(res["uri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("codebase", flattenFirebaseAppHostingBackendCodebase(res["codebase"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("managed_resources", flattenFirebaseAppHostingBackendManagedResources(res["managedResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenFirebaseAppHostingBackendEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenFirebaseAppHostingBackendTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenFirebaseAppHostingBackendEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Backend: %s", err)
 	}

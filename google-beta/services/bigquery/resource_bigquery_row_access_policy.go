@@ -592,12 +592,15 @@ func ResourceBigQueryRowAccessPolicyFlatten(d *schema.ResourceData, meta interfa
 			}
 		}
 	}
+
 	if err = d.Set("filter_predicate", flattenBigQueryRowAccessPolicyFilterPredicate(res["filterPredicate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RowAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("creation_time", flattenBigQueryRowAccessPolicyCreationTime(res["creationTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RowAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("last_modified_time", flattenBigQueryRowAccessPolicyLastModifiedTime(res["lastModifiedTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RowAccessPolicy: %s", err)
 	}

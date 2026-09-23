@@ -757,6 +757,7 @@ func ResourceComputeInstanceGroupNamedPortFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenNestedComputeInstanceGroupNamedPortName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceGroupNamedPort: %s", err)
 	}
+
 	if err = d.Set("port", flattenNestedComputeInstanceGroupNamedPortPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstanceGroupNamedPort: %s", err)
 	}

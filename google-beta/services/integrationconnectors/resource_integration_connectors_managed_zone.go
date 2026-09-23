@@ -733,27 +733,35 @@ func ResourceIntegrationConnectorsManagedZoneFlatten(d *schema.ResourceData, met
 	if err = d.Set("create_time", flattenIntegrationConnectorsManagedZoneCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenIntegrationConnectorsManagedZoneUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("description", flattenIntegrationConnectorsManagedZoneDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("labels", flattenIntegrationConnectorsManagedZoneLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("dns", flattenIntegrationConnectorsManagedZoneDns(res["dns"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("target_project", flattenIntegrationConnectorsManagedZoneTargetProject(res["targetProject"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("target_vpc", flattenIntegrationConnectorsManagedZoneTargetVpc(res["targetVpc"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenIntegrationConnectorsManagedZoneTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenIntegrationConnectorsManagedZoneEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}

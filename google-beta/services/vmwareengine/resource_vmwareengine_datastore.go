@@ -897,21 +897,27 @@ func ResourceVmwareengineDatastoreFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("clusters", flattenVmwareengineDatastoreClusters(res["clusters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVmwareengineDatastoreCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("description", flattenVmwareengineDatastoreDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("nfs_datastore", flattenVmwareengineDatastoreNfsDatastore(res["nfsDatastore"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("state", flattenVmwareengineDatastoreState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("uid", flattenVmwareengineDatastoreUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVmwareengineDatastoreUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}

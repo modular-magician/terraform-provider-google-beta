@@ -648,15 +648,19 @@ func ResourceFirebaseAppCheckResourcePolicyFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("resource_policy_id", flattenFirebaseAppCheckResourcePolicyResourcePolicyId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("target_resource", flattenFirebaseAppCheckResourcePolicyTargetResource(res["targetResource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("enforcement_mode", flattenFirebaseAppCheckResourcePolicyEnforcementMode(res["enforcementMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenFirebaseAppCheckResourcePolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirebaseAppCheckResourcePolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResourcePolicy: %s", err)
 	}

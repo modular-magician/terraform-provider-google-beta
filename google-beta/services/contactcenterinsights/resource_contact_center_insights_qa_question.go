@@ -1398,42 +1398,55 @@ func ResourceContactCenterInsightsQaQuestionFlatten(d *schema.ResourceData, meta
 	if err = d.Set("abbreviation", flattenContactCenterInsightsQaQuestionAbbreviation(res["abbreviation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("answer_choices", flattenContactCenterInsightsQaQuestionAnswerChoices(res["answerChoices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("answer_instructions", flattenContactCenterInsightsQaQuestionAnswerInstructions(res["answerInstructions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenContactCenterInsightsQaQuestionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("metrics", flattenContactCenterInsightsQaQuestionMetrics(res["metrics"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("name", flattenContactCenterInsightsQaQuestionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("order", flattenContactCenterInsightsQaQuestionOrder(res["order"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("predefined_question_config", flattenContactCenterInsightsQaQuestionPredefinedQuestionConfig(res["predefinedQuestionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("qa_question_data_options", flattenContactCenterInsightsQaQuestionQaQuestionDataOptions(res["qaQuestionDataOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("question_body", flattenContactCenterInsightsQaQuestionQuestionBody(res["questionBody"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("question_type", flattenContactCenterInsightsQaQuestionQuestionType(res["questionType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("tags", flattenContactCenterInsightsQaQuestionTags(res["tags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("tuning_metadata", flattenContactCenterInsightsQaQuestionTuningMetadata(res["tuningMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenContactCenterInsightsQaQuestionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaQuestion: %s", err)
 	}

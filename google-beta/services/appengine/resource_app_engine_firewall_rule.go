@@ -687,12 +687,15 @@ func ResourceAppEngineFirewallRuleFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("description", flattenAppEngineFirewallRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+
 	if err = d.Set("source_range", flattenAppEngineFirewallRuleSourceRange(res["sourceRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+
 	if err = d.Set("action", flattenAppEngineFirewallRuleAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+
 	if err = d.Set("priority", flattenAppEngineFirewallRulePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}

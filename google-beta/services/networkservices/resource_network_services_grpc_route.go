@@ -1966,33 +1966,43 @@ func ResourceNetworkServicesGrpcRouteFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("self_link", flattenNetworkServicesGrpcRouteSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkServicesGrpcRouteCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesGrpcRouteUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesGrpcRouteLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesGrpcRouteDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("hostnames", flattenNetworkServicesGrpcRouteHostnames(res["hostnames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("meshes", flattenNetworkServicesGrpcRouteMeshes(res["meshes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("gateways", flattenNetworkServicesGrpcRouteGateways(res["gateways"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("rules", flattenNetworkServicesGrpcRouteRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesGrpcRouteTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesGrpcRouteEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GrpcRoute: %s", err)
 	}

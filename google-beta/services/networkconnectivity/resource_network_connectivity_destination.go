@@ -997,33 +997,43 @@ func ResourceNetworkConnectivityDestinationFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("create_time", flattenNetworkConnectivityDestinationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkConnectivityDestinationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkConnectivityDestinationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNetworkConnectivityDestinationEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkConnectivityDestinationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("ip_prefix", flattenNetworkConnectivityDestinationIpPrefix(res["ipPrefix"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("endpoints", flattenNetworkConnectivityDestinationEndpoints(res["endpoints"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("state_timeline", flattenNetworkConnectivityDestinationStateTimeline(res["stateTimeline"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("uid", flattenNetworkConnectivityDestinationUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkConnectivityDestinationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkConnectivityDestinationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}

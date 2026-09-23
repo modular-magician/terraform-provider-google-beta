@@ -476,21 +476,27 @@ func ResourceNetworkManagementv1NetworkMonitoringProviderFlatten(d *schema.Resou
 	if err = d.Set("name", flattenNetworkManagementv1NetworkMonitoringProviderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}
+
 	if err = d.Set("provider_type", flattenNetworkManagementv1NetworkMonitoringProviderProviderType(res["providerType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}
+
 	if err = d.Set("provider_uri", flattenNetworkManagementv1NetworkMonitoringProviderProviderUri(res["providerUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkManagementv1NetworkMonitoringProviderCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkManagementv1NetworkMonitoringProviderUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkManagementv1NetworkMonitoringProviderState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}
+
 	if err = d.Set("errors", flattenNetworkManagementv1NetworkMonitoringProviderErrors(res["errors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkMonitoringProvider: %s", err)
 	}

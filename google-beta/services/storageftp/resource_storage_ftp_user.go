@@ -980,18 +980,23 @@ func ResourceStorageFtpUserFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("storage_directory_mappings", flattenStorageFtpUserStorageDirectoryMappings(res["storageDirectoryMappings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("customer_service_account", flattenStorageFtpUserCustomerServiceAccount(res["customerServiceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("user_credentials", flattenStorageFtpUserUserCredentials(res["userCredentials"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("labels", flattenStorageFtpUserLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenStorageFtpUserTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenStorageFtpUserEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading User: %s", err)
 	}

@@ -563,15 +563,19 @@ func ResourceContactCenterInsightsQaScorecardRevisionFlatten(d *schema.ResourceD
 	if err = d.Set("alternate_ids", flattenContactCenterInsightsQaScorecardRevisionAlternateIds(res["alternateIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecardRevision: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenContactCenterInsightsQaScorecardRevisionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecardRevision: %s", err)
 	}
+
 	if err = d.Set("name", flattenContactCenterInsightsQaScorecardRevisionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecardRevision: %s", err)
 	}
+
 	if err = d.Set("snapshot", flattenContactCenterInsightsQaScorecardRevisionSnapshot(res["snapshot"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecardRevision: %s", err)
 	}
+
 	if err = d.Set("state", flattenContactCenterInsightsQaScorecardRevisionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecardRevision: %s", err)
 	}

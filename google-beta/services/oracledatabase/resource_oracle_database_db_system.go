@@ -2468,36 +2468,47 @@ func ResourceOracleDatabaseDbSystemFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("create_time", flattenOracleDatabaseDbSystemCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenOracleDatabaseDbSystemDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("entitlement_id", flattenOracleDatabaseDbSystemEntitlementId(res["entitlementId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("gcp_oracle_zone", flattenOracleDatabaseDbSystemGcpOracleZone(res["gcpOracleZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseDbSystemLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("name", flattenOracleDatabaseDbSystemName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("oci_url", flattenOracleDatabaseDbSystemOciUrl(res["ociUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("odb_network", flattenOracleDatabaseDbSystemOdbNetwork(res["odbNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("odb_subnet", flattenOracleDatabaseDbSystemOdbSubnet(res["odbSubnet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("properties", flattenOracleDatabaseDbSystemProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseDbSystemTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseDbSystemEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DbSystem: %s", err)
 	}

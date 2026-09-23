@@ -711,33 +711,43 @@ func ResourceEdgenetworkInterconnectAttachmentFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenEdgenetworkInterconnectAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEdgenetworkInterconnectAttachmentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("description", flattenEdgenetworkInterconnectAttachmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEdgenetworkInterconnectAttachmentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEdgenetworkInterconnectAttachmentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("interconnect", flattenEdgenetworkInterconnectAttachmentInterconnect(res["interconnect"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("network", flattenEdgenetworkInterconnectAttachmentNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("vlan_id", flattenEdgenetworkInterconnectAttachmentVlanId(res["vlanId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("mtu", flattenEdgenetworkInterconnectAttachmentMtu(res["mtu"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEdgenetworkInterconnectAttachmentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEdgenetworkInterconnectAttachmentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}

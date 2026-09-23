@@ -1902,15 +1902,19 @@ func ResourceComputeRegionAutoscalerFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("creation_timestamp", flattenComputeRegionAutoscalerCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionAutoscalerName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionAutoscalerDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+
 	if err = d.Set("autoscaling_policy", flattenComputeRegionAutoscalerAutoscalingPolicy(res["autoscalingPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+
 	if err = d.Set("target", flattenComputeRegionAutoscalerTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}

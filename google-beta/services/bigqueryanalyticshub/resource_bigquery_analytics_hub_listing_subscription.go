@@ -2178,42 +2178,55 @@ func ResourceBigqueryAnalyticsHubListingSubscriptionFlatten(d *schema.ResourceDa
 	if err = d.Set("destination_dataset", flattenBigqueryAnalyticsHubListingSubscriptionDestinationDataset(res["destinationDataset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("name", flattenBigqueryAnalyticsHubListingSubscriptionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("subscription_id", flattenBigqueryAnalyticsHubListingSubscriptionSubscriptionId(res["subscriptionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("creation_time", flattenBigqueryAnalyticsHubListingSubscriptionCreationTime(res["creationTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("last_modify_time", flattenBigqueryAnalyticsHubListingSubscriptionLastModifyTime(res["lastModifyTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("organization_id", flattenBigqueryAnalyticsHubListingSubscriptionOrganizationId(res["organizationId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("organization_display_name", flattenBigqueryAnalyticsHubListingSubscriptionOrganizationDisplayName(res["organizationDisplayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("state", flattenBigqueryAnalyticsHubListingSubscriptionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("subscriber_contact", flattenBigqueryAnalyticsHubListingSubscriptionSubscriberContact(res["subscriberContact"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("resource_type", flattenBigqueryAnalyticsHubListingSubscriptionResourceType(res["resourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("linked_dataset_map", flattenBigqueryAnalyticsHubListingSubscriptionLinkedDatasetMap(res["linkedDatasetMap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("linked_resources", flattenBigqueryAnalyticsHubListingSubscriptionLinkedResources(res["linkedResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("log_linked_dataset_query_user_email", flattenBigqueryAnalyticsHubListingSubscriptionLogLinkedDatasetQueryUserEmail(res["logLinkedDatasetQueryUserEmail"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}
+
 	if err = d.Set("commercial_info", flattenBigqueryAnalyticsHubListingSubscriptionCommercialInfo(res["commercialInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ListingSubscription: %s", err)
 	}

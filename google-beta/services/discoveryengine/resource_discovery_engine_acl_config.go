@@ -544,6 +544,7 @@ func ResourceDiscoveryEngineAclConfigFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenDiscoveryEngineAclConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AclConfig: %s", err)
 	}
+
 	if err = d.Set("idp_config", flattenDiscoveryEngineAclConfigIdpConfig(res["idpConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AclConfig: %s", err)
 	}

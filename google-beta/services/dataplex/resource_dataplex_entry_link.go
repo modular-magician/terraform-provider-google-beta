@@ -1189,18 +1189,23 @@ func ResourceDataplexEntryLinkFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenDataplexEntryLinkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryLink: %s", err)
 	}
+
 	if err = d.Set("entry_link_type", flattenDataplexEntryLinkEntryLinkType(res["entryLinkType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryLink: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataplexEntryLinkCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryLink: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataplexEntryLinkUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryLink: %s", err)
 	}
+
 	if err = d.Set("entry_references", flattenDataplexEntryLinkEntryReferences(res["entryReferences"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryLink: %s", err)
 	}
+
 	if err = d.Set("aspects", flattenDataplexEntryLinkAspects(res["aspects"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryLink: %s", err)
 	}

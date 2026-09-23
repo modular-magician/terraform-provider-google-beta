@@ -591,30 +591,39 @@ func ResourceComputeFirewallPolicyFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("creation_timestamp", flattenComputeFirewallPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeFirewallPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("firewall_policy_id", flattenComputeFirewallPolicyFirewallPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("short_name", flattenComputeFirewallPolicyShortName(res["shortName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeFirewallPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("parent", flattenComputeFirewallPolicyParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeFirewallPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenComputeFirewallPolicySelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeFirewallPolicySelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}
+
 	if err = d.Set("rule_tuple_count", flattenComputeFirewallPolicyRuleTupleCount(res["ruleTupleCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallPolicy: %s", err)
 	}

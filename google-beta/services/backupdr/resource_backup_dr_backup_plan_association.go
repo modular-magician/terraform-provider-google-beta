@@ -764,21 +764,27 @@ func ResourceBackupDRBackupPlanAssociationFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenBackupDRBackupPlanAssociationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}
+
 	if err = d.Set("backup_plan", flattenBackupDRBackupPlanAssociationBackupPlan(res["backupPlan"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}
+
 	if err = d.Set("resource_type", flattenBackupDRBackupPlanAssociationResourceType(res["resourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBackupDRBackupPlanAssociationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBackupDRBackupPlanAssociationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}
+
 	if err = d.Set("data_source", flattenBackupDRBackupPlanAssociationDataSource(res["dataSource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}
+
 	if err = d.Set("rules_config_info", flattenBackupDRBackupPlanAssociationRulesConfigInfo(res["rulesConfigInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlanAssociation: %s", err)
 	}

@@ -927,6 +927,7 @@ func ResourceServiceUsageV2ConsumerPolicyFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("enable_rules", flattenServiceUsageV2ConsumerPolicyEnableRules(res["enableRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenServiceUsageV2ConsumerPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerPolicy: %s", err)
 	}

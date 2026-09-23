@@ -759,33 +759,43 @@ func ResourceNetworkSecurityInterceptDeploymentFlatten(d *schema.ResourceData, m
 	if err = d.Set("name", flattenNetworkSecurityInterceptDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityInterceptDeploymentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityInterceptDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityInterceptDeploymentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("forwarding_rule", flattenNetworkSecurityInterceptDeploymentForwardingRule(res["forwardingRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("intercept_deployment_group", flattenNetworkSecurityInterceptDeploymentInterceptDeploymentGroup(res["interceptDeploymentGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityInterceptDeploymentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityInterceptDeploymentReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityInterceptDeploymentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityInterceptDeploymentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityInterceptDeploymentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterceptDeployment: %s", err)
 	}

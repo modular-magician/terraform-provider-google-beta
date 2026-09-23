@@ -635,21 +635,27 @@ func ResourceParameterManagerTemplateFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenParameterManagerTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenParameterManagerTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenParameterManagerTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("labels", flattenParameterManagerTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("format", flattenParameterManagerTemplateFormat(res["format"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenParameterManagerTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenParameterManagerTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Template: %s", err)
 	}

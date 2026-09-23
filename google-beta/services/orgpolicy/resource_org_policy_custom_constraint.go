@@ -641,24 +641,31 @@ func ResourceOrgPolicyCustomConstraintFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("name", flattenOrgPolicyCustomConstraintName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenOrgPolicyCustomConstraintDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("description", flattenOrgPolicyCustomConstraintDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("condition", flattenOrgPolicyCustomConstraintCondition(res["condition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("action_type", flattenOrgPolicyCustomConstraintActionType(res["actionType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("method_types", flattenOrgPolicyCustomConstraintMethodTypes(res["methodTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("resource_types", flattenOrgPolicyCustomConstraintResourceTypes(res["resourceTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenOrgPolicyCustomConstraintUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CustomConstraint: %s", err)
 	}

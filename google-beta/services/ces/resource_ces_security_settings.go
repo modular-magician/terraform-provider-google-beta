@@ -543,15 +543,19 @@ func ResourceCESSecuritySettingsFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenCESSecuritySettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("endpoint_control_policy", flattenCESSecuritySettingsEndpointControlPolicy(res["endpointControlPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCESSecuritySettingsCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESSecuritySettingsUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESSecuritySettingsEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecuritySettings: %s", err)
 	}

@@ -1395,30 +1395,39 @@ func ResourceCloudSecurityComplianceFrameworkFlatten(d *schema.ResourceData, met
 	if err = d.Set("category", flattenCloudSecurityComplianceFrameworkCategory(res["category"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("cloud_control_details", flattenCloudSecurityComplianceFrameworkCloudControlDetails(res["cloudControlDetails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("description", flattenCloudSecurityComplianceFrameworkDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCloudSecurityComplianceFrameworkDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("major_revision_id", flattenCloudSecurityComplianceFrameworkMajorRevisionId(res["majorRevisionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("name", flattenCloudSecurityComplianceFrameworkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("supported_cloud_providers", flattenCloudSecurityComplianceFrameworkSupportedCloudProviders(res["supportedCloudProviders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("supported_enforcement_modes", flattenCloudSecurityComplianceFrameworkSupportedEnforcementModes(res["supportedEnforcementModes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("supported_target_resource_types", flattenCloudSecurityComplianceFrameworkSupportedTargetResourceTypes(res["supportedTargetResourceTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}
+
 	if err = d.Set("type", flattenCloudSecurityComplianceFrameworkType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Framework: %s", err)
 	}

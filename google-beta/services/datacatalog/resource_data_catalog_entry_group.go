@@ -577,9 +577,11 @@ func ResourceDataCatalogEntryGroupFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenDataCatalogEntryGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataCatalogEntryGroupDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenDataCatalogEntryGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}

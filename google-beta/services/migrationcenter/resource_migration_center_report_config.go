@@ -610,18 +610,23 @@ func ResourceMigrationCenterReportConfigFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("create_time", flattenMigrationCenterReportConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("description", flattenMigrationCenterReportConfigDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterReportConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("group_preferenceset_assignments", flattenMigrationCenterReportConfigGroupPreferencesetAssignments(res["groupPreferencesetAssignments"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterReportConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterReportConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ReportConfig: %s", err)
 	}

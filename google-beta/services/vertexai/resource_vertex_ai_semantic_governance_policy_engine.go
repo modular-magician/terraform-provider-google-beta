@@ -875,24 +875,31 @@ func ResourceVertexAISemanticGovernancePolicyEngineFlatten(d *schema.ResourceDat
 	if err = d.Set("name", flattenVertexAISemanticGovernancePolicyEngineName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAISemanticGovernancePolicyEngineCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAISemanticGovernancePolicyEngineUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("psc_service_attachment", flattenVertexAISemanticGovernancePolicyEnginePscServiceAttachment(res["pscServiceAttachment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("ip_address", flattenVertexAISemanticGovernancePolicyEngineIpAddress(res["ipAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("psc_forwarding_rule", flattenVertexAISemanticGovernancePolicyEnginePscForwardingRule(res["pscForwardingRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("state", flattenVertexAISemanticGovernancePolicyEngineState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}
+
 	if err = d.Set("gateway_configs", flattenVertexAISemanticGovernancePolicyEngineGatewayConfigs(res["gatewayConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SemanticGovernancePolicyEngine: %s", err)
 	}

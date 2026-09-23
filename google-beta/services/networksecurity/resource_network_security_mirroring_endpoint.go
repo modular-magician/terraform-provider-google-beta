@@ -737,30 +737,39 @@ func ResourceNetworkSecurityMirroringEndpointFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenNetworkSecurityMirroringEndpointName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkSecurityMirroringEndpointCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityMirroringEndpointUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityMirroringEndpointLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("mirroring_endpoint_group", flattenNetworkSecurityMirroringEndpointMirroringEndpointGroup(res["mirroringEndpointGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkSecurityMirroringEndpointState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenNetworkSecurityMirroringEndpointReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityMirroringEndpointDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityMirroringEndpointTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityMirroringEndpointEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MirroringEndpoint: %s", err)
 	}

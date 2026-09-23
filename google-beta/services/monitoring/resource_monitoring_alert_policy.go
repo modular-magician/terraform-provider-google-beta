@@ -4049,33 +4049,43 @@ func ResourceMonitoringAlertPolicyFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenMonitoringAlertPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringAlertPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("combiner", flattenMonitoringAlertPolicyCombiner(res["combiner"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("creation_record", flattenMonitoringAlertPolicyCreationRecord(res["creationRecord"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenMonitoringAlertPolicyEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("conditions", flattenMonitoringAlertPolicyConditions(res["conditions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("notification_channels", flattenMonitoringAlertPolicyNotificationChannels(res["notificationChannels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("alert_strategy", flattenMonitoringAlertPolicyAlertStrategy(res["alertStrategy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("user_labels", flattenMonitoringAlertPolicyUserLabels(res["userLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("severity", flattenMonitoringAlertPolicySeverity(res["severity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+
 	if err = d.Set("documentation", flattenMonitoringAlertPolicyDocumentation(res["documentation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}

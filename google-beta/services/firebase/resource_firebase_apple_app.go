@@ -687,21 +687,27 @@ func ResourceFirebaseAppleAppFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenFirebaseAppleAppName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenFirebaseAppleAppDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}
+
 	if err = d.Set("app_id", flattenFirebaseAppleAppAppId(res["appId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}
+
 	if err = d.Set("bundle_id", flattenFirebaseAppleAppBundleId(res["bundleId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}
+
 	if err = d.Set("app_store_id", flattenFirebaseAppleAppAppStoreId(res["appStoreId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}
+
 	if err = d.Set("team_id", flattenFirebaseAppleAppTeamId(res["teamId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}
+
 	if err = d.Set("api_key_id", flattenFirebaseAppleAppApiKeyId(res["apiKeyId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppleApp: %s", err)
 	}

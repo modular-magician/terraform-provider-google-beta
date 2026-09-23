@@ -591,6 +591,7 @@ func ResourceComposerUserWorkloadsConfigMapFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenComposerUserWorkloadsConfigMapName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UserWorkloadsConfigMap: %s", err)
 	}
+
 	if err = d.Set("data", flattenComposerUserWorkloadsConfigMapData(res["data"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UserWorkloadsConfigMap: %s", err)
 	}

@@ -867,9 +867,11 @@ func ResourceFirestoreFieldFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("name", flattenFirestoreFieldName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Field: %s", err)
 	}
+
 	if err = d.Set("index_config", flattenFirestoreFieldIndexConfig(res["indexConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Field: %s", err)
 	}
+
 	if err = d.Set("ttl_config", flattenFirestoreFieldTtlConfig(res["ttlConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Field: %s", err)
 	}

@@ -3216,60 +3216,79 @@ func ResourceColabScheduleFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("name", flattenColabScheduleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenColabScheduleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("start_time", flattenColabScheduleStartTime(res["startTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("end_time", flattenColabScheduleEndTime(res["endTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("max_run_count", flattenColabScheduleMaxRunCount(res["maxRunCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("cron", flattenColabScheduleCron(res["cron"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("max_concurrent_run_count", flattenColabScheduleMaxConcurrentRunCount(res["maxConcurrentRunCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("allow_queueing", flattenColabScheduleAllowQueueing(res["allowQueueing"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("state", flattenColabScheduleState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("create_notebook_execution_job_request", flattenColabScheduleCreateNotebookExecutionJobRequest(res["createNotebookExecutionJobRequest"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("catch_up", flattenColabScheduleCatchUp(res["catchUp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("create_pipeline_job_request", flattenColabScheduleCreatePipelineJobRequest(res["createPipelineJobRequest"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenColabScheduleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("last_pause_time", flattenColabScheduleLastPauseTime(res["lastPauseTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("last_resume_time", flattenColabScheduleLastResumeTime(res["lastResumeTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("last_scheduled_run_response", flattenColabScheduleLastScheduledRunResponse(res["lastScheduledRunResponse"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("max_concurrent_active_run_count", flattenColabScheduleMaxConcurrentActiveRunCount(res["maxConcurrentActiveRunCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("next_run_time", flattenColabScheduleNextRunTime(res["nextRunTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("started_run_count", flattenColabScheduleStartedRunCount(res["startedRunCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenColabScheduleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schedule: %s", err)
 	}

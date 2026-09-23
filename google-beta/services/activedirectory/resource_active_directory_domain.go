@@ -762,27 +762,35 @@ func ResourceActiveDirectoryDomainFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenActiveDirectoryDomainName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("labels", flattenActiveDirectoryDomainLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("authorized_networks", flattenActiveDirectoryDomainAuthorizedNetworks(res["authorizedNetworks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("reserved_ip_range", flattenActiveDirectoryDomainReservedIpRange(res["reservedIpRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("locations", flattenActiveDirectoryDomainLocations(res["locations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("admin", flattenActiveDirectoryDomainAdmin(res["admin"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("fqdn", flattenActiveDirectoryDomainFqdn(res["fqdn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenActiveDirectoryDomainTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenActiveDirectoryDomainEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Domain: %s", err)
 	}

@@ -832,21 +832,27 @@ func ResourceBiglakeTableFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("create_time", flattenBiglakeTableCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBiglakeTableUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenBiglakeTableDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenBiglakeTableExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}
+
 	if err = d.Set("etag", flattenBiglakeTableEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}
+
 	if err = d.Set("type", flattenBiglakeTableType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}
+
 	if err = d.Set("hive_options", flattenBiglakeTableHiveOptions(res["hiveOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Table: %s", err)
 	}

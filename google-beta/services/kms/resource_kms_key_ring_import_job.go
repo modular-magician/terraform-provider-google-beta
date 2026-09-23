@@ -536,21 +536,27 @@ func ResourceKMSKeyRingImportJobFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenKMSKeyRingImportJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}
+
 	if err = d.Set("import_method", flattenKMSKeyRingImportJobImportMethod(res["importMethod"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}
+
 	if err = d.Set("protection_level", flattenKMSKeyRingImportJobProtectionLevel(res["protectionLevel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}
+
 	if err = d.Set("expire_time", flattenKMSKeyRingImportJobExpireTime(res["expireTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}
+
 	if err = d.Set("state", flattenKMSKeyRingImportJobState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}
+
 	if err = d.Set("public_key", flattenKMSKeyRingImportJobPublicKey(res["publicKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}
+
 	if err = d.Set("attestation", flattenKMSKeyRingImportJobAttestation(res["attestation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading KeyRingImportJob: %s", err)
 	}

@@ -831,15 +831,19 @@ func ResourceStorageControlFolderIntelligenceConfigFlatten(d *schema.ResourceDat
 	if err = d.Set("edition_config", flattenStorageControlFolderIntelligenceConfigEditionConfig(res["editionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageControlFolderIntelligenceConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("filter", flattenStorageControlFolderIntelligenceConfigFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("effective_intelligence_config", flattenStorageControlFolderIntelligenceConfigEffectiveIntelligenceConfig(res["effectiveIntelligenceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("trial_config", flattenStorageControlFolderIntelligenceConfigTrialConfig(res["trialConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderIntelligenceConfig: %s", err)
 	}

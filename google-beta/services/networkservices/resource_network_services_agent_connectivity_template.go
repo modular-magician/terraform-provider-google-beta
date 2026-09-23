@@ -967,33 +967,43 @@ func ResourceNetworkServicesAgentConnectivityTemplateFlatten(d *schema.ResourceD
 	if err = d.Set("name", flattenNetworkServicesAgentConnectivityTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkServicesAgentConnectivityTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesAgentConnectivityTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesAgentConnectivityTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesAgentConnectivityTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNetworkServicesAgentConnectivityTemplateEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("access_types", flattenNetworkServicesAgentConnectivityTemplateAccessTypes(res["accessTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("access_path", flattenNetworkServicesAgentConnectivityTemplateAccessPath(res["accessPath"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("egress_network_config", flattenNetworkServicesAgentConnectivityTemplateEgressNetworkConfig(res["egressNetworkConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesAgentConnectivityTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesAgentConnectivityTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentConnectivityTemplate: %s", err)
 	}

@@ -679,12 +679,15 @@ func ResourceFirestoreBackupScheduleFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenFirestoreBackupScheduleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("retention", flattenFirestoreBackupScheduleRetention(res["retention"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("daily_recurrence", flattenFirestoreBackupScheduleDailyRecurrence(res["dailyRecurrence"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}
+
 	if err = d.Set("weekly_recurrence", flattenFirestoreBackupScheduleWeeklyRecurrence(res["weeklyRecurrence"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupSchedule: %s", err)
 	}

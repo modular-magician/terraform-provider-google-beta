@@ -783,21 +783,27 @@ func ResourceKMSCryptoKeyVersionFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenKMSCryptoKeyVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+
 	if err = d.Set("state", flattenKMSCryptoKeyVersionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+
 	if err = d.Set("protection_level", flattenKMSCryptoKeyVersionProtectionLevel(res["protectionLevel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+
 	if err = d.Set("generate_time", flattenKMSCryptoKeyVersionGenerateTime(res["generateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+
 	if err = d.Set("algorithm", flattenKMSCryptoKeyVersionAlgorithm(res["algorithm"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+
 	if err = d.Set("attestation", flattenKMSCryptoKeyVersionAttestation(res["attestation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+
 	if err = d.Set("external_protection_level_options", flattenKMSCryptoKeyVersionExternalProtectionLevelOptions(res["externalProtectionLevelOptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}

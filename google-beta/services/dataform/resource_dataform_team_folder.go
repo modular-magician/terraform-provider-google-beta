@@ -580,9 +580,11 @@ func ResourceDataformTeamFolderFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenDataformTeamFolderName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TeamFolder: %s", err)
 	}
+
 	if err = d.Set("teamfolder_id", flattenDataformTeamFolderTeamfolderId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TeamFolder: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataformTeamFolderDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TeamFolder: %s", err)
 	}

@@ -534,6 +534,7 @@ func ResourceArtifactRegistryProjectConfigFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("platform_logs_config", flattenArtifactRegistryProjectConfigPlatformLogsConfig(res["platformLogsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectConfig: %s", err)
 	}
+
 	if err = d.Set("name", flattenArtifactRegistryProjectConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectConfig: %s", err)
 	}

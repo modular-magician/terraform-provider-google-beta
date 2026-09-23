@@ -491,6 +491,7 @@ func ResourceKMSProjectAutokeyConfigFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("etag", flattenKMSProjectAutokeyConfigEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAutokeyConfig: %s", err)
 	}
+
 	if err = d.Set("key_project_resolution_mode", flattenKMSProjectAutokeyConfigKeyProjectResolutionMode(res["keyProjectResolutionMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectAutokeyConfig: %s", err)
 	}

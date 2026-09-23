@@ -783,33 +783,43 @@ func ResourceNetworkServicesMulticastProducerAssociationFlatten(d *schema.Resour
 	if err = d.Set("create_time", flattenNetworkServicesMulticastProducerAssociationCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesMulticastProducerAssociationDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesMulticastProducerAssociationLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("multicast_domain_activation", flattenNetworkServicesMulticastProducerAssociationMulticastDomainActivation(res["multicastDomainActivation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkServicesMulticastProducerAssociationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("network", flattenNetworkServicesMulticastProducerAssociationNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkServicesMulticastProducerAssociationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("unique_id", flattenNetworkServicesMulticastProducerAssociationUniqueId(res["uniqueId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesMulticastProducerAssociationUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesMulticastProducerAssociationTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesMulticastProducerAssociationEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastProducerAssociation: %s", err)
 	}

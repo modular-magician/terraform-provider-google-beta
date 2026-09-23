@@ -1185,27 +1185,35 @@ func ResourceNetworkSecurityServerTlsPolicyFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("create_time", flattenNetworkSecurityServerTlsPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityServerTlsPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityServerTlsPolicyLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityServerTlsPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("allow_open", flattenNetworkSecurityServerTlsPolicyAllowOpen(res["allowOpen"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("server_certificate", flattenNetworkSecurityServerTlsPolicyServerCertificate(res["serverCertificate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("mtls_policy", flattenNetworkSecurityServerTlsPolicyMtlsPolicy(res["mtlsPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityServerTlsPolicyTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityServerTlsPolicyEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServerTlsPolicy: %s", err)
 	}

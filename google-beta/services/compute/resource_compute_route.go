@@ -1128,66 +1128,87 @@ func ResourceComputeRouteFlatten(d *schema.ResourceData, meta interface{}, res m
 	if err = d.Set("dest_range", flattenComputeRouteDestRange(res["destRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRouteDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRouteName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeRouteNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeRoutePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("tags", flattenComputeRouteTags(res["tags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_gateway", flattenComputeRouteNextHopGateway(res["nextHopGateway"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_instance", flattenComputeRouteNextHopInstance(res["nextHopInstance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_ip", flattenComputeRouteNextHopIp(res["nextHopIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_vpn_tunnel", flattenComputeRouteNextHopVpnTunnel(res["nextHopVpnTunnel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_network", flattenComputeRouteNextHopNetwork(res["nextHopNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_origin", flattenComputeRouteNextHopOrigin(res["nextHopOrigin"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_med", flattenComputeRouteNextHopMed(res["nextHopMed"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_inter_region_cost", flattenComputeRouteNextHopInterRegionCost(res["nextHopInterRegionCost"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_ilb", flattenComputeRouteNextHopIlb(res["nextHopIlb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeRouteCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_peering", flattenComputeRouteNextHopPeering(res["nextHopPeering"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("warnings", flattenComputeRouteWarnings(res["warnings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("next_hop_hub", flattenComputeRouteNextHopHub(res["nextHopHub"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("route_type", flattenComputeRouteRouteType(res["routeType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("as_paths", flattenComputeRouteAsPaths(res["asPaths"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+
 	if err = d.Set("route_status", flattenComputeRouteRouteStatus(res["routeStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}

@@ -466,9 +466,11 @@ func ResourceEventarcGoogleChannelConfigFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenEventarcGoogleChannelConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleChannelConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEventarcGoogleChannelConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleChannelConfig: %s", err)
 	}
+
 	if err = d.Set("crypto_key_name", flattenEventarcGoogleChannelConfigCryptoKeyName(res["cryptoKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoogleChannelConfig: %s", err)
 	}

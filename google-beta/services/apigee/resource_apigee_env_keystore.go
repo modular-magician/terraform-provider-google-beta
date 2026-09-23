@@ -408,6 +408,7 @@ func ResourceApigeeEnvKeystoreFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("aliases", flattenApigeeEnvKeystoreAliases(res["aliases"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvKeystore: %s", err)
 	}
+
 	if err = d.Set("name", flattenApigeeEnvKeystoreName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvKeystore: %s", err)
 	}

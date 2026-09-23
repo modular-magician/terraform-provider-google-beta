@@ -668,12 +668,15 @@ func ResourceObservabilityLinkFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("create_time", flattenObservabilityLinkCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Link: %s", err)
 	}
+
 	if err = d.Set("description", flattenObservabilityLinkDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Link: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenObservabilityLinkDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Link: %s", err)
 	}
+
 	if err = d.Set("name", flattenObservabilityLinkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Link: %s", err)
 	}

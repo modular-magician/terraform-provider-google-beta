@@ -865,36 +865,47 @@ func ResourceGKEHub2ScopeRBACRoleBindingFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenGKEHub2ScopeRBACRoleBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("uid", flattenGKEHub2ScopeRBACRoleBindingUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGKEHub2ScopeRBACRoleBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGKEHub2ScopeRBACRoleBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("delete_time", flattenGKEHub2ScopeRBACRoleBindingDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("state", flattenGKEHub2ScopeRBACRoleBindingState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("user", flattenGKEHub2ScopeRBACRoleBindingUser(res["user"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("group", flattenGKEHub2ScopeRBACRoleBindingGroup(res["group"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("role", flattenGKEHub2ScopeRBACRoleBindingRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGKEHub2ScopeRBACRoleBindingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGKEHub2ScopeRBACRoleBindingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGKEHub2ScopeRBACRoleBindingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScopeRBACRoleBinding: %s", err)
 	}

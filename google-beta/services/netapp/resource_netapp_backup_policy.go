@@ -851,33 +851,43 @@ func ResourceNetappBackupPolicyFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("create_time", flattenNetappBackupPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappBackupPolicyLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetappBackupPolicyState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("daily_backup_limit", flattenNetappBackupPolicyDailyBackupLimit(res["dailyBackupLimit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("weekly_backup_limit", flattenNetappBackupPolicyWeeklyBackupLimit(res["weeklyBackupLimit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("monthly_backup_limit", flattenNetappBackupPolicyMonthlyBackupLimit(res["monthlyBackupLimit"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetappBackupPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenNetappBackupPolicyEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("assigned_volume_count", flattenNetappBackupPolicyAssignedVolumeCount(res["assignedVolumeCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappBackupPolicyTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappBackupPolicyEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPolicy: %s", err)
 	}

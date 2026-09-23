@@ -2841,27 +2841,35 @@ func ResourceSecurityposturePostureFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenSecurityposturePostureName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("state", flattenSecurityposturePostureState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("revision_id", flattenSecurityposturePostureRevisionId(res["revisionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecurityposturePostureCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityposturePostureUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityposturePostureDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("etag", flattenSecurityposturePostureEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("reconciling", flattenSecurityposturePostureReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}
+
 	if err = d.Set("policy_sets", flattenSecurityposturePosturePolicySets(res["policySets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Posture: %s", err)
 	}

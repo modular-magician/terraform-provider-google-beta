@@ -1526,48 +1526,63 @@ func ResourceChronicleParserFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("cbn", flattenChronicleParserCbn(res["cbn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("changelogs", flattenChronicleParserChangelogs(res["changelogs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenChronicleParserCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("creator", flattenChronicleParserCreator(res["creator"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("dynamic_parsing_config", flattenChronicleParserDynamicParsingConfig(res["dynamicParsingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("low_code", flattenChronicleParserLowCode(res["lowCode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleParserName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("parser_extension", flattenChronicleParserParserExtension(res["parserExtension"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("release_stage", flattenChronicleParserReleaseStage(res["releaseStage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("state", flattenChronicleParserState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("type", flattenChronicleParserType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("validation_report", flattenChronicleParserValidationReport(res["validationReport"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("validation_skipped", flattenChronicleParserValidationSkipped(res["validationSkipped"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("validation_stage", flattenChronicleParserValidationStage(res["validationStage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("version_info", flattenChronicleParserVersionInfo(res["versionInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}
+
 	if err = d.Set("parser", flattenChronicleParserParser(res["parser"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Parser: %s", err)
 	}

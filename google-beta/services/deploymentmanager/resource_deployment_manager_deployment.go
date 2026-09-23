@@ -1003,18 +1003,23 @@ func ResourceDeploymentManagerDeploymentFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenDeploymentManagerDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("description", flattenDeploymentManagerDeploymentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDeploymentManagerDeploymentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("deployment_id", flattenDeploymentManagerDeploymentDeploymentId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("manifest", flattenDeploymentManagerDeploymentManifest(res["manifest"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("self_link", flattenDeploymentManagerDeploymentSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}

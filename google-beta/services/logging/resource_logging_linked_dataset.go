@@ -559,15 +559,19 @@ func ResourceLoggingLinkedDatasetFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenLoggingLinkedDatasetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LinkedDataset: %s", err)
 	}
+
 	if err = d.Set("description", flattenLoggingLinkedDatasetDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LinkedDataset: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenLoggingLinkedDatasetCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LinkedDataset: %s", err)
 	}
+
 	if err = d.Set("lifecycle_state", flattenLoggingLinkedDatasetLifecycleState(res["lifecycleState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LinkedDataset: %s", err)
 	}
+
 	if err = d.Set("bigquery_dataset", flattenLoggingLinkedDatasetBigqueryDataset(res["bigqueryDataset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LinkedDataset: %s", err)
 	}

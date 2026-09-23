@@ -722,21 +722,27 @@ func ResourceChronicleFindingsRefinementFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("create_time", flattenChronicleFindingsRefinementCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleFindingsRefinementDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleFindingsRefinementName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}
+
 	if err = d.Set("outcome_filters", flattenChronicleFindingsRefinementOutcomeFilters(res["outcomeFilters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}
+
 	if err = d.Set("query", flattenChronicleFindingsRefinementQuery(res["query"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}
+
 	if err = d.Set("type", flattenChronicleFindingsRefinementType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenChronicleFindingsRefinementUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FindingsRefinement: %s", err)
 	}

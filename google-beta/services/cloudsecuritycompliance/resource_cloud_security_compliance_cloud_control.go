@@ -6495,45 +6495,59 @@ func ResourceCloudSecurityComplianceCloudControlFlatten(d *schema.ResourceData, 
 	if err = d.Set("categories", flattenCloudSecurityComplianceCloudControlCategories(res["categories"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCloudSecurityComplianceCloudControlCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("description", flattenCloudSecurityComplianceCloudControlDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCloudSecurityComplianceCloudControlDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("finding_category", flattenCloudSecurityComplianceCloudControlFindingCategory(res["findingCategory"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("major_revision_id", flattenCloudSecurityComplianceCloudControlMajorRevisionId(res["majorRevisionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("name", flattenCloudSecurityComplianceCloudControlName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("parameter_spec", flattenCloudSecurityComplianceCloudControlParameterSpec(res["parameterSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("related_frameworks", flattenCloudSecurityComplianceCloudControlRelatedFrameworks(res["relatedFrameworks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("remediation_steps", flattenCloudSecurityComplianceCloudControlRemediationSteps(res["remediationSteps"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("rules", flattenCloudSecurityComplianceCloudControlRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("severity", flattenCloudSecurityComplianceCloudControlSeverity(res["severity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("supported_cloud_providers", flattenCloudSecurityComplianceCloudControlSupportedCloudProviders(res["supportedCloudProviders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("supported_enforcement_modes", flattenCloudSecurityComplianceCloudControlSupportedEnforcementModes(res["supportedEnforcementModes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}
+
 	if err = d.Set("supported_target_resource_types", flattenCloudSecurityComplianceCloudControlSupportedTargetResourceTypes(res["supportedTargetResourceTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CloudControl: %s", err)
 	}

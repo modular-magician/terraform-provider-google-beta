@@ -476,6 +476,7 @@ func ResourceFirebaseAILogicPromptTemplateLockFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenFirebaseAILogicPromptTemplateLockName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PromptTemplateLock: %s", err)
 	}
+
 	if err = d.Set("locked", flattenFirebaseAILogicPromptTemplateLockLocked(res["locked"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PromptTemplateLock: %s", err)
 	}

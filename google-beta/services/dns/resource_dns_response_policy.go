@@ -735,12 +735,15 @@ func ResourceDNSResponsePolicyFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("response_policy_name", flattenDNSResponsePolicyResponsePolicyName(res["responsePolicyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenDNSResponsePolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicy: %s", err)
 	}
+
 	if err = d.Set("networks", flattenDNSResponsePolicyNetworks(res["networks"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicy: %s", err)
 	}
+
 	if err = d.Set("gke_clusters", flattenDNSResponsePolicyGkeClusters(res["gkeClusters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ResponsePolicy: %s", err)
 	}

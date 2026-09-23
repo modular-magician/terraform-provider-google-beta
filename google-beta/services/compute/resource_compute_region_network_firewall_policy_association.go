@@ -546,12 +546,15 @@ func ResourceComputeRegionNetworkFirewallPolicyAssociationFlatten(d *schema.Reso
 	if err = d.Set("name", flattenComputeRegionNetworkFirewallPolicyAssociationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("attachment_target", flattenComputeRegionNetworkFirewallPolicyAssociationAttachmentTarget(res["attachmentTarget"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("short_name", flattenComputeRegionNetworkFirewallPolicyAssociationShortName(res["shortName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicyAssociation: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeRegionNetworkFirewallPolicyAssociationPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkFirewallPolicyAssociation: %s", err)
 	}

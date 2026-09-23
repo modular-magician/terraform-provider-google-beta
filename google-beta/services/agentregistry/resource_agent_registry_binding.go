@@ -895,24 +895,31 @@ func ResourceAgentRegistryBindingFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenAgentRegistryBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenAgentRegistryBindingDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("description", flattenAgentRegistryBindingDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("source", flattenAgentRegistryBindingSource(res["source"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("target", flattenAgentRegistryBindingTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("auth_provider_binding", flattenAgentRegistryBindingAuthProviderBinding(res["authProviderBinding"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenAgentRegistryBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenAgentRegistryBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Binding: %s", err)
 	}

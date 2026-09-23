@@ -567,15 +567,19 @@ func ResourceVertexAiAadAgentAnomalyDetectionScopeFlatten(d *schema.ResourceData
 	if err = d.Set("name", flattenVertexAiAadAgentAnomalyDetectionScopeName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentAnomalyDetectionScope: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenVertexAiAadAgentAnomalyDetectionScopeDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentAnomalyDetectionScope: %s", err)
 	}
+
 	if err = d.Set("log_buckets", flattenVertexAiAadAgentAnomalyDetectionScopeLogBuckets(res["logBuckets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentAnomalyDetectionScope: %s", err)
 	}
+
 	if err = d.Set("observability_buckets", flattenVertexAiAadAgentAnomalyDetectionScopeObservabilityBuckets(res["observabilityBuckets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentAnomalyDetectionScope: %s", err)
 	}
+
 	if err = d.Set("state", flattenVertexAiAadAgentAnomalyDetectionScopeState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AgentAnomalyDetectionScope: %s", err)
 	}

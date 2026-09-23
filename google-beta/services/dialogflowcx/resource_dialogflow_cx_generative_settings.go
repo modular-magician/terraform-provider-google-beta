@@ -1061,18 +1061,23 @@ func ResourceDialogflowCXGenerativeSettingsFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenDialogflowCXGenerativeSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenerativeSettings: %s", err)
 	}
+
 	if err = d.Set("fallback_settings", flattenDialogflowCXGenerativeSettingsFallbackSettings(res["fallbackSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenerativeSettings: %s", err)
 	}
+
 	if err = d.Set("generative_safety_settings", flattenDialogflowCXGenerativeSettingsGenerativeSafetySettings(res["generativeSafetySettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenerativeSettings: %s", err)
 	}
+
 	if err = d.Set("knowledge_connector_settings", flattenDialogflowCXGenerativeSettingsKnowledgeConnectorSettings(res["knowledgeConnectorSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenerativeSettings: %s", err)
 	}
+
 	if err = d.Set("language_code", flattenDialogflowCXGenerativeSettingsLanguageCode(res["languageCode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenerativeSettings: %s", err)
 	}
+
 	if err = d.Set("llm_model_settings", flattenDialogflowCXGenerativeSettingsLlmModelSettings(res["llmModelSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenerativeSettings: %s", err)
 	}

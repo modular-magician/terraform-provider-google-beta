@@ -1456,33 +1456,43 @@ func ResourceApphubServiceFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("name", flattenApphubServiceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApphubServiceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("description", flattenApphubServiceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("service_reference", flattenApphubServiceServiceReference(res["serviceReference"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("service_properties", flattenApphubServiceServiceProperties(res["serviceProperties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("attributes", flattenApphubServiceAttributes(res["attributes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("discovered_service", flattenApphubServiceDiscoveredService(res["discoveredService"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApphubServiceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApphubServiceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("uid", flattenApphubServiceUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+
 	if err = d.Set("state", flattenApphubServiceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}

@@ -1136,15 +1136,19 @@ func ResourceDataprocAutoscalingPolicyFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("policy_id", flattenDataprocAutoscalingPolicyPolicyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoscalingPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenDataprocAutoscalingPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoscalingPolicy: %s", err)
 	}
+
 	if err = d.Set("worker_config", flattenDataprocAutoscalingPolicyWorkerConfig(res["workerConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoscalingPolicy: %s", err)
 	}
+
 	if err = d.Set("secondary_worker_config", flattenDataprocAutoscalingPolicySecondaryWorkerConfig(res["secondaryWorkerConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoscalingPolicy: %s", err)
 	}
+
 	if err = d.Set("basic_algorithm", flattenDataprocAutoscalingPolicyBasicAlgorithm(res["basicAlgorithm"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutoscalingPolicy: %s", err)
 	}

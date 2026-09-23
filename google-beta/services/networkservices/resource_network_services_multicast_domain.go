@@ -942,39 +942,51 @@ func ResourceNetworkServicesMulticastDomainFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("admin_network", flattenNetworkServicesMulticastDomainAdminNetwork(res["adminNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("connection_config", flattenNetworkServicesMulticastDomainConnectionConfig(res["connection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkServicesMulticastDomainCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesMulticastDomainDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesMulticastDomainLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("multicast_domain_group", flattenNetworkServicesMulticastDomainMulticastDomainGroup(res["multicastDomainGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("ull_multicast_domain", flattenNetworkServicesMulticastDomainUllMulticastDomain(res["ullMulticastDomain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkServicesMulticastDomainName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("unique_id", flattenNetworkServicesMulticastDomainUniqueId(res["uniqueId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkServicesMulticastDomainState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesMulticastDomainUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesMulticastDomainTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesMulticastDomainEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticastDomain: %s", err)
 	}

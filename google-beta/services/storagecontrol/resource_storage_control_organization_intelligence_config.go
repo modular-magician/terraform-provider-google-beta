@@ -831,15 +831,19 @@ func ResourceStorageControlOrganizationIntelligenceConfigFlatten(d *schema.Resou
 	if err = d.Set("edition_config", flattenStorageControlOrganizationIntelligenceConfigEditionConfig(res["editionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageControlOrganizationIntelligenceConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("filter", flattenStorageControlOrganizationIntelligenceConfigFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("effective_intelligence_config", flattenStorageControlOrganizationIntelligenceConfigEffectiveIntelligenceConfig(res["effectiveIntelligenceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("trial_config", flattenStorageControlOrganizationIntelligenceConfigTrialConfig(res["trialConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationIntelligenceConfig: %s", err)
 	}

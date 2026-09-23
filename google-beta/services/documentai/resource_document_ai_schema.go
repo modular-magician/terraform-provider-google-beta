@@ -667,21 +667,27 @@ func ResourceDocumentAISchemaFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenDocumentAISchemaName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDocumentAISchemaDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDocumentAISchemaLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDocumentAISchemaCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDocumentAISchemaUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDocumentAISchemaTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDocumentAISchemaEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Schema: %s", err)
 	}

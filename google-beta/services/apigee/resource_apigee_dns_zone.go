@@ -500,12 +500,15 @@ func ResourceApigeeDnsZoneFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("name", flattenApigeeDnsZoneName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsZone: %s", err)
 	}
+
 	if err = d.Set("domain", flattenApigeeDnsZoneDomain(res["domain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsZone: %s", err)
 	}
+
 	if err = d.Set("description", flattenApigeeDnsZoneDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsZone: %s", err)
 	}
+
 	if err = d.Set("peering_config", flattenApigeeDnsZonePeeringConfig(res["peeringConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DnsZone: %s", err)
 	}

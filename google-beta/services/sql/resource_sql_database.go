@@ -690,12 +690,15 @@ func ResourceSQLDatabaseFlatten(d *schema.ResourceData, meta interface{}, res ma
 	if err = d.Set("charset", flattenSQLDatabaseCharset(res["charset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("collation", flattenSQLDatabaseCollation(res["collation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("name", flattenSQLDatabaseName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+
 	if err = d.Set("instance", flattenSQLDatabaseInstance(res["instance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}

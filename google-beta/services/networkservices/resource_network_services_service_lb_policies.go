@@ -959,30 +959,39 @@ func ResourceNetworkServicesServiceLbPoliciesFlatten(d *schema.ResourceData, met
 	if err = d.Set("create_time", flattenNetworkServicesServiceLbPoliciesCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkServicesServiceLbPoliciesUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkServicesServiceLbPoliciesLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkServicesServiceLbPoliciesDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("load_balancing_algorithm", flattenNetworkServicesServiceLbPoliciesLoadBalancingAlgorithm(res["loadBalancingAlgorithm"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("auto_capacity_drain", flattenNetworkServicesServiceLbPoliciesAutoCapacityDrain(res["autoCapacityDrain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("failover_config", flattenNetworkServicesServiceLbPoliciesFailoverConfig(res["failoverConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("isolation_config", flattenNetworkServicesServiceLbPoliciesIsolationConfig(res["isolationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkServicesServiceLbPoliciesTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkServicesServiceLbPoliciesEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServiceLbPolicies: %s", err)
 	}

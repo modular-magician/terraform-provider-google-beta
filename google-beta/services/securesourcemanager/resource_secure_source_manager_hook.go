@@ -793,24 +793,31 @@ func ResourceSecureSourceManagerHookFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenSecureSourceManagerHookName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("target_uri", flattenSecureSourceManagerHookTargetUri(res["targetUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenSecureSourceManagerHookDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("events", flattenSecureSourceManagerHookEvents(res["events"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecureSourceManagerHookCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecureSourceManagerHookUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("uid", flattenSecureSourceManagerHookUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}
+
 	if err = d.Set("push_option", flattenSecureSourceManagerHookPushOption(res["pushOption"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Hook: %s", err)
 	}

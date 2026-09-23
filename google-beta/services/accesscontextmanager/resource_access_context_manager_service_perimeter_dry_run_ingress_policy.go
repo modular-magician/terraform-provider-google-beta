@@ -1603,12 +1603,15 @@ func ResourceAccessContextManagerServicePerimeterDryRunIngressPolicyFlatten(d *s
 	if err = d.Set("ingress_from", flattenNestedAccessContextManagerServicePerimeterDryRunIngressPolicyIngressFrom(res["ingressFrom"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterDryRunIngressPolicy: %s", err)
 	}
+
 	if err = d.Set("ingress_to", flattenNestedAccessContextManagerServicePerimeterDryRunIngressPolicyIngressTo(res["ingressTo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterDryRunIngressPolicy: %s", err)
 	}
+
 	if err = d.Set("title", flattenNestedAccessContextManagerServicePerimeterDryRunIngressPolicyTitle(res["title"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterDryRunIngressPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNestedAccessContextManagerServicePerimeterDryRunIngressPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterDryRunIngressPolicy: %s", err)
 	}

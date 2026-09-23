@@ -3182,15 +3182,19 @@ func ResourceTranscoderJobTemplateFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenTranscoderJobTemplateName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading JobTemplate: %s", err)
 	}
+
 	if err = d.Set("labels", flattenTranscoderJobTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading JobTemplate: %s", err)
 	}
+
 	if err = d.Set("config", flattenTranscoderJobTemplateConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading JobTemplate: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenTranscoderJobTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading JobTemplate: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenTranscoderJobTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading JobTemplate: %s", err)
 	}

@@ -758,24 +758,31 @@ func ResourceGeminiGdaObservabilitySettingBindingFlatten(d *schema.ResourceData,
 	if err = d.Set("product", flattenGeminiGdaObservabilitySettingBindingProduct(res["product"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("name", flattenGeminiGdaObservabilitySettingBindingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiGdaObservabilitySettingBindingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiGdaObservabilitySettingBindingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiGdaObservabilitySettingBindingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("target", flattenGeminiGdaObservabilitySettingBindingTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiGdaObservabilitySettingBindingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiGdaObservabilitySettingBindingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GdaObservabilitySettingBinding: %s", err)
 	}

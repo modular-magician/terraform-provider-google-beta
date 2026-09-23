@@ -466,9 +466,11 @@ func ResourceSecurityCenterV2OrganizationSourceFlatten(d *schema.ResourceData, m
 	if err = d.Set("name", flattenSecurityCenterV2OrganizationSourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSource: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterV2OrganizationSourceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSource: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterV2OrganizationSourceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSource: %s", err)
 	}

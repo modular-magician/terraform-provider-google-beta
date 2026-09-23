@@ -940,27 +940,35 @@ func ResourceDatastreamPrivateConnectionFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenDatastreamPrivateConnectionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDatastreamPrivateConnectionLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDatastreamPrivateConnectionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("state", flattenDatastreamPrivateConnectionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("error", flattenDatastreamPrivateConnectionError(res["error"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("vpc_peering_config", flattenDatastreamPrivateConnectionVpcPeeringConfig(res["vpcPeeringConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("psc_interface_config", flattenDatastreamPrivateConnectionPscInterfaceConfig(res["pscInterfaceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDatastreamPrivateConnectionTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDatastreamPrivateConnectionEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}

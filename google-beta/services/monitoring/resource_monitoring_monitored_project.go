@@ -539,6 +539,7 @@ func ResourceMonitoringMonitoredProjectFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("name", flattenMonitoringMonitoredProjectName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MonitoredProject: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenMonitoringMonitoredProjectCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MonitoredProject: %s", err)
 	}

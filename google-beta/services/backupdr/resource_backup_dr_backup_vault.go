@@ -1054,57 +1054,75 @@ func ResourceBackupDRBackupVaultFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenBackupDRBackupVaultName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("description", flattenBackupDRBackupVaultDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("labels", flattenBackupDRBackupVaultLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBackupDRBackupVaultCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBackupDRBackupVaultUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("backup_minimum_enforced_retention_duration", flattenBackupDRBackupVaultBackupMinimumEnforcedRetentionDuration(res["backupMinimumEnforcedRetentionDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("deletable", flattenBackupDRBackupVaultDeletable(res["deletable"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("etag", flattenBackupDRBackupVaultEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("state", flattenBackupDRBackupVaultState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("effective_time", flattenBackupDRBackupVaultEffectiveTime(res["effectiveTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("backup_count", flattenBackupDRBackupVaultBackupCount(res["backupCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenBackupDRBackupVaultServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("total_stored_bytes", flattenBackupDRBackupVaultTotalStoredBytes(res["totalStoredBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("uid", flattenBackupDRBackupVaultUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenBackupDRBackupVaultAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("access_restriction", flattenBackupDRBackupVaultAccessRestriction(res["accessRestriction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenBackupDRBackupVaultTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenBackupDRBackupVaultEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenBackupDRBackupVaultEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupVault: %s", err)
 	}

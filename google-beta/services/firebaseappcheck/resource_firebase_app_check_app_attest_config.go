@@ -449,6 +449,7 @@ func ResourceFirebaseAppCheckAppAttestConfigFlatten(d *schema.ResourceData, meta
 	if err = d.Set("name", flattenFirebaseAppCheckAppAttestConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppAttestConfig: %s", err)
 	}
+
 	if err = d.Set("token_ttl", flattenFirebaseAppCheckAppAttestConfigTokenTtl(res["tokenTtl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppAttestConfig: %s", err)
 	}

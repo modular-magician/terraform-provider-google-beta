@@ -1205,21 +1205,27 @@ func ResourceSecurityCenterProjectCustomModuleFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenSecurityCenterProjectCustomModuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterProjectCustomModuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}
+
 	if err = d.Set("enablement_state", flattenSecurityCenterProjectCustomModuleEnablementState(res["enablementState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterProjectCustomModuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenSecurityCenterProjectCustomModuleLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}
+
 	if err = d.Set("ancestor_module", flattenSecurityCenterProjectCustomModuleAncestorModule(res["ancestorModule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}
+
 	if err = d.Set("custom_config", flattenSecurityCenterProjectCustomModuleCustomConfig(res["customConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectCustomModule: %s", err)
 	}

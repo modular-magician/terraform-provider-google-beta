@@ -591,6 +591,7 @@ func ResourceFirebaseAppCheckDebugTokenFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("debug_token_id", flattenFirebaseAppCheckDebugTokenDebugTokenId(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DebugToken: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenFirebaseAppCheckDebugTokenDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DebugToken: %s", err)
 	}

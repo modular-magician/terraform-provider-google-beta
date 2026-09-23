@@ -4330,45 +4330,59 @@ func ResourceDialogflowConversationProfileFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("name", flattenDialogflowConversationProfileName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowConversationProfileDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("use_bidi_streaming", flattenDialogflowConversationProfileUseBidiStreaming(res["useBidiStreaming"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("automated_agent_config", flattenDialogflowConversationProfileAutomatedAgentConfig(res["automatedAgentConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("human_agent_assistant_config", flattenDialogflowConversationProfileHumanAgentAssistantConfig(res["humanAgentAssistantConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("human_agent_handoff_config", flattenDialogflowConversationProfileHumanAgentHandoffConfig(res["humanAgentHandoffConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("notification_config", flattenDialogflowConversationProfileNotificationConfig(res["notificationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("new_message_event_notification_config", flattenDialogflowConversationProfileNewMessageEventNotificationConfig(res["newMessageEventNotificationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("stt_config", flattenDialogflowConversationProfileSttConfig(res["sttConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("language_code", flattenDialogflowConversationProfileLanguageCode(res["languageCode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("time_zone", flattenDialogflowConversationProfileTimeZone(res["timeZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("security_settings", flattenDialogflowConversationProfileSecuritySettings(res["securitySettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("tts_config", flattenDialogflowConversationProfileTtsConfig(res["ttsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("sip_config", flattenDialogflowConversationProfileSipConfig(res["sipConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}
+
 	if err = d.Set("new_recognition_result_notification_config", flattenDialogflowConversationProfileNewRecognitionResultNotificationConfig(res["newRecognitionResultNotificationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConversationProfile: %s", err)
 	}

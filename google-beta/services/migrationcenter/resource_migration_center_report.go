@@ -3065,24 +3065,31 @@ func ResourceMigrationCenterReportFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("create_time", flattenMigrationCenterReportCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("description", flattenMigrationCenterReportDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMigrationCenterReportDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("name", flattenMigrationCenterReportName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("state", flattenMigrationCenterReportState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("summary", flattenMigrationCenterReportSummary(res["summary"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("type", flattenMigrationCenterReportType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenMigrationCenterReportUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Report: %s", err)
 	}

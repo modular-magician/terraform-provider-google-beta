@@ -773,21 +773,27 @@ func ResourceDataplexDataProductDataAssetFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("uid", flattenDataplexDataProductDataAssetUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}
+
 	if err = d.Set("resource", flattenDataplexDataProductDataAssetResource(res["resource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataplexDataProductDataAssetLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}
+
 	if err = d.Set("access_group_configs", flattenDataplexDataProductDataAssetAccessGroupConfigs(res["accessGroupConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataplexDataProductDataAssetTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataplexDataProductDataAssetEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}
+
 	if err = d.Set("name", flattenDataplexDataProductDataAssetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataProductDataAsset: %s", err)
 	}

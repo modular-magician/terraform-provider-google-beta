@@ -1078,27 +1078,35 @@ func ResourceIAM3FolderAccessPolicyFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("annotations", flattenIAM3FolderAccessPolicyAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenIAM3FolderAccessPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("details", flattenIAM3FolderAccessPolicyDetails(res["details"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenIAM3FolderAccessPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenIAM3FolderAccessPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenIAM3FolderAccessPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("uid", flattenIAM3FolderAccessPolicyUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenIAM3FolderAccessPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenIAM3FolderAccessPolicyEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FolderAccessPolicy: %s", err)
 	}

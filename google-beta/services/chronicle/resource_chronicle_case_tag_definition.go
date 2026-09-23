@@ -794,27 +794,35 @@ func ResourceChronicleCaseTagDefinitionFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("can_be_case_title", flattenChronicleCaseTagDefinitionCanBeCaseTitle(res["canBeCaseTitle"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("comparison_type", flattenChronicleCaseTagDefinitionComparisonType(res["comparisonType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleCaseTagDefinitionDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("match_criteria", flattenChronicleCaseTagDefinitionMatchCriteria(res["matchCriteria"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleCaseTagDefinitionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("priority", flattenChronicleCaseTagDefinitionPriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("property_name", flattenChronicleCaseTagDefinitionPropertyName(res["propertyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("value", flattenChronicleCaseTagDefinitionValue(res["value"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}
+
 	if err = d.Set("case_tag_definition_id", flattenChronicleCaseTagDefinitionCaseTagDefinitionId(res["caseTagDefinitionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CaseTagDefinition: %s", err)
 	}

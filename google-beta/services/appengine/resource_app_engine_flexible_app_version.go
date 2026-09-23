@@ -4070,69 +4070,91 @@ func ResourceAppEngineFlexibleAppVersionFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenAppEngineFlexibleAppVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("version_id", flattenAppEngineFlexibleAppVersionVersionId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("inbound_services", flattenAppEngineFlexibleAppVersionInboundServices(res["inboundServices"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("instance_class", flattenAppEngineFlexibleAppVersionInstanceClass(res["instanceClass"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("network", flattenAppEngineFlexibleAppVersionNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("resources", flattenAppEngineFlexibleAppVersionResources(res["resources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("runtime", flattenAppEngineFlexibleAppVersionRuntime(res["runtime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("runtime_channel", flattenAppEngineFlexibleAppVersionRuntimeChannel(res["runtimeChannel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("flexible_runtime_settings", flattenAppEngineFlexibleAppVersionFlexibleRuntimeSettings(res["flexibleRuntimeSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("serving_status", flattenAppEngineFlexibleAppVersionServingStatus(res["servingStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("runtime_api_version", flattenAppEngineFlexibleAppVersionRuntimeApiVersion(res["runtimeApiVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("handlers", flattenAppEngineFlexibleAppVersionHandlers(res["handlers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("runtime_main_executable_path", flattenAppEngineFlexibleAppVersionRuntimeMainExecutablePath(res["runtimeMainExecutablePath"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenAppEngineFlexibleAppVersionServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("api_config", flattenAppEngineFlexibleAppVersionApiConfig(res["apiConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("default_expiration", flattenAppEngineFlexibleAppVersionDefaultExpiration(res["defaultExpiration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("readiness_check", flattenAppEngineFlexibleAppVersionReadinessCheck(res["readinessCheck"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("liveness_check", flattenAppEngineFlexibleAppVersionLivenessCheck(res["livenessCheck"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("nobuild_files_regex", flattenAppEngineFlexibleAppVersionNobuildFilesRegex(res["nobuildFilesRegex"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("endpoints_api_service", flattenAppEngineFlexibleAppVersionEndpointsApiService(res["endpointsApiService"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("vpc_access_connector", flattenAppEngineFlexibleAppVersionVpcAccessConnector(res["vpcAccessConnector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("automatic_scaling", flattenAppEngineFlexibleAppVersionAutomaticScaling(res["automaticScaling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+
 	if err = d.Set("manual_scaling", flattenAppEngineFlexibleAppVersionManualScaling(res["manualScaling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}

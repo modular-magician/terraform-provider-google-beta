@@ -998,24 +998,31 @@ func ResourceMonitoringNotificationChannelFlatten(d *schema.ResourceData, meta i
 	if err = d.Set("labels", flattenMonitoringNotificationChannelLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("name", flattenMonitoringNotificationChannelName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("verification_status", flattenMonitoringNotificationChannelVerificationStatus(res["verificationStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("type", flattenMonitoringNotificationChannelType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("user_labels", flattenMonitoringNotificationChannelUserLabels(res["userLabels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("description", flattenMonitoringNotificationChannelDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenMonitoringNotificationChannelDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenMonitoringNotificationChannelEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}

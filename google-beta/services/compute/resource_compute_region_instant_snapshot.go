@@ -915,48 +915,63 @@ func ResourceComputeRegionInstantSnapshotFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("creation_timestamp", flattenComputeRegionInstantSnapshotCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionInstantSnapshotName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionInstantSnapshotDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("source_disk_id", flattenComputeRegionInstantSnapshotSourceDiskId(res["sourceDiskId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("disk_size_gb", flattenComputeRegionInstantSnapshotDiskSizeGb(res["diskSizeGb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("labels", flattenComputeRegionInstantSnapshotLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("label_fingerprint", flattenComputeRegionInstantSnapshotLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("status", flattenComputeRegionInstantSnapshotStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("architecture", flattenComputeRegionInstantSnapshotArchitecture(res["architecture"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("resource_status", flattenComputeRegionInstantSnapshotResourceStatus(res["resourceStatus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("source_instant_snapshot_group", flattenComputeRegionInstantSnapshotSourceInstantSnapshotGroup(res["sourceInstantSnapshotGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("source_instant_snapshot_group_id", flattenComputeRegionInstantSnapshotSourceInstantSnapshotGroupId(res["sourceInstantSnapshotGroupId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenComputeRegionInstantSnapshotTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenComputeRegionInstantSnapshotEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("source_disk", flattenComputeRegionInstantSnapshotSourceDisk(res["sourceDisk"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRegionInstantSnapshotRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionInstantSnapshot: %s", err)
 	}

@@ -754,24 +754,31 @@ func ResourceOracleDatabaseGoldengateConnectionAssignmentFlatten(d *schema.Resou
 	if err = d.Set("create_time", flattenOracleDatabaseGoldengateConnectionAssignmentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenOracleDatabaseGoldengateConnectionAssignmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("entitlement_id", flattenOracleDatabaseGoldengateConnectionAssignmentEntitlementId(res["entitlementId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseGoldengateConnectionAssignmentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("name", flattenOracleDatabaseGoldengateConnectionAssignmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("properties", flattenOracleDatabaseGoldengateConnectionAssignmentProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseGoldengateConnectionAssignmentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseGoldengateConnectionAssignmentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateConnectionAssignment: %s", err)
 	}

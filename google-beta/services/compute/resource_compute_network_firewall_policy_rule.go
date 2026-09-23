@@ -1706,51 +1706,67 @@ func ResourceComputeNetworkFirewallPolicyRuleFlatten(d *schema.ResourceData, met
 	if err = d.Set("creation_timestamp", flattenComputeNetworkFirewallPolicyRuleCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("kind", flattenComputeNetworkFirewallPolicyRuleKind(res["kind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("rule_name", flattenComputeNetworkFirewallPolicyRuleRuleName(res["ruleName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeNetworkFirewallPolicyRuleDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("priority", flattenComputeNetworkFirewallPolicyRulePriority(res["priority"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("match", flattenComputeNetworkFirewallPolicyRuleMatch(res["match"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("action", flattenComputeNetworkFirewallPolicyRuleAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("security_profile_group", flattenComputeNetworkFirewallPolicyRuleSecurityProfileGroup(res["securityProfileGroup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("tls_inspect", flattenComputeNetworkFirewallPolicyRuleTlsInspect(res["tlsInspect"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("direction", flattenComputeNetworkFirewallPolicyRuleDirection(res["direction"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("enable_logging", flattenComputeNetworkFirewallPolicyRuleEnableLogging(res["enableLogging"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("rule_tuple_count", flattenComputeNetworkFirewallPolicyRuleRuleTupleCount(res["ruleTupleCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("target_service_accounts", flattenComputeNetworkFirewallPolicyRuleTargetServiceAccounts(res["targetServiceAccounts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("target_secure_tags", flattenComputeNetworkFirewallPolicyRuleTargetSecureTags(res["targetSecureTags"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenComputeNetworkFirewallPolicyRuleDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("target_type", flattenComputeNetworkFirewallPolicyRuleTargetType(res["targetType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+
 	if err = d.Set("target_forwarding_rules", flattenComputeNetworkFirewallPolicyRuleTargetForwardingRules(res["targetForwardingRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}

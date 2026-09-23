@@ -917,15 +917,19 @@ func ResourceIAMBetaWorkloadIdentityPoolManagedIdentityFlatten(d *schema.Resourc
 	if err = d.Set("name", flattenIAMBetaWorkloadIdentityPoolManagedIdentityName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolManagedIdentity: %s", err)
 	}
+
 	if err = d.Set("description", flattenIAMBetaWorkloadIdentityPoolManagedIdentityDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolManagedIdentity: %s", err)
 	}
+
 	if err = d.Set("state", flattenIAMBetaWorkloadIdentityPoolManagedIdentityState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolManagedIdentity: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenIAMBetaWorkloadIdentityPoolManagedIdentityDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolManagedIdentity: %s", err)
 	}
+
 	if err = d.Set("attestation_rules", flattenIAMBetaWorkloadIdentityPoolManagedIdentityAttestationRules(res["attestationRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolManagedIdentity: %s", err)
 	}

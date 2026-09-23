@@ -659,12 +659,15 @@ func ResourceRedisClusterAclPolicyFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("etag", flattenRedisClusterAclPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ClusterAclPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenRedisClusterAclPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ClusterAclPolicy: %s", err)
 	}
+
 	if err = d.Set("rules", flattenRedisClusterAclPolicyRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ClusterAclPolicy: %s", err)
 	}
+
 	if err = d.Set("state", flattenRedisClusterAclPolicyState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ClusterAclPolicy: %s", err)
 	}

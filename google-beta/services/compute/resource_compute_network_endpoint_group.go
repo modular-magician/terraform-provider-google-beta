@@ -689,24 +689,31 @@ func ResourceComputeNetworkEndpointGroupFlatten(d *schema.ResourceData, meta int
 	if err = d.Set("name", flattenComputeNetworkEndpointGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeNetworkEndpointGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("network_endpoint_type", flattenComputeNetworkEndpointGroupNetworkEndpointType(res["networkEndpointType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("size", flattenComputeNetworkEndpointGroupSize(res["size"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("network", flattenComputeNetworkEndpointGroupNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("subnetwork", flattenComputeNetworkEndpointGroupSubnetwork(res["subnetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("default_port", flattenComputeNetworkEndpointGroupDefaultPort(res["defaultPort"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+
 	if err = d.Set("generated_id", flattenComputeNetworkEndpointGroupGeneratedId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}

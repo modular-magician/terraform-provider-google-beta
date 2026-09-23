@@ -660,15 +660,19 @@ func ResourceComputeNetworkPeeringRoutesConfigFlatten(d *schema.ResourceData, me
 	if err = d.Set("peering", flattenNestedComputeNetworkPeeringRoutesConfigPeering(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPeeringRoutesConfig: %s", err)
 	}
+
 	if err = d.Set("export_custom_routes", flattenNestedComputeNetworkPeeringRoutesConfigExportCustomRoutes(res["exportCustomRoutes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPeeringRoutesConfig: %s", err)
 	}
+
 	if err = d.Set("import_custom_routes", flattenNestedComputeNetworkPeeringRoutesConfigImportCustomRoutes(res["importCustomRoutes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPeeringRoutesConfig: %s", err)
 	}
+
 	if err = d.Set("export_subnet_routes_with_public_ip", flattenNestedComputeNetworkPeeringRoutesConfigExportSubnetRoutesWithPublicIp(res["exportSubnetRoutesWithPublicIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPeeringRoutesConfig: %s", err)
 	}
+
 	if err = d.Set("import_subnet_routes_with_public_ip", flattenNestedComputeNetworkPeeringRoutesConfigImportSubnetRoutesWithPublicIp(res["importSubnetRoutesWithPublicIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkPeeringRoutesConfig: %s", err)
 	}

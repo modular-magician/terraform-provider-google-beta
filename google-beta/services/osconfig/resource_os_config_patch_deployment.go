@@ -3651,33 +3651,43 @@ func ResourceOSConfigPatchDeploymentFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenOSConfigPatchDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("description", flattenOSConfigPatchDeploymentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("instance_filter", flattenOSConfigPatchDeploymentInstanceFilter(res["instanceFilter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("patch_config", flattenOSConfigPatchDeploymentPatchConfig(res["patchConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("duration", flattenOSConfigPatchDeploymentDuration(res["duration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenOSConfigPatchDeploymentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenOSConfigPatchDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("last_execute_time", flattenOSConfigPatchDeploymentLastExecuteTime(res["lastExecuteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("one_time_schedule", flattenOSConfigPatchDeploymentOneTimeSchedule(res["oneTimeSchedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("recurring_schedule", flattenOSConfigPatchDeploymentRecurringSchedule(res["recurringSchedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}
+
 	if err = d.Set("rollout", flattenOSConfigPatchDeploymentRollout(res["rollout"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PatchDeployment: %s", err)
 	}

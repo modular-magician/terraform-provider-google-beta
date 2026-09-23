@@ -703,24 +703,31 @@ func ResourceComputeTargetHttpProxyFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("creation_timestamp", flattenComputeTargetHttpProxyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeTargetHttpProxyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_id", flattenComputeTargetHttpProxyProxyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeTargetHttpProxyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("url_map", flattenComputeTargetHttpProxyUrlMap(res["urlMap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_bind", flattenComputeTargetHttpProxyProxyBind(res["proxyBind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("http_keep_alive_timeout_sec", flattenComputeTargetHttpProxyHttpKeepAliveTimeoutSec(res["httpKeepAliveTimeoutSec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeTargetHttpProxyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}

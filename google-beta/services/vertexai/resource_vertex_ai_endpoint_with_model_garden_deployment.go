@@ -3976,21 +3976,27 @@ func ResourceVertexAIEndpointWithModelGardenDeploymentFlatten(d *schema.Resource
 	if err = d.Set("deployed_model_id", flattenVertexAIEndpointWithModelGardenDeploymentDeployedModelId(res["deployedModelId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}
+
 	if err = d.Set("deployed_model_display_name", flattenVertexAIEndpointWithModelGardenDeploymentDeployedModelDisplayName(res["deployedModelDisplayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}
+
 	if err = d.Set("publisher_model_name", flattenVertexAIEndpointWithModelGardenDeploymentPublisherModelName(res["publisherModelName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}
+
 	if err = d.Set("hugging_face_model_id", flattenVertexAIEndpointWithModelGardenDeploymentHuggingFaceModelId(res["huggingFaceModelId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}
+
 	if err = d.Set("model_config", flattenVertexAIEndpointWithModelGardenDeploymentModelConfig(res["modelConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}
+
 	if err = d.Set("endpoint_config", flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfig(res["endpointConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}
+
 	if err = d.Set("deploy_config", flattenVertexAIEndpointWithModelGardenDeploymentDeployConfig(res["deployConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EndpointWithModelGardenDeployment: %s", err)
 	}

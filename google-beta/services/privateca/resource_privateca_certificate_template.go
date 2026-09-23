@@ -1522,30 +1522,39 @@ func ResourcePrivatecaCertificateTemplateFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("predefined_values", flattenPrivatecaCertificateTemplatePredefinedValues(res["predefinedValues"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("identity_constraints", flattenPrivatecaCertificateTemplateIdentityConstraints(res["identityConstraints"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("passthrough_extensions", flattenPrivatecaCertificateTemplatePassthroughExtensions(res["passthroughExtensions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("maximum_lifetime", flattenPrivatecaCertificateTemplateMaximumLifetime(res["maximumLifetime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("description", flattenPrivatecaCertificateTemplateDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenPrivatecaCertificateTemplateCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenPrivatecaCertificateTemplateUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("labels", flattenPrivatecaCertificateTemplateLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenPrivatecaCertificateTemplateTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenPrivatecaCertificateTemplateEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateTemplate: %s", err)
 	}

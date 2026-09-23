@@ -652,24 +652,31 @@ func ResourceStorageDefaultObjectAccessControlFlatten(d *schema.ResourceData, me
 	if err = d.Set("domain", flattenStorageDefaultObjectAccessControlDomain(res["domain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("email", flattenStorageDefaultObjectAccessControlEmail(res["email"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("entity", flattenStorageDefaultObjectAccessControlEntity(res["entity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("entity_id", flattenStorageDefaultObjectAccessControlEntityId(res["entityId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("generation", flattenStorageDefaultObjectAccessControlGeneration(res["generation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("object", flattenStorageDefaultObjectAccessControlObject(res["object"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("project_team", flattenStorageDefaultObjectAccessControlProjectTeam(res["projectTeam"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}
+
 	if err = d.Set("role", flattenStorageDefaultObjectAccessControlRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DefaultObjectAccessControl: %s", err)
 	}

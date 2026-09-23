@@ -519,12 +519,15 @@ func ResourceParameterManagerParameterVersionFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenParameterManagerParameterVersionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParameterVersion: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenParameterManagerParameterVersionCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParameterVersion: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenParameterManagerParameterVersionUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParameterVersion: %s", err)
 	}
+
 	if err = d.Set("disabled", flattenParameterManagerParameterVersionDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParameterVersion: %s", err)
 	}
@@ -543,6 +546,7 @@ func ResourceParameterManagerParameterVersionFlatten(d *schema.ResourceData, met
 			}
 		}
 	}
+
 	if err = d.Set("kms_key_version", flattenParameterManagerParameterVersionKmsKeyVersion(res["kmsKeyVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ParameterVersion: %s", err)
 	}

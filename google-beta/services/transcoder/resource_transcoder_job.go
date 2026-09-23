@@ -3218,27 +3218,35 @@ func ResourceTranscoderJobFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("name", flattenTranscoderJobName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenTranscoderJobCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("start_time", flattenTranscoderJobStartTime(res["startTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("end_time", flattenTranscoderJobEndTime(res["endTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("state", flattenTranscoderJobState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("labels", flattenTranscoderJobLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("config", flattenTranscoderJobConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenTranscoderJobTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenTranscoderJobEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}

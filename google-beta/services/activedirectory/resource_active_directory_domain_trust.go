@@ -833,15 +833,19 @@ func ResourceActiveDirectoryDomainTrustFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("target_domain_name", flattenNestedActiveDirectoryDomainTrustTargetDomainName(res["targetDomainName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainTrust: %s", err)
 	}
+
 	if err = d.Set("trust_type", flattenNestedActiveDirectoryDomainTrustTrustType(res["trustType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainTrust: %s", err)
 	}
+
 	if err = d.Set("trust_direction", flattenNestedActiveDirectoryDomainTrustTrustDirection(res["trustDirection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainTrust: %s", err)
 	}
+
 	if err = d.Set("selective_authentication", flattenNestedActiveDirectoryDomainTrustSelectiveAuthentication(res["selectiveAuthentication"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainTrust: %s", err)
 	}
+
 	if err = d.Set("target_dns_ip_addresses", flattenNestedActiveDirectoryDomainTrustTargetDnsIpAddresses(res["targetDnsIpAddresses"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DomainTrust: %s", err)
 	}

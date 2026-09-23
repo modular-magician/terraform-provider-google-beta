@@ -692,6 +692,7 @@ func ResourceAccessContextManagerServicePerimeterDryRunResourceFlatten(d *schema
 	if err = d.Set("resource", flattenNestedAccessContextManagerServicePerimeterDryRunResourceResource(res["resource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterDryRunResource: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNestedAccessContextManagerServicePerimeterDryRunResourceEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeterDryRunResource: %s", err)
 	}

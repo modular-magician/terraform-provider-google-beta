@@ -712,15 +712,19 @@ func ResourceBigqueryDatapolicyDataPolicyFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenBigqueryDatapolicyDataPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataPolicy: %s", err)
 	}
+
 	if err = d.Set("data_policy_id", flattenBigqueryDatapolicyDataPolicyDataPolicyId(res["dataPolicyId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataPolicy: %s", err)
 	}
+
 	if err = d.Set("policy_tag", flattenBigqueryDatapolicyDataPolicyPolicyTag(res["policyTag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataPolicy: %s", err)
 	}
+
 	if err = d.Set("data_policy_type", flattenBigqueryDatapolicyDataPolicyDataPolicyType(res["dataPolicyType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataPolicy: %s", err)
 	}
+
 	if err = d.Set("data_masking_policy", flattenBigqueryDatapolicyDataPolicyDataMaskingPolicy(res["dataMaskingPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataPolicy: %s", err)
 	}

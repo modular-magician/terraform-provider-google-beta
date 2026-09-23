@@ -583,9 +583,11 @@ func ResourceBigtableLogicalViewFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("name", flattenBigtableLogicalViewName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogicalView: %s", err)
 	}
+
 	if err = d.Set("query", flattenBigtableLogicalViewQuery(res["query"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogicalView: %s", err)
 	}
+
 	if err = d.Set("deletion_protection", flattenBigtableLogicalViewDeletionProtection(res["deletionProtection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LogicalView: %s", err)
 	}

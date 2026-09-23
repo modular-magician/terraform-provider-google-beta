@@ -881,24 +881,31 @@ func ResourceComputeExternalVpnGatewayFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("description", flattenComputeExternalVpnGatewayDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("labels", flattenComputeExternalVpnGatewayLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("label_fingerprint", flattenComputeExternalVpnGatewayLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeExternalVpnGatewayName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("redundancy_type", flattenComputeExternalVpnGatewayRedundancyType(res["redundancyType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("interface", flattenComputeExternalVpnGatewayInterface(res["interfaces"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenComputeExternalVpnGatewayTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenComputeExternalVpnGatewayEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ExternalVpnGateway: %s", err)
 	}

@@ -5423,39 +5423,51 @@ func ResourceNetworkSecurityAuthzPolicyFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("create_time", flattenNetworkSecurityAuthzPolicyCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecurityAuthzPolicyUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecurityAuthzPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("policy_profile", flattenNetworkSecurityAuthzPolicyPolicyProfile(res["policyProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecurityAuthzPolicyLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("target", flattenNetworkSecurityAuthzPolicyTarget(res["target"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("http_rules", flattenNetworkSecurityAuthzPolicyHttpRules(res["httpRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("network_rules", flattenNetworkSecurityAuthzPolicyNetworkRules(res["networkRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("action", flattenNetworkSecurityAuthzPolicyAction(res["action"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("custom_provider", flattenNetworkSecurityAuthzPolicyCustomProvider(res["customProvider"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecurityAuthzPolicyTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecurityAuthzPolicyEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenNetworkSecurityAuthzPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AuthzPolicy: %s", err)
 	}

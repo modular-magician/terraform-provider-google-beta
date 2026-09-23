@@ -905,18 +905,23 @@ func ResourceCloudAssetProjectFeedFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("name", flattenCloudAssetProjectFeedName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
+
 	if err = d.Set("asset_names", flattenCloudAssetProjectFeedAssetNames(res["assetNames"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
+
 	if err = d.Set("asset_types", flattenCloudAssetProjectFeedAssetTypes(res["assetTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
+
 	if err = d.Set("content_type", flattenCloudAssetProjectFeedContentType(res["contentType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
+
 	if err = d.Set("feed_output_config", flattenCloudAssetProjectFeedFeedOutputConfig(res["feedOutputConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
+
 	if err = d.Set("condition", flattenCloudAssetProjectFeedCondition(res["condition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}

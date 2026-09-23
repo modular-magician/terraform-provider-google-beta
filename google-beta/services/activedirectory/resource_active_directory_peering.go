@@ -649,18 +649,23 @@ func ResourceActiveDirectoryPeeringFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenActiveDirectoryPeeringName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Peering: %s", err)
 	}
+
 	if err = d.Set("labels", flattenActiveDirectoryPeeringLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Peering: %s", err)
 	}
+
 	if err = d.Set("authorized_network", flattenActiveDirectoryPeeringAuthorizedNetwork(res["authorizedNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Peering: %s", err)
 	}
+
 	if err = d.Set("domain_resource", flattenActiveDirectoryPeeringDomainResource(res["domainResource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Peering: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenActiveDirectoryPeeringTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Peering: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenActiveDirectoryPeeringEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Peering: %s", err)
 	}

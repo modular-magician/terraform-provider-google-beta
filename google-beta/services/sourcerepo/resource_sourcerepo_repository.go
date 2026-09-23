@@ -761,12 +761,15 @@ func ResourceSourceRepoRepositoryFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenSourceRepoRepositoryName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("url", flattenSourceRepoRepositoryUrl(res["url"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("size", flattenSourceRepoRepositorySize(res["size"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+
 	if err = d.Set("pubsub_configs", flattenSourceRepoRepositoryPubsubConfigs(res["pubsubConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}

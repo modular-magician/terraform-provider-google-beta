@@ -761,27 +761,35 @@ func ResourceComputeRegionHealthSourceFlatten(d *schema.ResourceData, meta inter
 	if err = d.Set("description", flattenComputeRegionHealthSourceDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("source_type", flattenComputeRegionHealthSourceSourceType(res["sourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("sources", flattenComputeRegionHealthSourceSources(res["sources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("health_aggregation_policy", flattenComputeRegionHealthSourceHealthAggregationPolicy(res["healthAggregationPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("id", flattenComputeRegionHealthSourceId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeRegionHealthSourceCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("self_link_with_id", flattenComputeRegionHealthSourceSelfLinkWithId(res["selfLinkWithId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeRegionHealthSourceFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionHealthSourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionHealthSource: %s", err)
 	}

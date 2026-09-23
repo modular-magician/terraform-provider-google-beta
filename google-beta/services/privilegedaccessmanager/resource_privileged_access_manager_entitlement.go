@@ -1628,33 +1628,43 @@ func ResourcePrivilegedAccessManagerEntitlementFlatten(d *schema.ResourceData, m
 	if err = d.Set("name", flattenPrivilegedAccessManagerEntitlementName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenPrivilegedAccessManagerEntitlementCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenPrivilegedAccessManagerEntitlementUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("eligible_users", flattenPrivilegedAccessManagerEntitlementEligibleUsers(res["eligibleUsers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("approval_workflow", flattenPrivilegedAccessManagerEntitlementApprovalWorkflow(res["approvalWorkflow"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("privileged_access", flattenPrivilegedAccessManagerEntitlementPrivilegedAccess(res["privilegedAccess"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("max_request_duration", flattenPrivilegedAccessManagerEntitlementMaxRequestDuration(res["maxRequestDuration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("state", flattenPrivilegedAccessManagerEntitlementState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("etag", flattenPrivilegedAccessManagerEntitlementEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("requester_justification_config", flattenPrivilegedAccessManagerEntitlementRequesterJustificationConfig(res["requesterJustificationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}
+
 	if err = d.Set("additional_notification_targets", flattenPrivilegedAccessManagerEntitlementAdditionalNotificationTargets(res["additionalNotificationTargets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Entitlement: %s", err)
 	}

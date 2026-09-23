@@ -568,15 +568,19 @@ func ResourceStorageBucketAccessControlFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("bucket", flattenStorageBucketAccessControlBucket(res["bucket"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BucketAccessControl: %s", err)
 	}
+
 	if err = d.Set("domain", flattenStorageBucketAccessControlDomain(res["domain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BucketAccessControl: %s", err)
 	}
+
 	if err = d.Set("email", flattenStorageBucketAccessControlEmail(res["email"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BucketAccessControl: %s", err)
 	}
+
 	if err = d.Set("entity", flattenStorageBucketAccessControlEntity(res["entity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BucketAccessControl: %s", err)
 	}
+
 	if err = d.Set("role", flattenStorageBucketAccessControlRole(res["role"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BucketAccessControl: %s", err)
 	}

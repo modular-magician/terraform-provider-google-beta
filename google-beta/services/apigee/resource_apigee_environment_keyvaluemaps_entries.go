@@ -416,6 +416,7 @@ func ResourceApigeeEnvironmentKeyvaluemapsEntriesFlatten(d *schema.ResourceData,
 	if err = d.Set("name", flattenApigeeEnvironmentKeyvaluemapsEntriesName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentKeyvaluemapsEntries: %s", err)
 	}
+
 	if err = d.Set("value", flattenApigeeEnvironmentKeyvaluemapsEntriesValue(res["value"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentKeyvaluemapsEntries: %s", err)
 	}

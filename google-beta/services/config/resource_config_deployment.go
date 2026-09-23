@@ -1185,42 +1185,55 @@ func ResourceConfigDeploymentFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("service_account", flattenConfigDeploymentServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("terraform_blueprint", flattenConfigDeploymentTerraformBlueprint(res["terraformBlueprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenConfigDeploymentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenConfigDeploymentAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("tf_version_constraint", flattenConfigDeploymentTfVersionConstraint(res["tfVersionConstraint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("artifacts_gcs_bucket", flattenConfigDeploymentArtifactsGcsBucket(res["artifactsGcsBucket"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("worker_pool", flattenConfigDeploymentWorkerPool(res["workerPool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("import_existing_resources", flattenConfigDeploymentImportExistingResources(res["importExistingResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("quota_validation", flattenConfigDeploymentQuotaValidation(res["quotaValidation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("state", flattenConfigDeploymentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("latest_revision", flattenConfigDeploymentLatestRevision(res["latestRevision"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenConfigDeploymentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenConfigDeploymentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenConfigDeploymentEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}

@@ -764,24 +764,31 @@ func ResourceApigeeDatastoreFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenApigeeDatastoreName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("self", flattenApigeeDatastoreSelf(res["self"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApigeeDatastoreDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("org", flattenApigeeDatastoreOrg(res["org"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("target_type", flattenApigeeDatastoreTargetType(res["targetType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApigeeDatastoreCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("last_update_time", flattenApigeeDatastoreLastUpdateTime(res["lastUpdateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}
+
 	if err = d.Set("datastore_config", flattenApigeeDatastoreDatastoreConfig(res["datastoreConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Datastore: %s", err)
 	}

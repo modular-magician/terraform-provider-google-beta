@@ -806,30 +806,39 @@ func ResourceComputeRegionSslPolicyFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("creation_timestamp", flattenComputeRegionSslPolicyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionSslPolicyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionSslPolicyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("profile", flattenComputeRegionSslPolicyProfile(res["profile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("min_tls_version", flattenComputeRegionSslPolicyMinTlsVersion(res["minTlsVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("enabled_features", flattenComputeRegionSslPolicyEnabledFeatures(res["enabledFeatures"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("custom_features", flattenComputeRegionSslPolicyCustomFeatures(res["customFeatures"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("post_quantum_key_exchange", flattenComputeRegionSslPolicyPostQuantumKeyExchange(res["postQuantumKeyExchange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenComputeRegionSslPolicyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRegionSslPolicyRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionSslPolicy: %s", err)
 	}

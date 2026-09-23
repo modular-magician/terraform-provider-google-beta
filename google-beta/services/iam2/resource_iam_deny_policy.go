@@ -884,9 +884,11 @@ func ResourceIAM2DenyPolicyFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("display_name", flattenIAM2DenyPolicyDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DenyPolicy: %s", err)
 	}
+
 	if err = d.Set("etag", flattenIAM2DenyPolicyEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DenyPolicy: %s", err)
 	}
+
 	if err = d.Set("rules", flattenIAM2DenyPolicyRules(res["rules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DenyPolicy: %s", err)
 	}

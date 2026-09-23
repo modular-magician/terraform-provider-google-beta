@@ -840,9 +840,11 @@ func ResourceVertexAIDeploymentResourcePoolFlatten(d *schema.ResourceData, meta 
 	if err = d.Set("name", flattenVertexAIDeploymentResourcePoolName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeploymentResourcePool: %s", err)
 	}
+
 	if err = d.Set("dedicated_resources", flattenVertexAIDeploymentResourcePoolDedicatedResources(res["dedicatedResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeploymentResourcePool: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAIDeploymentResourcePoolCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DeploymentResourcePool: %s", err)
 	}

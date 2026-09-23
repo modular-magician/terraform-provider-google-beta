@@ -3787,45 +3787,59 @@ func ResourceOracleDatabaseAutonomousDatabaseFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenOracleDatabaseAutonomousDatabaseName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("database", flattenOracleDatabaseAutonomousDatabaseDatabase(res["database"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenOracleDatabaseAutonomousDatabaseDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("entitlement_id", flattenOracleDatabaseAutonomousDatabaseEntitlementId(res["entitlementId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("properties", flattenOracleDatabaseAutonomousDatabaseProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseAutonomousDatabaseLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("network", flattenOracleDatabaseAutonomousDatabaseNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("cidr", flattenOracleDatabaseAutonomousDatabaseCidr(res["cidr"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("odb_network", flattenOracleDatabaseAutonomousDatabaseOdbNetwork(res["odbNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("odb_subnet", flattenOracleDatabaseAutonomousDatabaseOdbSubnet(res["odbSubnet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenOracleDatabaseAutonomousDatabaseCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("peer_autonomous_databases", flattenOracleDatabaseAutonomousDatabasePeerAutonomousDatabases(res["peerAutonomousDatabases"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("disaster_recovery_supported_locations", flattenOracleDatabaseAutonomousDatabaseDisasterRecoverySupportedLocations(res["disasterRecoverySupportedLocations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseAutonomousDatabaseTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseAutonomousDatabaseEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutonomousDatabase: %s", err)
 	}

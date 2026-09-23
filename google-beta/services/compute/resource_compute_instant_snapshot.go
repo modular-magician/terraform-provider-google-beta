@@ -835,33 +835,43 @@ func ResourceComputeInstantSnapshotFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("creation_timestamp", flattenComputeInstantSnapshotCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeInstantSnapshotName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeInstantSnapshotDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("source_disk_id", flattenComputeInstantSnapshotSourceDiskId(res["sourceDiskId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("disk_size_gb", flattenComputeInstantSnapshotDiskSizeGb(res["diskSizeGb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("labels", flattenComputeInstantSnapshotLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("label_fingerprint", flattenComputeInstantSnapshotLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenComputeInstantSnapshotTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenComputeInstantSnapshotEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("source_disk", flattenComputeInstantSnapshotSourceDisk(res["sourceDisk"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}
+
 	if err = d.Set("zone", flattenComputeInstantSnapshotZone(res["zone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstantSnapshot: %s", err)
 	}

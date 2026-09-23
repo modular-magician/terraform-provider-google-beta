@@ -889,21 +889,27 @@ func ResourceGeminiCodeToolsSettingFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenGeminiCodeToolsSettingName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiCodeToolsSettingCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiCodeToolsSettingUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiCodeToolsSettingLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}
+
 	if err = d.Set("enabled_tool", flattenGeminiCodeToolsSettingEnabledTool(res["enabledTool"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiCodeToolsSettingTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiCodeToolsSettingEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CodeToolsSetting: %s", err)
 	}

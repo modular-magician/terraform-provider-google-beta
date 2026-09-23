@@ -753,21 +753,27 @@ func ResourceCertificateManagerCertificateMapFlatten(d *schema.ResourceData, met
 	if err = d.Set("description", flattenCertificateManagerCertificateMapDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCertificateManagerCertificateMapCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCertificateManagerCertificateMapUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}
+
 	if err = d.Set("labels", flattenCertificateManagerCertificateMapLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}
+
 	if err = d.Set("gclb_targets", flattenCertificateManagerCertificateMapGclbTargets(res["gclbTargets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenCertificateManagerCertificateMapTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenCertificateManagerCertificateMapEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CertificateMap: %s", err)
 	}

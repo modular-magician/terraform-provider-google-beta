@@ -776,33 +776,43 @@ func ResourceNetworkSecuritySecurityProfileGroupFlatten(d *schema.ResourceData, 
 	if err = d.Set("create_time", flattenNetworkSecuritySecurityProfileGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkSecuritySecurityProfileGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("etag", flattenNetworkSecuritySecurityProfileGroupEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkSecuritySecurityProfileGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkSecuritySecurityProfileGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("threat_prevention_profile", flattenNetworkSecuritySecurityProfileGroupThreatPreventionProfile(res["threatPreventionProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("url_filtering_profile", flattenNetworkSecuritySecurityProfileGroupUrlFilteringProfile(res["urlFilteringProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("custom_mirroring_profile", flattenNetworkSecuritySecurityProfileGroupCustomMirroringProfile(res["customMirroringProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("custom_intercept_profile", flattenNetworkSecuritySecurityProfileGroupCustomInterceptProfile(res["customInterceptProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkSecuritySecurityProfileGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkSecuritySecurityProfileGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfileGroup: %s", err)
 	}

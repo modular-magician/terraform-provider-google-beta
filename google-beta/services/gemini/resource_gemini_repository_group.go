@@ -807,21 +807,27 @@ func ResourceGeminiRepositoryGroupFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("repositories", flattenGeminiRepositoryGroupRepositories(res["repositories"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}
+
 	if err = d.Set("name", flattenGeminiRepositoryGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenGeminiRepositoryGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenGeminiRepositoryGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}
+
 	if err = d.Set("labels", flattenGeminiRepositoryGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenGeminiRepositoryGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenGeminiRepositoryGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RepositoryGroup: %s", err)
 	}

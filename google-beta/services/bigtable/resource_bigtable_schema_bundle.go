@@ -652,9 +652,11 @@ func ResourceBigtableSchemaBundleFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("name", flattenBigtableSchemaBundleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SchemaBundle: %s", err)
 	}
+
 	if err = d.Set("etag", flattenBigtableSchemaBundleEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SchemaBundle: %s", err)
 	}
+
 	if err = d.Set("proto_schema", flattenBigtableSchemaBundleProtoSchema(res["protoSchema"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SchemaBundle: %s", err)
 	}

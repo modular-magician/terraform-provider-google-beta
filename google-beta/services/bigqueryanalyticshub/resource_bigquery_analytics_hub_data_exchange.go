@@ -890,30 +890,39 @@ func ResourceBigqueryAnalyticsHubDataExchangeFlatten(d *schema.ResourceData, met
 	if err = d.Set("name", flattenBigqueryAnalyticsHubDataExchangeName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenBigqueryAnalyticsHubDataExchangeDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("description", flattenBigqueryAnalyticsHubDataExchangeDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("primary_contact", flattenBigqueryAnalyticsHubDataExchangePrimaryContact(res["primaryContact"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("documentation", flattenBigqueryAnalyticsHubDataExchangeDocumentation(res["documentation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("listing_count", flattenBigqueryAnalyticsHubDataExchangeListingCount(res["listingCount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("icon", flattenBigqueryAnalyticsHubDataExchangeIcon(res["icon"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("sharing_environment_config", flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfig(res["sharingEnvironmentConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("discovery_type", flattenBigqueryAnalyticsHubDataExchangeDiscoveryType(res["discoveryType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+
 	if err = d.Set("log_linked_dataset_query_user_email", flattenBigqueryAnalyticsHubDataExchangeLogLinkedDatasetQueryUserEmail(res["logLinkedDatasetQueryUserEmail"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}

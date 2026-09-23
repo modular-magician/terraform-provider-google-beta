@@ -766,18 +766,23 @@ func ResourceDataplexDataAssetFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("uid", flattenDataplexDataAssetUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAsset: %s", err)
 	}
+
 	if err = d.Set("resource", flattenDataplexDataAssetResource(res["resource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAsset: %s", err)
 	}
+
 	if err = d.Set("labels", flattenDataplexDataAssetLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAsset: %s", err)
 	}
+
 	if err = d.Set("access_group_configs", flattenDataplexDataAssetAccessGroupConfigs(res["accessGroupConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAsset: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenDataplexDataAssetTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAsset: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenDataplexDataAssetEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataAsset: %s", err)
 	}

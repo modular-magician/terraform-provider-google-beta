@@ -731,24 +731,31 @@ func ResourceComputeTargetTcpProxyFlatten(d *schema.ResourceData, meta interface
 	if err = d.Set("creation_timestamp", flattenComputeTargetTcpProxyCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeTargetTcpProxyDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_id", flattenComputeTargetTcpProxyProxyId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeTargetTcpProxyName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_header", flattenComputeTargetTcpProxyProxyHeader(res["proxyHeader"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("backend_service", flattenComputeTargetTcpProxyBackendService(res["service"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("proxy_bind", flattenComputeTargetTcpProxyProxyBind(res["proxyBind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+
 	if err = d.Set("load_balancing_scheme", flattenComputeTargetTcpProxyLoadBalancingScheme(res["loadBalancingScheme"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}

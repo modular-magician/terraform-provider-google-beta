@@ -487,12 +487,15 @@ func ResourceObservabilityOrganizationSettingsFlatten(d *schema.ResourceData, me
 	if err = d.Set("default_storage_location", flattenObservabilityOrganizationSettingsDefaultStorageLocation(res["defaultStorageLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("kms_key_name", flattenObservabilityOrganizationSettingsKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("name", flattenObservabilityOrganizationSettingsName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}
+
 	if err = d.Set("service_account_id", flattenObservabilityOrganizationSettingsServiceAccountId(res["serviceAccountId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSettings: %s", err)
 	}

@@ -1568,48 +1568,63 @@ func ResourceEventarcTriggerFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("name", flattenEventarcTriggerName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("uid", flattenEventarcTriggerUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEventarcTriggerCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEventarcTriggerUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("matching_criteria", flattenEventarcTriggerMatchingCriteria(res["eventFilters"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("service_account", flattenEventarcTriggerServiceAccount(res["serviceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("destination", flattenEventarcTriggerDestination(res["destination"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("transport", flattenEventarcTriggerTransport(res["transport"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEventarcTriggerLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("etag", flattenEventarcTriggerEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("channel", flattenEventarcTriggerChannel(res["channel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("conditions", flattenEventarcTriggerConditions(res["conditions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("event_data_content_type", flattenEventarcTriggerEventDataContentType(res["eventDataContentType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("retry_policy", flattenEventarcTriggerRetryPolicy(res["retryPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEventarcTriggerTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEventarcTriggerEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}

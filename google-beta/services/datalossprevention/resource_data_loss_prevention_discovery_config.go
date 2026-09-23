@@ -6188,36 +6188,47 @@ func ResourceDataLossPreventionDiscoveryConfigFlatten(d *schema.ResourceData, me
 	if err = d.Set("name", flattenDataLossPreventionDiscoveryConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDataLossPreventionDiscoveryConfigDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("org_config", flattenDataLossPreventionDiscoveryConfigOrgConfig(res["orgConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("other_cloud_starting_location", flattenDataLossPreventionDiscoveryConfigOtherCloudStartingLocation(res["otherCloudStartingLocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("inspect_templates", flattenDataLossPreventionDiscoveryConfigInspectTemplates(res["inspectTemplates"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("actions", flattenDataLossPreventionDiscoveryConfigActions(res["actions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("targets", flattenDataLossPreventionDiscoveryConfigTargets(res["targets"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("errors", flattenDataLossPreventionDiscoveryConfigErrors(res["errors"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenDataLossPreventionDiscoveryConfigCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDataLossPreventionDiscoveryConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("last_run_time", flattenDataLossPreventionDiscoveryConfigLastRunTime(res["lastRunTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}
+
 	if err = d.Set("status", flattenDataLossPreventionDiscoveryConfigStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DiscoveryConfig: %s", err)
 	}

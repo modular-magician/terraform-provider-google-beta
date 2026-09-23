@@ -1423,39 +1423,51 @@ func ResourceBackupDRBackupPlanFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("name", flattenBackupDRBackupPlanName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("description", flattenBackupDRBackupPlanDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("backup_vault", flattenBackupDRBackupPlanBackupVault(res["backupVault"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("backup_vault_service_account", flattenBackupDRBackupPlanBackupVaultServiceAccount(res["backupVaultServiceAccount"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("supported_resource_types", flattenBackupDRBackupPlanSupportedResourceTypes(res["supportedResourceTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("resource_type", flattenBackupDRBackupPlanResourceType(res["resourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenBackupDRBackupPlanCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenBackupDRBackupPlanUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("max_custom_on_demand_retention_days", flattenBackupDRBackupPlanMaxCustomOnDemandRetentionDays(res["maxCustomOnDemandRetentionDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("backup_rules", flattenBackupDRBackupPlanBackupRules(res["backupRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("log_retention_days", flattenBackupDRBackupPlanLogRetentionDays(res["logRetentionDays"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("disk_backup_plan_properties", flattenBackupDRBackupPlanDiskBackupPlanProperties(res["diskBackupPlanProperties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}
+
 	if err = d.Set("compute_instance_backup_plan_properties", flattenBackupDRBackupPlanComputeInstanceBackupPlanProperties(res["computeInstanceBackupPlanProperties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackupPlan: %s", err)
 	}

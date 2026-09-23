@@ -684,27 +684,35 @@ func ResourceCloudIdsEndpointFlatten(d *schema.ResourceData, meta interface{}, r
 	if err = d.Set("name", flattenCloudIdsEndpointName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCloudIdsEndpointCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCloudIdsEndpointUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("network", flattenCloudIdsEndpointNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("description", flattenCloudIdsEndpointDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("endpoint_forwarding_rule", flattenCloudIdsEndpointEndpointForwardingRule(res["endpointForwardingRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("endpoint_ip", flattenCloudIdsEndpointEndpointIp(res["endpointIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("severity", flattenCloudIdsEndpointSeverity(res["severity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}
+
 	if err = d.Set("threat_exceptions", flattenCloudIdsEndpointThreatExceptions(res["threatExceptions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Endpoint: %s", err)
 	}

@@ -805,33 +805,43 @@ func ResourceSaasRuntimeSaasFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("annotations", flattenSaasRuntimeSaasAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSaasRuntimeSaasCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("etag", flattenSaasRuntimeSaasEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("labels", flattenSaasRuntimeSaasLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("locations", flattenSaasRuntimeSaasLocations(res["locations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("name", flattenSaasRuntimeSaasName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("uid", flattenSaasRuntimeSaasUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSaasRuntimeSaasUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenSaasRuntimeSaasEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenSaasRuntimeSaasTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenSaasRuntimeSaasEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Saas: %s", err)
 	}

@@ -702,15 +702,19 @@ func ResourceNetappVolumeSnapshotFlatten(d *schema.ResourceData, meta interface{
 	if err = d.Set("description", flattenNetappVolumeSnapshotDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VolumeSnapshot: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetappVolumeSnapshotLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VolumeSnapshot: %s", err)
 	}
+
 	if err = d.Set("used_bytes", flattenNetappVolumeSnapshotUsedBytes(res["usedBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VolumeSnapshot: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetappVolumeSnapshotTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VolumeSnapshot: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetappVolumeSnapshotEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VolumeSnapshot: %s", err)
 	}

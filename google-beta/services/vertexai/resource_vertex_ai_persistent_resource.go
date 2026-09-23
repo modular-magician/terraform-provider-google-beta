@@ -1791,57 +1791,75 @@ func ResourceVertexAIPersistentResourceFlatten(d *schema.ResourceData, meta inte
 	if err = d.Set("name", flattenVertexAIPersistentResourceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenVertexAIPersistentResourceDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("resource_pools", flattenVertexAIPersistentResourceResourcePools(res["resourcePools"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("labels", flattenVertexAIPersistentResourceLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("network", flattenVertexAIPersistentResourceNetwork(res["network"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("psc_interface_config", flattenVertexAIPersistentResourcePscInterfaceConfig(res["pscInterfaceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("encryption_spec", flattenVertexAIPersistentResourceEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("resource_runtime_spec", flattenVertexAIPersistentResourceResourceRuntimeSpec(res["resourceRuntimeSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("reserved_ip_ranges", flattenVertexAIPersistentResourceReservedIpRanges(res["reservedIpRanges"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("state", flattenVertexAIPersistentResourceState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("error", flattenVertexAIPersistentResourceError(res["error"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenVertexAIPersistentResourceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("start_time", flattenVertexAIPersistentResourceStartTime(res["startTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenVertexAIPersistentResourceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("resource_runtime", flattenVertexAIPersistentResourceResourceRuntime(res["resourceRuntime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("satisfies_pzs", flattenVertexAIPersistentResourceSatisfiesPzs(res["satisfiesPzs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("satisfies_pzi", flattenVertexAIPersistentResourceSatisfiesPzi(res["satisfiesPzi"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenVertexAIPersistentResourceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenVertexAIPersistentResourceEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PersistentResource: %s", err)
 	}

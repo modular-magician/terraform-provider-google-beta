@@ -774,33 +774,43 @@ func ResourceNetworkConnectivityGroupFlatten(d *schema.ResourceData, meta interf
 	if err = d.Set("name", flattenNetworkConnectivityGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenNetworkConnectivityGroupCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenNetworkConnectivityGroupUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("labels", flattenNetworkConnectivityGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("description", flattenNetworkConnectivityGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("uid", flattenNetworkConnectivityGroupUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("state", flattenNetworkConnectivityGroupState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("auto_accept", flattenNetworkConnectivityGroupAutoAccept(res["autoAccept"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("route_table", flattenNetworkConnectivityGroupRouteTable(res["routeTable"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenNetworkConnectivityGroupTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenNetworkConnectivityGroupEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}

@@ -17773,36 +17773,47 @@ func ResourceChronicleFeedFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("state", flattenChronicleFeedState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("enabled", flattenChronicleFeedEnabled(res["enabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("details", flattenChronicleFeedDetails(res["details"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenChronicleFeedDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("failure_details", flattenChronicleFeedFailureDetails(res["failureDetails"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("failure_msg", flattenChronicleFeedFailureMsg(res["failureMsg"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("last_feed_initiation_time", flattenChronicleFeedLastFeedInitiationTime(res["lastFeedInitiationTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("name", flattenChronicleFeedName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("read_only", flattenChronicleFeedReadOnly(res["readOnly"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("reference_id", flattenChronicleFeedReferenceId(res["referenceId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("uid", flattenChronicleFeedUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}
+
 	if err = d.Set("feed", flattenChronicleFeedFeed(res["feed"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Feed: %s", err)
 	}

@@ -941,21 +941,27 @@ func ResourceContactCenterInsightsAssessmentRuleFlatten(d *schema.ResourceData, 
 	if err = d.Set("active", flattenContactCenterInsightsAssessmentRuleActive(res["active"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenContactCenterInsightsAssessmentRuleCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenContactCenterInsightsAssessmentRuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}
+
 	if err = d.Set("name", flattenContactCenterInsightsAssessmentRuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}
+
 	if err = d.Set("sample_rule", flattenContactCenterInsightsAssessmentRuleSampleRule(res["sampleRule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}
+
 	if err = d.Set("schedule_info", flattenContactCenterInsightsAssessmentRuleScheduleInfo(res["scheduleInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenContactCenterInsightsAssessmentRuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AssessmentRule: %s", err)
 	}

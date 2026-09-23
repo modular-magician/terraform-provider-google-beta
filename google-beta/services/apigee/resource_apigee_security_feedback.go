@@ -629,24 +629,31 @@ func ResourceApigeeSecurityFeedbackFlatten(d *schema.ResourceData, meta interfac
 	if err = d.Set("name", flattenApigeeSecurityFeedbackName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenApigeeSecurityFeedbackDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("feedback_contexts", flattenApigeeSecurityFeedbackFeedbackContexts(res["feedbackContexts"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("feedback_type", flattenApigeeSecurityFeedbackFeedbackType(res["feedbackType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenApigeeSecurityFeedbackCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenApigeeSecurityFeedbackUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("reason", flattenApigeeSecurityFeedbackReason(res["reason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}
+
 	if err = d.Set("comment", flattenApigeeSecurityFeedbackComment(res["comment"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityFeedback: %s", err)
 	}

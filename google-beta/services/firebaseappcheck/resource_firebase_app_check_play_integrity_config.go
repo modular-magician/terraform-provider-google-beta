@@ -449,6 +449,7 @@ func ResourceFirebaseAppCheckPlayIntegrityConfigFlatten(d *schema.ResourceData, 
 	if err = d.Set("name", flattenFirebaseAppCheckPlayIntegrityConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PlayIntegrityConfig: %s", err)
 	}
+
 	if err = d.Set("token_ttl", flattenFirebaseAppCheckPlayIntegrityConfigTokenTtl(res["tokenTtl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PlayIntegrityConfig: %s", err)
 	}

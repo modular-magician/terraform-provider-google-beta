@@ -473,9 +473,11 @@ func ResourceApigeeEnvironmentApiRevisionDeploymentFlatten(d *schema.ResourceDat
 	if err = d.Set("state", flattenApigeeEnvironmentApiRevisionDeploymentState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentApiRevisionDeployment: %s", err)
 	}
+
 	if err = d.Set("basepaths", flattenApigeeEnvironmentApiRevisionDeploymentBasepaths(res["basePath"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentApiRevisionDeployment: %s", err)
 	}
+
 	if err = d.Set("deploy_start_time", flattenApigeeEnvironmentApiRevisionDeploymentDeployStartTime(res["deployStartTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EnvironmentApiRevisionDeployment: %s", err)
 	}

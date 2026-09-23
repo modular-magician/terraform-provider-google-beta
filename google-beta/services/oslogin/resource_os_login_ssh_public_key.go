@@ -564,9 +564,11 @@ func ResourceOSLoginSSHPublicKeyFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("key", flattenOSLoginSSHPublicKeyKey(res["key"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SSHPublicKey: %s", err)
 	}
+
 	if err = d.Set("expiration_time_usec", flattenOSLoginSSHPublicKeyExpirationTimeUsec(res["expirationTimeUsec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SSHPublicKey: %s", err)
 	}
+
 	if err = d.Set("fingerprint", flattenOSLoginSSHPublicKeyFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SSHPublicKey: %s", err)
 	}

@@ -793,30 +793,39 @@ func ResourceComputePublicDelegatedPrefixFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("description", flattenComputePublicDelegatedPrefixDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("is_live_migration", flattenComputePublicDelegatedPrefixIsLiveMigration(res["isLiveMigration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputePublicDelegatedPrefixName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("parent_prefix", flattenComputePublicDelegatedPrefixParentPrefix(res["parentPrefix"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("mode", flattenComputePublicDelegatedPrefixMode(res["mode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("allocatable_prefix_length", flattenComputePublicDelegatedPrefixAllocatablePrefixLength(res["allocatablePrefixLength"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("ip_cidr_range", flattenComputePublicDelegatedPrefixIpCidrRange(res["ipCidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("ipv6_access_type", flattenComputePublicDelegatedPrefixIpv6AccessType(res["ipv6AccessType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("enable_enhanced_ipv4_allocation", flattenComputePublicDelegatedPrefixEnableEnhancedIpv4Allocation(res["enableEnhancedIpv4Allocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+
 	if err = d.Set("public_delegated_sub_prefixs", flattenComputePublicDelegatedPrefixPublicDelegatedSubPrefixs(res["publicDelegatedSubPrefixs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}

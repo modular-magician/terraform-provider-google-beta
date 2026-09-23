@@ -1220,12 +1220,15 @@ func ResourceComputeRolloutPlanFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("description", flattenComputeRolloutPlanDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutPlan: %s", err)
 	}
+
 	if err = d.Set("location_scope", flattenComputeRolloutPlanLocationScope(res["locationScope"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutPlan: %s", err)
 	}
+
 	if err = d.Set("waves", flattenComputeRolloutPlanWaves(res["waves"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutPlan: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRolloutPlanName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RolloutPlan: %s", err)
 	}

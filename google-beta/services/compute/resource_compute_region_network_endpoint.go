@@ -836,18 +836,23 @@ func ResourceComputeRegionNetworkEndpointFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("port", flattenNestedComputeRegionNetworkEndpointPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("ip_address", flattenNestedComputeRegionNetworkEndpointIpAddress(res["ipAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("network_endpoint_id", flattenNestedComputeRegionNetworkEndpointNetworkEndpointId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("fqdn", flattenNestedComputeRegionNetworkEndpointFqdn(res["fqdn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("client_destination_port", flattenNestedComputeRegionNetworkEndpointClientDestinationPort(res["clientDestinationPort"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("instance", flattenNestedComputeRegionNetworkEndpointInstance(res["instance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpoint: %s", err)
 	}

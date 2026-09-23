@@ -2898,36 +2898,47 @@ func ResourceOracleDatabaseGoldengateDeploymentFlatten(d *schema.ResourceData, m
 	if err = d.Set("create_time", flattenOracleDatabaseGoldengateDeploymentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenOracleDatabaseGoldengateDeploymentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("entitlement_id", flattenOracleDatabaseGoldengateDeploymentEntitlementId(res["entitlementId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("gcp_oracle_zone", flattenOracleDatabaseGoldengateDeploymentGcpOracleZone(res["gcpOracleZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenOracleDatabaseGoldengateDeploymentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("name", flattenOracleDatabaseGoldengateDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("oci_url", flattenOracleDatabaseGoldengateDeploymentOciUrl(res["ociUrl"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("odb_network", flattenOracleDatabaseGoldengateDeploymentOdbNetwork(res["odbNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("odb_subnet", flattenOracleDatabaseGoldengateDeploymentOdbSubnet(res["odbSubnet"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("properties", flattenOracleDatabaseGoldengateDeploymentProperties(res["properties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenOracleDatabaseGoldengateDeploymentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenOracleDatabaseGoldengateDeploymentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GoldengateDeployment: %s", err)
 	}

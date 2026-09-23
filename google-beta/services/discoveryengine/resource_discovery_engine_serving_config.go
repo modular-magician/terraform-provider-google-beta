@@ -657,18 +657,23 @@ func ResourceDiscoveryEngineServingConfigFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("name", flattenDiscoveryEngineServingConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServingConfig: %s", err)
 	}
+
 	if err = d.Set("filter_control_ids", flattenDiscoveryEngineServingConfigFilterControlIds(res["filterControlIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServingConfig: %s", err)
 	}
+
 	if err = d.Set("boost_control_ids", flattenDiscoveryEngineServingConfigBoostControlIds(res["boostControlIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServingConfig: %s", err)
 	}
+
 	if err = d.Set("synonyms_control_ids", flattenDiscoveryEngineServingConfigSynonymsControlIds(res["synonymsControlIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServingConfig: %s", err)
 	}
+
 	if err = d.Set("redirect_control_ids", flattenDiscoveryEngineServingConfigRedirectControlIds(res["redirectControlIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServingConfig: %s", err)
 	}
+
 	if err = d.Set("promote_control_ids", flattenDiscoveryEngineServingConfigPromoteControlIds(res["promoteControlIds"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ServingConfig: %s", err)
 	}

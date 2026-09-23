@@ -735,15 +735,19 @@ func ResourceDialogflowCXEnvironmentFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("name", flattenDialogflowCXEnvironmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenDialogflowCXEnvironmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("description", flattenDialogflowCXEnvironmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("version_configs", flattenDialogflowCXEnvironmentVersionConfigs(res["versionConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenDialogflowCXEnvironmentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}

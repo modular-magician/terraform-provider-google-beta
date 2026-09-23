@@ -647,21 +647,27 @@ func ResourceSecurityCenterEventThreatDetectionCustomModuleFlatten(d *schema.Res
 	if err = d.Set("name", flattenSecurityCenterEventThreatDetectionCustomModuleName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}
+
 	if err = d.Set("config", flattenSecurityCenterEventThreatDetectionCustomModuleConfig(res["config"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}
+
 	if err = d.Set("enablement_state", flattenSecurityCenterEventThreatDetectionCustomModuleEnablementState(res["enablementState"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}
+
 	if err = d.Set("type", flattenSecurityCenterEventThreatDetectionCustomModuleType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenSecurityCenterEventThreatDetectionCustomModuleDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterEventThreatDetectionCustomModuleUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}
+
 	if err = d.Set("last_editor", flattenSecurityCenterEventThreatDetectionCustomModuleLastEditor(res["lastEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EventThreatDetectionCustomModule: %s", err)
 	}

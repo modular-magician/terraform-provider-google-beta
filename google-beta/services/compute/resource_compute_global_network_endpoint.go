@@ -708,9 +708,11 @@ func ResourceComputeGlobalNetworkEndpointFlatten(d *schema.ResourceData, meta in
 	if err = d.Set("port", flattenNestedComputeGlobalNetworkEndpointPort(res["port"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("ip_address", flattenNestedComputeGlobalNetworkEndpointIpAddress(res["ipAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpoint: %s", err)
 	}
+
 	if err = d.Set("fqdn", flattenNestedComputeGlobalNetworkEndpointFqdn(res["fqdn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalNetworkEndpoint: %s", err)
 	}

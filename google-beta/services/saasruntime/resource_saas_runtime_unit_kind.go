@@ -1435,45 +1435,59 @@ func ResourceSaasRuntimeUnitKindFlatten(d *schema.ResourceData, meta interface{}
 	if err = d.Set("annotations", flattenSaasRuntimeUnitKindAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSaasRuntimeUnitKindCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("default_release", flattenSaasRuntimeUnitKindDefaultRelease(res["defaultRelease"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("dependencies", flattenSaasRuntimeUnitKindDependencies(res["dependencies"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("etag", flattenSaasRuntimeUnitKindEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("input_variable_mappings", flattenSaasRuntimeUnitKindInputVariableMappings(res["inputVariableMappings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("labels", flattenSaasRuntimeUnitKindLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("name", flattenSaasRuntimeUnitKindName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("output_variable_mappings", flattenSaasRuntimeUnitKindOutputVariableMappings(res["outputVariableMappings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("saas", flattenSaasRuntimeUnitKindSaas(res["saas"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("uid", flattenSaasRuntimeUnitKindUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSaasRuntimeUnitKindUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenSaasRuntimeUnitKindEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenSaasRuntimeUnitKindTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenSaasRuntimeUnitKindEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitKind: %s", err)
 	}

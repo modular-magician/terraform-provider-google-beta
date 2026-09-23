@@ -928,15 +928,19 @@ func ResourceStorageControlProjectIntelligenceConfigFlatten(d *schema.ResourceDa
 	if err = d.Set("edition_config", flattenStorageControlProjectIntelligenceConfigEditionConfig(res["editionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenStorageControlProjectIntelligenceConfigUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("filter", flattenStorageControlProjectIntelligenceConfigFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("effective_intelligence_config", flattenStorageControlProjectIntelligenceConfigEffectiveIntelligenceConfig(res["effectiveIntelligenceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectIntelligenceConfig: %s", err)
 	}
+
 	if err = d.Set("trial_config", flattenStorageControlProjectIntelligenceConfigTrialConfig(res["trialConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectIntelligenceConfig: %s", err)
 	}

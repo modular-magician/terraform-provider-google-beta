@@ -669,21 +669,27 @@ func ResourceContactCenterInsightsQaScorecardFlatten(d *schema.ResourceData, met
 	if err = d.Set("create_time", flattenContactCenterInsightsQaScorecardCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}
+
 	if err = d.Set("description", flattenContactCenterInsightsQaScorecardDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenContactCenterInsightsQaScorecardDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}
+
 	if err = d.Set("is_default", flattenContactCenterInsightsQaScorecardIsDefault(res["isDefault"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}
+
 	if err = d.Set("name", flattenContactCenterInsightsQaScorecardName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}
+
 	if err = d.Set("source", flattenContactCenterInsightsQaScorecardSource(res["source"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenContactCenterInsightsQaScorecardUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QaScorecard: %s", err)
 	}

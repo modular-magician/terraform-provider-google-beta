@@ -606,15 +606,19 @@ func ResourceFirestoreDocumentFlatten(d *schema.ResourceData, meta interface{}, 
 	if err = d.Set("name", flattenFirestoreDocumentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Document: %s", err)
 	}
+
 	if err = d.Set("path", flattenFirestoreDocumentPath(res["path"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Document: %s", err)
 	}
+
 	if err = d.Set("fields", flattenFirestoreDocumentFields(res["fields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Document: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenFirestoreDocumentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Document: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenFirestoreDocumentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Document: %s", err)
 	}

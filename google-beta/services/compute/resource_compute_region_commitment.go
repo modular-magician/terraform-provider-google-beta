@@ -908,45 +908,59 @@ func ResourceComputeRegionCommitmentFlatten(d *schema.ResourceData, meta interfa
 	if err = d.Set("commitment_id", flattenComputeRegionCommitmentCommitmentId(res["id"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("creation_timestamp", flattenComputeRegionCommitmentCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("name", flattenComputeRegionCommitmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("description", flattenComputeRegionCommitmentDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("status", flattenComputeRegionCommitmentStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("status_message", flattenComputeRegionCommitmentStatusMessage(res["statusMessage"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("plan", flattenComputeRegionCommitmentPlan(res["plan"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("start_timestamp", flattenComputeRegionCommitmentStartTimestamp(res["startTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("end_timestamp", flattenComputeRegionCommitmentEndTimestamp(res["endTimestamp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("resources", flattenComputeRegionCommitmentResources(res["resources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("type", flattenComputeRegionCommitmentType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("category", flattenComputeRegionCommitmentCategory(res["category"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("license_resource", flattenComputeRegionCommitmentLicenseResource(res["licenseResource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("auto_renew", flattenComputeRegionCommitmentAutoRenew(res["autoRenew"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}
+
 	if err = d.Set("region", flattenComputeRegionCommitmentRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionCommitment: %s", err)
 	}

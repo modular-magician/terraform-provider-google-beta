@@ -1047,39 +1047,51 @@ func ResourceBigqueryAnalyticsHubDataExchangeSubscriptionFlatten(d *schema.Resou
 	if err = d.Set("name", flattenBigqueryAnalyticsHubDataExchangeSubscriptionName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("creation_time", flattenBigqueryAnalyticsHubDataExchangeSubscriptionCreationTime(res["creationTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("last_modify_time", flattenBigqueryAnalyticsHubDataExchangeSubscriptionLastModifyTime(res["lastModifyTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("organization_id", flattenBigqueryAnalyticsHubDataExchangeSubscriptionOrganizationId(res["organizationId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("organization_display_name", flattenBigqueryAnalyticsHubDataExchangeSubscriptionOrganizationDisplayName(res["organizationDisplayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("state", flattenBigqueryAnalyticsHubDataExchangeSubscriptionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("resource_type", flattenBigqueryAnalyticsHubDataExchangeSubscriptionResourceType(res["resourceType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("linked_dataset_map", flattenBigqueryAnalyticsHubDataExchangeSubscriptionLinkedDatasetMap(res["linkedDatasetMap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("linked_resources", flattenBigqueryAnalyticsHubDataExchangeSubscriptionLinkedResources(res["linkedResources"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("data_exchange", flattenBigqueryAnalyticsHubDataExchangeSubscriptionDataExchange(res["dataExchange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("log_linked_dataset_query_user_email", flattenBigqueryAnalyticsHubDataExchangeSubscriptionLogLinkedDatasetQueryUserEmail(res["logLinkedDatasetQueryUserEmail"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("subscription_id", flattenBigqueryAnalyticsHubDataExchangeSubscriptionSubscriptionId(res["subscriptionId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}
+
 	if err = d.Set("subscriber_contact", flattenBigqueryAnalyticsHubDataExchangeSubscriptionSubscriberContact(res["subscriberContact"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchangeSubscription: %s", err)
 	}

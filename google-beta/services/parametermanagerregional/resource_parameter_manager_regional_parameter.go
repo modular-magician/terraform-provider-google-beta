@@ -764,27 +764,35 @@ func ResourceParameterManagerRegionalRegionalParameterFlatten(d *schema.Resource
 	if err = d.Set("name", flattenParameterManagerRegionalRegionalParameterName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenParameterManagerRegionalRegionalParameterCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenParameterManagerRegionalRegionalParameterUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("policy_member", flattenParameterManagerRegionalRegionalParameterPolicyMember(res["policyMember"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("labels", flattenParameterManagerRegionalRegionalParameterLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("format", flattenParameterManagerRegionalRegionalParameterFormat(res["format"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("kms_key", flattenParameterManagerRegionalRegionalParameterKmsKey(res["kmsKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenParameterManagerRegionalRegionalParameterTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenParameterManagerRegionalRegionalParameterEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionalParameter: %s", err)
 	}

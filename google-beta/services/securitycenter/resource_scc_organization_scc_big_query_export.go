@@ -625,24 +625,31 @@ func ResourceSecurityCenterOrganizationSccBigQueryExportFlatten(d *schema.Resour
 	if err = d.Set("name", flattenSecurityCenterOrganizationSccBigQueryExportName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("description", flattenSecurityCenterOrganizationSccBigQueryExportDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("dataset", flattenSecurityCenterOrganizationSccBigQueryExportDataset(res["dataset"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenSecurityCenterOrganizationSccBigQueryExportCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenSecurityCenterOrganizationSccBigQueryExportUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("most_recent_editor", flattenSecurityCenterOrganizationSccBigQueryExportMostRecentEditor(res["mostRecentEditor"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("principal", flattenSecurityCenterOrganizationSccBigQueryExportPrincipal(res["principal"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}
+
 	if err = d.Set("filter", flattenSecurityCenterOrganizationSccBigQueryExportFilter(res["filter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSccBigQueryExport: %s", err)
 	}

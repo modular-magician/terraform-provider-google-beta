@@ -2857,75 +2857,99 @@ func ResourceLookerInstanceFlatten(d *schema.ResourceData, meta interface{}, res
 	if err = d.Set("admin_settings", flattenLookerInstanceAdminSettings(res["adminSettings"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("consumer_network", flattenLookerInstanceConsumerNetwork(res["consumerNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("controlled_egress_config", flattenLookerInstanceControlledEgressConfig(res["controlledEgressConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("controlled_egress_enabled", flattenLookerInstanceControlledEgressEnabled(res["controlledEgressEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenLookerInstanceCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("deny_maintenance_period", flattenLookerInstanceDenyMaintenancePeriod(res["denyMaintenancePeriod"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("egress_public_ip", flattenLookerInstanceEgressPublicIp(res["egressPublicIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("encryption_config", flattenLookerInstanceEncryptionConfig(res["encryptionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("fips_enabled", flattenLookerInstanceFipsEnabled(res["fipsEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("gemini_enabled", flattenLookerInstanceGeminiEnabled(res["geminiEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("ingress_private_ip", flattenLookerInstanceIngressPrivateIp(res["ingressPrivateIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("ingress_public_ip", flattenLookerInstanceIngressPublicIp(res["ingressPublicIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("looker_version", flattenLookerInstanceLookerVersion(res["lookerVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("looker_uri", flattenLookerInstanceLookerUri(res["lookerUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("maintenance_window", flattenLookerInstanceMaintenanceWindow(res["maintenanceWindow"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("periodic_export_config", flattenLookerInstancePeriodicExportConfig(res["periodicExportConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("platform_edition", flattenLookerInstancePlatformEdition(res["platformEdition"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("private_ip_enabled", flattenLookerInstancePrivateIpEnabled(res["privateIpEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("psc_config", flattenLookerInstancePscConfig(res["pscConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("psc_enabled", flattenLookerInstancePscEnabled(res["pscEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("public_ip_enabled", flattenLookerInstancePublicIpEnabled(res["publicIpEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("reserved_range", flattenLookerInstanceReservedRange(res["reservedRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenLookerInstanceUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("user_metadata", flattenLookerInstanceUserMetadata(res["userMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+
 	if err = d.Set("custom_domain", flattenLookerInstanceCustomDomain(res["customDomain"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

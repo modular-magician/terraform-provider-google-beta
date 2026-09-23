@@ -847,42 +847,55 @@ func ResourceEventarcEnrollmentFlatten(d *schema.ResourceData, meta interface{},
 	if err = d.Set("display_name", flattenEventarcEnrollmentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("message_bus", flattenEventarcEnrollmentMessageBus(res["messageBus"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("name", flattenEventarcEnrollmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("etag", flattenEventarcEnrollmentEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenEventarcEnrollmentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenEventarcEnrollmentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("labels", flattenEventarcEnrollmentLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("cel_match", flattenEventarcEnrollmentCelMatch(res["celMatch"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("destination", flattenEventarcEnrollmentDestination(res["destination"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("uid", flattenEventarcEnrollmentUid(res["uid"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("annotations", flattenEventarcEnrollmentAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("terraform_labels", flattenEventarcEnrollmentTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("effective_labels", flattenEventarcEnrollmentEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}
+
 	if err = d.Set("effective_annotations", flattenEventarcEnrollmentEffectiveAnnotations(res["annotations"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Enrollment: %s", err)
 	}

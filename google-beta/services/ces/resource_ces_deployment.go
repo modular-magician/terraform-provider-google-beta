@@ -1611,18 +1611,23 @@ func ResourceCESDeploymentFlatten(d *schema.ResourceData, meta interface{}, res 
 	if err = d.Set("channel_profile", flattenCESDeploymentChannelProfile(res["channelProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("create_time", flattenCESDeploymentCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("display_name", flattenCESDeploymentDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("etag", flattenCESDeploymentEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("name", flattenCESDeploymentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
+
 	if err = d.Set("update_time", flattenCESDeploymentUpdateTime(res["updateTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Deployment: %s", err)
 	}
