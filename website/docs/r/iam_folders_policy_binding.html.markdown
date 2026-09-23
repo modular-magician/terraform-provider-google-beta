@@ -149,10 +149,16 @@ The following arguments are supported:
 
 * `principal_set` -
   (Optional)
-  Required. Immutable. Full Resource Name of the principal set used for principal access boundary policy bindings.
+  Immutable. Full Resource Name of the principal set used for principal access boundary policy bindings.
   Examples for each one of the following supported principal set types:
   * Folder: `//cloudresourcemanager.googleapis.com/folders/FOLDER_ID`
   It must be parent by the policy binding's parent (the folder).
+
+* `resource` -
+  (Optional)
+  Immutable. Full Resource Name used for access policy bindings.
+  Examples:
+  * `//cloudresourcemanager.googleapis.com/folders/FOLDER_ID`
 
 <a name="nested_condition"></a>The `condition` block supports:
 
