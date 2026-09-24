@@ -2250,6 +2250,11 @@ The following arguments are supported:
   header is replaced with contents of hostRewrite. The value must be between 1 and
   255 characters.
 
+* `regex_rewrite` -
+  (Optional)
+  The regex rewrite to be applied to the URL. Only one of pathPrefixRewrite, pathTemplateRewrite, or regexRewrite may be specified.
+  Structure is [documented below](#nested_path_matcher_route_rules_route_action_url_rewrite_regex_rewrite).
+
 * `path_prefix_rewrite` -
   (Optional)
   Prior to forwarding the request to the selected backend service, the matching
@@ -2269,6 +2274,31 @@ The following arguments are supported:
   MatchRules specify pathTemplate.
   Only one of pathPrefixRewrite and pathTemplateRewrite may be
   specified.
+
+
+<a name="nested_path_matcher_route_rules_route_action_url_rewrite_regex_rewrite"></a>The `regex_rewrite` block supports:
+
+* `path_pattern` -
+  (Optional)
+  The regular expression used to match against the URL path.
+  It uses RE2 syntax with the following constraints:
+   - Any single character operators
+   - Groups are allowed to have only submatch operator inside
+   - Groups are allowed only without any char repetition, e.g. .*
+   - Any char repetition, e.g. .*, is only allowed to be used in a single regex together with:
+       - Empty string operators
+       - Other repetitions
+       - Ranges
+       - Repetitions of ranges
+   - Ranges are only allowed to have:
+       - Character range
+       - Digits range
+       - Symbols listed in characters allowed for ranges
+
+* `path_substitution` -
+  (Optional)
+  Required when path pattern is specified. Used to rewrite matching parts of
+  the path.
 
 <a name="nested_path_matcher_route_rules_route_action_weighted_backend_services"></a>The `weighted_backend_services` block supports:
 
