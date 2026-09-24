@@ -313,6 +313,9 @@ The following arguments are supported:
 * `kms_key_self_link` -
   (Optional)
   The name of the encryption key that is stored in Google Cloud KMS.
+  Note: Specify the Cloud KMS CryptoKey resource path without a version suffix
+  (e.g. `projects/[PROJECT]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]`).
+  Rotating snapshot to a specific crypto key version is not supported via terraform.
 
 * `kms_key_service_account` -
   (Optional)

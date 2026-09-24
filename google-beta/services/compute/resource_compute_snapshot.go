@@ -54,6 +54,23 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+// SnapshotKmsKeyDiffSuppress suppresses diffs between base KMS keys, self-links, and versioned keys
+func SnapshotKmsKeyDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
+	oldStripped, err := tpgresource.GetRelativePath(old)
+	if err != nil {
+		oldStripped = old
+	}
+	newStripped, err := tpgresource.GetRelativePath(new)
+	if err != nil {
+		newStripped = new
+	}
+
+	oldKey := strings.Split(oldStripped, "/cryptoKeyVersions")[0]
+	newKey := strings.Split(newStripped, "/cryptoKeyVersions")[0]
+
+	return oldKey == newKey
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -205,7 +222,6 @@ and values are in the format tagValues/456.`,
 			"snapshot_encryption_key": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				Description: `Encrypts the snapshot using a customer-supplied encryption key.
 
 After you encrypt a snapshot using a customer-supplied key, you must
@@ -223,10 +239,14 @@ key and you do not need to provide a key to use the snapshot later.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"kms_key_self_link": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							ForceNew:    true,
-							Description: `The name of the encryption key that is stored in Google Cloud KMS.`,
+							Type:             schema.TypeString,
+							Optional:         true,
+							DiffSuppressFunc: SnapshotKmsKeyDiffSuppress,
+							Description: `The name of the encryption key that is stored in Google Cloud KMS.
+
+Note: Specify the Cloud KMS CryptoKey resource path without a version suffix
+(e.g. 'projects/[PROJECT]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]').
+Rotating snapshot to a specific crypto key version is not supported via terraform.`,
 						},
 						"kms_key_service_account": {
 							Type:     schema.TypeString,
@@ -707,91 +727,106 @@ func resourceComputeSnapshotUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	config := meta.(*transport_tpg.Config)
+
+	// 'config' is provided by the boilerplate.
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
-	identity, err := d.Identity()
-	if err == nil && identity != nil {
-		if nameValue, ok := d.GetOk("name"); ok && nameValue.(string) != "" {
-			if err = identity.Set("name", nameValue.(string)); err != nil {
-				return fmt.Errorf("Error setting name: %s", err)
-			}
-		}
-		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
-			if err = identity.Set("project", projectValue.(string)); err != nil {
-				return fmt.Errorf("Error setting project: %s", err)
-			}
-		}
-	} else {
-		log.Printf("[DEBUG] (Update) identity not set: %s", err)
-	}
 
 	billingProject := ""
-
 	project, err := tpgresource.GetProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Snapshot: %s", err)
 	}
 	billingProject = project
+	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		billingProject = bp
+	}
 
 	d.Partial(true)
 
+	// 1. Labels (POST)
 	if d.HasChange("label_fingerprint") || d.HasChange("effective_labels") {
 		obj := make(map[string]interface{})
-
-		labelFingerprintProp, err := expandComputeSnapshotLabelFingerprint(d.Get("label_fingerprint"), d, config)
-		if err != nil {
-			return err
-		} else if v, ok := d.GetOkExists("label_fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelFingerprintProp)) {
-			obj["labelFingerprint"] = labelFingerprintProp
-		}
-		labelsProp, err := expandComputeSnapshotEffectiveLabels(d.Get("effective_labels"), d, config)
-		if err != nil {
-			return err
-		} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-			obj["labels"] = labelsProp
+		if v, ok := d.GetOk("label_fingerprint"); ok {
+			obj["labelFingerprint"] = v
 		}
 
-		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/global/snapshots/{{name}}/setLabels")
+		obj["labels"] = tpgresource.ExpandEffectiveLabels(d)
+
+		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/snapshots/{{name}}/setLabels")
 		if err != nil {
 			return err
-		}
-
-		headers := make(http.Header)
-
-		// err == nil indicates that the billing_project value was found
-		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-			billingProject = bp
 		}
 
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-			Headers:   headers,
+			Config: config, Method: "POST", Project: billingProject, RawURL: url, UserAgent: userAgent, Body: obj, Timeout: d.Timeout(schema.TimeoutUpdate),
 		})
 		if err != nil {
-			return fmt.Errorf("Error updating Snapshot %q: %s", d.Id(), err)
-		} else {
-			log.Printf("[DEBUG] Finished updating Snapshot %q: %#v", d.Id(), res)
+			return fmt.Errorf("Error updating Snapshot %q labels: %s", d.Id(), err)
 		}
-
-		err = ComputeOperationWaitTime(
-			config, res, project, "Updating Snapshot", userAgent,
-			d.Timeout(schema.TimeoutUpdate))
+		err = ComputeOperationWaitTime(config, res, project, "Updating Snapshot Labels", userAgent, d.Timeout(schema.TimeoutUpdate))
 		if err != nil {
 			return err
 		}
 	}
 
-	d.Partial(false)
+	// 2. KMS Key Update (POST)
+	if d.HasChange("snapshot_encryption_key") {
+		oldKey, newKey := d.GetChange("snapshot_encryption_key")
+		oldList := oldKey.([]interface{})
+		newList := newKey.([]interface{})
 
+		var oldKmsKey, newKmsKey string
+		if len(oldList) > 0 && oldList[0] != nil {
+			oldKmsKey = oldList[0].(map[string]interface{})["kms_key_self_link"].(string)
+		}
+		if len(newList) > 0 && newList[0] != nil {
+			newKmsKey = newList[0].(map[string]interface{})["kms_key_self_link"].(string)
+		}
+
+		// Converting a snapshot from CMEK to GMEK is not supported
+		if oldKmsKey != "" && newKmsKey == "" {
+			return fmt.Errorf("Removing 'snapshot_encryption_key' is not supported in-place. To remove the KMS key, please destroy and recreate the snapshot without a KMS key.")
+		}
+
+		if newKmsKey != "" {
+			obj := map[string]interface{}{
+				"kmsKeyName": newKmsKey,
+			}
+
+			// Global URL pattern for Snapshots
+			url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+d.Id()+"/updateKmsKey")
+			if err != nil {
+				return err
+			}
+
+			res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "POST",
+				Project:   billingProject,
+				RawURL:    url,
+				UserAgent: userAgent,
+				Body:      obj,
+				Timeout:   d.Timeout(schema.TimeoutUpdate),
+			})
+			if err != nil {
+				return fmt.Errorf("Error updating Snapshot %q KMS key: %s", d.Id(), err)
+			}
+
+			err = ComputeOperationWaitTime(
+				config, res, project, "Updating Snapshot KMS key", userAgent,
+				d.Timeout(schema.TimeoutUpdate))
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	d.Partial(false)
 	return resourceComputeSnapshotRead(d, meta)
+
 }
 
 func resourceComputeSnapshotDelete(d *schema.ResourceData, meta interface{}) error {
