@@ -88,6 +88,29 @@ Hello world!
 EOF
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=firebaseailogic_prompt_template_cmek&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Firebaseailogic Prompt Template Cmek
+
+
+```hcl
+resource "google_firebase_ai_logic_prompt_template" "cmek" {
+  provider = google-beta
+  location = "us-central1"
+  template_id = "cmek-template"
+  regional_propagation_disabled = true
+  kms_key_name = "kms-key"
+  template_string = <<EOF
+---
+model: gemini-2.5-flash
+---
+Hello world!
+EOF
+}
+```
 
 ## Argument Reference
 
@@ -111,6 +134,23 @@ The following arguments are supported:
 * `display_name` -
   (Optional)
   The display name of the PromptTemplate.
+
+* `kms_key_name` -
+  (Optional)
+  The Cloud KMS key used to encrypt this PromptTemplate at rest
+  (customer-managed encryption key, or CMEK).
+  Format:
+  projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}
+  Cloud KMS keys are regional resources and cannot be replicated across
+  regions, so a CMEK-encrypted PromptTemplate must use a regional
+  `location` that matches the key's location, and must set
+  `regional_propagation_disabled` to `true`. The `global` location is not
+  supported.
+  Before creating a CMEK-encrypted PromptTemplate, grant the Firebase AI
+  Logic service agent
+  (`service-{projectNumber}@gcp-sa-firebasevertexai.iam.gserviceaccount.com`)
+  the `roles/cloudkms.cryptoKeyEncrypterDecrypter` role on the key.
+  Changing this field re-encrypts the PromptTemplate with the new key.
 
 * `regional_propagation_disabled` -
   (Optional)
@@ -137,6 +177,11 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `create_time` -
   Timestamp when the PromptTemplate was created.
+
+* `kms_key_version_name` -
+  The Cloud KMS key version that this PromptTemplate is encrypted with.
+  Format:
+  projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}/cryptoKeyVersions/{cryptoKeyVersion}
 
 * `locked` -
   Indicates if the PromptTemplate has been locked for mutations.  It is

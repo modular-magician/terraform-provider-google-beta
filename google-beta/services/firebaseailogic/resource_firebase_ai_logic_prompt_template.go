@@ -164,6 +164,27 @@ PromptTemplate's resource name.`,
 				Optional:    true,
 				Description: `The display name of the PromptTemplate.`,
 			},
+			"kms_key_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The Cloud KMS key used to encrypt this PromptTemplate at rest
+(customer-managed encryption key, or CMEK).
+Format:
+projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}
+
+Cloud KMS keys are regional resources and cannot be replicated across
+regions, so a CMEK-encrypted PromptTemplate must use a regional
+'location' that matches the key's location, and must set
+'regional_propagation_disabled' to 'true'. The 'global' location is not
+supported.
+
+Before creating a CMEK-encrypted PromptTemplate, grant the Firebase AI
+Logic service agent
+('service-{projectNumber}@gcp-sa-firebasevertexai.iam.gserviceaccount.com')
+the 'roles/cloudkms.cryptoKeyEncrypterDecrypter' role on the key.
+
+Changing this field re-encrypts the PromptTemplate with the new key.`,
+			},
 			"regional_propagation_disabled": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -175,6 +196,13 @@ operation will also propagate to all applicable regions.`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Timestamp when the PromptTemplate was created.`,
+			},
+			"kms_key_version_name": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `The Cloud KMS key version that this PromptTemplate is encrypted with.
+Format:
+projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}/cryptoKeyVersions/{cryptoKeyVersion}`,
 			},
 			"locked": {
 				Type:     schema.TypeBool,
@@ -250,6 +278,12 @@ func resourceFirebaseAILogicPromptTemplateCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	kmsKeyNameProp, err := expandFirebaseAILogicPromptTemplateKmsKeyName(d.Get("kms_key_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(kmsKeyNameProp)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
+		obj["kmsKeyName"] = kmsKeyNameProp
 	}
 	templateStringProp, err := expandFirebaseAILogicPromptTemplateTemplateString(d.Get("template_string"), d, config)
 	if err != nil {
@@ -475,6 +509,12 @@ func resourceFirebaseAILogicPromptTemplateUpdate(d *schema.ResourceData, meta in
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	kmsKeyNameProp, err := expandFirebaseAILogicPromptTemplateKmsKeyName(d.Get("kms_key_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
+		obj["kmsKeyName"] = kmsKeyNameProp
+	}
 	templateStringProp, err := expandFirebaseAILogicPromptTemplateTemplateString(d.Get("template_string"), d, config)
 	if err != nil {
 		return err
@@ -493,6 +533,10 @@ func resourceFirebaseAILogicPromptTemplateUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("kms_key_name") {
+		updateMask = append(updateMask, "kmsKeyName")
 	}
 
 	if d.HasChange("template_string") {
@@ -633,6 +677,14 @@ func flattenFirebaseAILogicPromptTemplateDisplayName(v interface{}, d *schema.Re
 	return v
 }
 
+func flattenFirebaseAILogicPromptTemplateKmsKeyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenFirebaseAILogicPromptTemplateKmsKeyVersionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenFirebaseAILogicPromptTemplateLocked(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -665,6 +717,10 @@ func expandFirebaseAILogicPromptTemplateDisplayName(v interface{}, d tpgresource
 	return v, nil
 }
 
+func expandFirebaseAILogicPromptTemplateKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandFirebaseAILogicPromptTemplateTemplateString(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -679,6 +735,12 @@ func ResourceFirebaseAILogicPromptTemplateFlatten(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error reading PromptTemplate: %s", err)
 	}
 	if err = d.Set("display_name", flattenFirebaseAILogicPromptTemplateDisplayName(res["displayName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PromptTemplate: %s", err)
+	}
+	if err = d.Set("kms_key_name", flattenFirebaseAILogicPromptTemplateKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PromptTemplate: %s", err)
+	}
+	if err = d.Set("kms_key_version_name", flattenFirebaseAILogicPromptTemplateKmsKeyVersionName(res["kmsKeyVersionName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PromptTemplate: %s", err)
 	}
 	if err = d.Set("locked", flattenFirebaseAILogicPromptTemplateLocked(res["locked"], d, config)); err != nil {

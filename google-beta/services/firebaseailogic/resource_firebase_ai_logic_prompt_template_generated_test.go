@@ -32,6 +32,8 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaseailogic"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -185,6 +187,65 @@ resource "google_firebase_ai_logic_prompt_template" "basic" {
   provider = google-beta
   location = "global"
   template_id = "%{template_id}"
+  template_string = <<EOF
+---
+model: gemini-2.5-flash
+---
+Hello world!
+EOF
+}
+`, context)
+}
+
+func TestAccFirebaseAILogicPromptTemplate_firebaseailogicPromptTemplateCmekExample(t *testing.T) {
+	t.Parallel()
+	resourcemanager.BootstrapIamMembers(t, []resourcemanager.IamMember{
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-firebasevertexai.iam.gserviceaccount.com",
+			Role:   "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+		},
+	})
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+		"template_id":   "tf-test-cmek-template" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckFirebaseAILogicPromptTemplateDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFirebaseAILogicPromptTemplate_firebaseailogicPromptTemplateCmekExample(context),
+			},
+			{
+				ResourceName:            "google_firebase_ai_logic_prompt_template.cmek",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "regional_propagation_disabled"},
+			},
+			{
+				ResourceName:       "google_firebase_ai_logic_prompt_template.cmek",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccFirebaseAILogicPromptTemplate_firebaseailogicPromptTemplateCmekExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_firebase_ai_logic_prompt_template" "cmek" {
+  provider = google-beta
+  location = "us-central1"
+  template_id = "%{template_id}"
+  regional_propagation_disabled = true
+  kms_key_name = "%{kms_key_name}"
   template_string = <<EOF
 ---
 model: gemini-2.5-flash

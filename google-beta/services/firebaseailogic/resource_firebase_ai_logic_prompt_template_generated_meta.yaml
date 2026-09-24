@@ -11,6 +11,8 @@ autogen_version: 1
 fields:
     - api_field: createTime
     - api_field: displayName
+    - api_field: kmsKeyName
+    - api_field: kmsKeyVersionName
     - field: location
       provider_only: true
     - api_field: locked
