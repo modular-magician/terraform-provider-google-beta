@@ -217,6 +217,14 @@ The following arguments are supported:
   Private cloud must have a minimum of 3 nodes to add autoscale settings
   Structure is [documented below](#nested_management_cluster_autoscaling_settings).
 
+* `vsan_type` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Optional. The type of the vSAN.
+  Possible values:
+  * `VSAN_TYPE_OSA`: Standard (OSA) vSAN.
+  * `VSAN_TYPE_ESA`: Express Storage Architecture (ESA) vSAN.
+  Possible values are: `VSAN_TYPE_OSA`, `VSAN_TYPE_ESA`.
+
 
 <a name="nested_management_cluster_node_type_configs"></a>The `node_type_configs` block supports:
 

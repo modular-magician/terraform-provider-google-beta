@@ -420,6 +420,16 @@ Specify the zone in the following format: projects/{project}/locations/{location
 								},
 							},
 						},
+						"vsan_type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"VSAN_TYPE_OSA", "VSAN_TYPE_ESA", ""}),
+							Description: `Optional. The type of the vSAN.
+Possible values:
+* 'VSAN_TYPE_OSA': Standard (OSA) vSAN.
+* 'VSAN_TYPE_ESA': Express Storage Architecture (ESA) vSAN. Possible values: ["VSAN_TYPE_OSA", "VSAN_TYPE_ESA"]`,
+						},
 					},
 				},
 			},
@@ -1359,6 +1369,8 @@ func flattenVmwareenginePrivateCloudManagementCluster(v interface{}, d *schema.R
 		flattenVmwareenginePrivateCloudManagementClusterStretchedClusterConfig(original["stretchedClusterConfig"], d, config)
 	transformed["autoscaling_settings"] =
 		flattenVmwareenginePrivateCloudManagementClusterAutoscalingSettings(original["autoscalingSettings"], d, config)
+	transformed["vsan_type"] =
+		flattenVmwareenginePrivateCloudManagementClusterVsanType(original["vsanType"], d, config)
 	return []interface{}{transformed}
 }
 func flattenVmwareenginePrivateCloudManagementClusterClusterId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1682,6 +1694,10 @@ func flattenVmwareenginePrivateCloudManagementClusterAutoscalingSettingsCoolDown
 	return v
 }
 
+func flattenVmwareenginePrivateCloudManagementClusterVsanType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenVmwareenginePrivateCloudHcx(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1903,6 +1919,13 @@ func expandVmwareenginePrivateCloudManagementCluster(v interface{}, d tpgresourc
 		return nil, err
 	} else if val := reflect.ValueOf(transformedAutoscalingSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["autoscalingSettings"] = transformedAutoscalingSettings
+	}
+
+	transformedVsanType, err := expandVmwareenginePrivateCloudManagementClusterVsanType(original["vsan_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVsanType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["vsanType"] = transformedVsanType
 	}
 
 	return transformed, nil
@@ -2213,6 +2236,10 @@ func expandVmwareenginePrivateCloudManagementClusterAutoscalingSettingsMaxCluste
 }
 
 func expandVmwareenginePrivateCloudManagementClusterAutoscalingSettingsCoolDownPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareenginePrivateCloudManagementClusterVsanType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

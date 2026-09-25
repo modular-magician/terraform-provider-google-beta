@@ -571,6 +571,16 @@ Once the customer is created then corecount cannot be changed.`,
 					},
 				},
 			},
+			"vsan_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"VSAN_TYPE_OSA", "VSAN_TYPE_ESA", ""}),
+				Description: `Optional. The type of the vSAN.
+Possible values:
+* 'VSAN_TYPE_OSA': Standard (OSA) vSAN.
+* 'VSAN_TYPE_ESA': Express Storage Architecture (ESA) vSAN. Possible values: ["VSAN_TYPE_OSA", "VSAN_TYPE_ESA"]`,
+			},
 			"create_time": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -639,6 +649,12 @@ func resourceVmwareengineClusterCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("autoscaling_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(autoscalingSettingsProp)) && (ok || !reflect.DeepEqual(v, autoscalingSettingsProp)) {
 		obj["autoscalingSettings"] = autoscalingSettingsProp
+	}
+	vsanTypeProp, err := expandVmwareengineClusterVsanType(d.Get("vsan_type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("vsan_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(vsanTypeProp)) && (ok || !reflect.DeepEqual(v, vsanTypeProp)) {
+		obj["vsanType"] = vsanTypeProp
 	}
 	datastoreMountConfigProp, err := expandVmwareengineClusterDatastoreMountConfig(d.Get("datastore_mount_config"), d, config)
 	if err != nil {
@@ -1342,6 +1358,10 @@ func flattenVmwareengineClusterAutoscalingSettingsCoolDownPeriod(v interface{}, 
 	return v
 }
 
+func flattenVmwareengineClusterVsanType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenVmwareengineClusterDatastoreMountConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1718,6 +1738,10 @@ func expandVmwareengineClusterAutoscalingSettingsCoolDownPeriod(v interface{}, d
 	return v, nil
 }
 
+func expandVmwareengineClusterVsanType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandVmwareengineClusterDatastoreMountConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1897,6 +1921,9 @@ func ResourceVmwareengineClusterFlatten(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
 	if err = d.Set("autoscaling_settings", flattenVmwareengineClusterAutoscalingSettings(res["autoscalingSettings"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
+	if err = d.Set("vsan_type", flattenVmwareengineClusterVsanType(res["vsanType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
 	if err = d.Set("datastore_mount_config", flattenVmwareengineClusterDatastoreMountConfig(res["datastoreMountConfig"], d, config)); err != nil {
