@@ -39,6 +39,7 @@ To get more information about GuestPolicies, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Guest Policies Basic
 
 
@@ -91,6 +92,7 @@ resource "google_os_config_guest_policies" "guest_policies" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Guest Policies Packages
 
 
@@ -155,6 +157,7 @@ resource "google_os_config_guest_policies" "guest_policies" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Guest Policies Recipes
 
 

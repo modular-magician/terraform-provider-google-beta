@@ -42,6 +42,7 @@ To get more information about BackendBucket, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Bucket Basic
 
 
@@ -63,6 +64,7 @@ resource "google_storage_bucket" "image_bucket" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Bucket Security Policy
 
 
@@ -91,6 +93,7 @@ resource "google_compute_security_policy" "policy" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Bucket Query String Whitelist
 
 
@@ -117,6 +120,7 @@ resource "google_storage_bucket" "image_bucket" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Bucket Include Http Headers
 
 

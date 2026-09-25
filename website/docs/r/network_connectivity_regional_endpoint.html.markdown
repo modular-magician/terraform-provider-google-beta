@@ -35,6 +35,7 @@ To get more information about RegionalEndpoint, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Regional Endpoint Regional Access
 
 
@@ -68,6 +69,7 @@ resource "google_network_connectivity_regional_endpoint" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Regional Endpoint Global Access
 
 

@@ -33,6 +33,7 @@ To get more information about ResourcePolicy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Basic
 
 
@@ -55,6 +56,7 @@ resource "google_compute_resource_policy" "foo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Full
 
 
@@ -88,6 +90,7 @@ resource "google_compute_resource_policy" "bar" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Placement Policy
 
 
@@ -106,6 +109,7 @@ resource "google_compute_resource_policy" "baz" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Placement Policy Max Distance
 
 
@@ -126,6 +130,7 @@ resource "google_compute_resource_policy" "baz" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Instance Schedule Policy
 
 
@@ -150,6 +155,7 @@ resource "google_compute_resource_policy" "hourly" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Snapshot Schedule Chain Name
 
 
@@ -185,6 +191,7 @@ resource "google_compute_resource_policy" "hourly" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Consistency Group
 
 
@@ -202,6 +209,7 @@ resource "google_compute_resource_policy" "cgroup" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Workload Policy
 
 
@@ -219,6 +227,7 @@ resource "google_compute_resource_policy" "bar" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Workload Policy Accelerator Topology
 
 
@@ -237,6 +246,7 @@ resource "google_compute_resource_policy" "bar" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Workload Policy Accelerator Topology Mode
 
 
@@ -257,6 +267,7 @@ resource "google_compute_resource_policy" "bar" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Workload Policy Max Topology Distance
 
 
@@ -275,6 +286,7 @@ resource "google_compute_resource_policy" "bar" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Placement Policy Gpu Topology
 
 
@@ -293,6 +305,7 @@ resource "google_compute_resource_policy" "baz" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Resource Policy Placement Policy Tpu Topology
 
 

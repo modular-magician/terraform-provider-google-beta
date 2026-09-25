@@ -35,6 +35,7 @@ To get more information about BlockchainNodes, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Blockchain Nodes Basic
 
 
@@ -65,6 +66,7 @@ resource "google_blockchain_node_engine_blockchain_nodes" "default_node" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Blockchain Nodes Geth Details
 
 
@@ -98,6 +100,7 @@ resource "google_blockchain_node_engine_blockchain_nodes" "default_node_geth" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Blockchain Nodes Beacon Fee Recipient
 
 

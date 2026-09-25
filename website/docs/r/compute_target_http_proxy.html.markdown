@@ -37,6 +37,7 @@ To get more information about TargetHttpProxy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Http Proxy Basic
 
 
@@ -88,6 +89,7 @@ resource "google_compute_http_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Http Proxy Http Keep Alive Timeout
 
 
@@ -140,6 +142,7 @@ resource "google_compute_http_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Http Proxy Https Redirect
 
 
@@ -162,6 +165,7 @@ resource "google_compute_url_map" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Http Proxy Fingerprint
 
 

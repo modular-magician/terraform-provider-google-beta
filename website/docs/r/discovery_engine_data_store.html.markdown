@@ -38,6 +38,7 @@ To get more information about DataStore, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Discoveryengine Datastore Basic
 
 
@@ -58,6 +59,7 @@ resource "google_discovery_engine_data_store" "basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Discoveryengine Datastore Kms Key Name
 
 
@@ -79,6 +81,7 @@ resource "google_discovery_engine_data_store" "kms_key_name" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Discoveryengine Datastore Document Processing Config
 
 
@@ -109,6 +112,7 @@ resource "google_discovery_engine_data_store" "document_processing_config" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Discoveryengine Datastore Advanced Site Search Config
 
 

@@ -35,6 +35,7 @@ To get more information about Network, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Basic
 
 
@@ -43,6 +44,7 @@ resource "google_compute_network" "vpc_network" {
   name = "vpc-network"
 }
 ```
+
 ## Example Usage - Network Custom Mtu
 
 
@@ -54,6 +56,7 @@ resource "google_compute_network" "vpc_network" {
   mtu                     = 1460
 }
 ```
+
 ## Example Usage - Network Custom Firewall Enforcement Order
 
 
@@ -65,6 +68,7 @@ resource "google_compute_network" "vpc_network" {
   network_firewall_policy_enforcement_order = "BEFORE_CLASSIC_FIREWALL"
 }
 ```
+
 ## Example Usage - Network Bgp Best Path Selection Mode
 
 
@@ -75,6 +79,7 @@ resource "google_compute_network" "vpc_network" {
   routing_mode                              = "GLOBAL"
 }
 ```
+
 ## Example Usage - Network Bgp Best Path Selection Mode Standard
 
 
@@ -86,6 +91,7 @@ resource "google_compute_network" "vpc_network" {
   bgp_best_path_selection_mode              = "STANDARD"
 }
 ```
+
 ## Example Usage - Network Bgp Best Path Selection Mode Standard Custom Fields
 
 
@@ -99,6 +105,7 @@ resource "google_compute_network" "vpc_network" {
   bgp_inter_region_cost                     = "ADD_COST_TO_MED"
 }
 ```
+
 ## Example Usage - Network Bgp Standard Mode Delete Med
 
 

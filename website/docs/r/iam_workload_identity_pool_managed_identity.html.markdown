@@ -36,6 +36,7 @@ To get more information about WorkloadIdentityPoolManagedIdentity, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Managed Identity Basic
 
 
@@ -56,6 +57,7 @@ resource "google_iam_workload_identity_pool_managed_identity" "example" {
   workload_identity_pool_managed_identity_id = "example-managed-identity"
 }
 ```
+
 ## Example Usage - Iam Workload Identity Pool Managed Identity Full
 
 

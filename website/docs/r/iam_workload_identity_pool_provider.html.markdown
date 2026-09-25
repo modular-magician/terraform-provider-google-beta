@@ -35,6 +35,7 @@ To get more information about WorkloadIdentityPoolProvider, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Aws Basic
 
 
@@ -56,6 +57,7 @@ resource "google_iam_workload_identity_pool_provider" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Aws Full
 
 
@@ -86,6 +88,7 @@ resource "google_iam_workload_identity_pool_provider" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Github Actions
 
 
@@ -122,6 +125,7 @@ EOT
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Oidc Basic
 
 
@@ -146,6 +150,7 @@ resource "google_iam_workload_identity_pool_provider" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Oidc Full
 
 
@@ -182,6 +187,7 @@ EOT
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Saml Basic
 
 
@@ -208,6 +214,7 @@ resource "google_iam_workload_identity_pool_provider" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Saml Full
 
 
@@ -237,6 +244,7 @@ resource "google_iam_workload_identity_pool_provider" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider Oidc Upload Key
 
 
@@ -274,6 +282,7 @@ EOT
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider X509 Basic
 
 
@@ -302,6 +311,7 @@ resource "google_iam_workload_identity_pool_provider" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Provider X509 Full
 
 

@@ -35,6 +35,7 @@ To get more information about ServerTlsPolicy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Server Tls Policy Basic
 
 
@@ -65,6 +66,7 @@ resource "google_network_security_server_tls_policy" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Server Tls Policy Advanced
 
 
@@ -87,6 +89,7 @@ resource "google_network_security_server_tls_policy" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Server Tls Policy Server Cert
 
 
@@ -111,6 +114,7 @@ resource "google_network_security_server_tls_policy" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Server Tls Policy Mtls
 
 

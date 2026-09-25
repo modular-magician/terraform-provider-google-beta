@@ -41,6 +41,7 @@ values will be stored in the raw state as plain text: `authentication.google_acc
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scan Config Basic
 
 
@@ -62,6 +63,7 @@ resource "google_security_scanner_scan_config" "scan-config" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scan Config Ignore Http Status Errors
 
 
@@ -90,6 +92,7 @@ resource "google_security_scanner_scan_config" "scan-config" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scan Config Static Ip
 
 

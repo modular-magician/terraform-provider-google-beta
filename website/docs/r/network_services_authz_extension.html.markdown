@@ -28,6 +28,7 @@ To get more information about AuthzExtension, see:
 
 * [API documentation](https://cloud.google.com/service-extensions/docs/reference/rest/v1beta1/projects.locations.authzExtensions)
 
+
 ## Example Usage - Network Services Authz Extension Basic
 
 
@@ -56,6 +57,7 @@ resource "google_network_services_authz_extension" "default" {
   forward_headers       = ["Authorization"]
 }
 ```
+
 ## Example Usage - Network Services Authz Extension Basic With Auth Grpc
 
 
@@ -92,6 +94,7 @@ resource "google_network_services_authz_extension" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Services Authz Extension Iap
 
 

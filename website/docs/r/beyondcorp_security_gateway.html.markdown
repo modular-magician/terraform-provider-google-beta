@@ -30,6 +30,7 @@ Deployment of Security Gateway.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Basic
 
 
@@ -45,6 +46,7 @@ resource "google_beyondcorp_security_gateway" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Logging
 
 
@@ -61,6 +63,7 @@ resource "google_beyondcorp_security_gateway" "example-logging" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Spa
 
 

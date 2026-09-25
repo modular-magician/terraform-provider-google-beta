@@ -37,6 +37,7 @@ in the format projects/{{destination_project}}/locations/{{destination_location}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Subscription Basic
 
 
@@ -85,6 +86,7 @@ resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
   }
 }
 ```
+
 ## Example Usage - Bigquery Analyticshub Listing Subscription Multiregion
 
 
@@ -127,6 +129,7 @@ resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Subscription Pubsub
 
 

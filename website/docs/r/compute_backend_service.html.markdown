@@ -51,6 +51,7 @@ values will be stored in the raw state as plain text: `iap.oauth2_client_id`, `i
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Basic
 
 
@@ -75,6 +76,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service External Iap
 
 
@@ -95,6 +97,7 @@ resource "google_compute_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Cache Simple
 
 
@@ -123,6 +126,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Cache Include Http Headers
 
 
@@ -146,6 +150,7 @@ resource "google_compute_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Cache Include Named Cookies
 
 
@@ -172,6 +177,7 @@ resource "google_compute_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Cache
 
 
@@ -205,6 +211,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Cache Bypass Cache On Request Headers
 
 
@@ -246,6 +253,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Traffic Director Round Robin
 
 
@@ -273,6 +281,7 @@ resource "google_compute_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Traffic Director Ring Hash
 
 
@@ -324,6 +333,7 @@ resource "google_compute_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Stateful Session Affinity
 
 
@@ -360,6 +370,7 @@ resource "google_compute_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Network Endpoint
 
 
@@ -398,6 +409,7 @@ resource "google_compute_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service In Flight
 
 
@@ -488,6 +500,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service External Managed
 
 
@@ -511,6 +524,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Ip Address Selection Policy
 
 
@@ -526,6 +540,7 @@ resource "google_compute_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Custom Metrics
 
 
@@ -591,6 +606,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Tls Settings
 
 
@@ -624,6 +640,7 @@ resource "google_network_security_backend_authentication_config" "default" {
   well_known_roots = "PUBLIC_ROOTS"
 }
 ```
+
 ## Example Usage - Backend Service Dynamic Backends
 
 
@@ -745,6 +762,7 @@ resource "google_compute_url_map" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Dynamic Forwarding
 
 

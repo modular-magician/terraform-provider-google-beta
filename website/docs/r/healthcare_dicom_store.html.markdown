@@ -37,6 +37,7 @@ To get more information about DicomStore, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Dicom Store Basic
 
 
@@ -68,6 +69,7 @@ resource "google_healthcare_dataset" "dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Dicom Store Bq Stream
 
 

@@ -38,6 +38,7 @@ To get more information about HaVpnGateway, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ha Vpn Gateway Basic
 
 
@@ -58,6 +59,7 @@ resource "google_compute_network" "network1" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ha Vpn Gateway Ipv6
 
 
@@ -77,6 +79,7 @@ resource "google_compute_network" "network1" {
   auto_create_subnetworks = false
 }
 ```
+
 ## Example Usage - Compute Ha Vpn Gateway Encrypted Interconnect
 
 

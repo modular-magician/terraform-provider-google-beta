@@ -39,6 +39,7 @@ values will be stored in the raw state as plain text: `vector_db_config.api_auth
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Rag Corpus Basic
 
 
@@ -69,6 +70,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Rag Corpus Full
 
 
@@ -106,6 +108,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Rag Corpus Search
 
 
@@ -128,6 +131,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Rag Corpus Pinecone
 
 
@@ -164,6 +168,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Rag Corpus Vertex Vector Search
 
 
@@ -233,6 +238,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Rag Corpus Secret Manager
 
 

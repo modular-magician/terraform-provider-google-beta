@@ -37,6 +37,7 @@ values will be stored in the raw state as plain text: `sensitive_query_string`.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Hook Basic
 
 
@@ -72,6 +73,7 @@ resource "google_secure_source_manager_hook" "basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Hook With Fields
 
 

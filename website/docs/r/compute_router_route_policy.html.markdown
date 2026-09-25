@@ -35,6 +35,7 @@ To get more information about RouterRoutePolicy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Router Route Policy Export
 
 
@@ -78,6 +79,7 @@ resource "google_compute_router_route_policy" "rp-export" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Router Route Policy Import
 
 

@@ -58,6 +58,7 @@ To get more information about Subnetwork, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Basic
 
 
@@ -83,6 +84,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Logging Config
 
 
@@ -110,6 +112,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Internal L7lb
 
 
@@ -137,6 +140,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Ipv6
 
 
@@ -163,6 +167,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Internal Ipv6
 
 
@@ -190,6 +195,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Purpose Private Nat
 
 
@@ -216,6 +222,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Resolve Subnet Mask
 
 
@@ -241,6 +248,7 @@ resource "google_compute_network" "custom-test" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Cidr Overlap
 
 
@@ -265,6 +273,7 @@ resource "google_compute_network" "net-cidr-overlap" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Reserved Internal Range
 
 
@@ -300,6 +309,7 @@ resource "google_network_connectivity_internal_range" "reserved" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork Reserved Secondary Range
 
 
@@ -352,6 +362,7 @@ resource "google_network_connectivity_internal_range" "reserved_secondary" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Subnetwork With Secondary Ipv6 Range
 
 

@@ -39,6 +39,7 @@ To get more information about MirroringEndpointGroup, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Mirroring Endpoint Group Basic
 
 
@@ -69,6 +70,7 @@ resource "google_network_security_mirroring_endpoint_group" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Mirroring Endpoint Group Broker Basic
 
 

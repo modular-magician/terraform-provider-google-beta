@@ -42,6 +42,7 @@ values will be stored in the raw state as plain text: `self_managed.certificate_
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Google Managed Certificate Dns
 
 
@@ -83,6 +84,7 @@ resource "google_certificate_manager_dns_authorization" "instance2" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Google Managed Certificate Issuance Config
 
 
@@ -166,6 +168,7 @@ resource "google_privateca_certificate_authority" "ca_authority" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Self Managed Certificate
 
 
@@ -185,6 +188,7 @@ resource "google_certificate_manager_certificate" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Self Managed Certificate Write Only
 
 
@@ -205,6 +209,7 @@ resource "google_certificate_manager_certificate" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Self Managed Certificate Regional
 
 
@@ -224,6 +229,7 @@ resource "google_certificate_manager_certificate" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Google Managed Certificate Issuance Config All Regions
 
 
@@ -307,6 +313,7 @@ resource "google_privateca_certificate_authority" "ca_authority" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Google Managed Certificate Dns All Regions
 
 
@@ -345,6 +352,7 @@ resource "google_certificate_manager_dns_authorization" "instance2" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Google Managed Regional Certificate Dns Auth
 
 
@@ -374,6 +382,7 @@ resource "google_certificate_manager_dns_authorization" "instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Client Auth Certificate
 
 

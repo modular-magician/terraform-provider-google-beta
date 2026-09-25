@@ -35,6 +35,7 @@ To get more information about Repository, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Basic
 
 
@@ -51,6 +52,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Multi Region
 
 
@@ -67,6 +69,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Docker
 
 
@@ -87,6 +90,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Cmek
 
 
@@ -115,6 +119,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Virtual
 
 
@@ -159,6 +164,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote
 
 
@@ -182,6 +188,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Connector
 
 
@@ -235,6 +242,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Apt
 
 
@@ -261,6 +269,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Yum
 
 
@@ -287,6 +296,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Cleanup
 
 
@@ -345,6 +355,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Dockerhub Auth
 
 
@@ -395,6 +406,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Docker Custom With Auth
 
 
@@ -447,6 +459,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Maven Custom With Auth
 
 
@@ -499,6 +512,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Npm Custom With Auth
 
 
@@ -551,6 +565,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Python Custom With Auth
 
 
@@ -603,6 +618,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Common Repository With Docker
 
 
@@ -633,6 +649,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Common Repository With Artifact Registry Uri
 
 
@@ -666,6 +683,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Remote Common Repository With Custom Upstream
 
 
@@ -716,6 +734,7 @@ resource "google_artifact_registry_repository" "my-repo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Artifact Registry Repository Vulnerability Scanning
 
 

@@ -38,6 +38,7 @@ To get more information about WorkloadIdentityPool, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Basic
 
 
@@ -51,6 +52,7 @@ resource "google_iam_workload_identity_pool" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Iam Workload Identity Pool Full Federation Only Mode
 
 
@@ -63,6 +65,7 @@ resource "google_iam_workload_identity_pool" "example" {
   mode                      = "FEDERATION_ONLY"
 }
 ```
+
 ## Example Usage - Iam Workload Identity Pool Full Trust Domain Mode
 
 
@@ -109,6 +112,7 @@ resource "google_iam_workload_identity_pool" "example" {
   }
 }
 ```
+
 ## Example Usage - Iam Workload Identity Pool Full Trust Domain Mode With Default Shared Ca
 
 

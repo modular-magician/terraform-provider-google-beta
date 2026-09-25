@@ -30,6 +30,7 @@ To get more information about Endpoint, see:
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/vertex-ai/docs)
 
+
 ## Example Usage - Vertex Ai Endpoint Network
 
 
@@ -102,6 +103,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Endpoint Private Service Connect
 
 
@@ -139,6 +141,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Endpoint Dedicated Endpoint
 
 

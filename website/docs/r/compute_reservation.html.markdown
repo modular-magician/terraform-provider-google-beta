@@ -42,6 +42,7 @@ To get more information about Reservation, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Reservation Basic
 
 
@@ -64,6 +65,7 @@ resource "google_compute_reservation" "gce_reservation" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Reservation Basic Beta
 
 
@@ -90,6 +92,7 @@ resource "google_compute_reservation" "gce_reservation" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Reservation Source Instance Template
 
 
@@ -148,6 +151,7 @@ resource "google_compute_reservation" "gce_reservation_source_instance_template"
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Reservation Sharing Policy
 
 

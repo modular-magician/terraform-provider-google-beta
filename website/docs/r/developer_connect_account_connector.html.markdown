@@ -30,6 +30,7 @@ Description
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Account Connector Github
 
 
@@ -49,6 +50,7 @@ resource "google_developer_connect_account_connector" "my-account-connector" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Account Connector Gitlab
 
 
@@ -68,6 +70,7 @@ resource "google_developer_connect_account_connector" "my-account-connector" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Account Connector Ghe
 
 
@@ -124,6 +127,7 @@ resource "google_developer_connect_account_connector" "my-account-connector" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Account Connector Gle
 
 
@@ -180,6 +184,7 @@ resource "google_developer_connect_account_connector" "my-account-connector" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Account Connector Bbdc
 
 

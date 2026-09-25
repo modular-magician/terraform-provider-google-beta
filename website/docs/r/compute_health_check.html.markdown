@@ -49,6 +49,7 @@ To get more information about HealthCheck, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Tcp
 
 
@@ -69,6 +70,7 @@ resource "google_compute_health_check" "tcp-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Tcp Full
 
 
@@ -96,6 +98,7 @@ resource "google_compute_health_check" "tcp-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Ssl
 
 
@@ -116,6 +119,7 @@ resource "google_compute_health_check" "ssl-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Ssl Full
 
 
@@ -143,6 +147,7 @@ resource "google_compute_health_check" "ssl-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Http
 
 
@@ -163,6 +168,7 @@ resource "google_compute_health_check" "http-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Http Full
 
 
@@ -191,6 +197,7 @@ resource "google_compute_health_check" "http-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Https
 
 
@@ -211,6 +218,7 @@ resource "google_compute_health_check" "https-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Https Full
 
 
@@ -239,6 +247,7 @@ resource "google_compute_health_check" "https-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Http2
 
 
@@ -259,6 +268,7 @@ resource "google_compute_health_check" "http2-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Http2 Full
 
 
@@ -287,6 +297,7 @@ resource "google_compute_health_check" "http2-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Grpc
 
 
@@ -307,6 +318,7 @@ resource "google_compute_health_check" "grpc-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Grpc Full
 
 
@@ -329,6 +341,7 @@ resource "google_compute_health_check" "grpc-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Grpc With Tls
 
 
@@ -349,6 +362,7 @@ resource "google_compute_health_check" "grpc-with-tls-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check Grpc With Tls Full
 
 
@@ -374,6 +388,7 @@ resource "google_compute_health_check" "grpc-with-tls-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Health Check With Logging
 
 
@@ -400,6 +415,7 @@ resource "google_compute_health_check" "health-check-with-logging" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Health Check Http Source Regions
 
 
@@ -421,6 +437,7 @@ resource "google_compute_health_check" "http-health-check-with-source-regions" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Health Check Https Source Regions
 
 
@@ -442,6 +459,7 @@ resource "google_compute_health_check" "https-health-check-with-source-regions" 
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Health Check Tcp Source Regions
 
 

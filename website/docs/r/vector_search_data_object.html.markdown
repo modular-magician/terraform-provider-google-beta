@@ -53,6 +53,7 @@ longer available and DataObjects must be created via `CreateDataObject`
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vectorsearch Data Object Basic
 
 
@@ -122,6 +123,7 @@ resource "google_vector_search_data_object" "example-data-object" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vectorsearch Data Object With Vectors
 
 

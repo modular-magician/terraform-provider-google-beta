@@ -35,6 +35,7 @@ To get more information about LbRouteExtension, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Services Lb Route Extension Basic
 
 
@@ -400,6 +401,7 @@ resource "google_compute_region_backend_service" "callouts_backend" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Services Lb Route Extension Observability
 
 

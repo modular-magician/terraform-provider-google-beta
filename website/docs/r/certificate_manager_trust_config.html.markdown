@@ -39,6 +39,7 @@ values will be stored in the raw state as plain text: `trust_stores.trust_anchor
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Trust Config
 
 
@@ -67,6 +68,7 @@ resource "google_certificate_manager_trust_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Certificate Manager Trust Config Allowlisted Certificates
 
 

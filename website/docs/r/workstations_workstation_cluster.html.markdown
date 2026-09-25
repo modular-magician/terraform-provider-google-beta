@@ -35,6 +35,7 @@ To get more information about WorkstationCluster, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Cluster Basic
 
 
@@ -74,6 +75,7 @@ resource "google_compute_subnetwork" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Cluster Private
 
 
@@ -117,6 +119,7 @@ resource "google_compute_subnetwork" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Cluster Custom Domain
 
 
@@ -164,6 +167,7 @@ resource "google_compute_subnetwork" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Cluster Tags
 
 
@@ -209,6 +213,7 @@ resource "google_compute_subnetwork" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Cluster Custom Urls
 
 

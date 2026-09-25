@@ -33,6 +33,7 @@ To get more information about BackendAuthenticationConfig, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Backend Authentication Config Basic
 
 
@@ -51,6 +52,7 @@ resource "google_network_security_backend_authentication_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Backend Authentication Config Full
 
 
@@ -104,6 +106,7 @@ resource "google_network_security_backend_authentication_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Backend Service Tls Settings
 
 

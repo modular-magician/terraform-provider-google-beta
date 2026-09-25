@@ -37,6 +37,7 @@ To get more information about RepositoryWorkflowConfig, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataform Repository Workflow Config
 
 
@@ -148,6 +149,7 @@ resource "google_dataform_repository_workflow_config" "workflow" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataform Repository Workflow Config With Disabled
 
 

@@ -50,6 +50,7 @@ values will be stored in the raw state as plain text: `snapshot_encryption_key.r
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Snapshot Basic
 
 
@@ -82,6 +83,7 @@ resource "google_compute_disk" "persistent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Snapshot Basic2
 
 
@@ -118,6 +120,7 @@ resource "google_compute_disk" "persistent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Snapshot Basic Source Instant Snapshot
 
 
@@ -157,6 +160,7 @@ resource "google_compute_disk" "persistent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Snapshot Chainname
 
 

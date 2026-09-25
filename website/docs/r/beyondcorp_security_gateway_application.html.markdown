@@ -30,6 +30,7 @@ Specifies application endpoint(s) to protect behind a Security Gateway.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Application Basic
 
 
@@ -54,6 +55,7 @@ resource "google_beyondcorp_security_gateway_application" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Application Vpc
 
 
@@ -88,6 +90,7 @@ resource "google_beyondcorp_security_gateway_application" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Application Spa Api
 
 
@@ -119,6 +122,7 @@ resource "google_beyondcorp_security_gateway_application" "example-spa" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Beyondcorp Security Gateway Application Spa Proxy
 
 

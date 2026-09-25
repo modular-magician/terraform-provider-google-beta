@@ -36,6 +36,7 @@ To get more information about Instance, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Looker Instance Basic
 
 
@@ -56,6 +57,7 @@ resource "google_looker_instance" "looker-instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Looker Instance Full
 
 
@@ -107,6 +109,7 @@ resource "google_looker_instance" "looker-instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Looker Instance Fips
 
 
@@ -123,6 +126,7 @@ resource "google_looker_instance" "looker-instance" {
   }  
 }
 ```
+
 ## Example Usage - Looker Instance Enterprise Full
 
 
@@ -209,6 +213,7 @@ resource "google_kms_crypto_key_iam_member" "crypto_key" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Looker Instance Custom Domain
 
 
@@ -233,6 +238,7 @@ resource "google_looker_instance" "looker-instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Looker Instance Psc
 
 
@@ -276,6 +282,7 @@ resource "google_looker_instance" "looker-instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Looker Instance Force Delete
 
 

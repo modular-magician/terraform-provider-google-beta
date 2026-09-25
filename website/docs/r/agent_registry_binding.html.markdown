@@ -25,6 +25,7 @@ Represents a user-defined Binding.
 
 
 
+
 ## Example Usage - Agent Registry Binding Basic
 
 

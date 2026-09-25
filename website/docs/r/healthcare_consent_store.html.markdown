@@ -35,6 +35,7 @@ To get more information about ConsentStore, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Consent Store Basic
 
 
@@ -54,6 +55,7 @@ resource "google_healthcare_consent_store" "my-consent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Consent Store Full
 
 
@@ -81,6 +83,7 @@ resource "google_healthcare_consent_store" "my-consent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Consent Store Iam
 
 

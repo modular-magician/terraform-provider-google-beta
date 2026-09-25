@@ -35,6 +35,7 @@ To get more information about ApplicationEnvironment, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataprocgdc Applicationenvironment Basic
 
 
@@ -52,6 +53,7 @@ resource "google_dataproc_gdc_application_environment" "application-environment"
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataprocgdc Applicationenvironment
 
 

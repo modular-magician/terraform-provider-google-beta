@@ -33,6 +33,7 @@ To get more information about StandardAppVersion, see:
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/appengine/docs/standard)
 
+
 ## Example Usage - App Engine Standard App Version
 
 
@@ -135,6 +136,7 @@ resource "google_storage_bucket_object" "object" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - App Engine Standard App Version Bundled Services
 
 
@@ -210,6 +212,7 @@ resource "google_app_engine_standard_app_version" "gae-std-app-ver-bundled" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - App Engine Standard App Version Vpc Access
 
 

@@ -39,6 +39,7 @@ To get more information about Parameter, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Parameter Config Basic
 
 
@@ -52,6 +53,7 @@ resource "google_parameter_manager_parameter" "parameter-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Parameter With Format
 
 
@@ -66,6 +68,7 @@ resource "google_parameter_manager_parameter" "parameter-with-format" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Parameter With Labels
 
 
@@ -87,6 +90,7 @@ resource "google_parameter_manager_parameter" "parameter-with-labels" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Parameter With Kms Key
 
 
@@ -98,6 +102,7 @@ resource "google_parameter_manager_parameter" "parameter-with-kms-key" {
   kms_key = "kms-key"
 }
 ```
+
 ## Example Usage - Parameter With Tags
 
 

@@ -36,6 +36,7 @@ To get more information about Job, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Job Query
 
 
@@ -83,6 +84,7 @@ resource "google_bigquery_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Job Query Table Reference
 
 
@@ -132,6 +134,7 @@ resource "google_bigquery_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Job Load
 
 
@@ -175,6 +178,7 @@ resource "google_bigquery_job" "job" {
   }
 }
 ```
+
 ## Example Usage - Bigquery Job Load Geojson
 
 
@@ -243,6 +247,7 @@ resource "google_bigquery_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Job Load Parquet
 
 
@@ -302,6 +307,7 @@ resource "google_bigquery_job" "job" {
   }
 }
 ```
+
 ## Example Usage - Bigquery Job Copy
 
 
@@ -432,6 +438,7 @@ resource "google_bigquery_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Job Extract
 
 

@@ -30,6 +30,7 @@ A managed metastore federation.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Federation Basic
 
 
@@ -64,6 +65,7 @@ resource "google_dataproc_metastore_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Federation Bigquery
 
 

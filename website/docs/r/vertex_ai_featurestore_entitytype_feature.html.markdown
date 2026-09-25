@@ -35,6 +35,7 @@ To get more information about FeaturestoreEntitytypeFeature, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Featurestore Entitytype Feature
 
 
@@ -73,6 +74,7 @@ resource "google_vertex_ai_featurestore_entitytype_feature" "feature" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Featurestore Entitytype Feature With Beta Fields
 
 

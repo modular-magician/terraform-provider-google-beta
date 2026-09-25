@@ -37,6 +37,7 @@ see the [Classic VPN partial deprecation page](https://cloud.google.com/network-
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Vpn Gateway Basic
 
 
@@ -105,6 +106,7 @@ resource "google_compute_route" "route1" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Vpn Gateway Tags
 
 

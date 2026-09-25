@@ -37,6 +37,7 @@ To get more information about Trigger, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Filename
 
 
@@ -62,6 +63,7 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Build
 
 
@@ -163,6 +165,7 @@ resource "google_cloudbuild_trigger" "build-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Service Account
 
 
@@ -199,6 +202,7 @@ resource "google_project_iam_member" "logs_writer" {
   member  = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
 }
 ```
+
 ## Example Usage - Cloudbuild Trigger Include Build Logs
 
 
@@ -224,6 +228,7 @@ resource "google_cloudbuild_trigger" "include-build-logs-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Pubsub Config
 
 
@@ -267,6 +272,7 @@ resource "google_cloudbuild_trigger" "pubsub-config-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Webhook Config
 
 
@@ -335,6 +341,7 @@ resource "google_cloudbuild_trigger" "webhook-config-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Manual
 
 
@@ -357,6 +364,7 @@ resource "google_cloudbuild_trigger" "manual-trigger" {
   }
 }
 ```
+
 ## Example Usage - Cloudbuild Trigger Manual Github Enterprise
 
 
@@ -385,6 +393,7 @@ git_file_source {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Manual Bitbucket Server
 
 
@@ -413,6 +422,7 @@ resource "google_cloudbuild_trigger" "manual-bitbucket-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Repo
 
 
@@ -453,6 +463,7 @@ resource "google_cloudbuild_trigger" "repo-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Bitbucket Server Push
 
 
@@ -479,6 +490,7 @@ resource "google_cloudbuild_trigger" "bbs-push-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Bitbucket Server Pull Request
 
 
@@ -501,6 +513,7 @@ resource "google_cloudbuild_trigger" "bbs-pull-request-trigger" {
   filename = "cloudbuild.yaml"
 }
 ```
+
 ## Example Usage - Cloudbuild Trigger Github Enterprise
 
 
@@ -526,6 +539,7 @@ resource "google_cloudbuild_trigger" "ghe-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Allow Failure
 
 
@@ -603,6 +617,7 @@ resource "google_cloudbuild_trigger" "allow-failure-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Allow Exit Codes
 
 
@@ -680,6 +695,7 @@ resource "google_cloudbuild_trigger" "allow-exit-codes-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Pubsub With Repo
 
 
@@ -731,6 +747,7 @@ resource "google_cloudbuild_trigger" "pubsub-with-repo-trigger" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Developer Connect Pull
 
 
@@ -754,6 +771,7 @@ resource "google_cloudbuild_trigger" "developer-connect-trigger-pull" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Developer Connect Push
 
 
@@ -776,6 +794,7 @@ resource "google_cloudbuild_trigger" "developer-connect-trigger-push" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Trigger Developer Connect Push Branch
 
 

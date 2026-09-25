@@ -35,6 +35,7 @@ To get more information about FeatureOnlineStoreFeatureview, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Featureonlinestore Featureview
 
 
@@ -114,6 +115,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Featureonlinestore Featureview Feature Registry
 
 
@@ -211,6 +213,7 @@ resource "google_vertex_ai_feature_online_store_featureview" "featureview_featur
   }
 }
 ```
+
 ## Example Usage - Vertex Ai Featureonlinestore Featureview Cross Project
 
 
@@ -361,6 +364,7 @@ resource "google_vertex_ai_feature_online_store_featureview" "cross_project_feat
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Featureonlinestore Featureview With Vector Search
 
 

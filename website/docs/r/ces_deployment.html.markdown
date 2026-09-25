@@ -37,6 +37,7 @@ values will be stored in the raw state as plain text: `instagram_credentials.aut
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Deployment Basic
 
 
@@ -82,6 +83,7 @@ resource "google_ces_deployment" "my-deployment" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Deployment Full
 
 
@@ -133,6 +135,7 @@ resource "google_ces_deployment" "my-deployment" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Deployment Whatsapp
 
 

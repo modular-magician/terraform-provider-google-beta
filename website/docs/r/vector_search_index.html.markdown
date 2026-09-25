@@ -32,6 +32,7 @@ field of a Vector Search Collection.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vectorsearch Index Basic
 
 
@@ -99,6 +100,7 @@ resource "google_vector_search_index" "example-index" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vectorsearch Index Dedicated
 
 

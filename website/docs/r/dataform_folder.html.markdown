@@ -35,6 +35,7 @@ To get more information about Folder, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataform Folder Basic
 
 
@@ -49,6 +50,7 @@ resource "google_dataform_folder" "dataform_folder_basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataform Folder Full
 
 

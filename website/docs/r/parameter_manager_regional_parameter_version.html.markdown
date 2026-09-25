@@ -37,6 +37,7 @@ values will be stored in the raw state as plain text: `parameter_data`.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version Basic
 
 
@@ -57,6 +58,7 @@ resource "google_parameter_manager_regional_parameter_version" "regional-paramet
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version With Json Format
 
 
@@ -81,6 +83,7 @@ resource "google_parameter_manager_regional_parameter_version" "regional-paramet
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version With Yaml Format
 
 
@@ -105,6 +108,7 @@ resource "google_parameter_manager_regional_parameter_version" "regional-paramet
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version With Kms Key
 
 
@@ -129,6 +133,7 @@ resource "google_parameter_manager_regional_parameter_version" "regional-paramet
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version With Json Format With File
 
 
@@ -150,6 +155,7 @@ resource "google_parameter_manager_regional_parameter_version" "regional-paramet
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version With Yaml Format With File
 
 
@@ -171,6 +177,7 @@ resource "google_parameter_manager_regional_parameter_version" "regional-paramet
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Version With Data Crc32c
 
 

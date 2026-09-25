@@ -28,6 +28,7 @@ To get more information about IndexEndpoint, see:
 
 * [API documentation](https://cloud.google.com/vertex-ai/docs/reference/rest/v1/projects.locations.indexEndpoints/)
 
+
 ## Example Usage - Vertex Ai Index Endpoint
 
 
@@ -70,6 +71,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Index Endpoint With Psc
 
 
@@ -97,6 +99,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Index Endpoint With Public Endpoint
 
 

@@ -43,6 +43,7 @@ values will be stored in the raw state as plain text: `machine_image_encryption_
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Machine Image Basic
 
 
@@ -74,6 +75,7 @@ resource "google_compute_machine_image" "image" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Machine Image Kms
 
 
@@ -120,6 +122,7 @@ resource "google_kms_key_ring" "key_ring" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Machine Image Resource Manager Tags
 
 

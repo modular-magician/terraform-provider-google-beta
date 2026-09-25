@@ -31,6 +31,7 @@ It functions as sets of customized filters and thresholds for different safety a
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Modelarmor Template Basic
 
 
@@ -53,6 +54,7 @@ resource "google_model_armor_template" "template-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Modelarmor Template Filter Config
 
 
@@ -93,6 +95,7 @@ resource "google_model_armor_template" "template-filter-config" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Modelarmor Template Template Metadata
 
 
@@ -132,6 +135,7 @@ resource "google_model_armor_template" "template-template-metadata" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Modelarmor Template Filter Version Selector
 
 
@@ -160,6 +164,7 @@ resource "google_model_armor_template" "template-filter-version-selector" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Modelarmor Template Label
 
 

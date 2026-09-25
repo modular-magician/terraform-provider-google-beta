@@ -37,6 +37,7 @@ To get more information about SacRealm, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Sac Realm Prisma Access
 
 
@@ -50,6 +51,7 @@ resource "google_network_security_sac_realm" "default" {
   security_service = "PALO_ALTO_PRISMA_ACCESS"
 }
 ```
+
 ## Example Usage - Sac Realm Symantec Cloud Swg
 
 

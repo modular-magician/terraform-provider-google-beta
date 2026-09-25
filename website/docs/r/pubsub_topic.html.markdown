@@ -38,6 +38,7 @@ by using the `google_project_service_identity` resource.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Basic
 
 
@@ -52,6 +53,7 @@ resource "google_pubsub_topic" "example" {
   message_retention_duration = "86600s"
 }
 ```
+
 ## Example Usage - Pubsub Topic Cmek
 
 
@@ -76,6 +78,7 @@ resource "google_kms_key_ring" "key_ring" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Geo Restricted
 
 
@@ -91,6 +94,7 @@ resource "google_pubsub_topic" "example" {
   }
 }
 ```
+
 ## Example Usage - Pubsub Topic Schema Settings
 
 
@@ -118,6 +122,7 @@ resource "google_pubsub_topic" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Ingestion Kinesis
 
 
@@ -141,6 +146,7 @@ resource "google_pubsub_topic" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Ingestion Cloud Storage
 
 
@@ -169,6 +175,7 @@ resource "google_pubsub_topic" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Ingestion Azure Event Hubs
 
 
@@ -195,6 +202,7 @@ resource "google_pubsub_topic" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Ingestion Aws Msk
 
 
@@ -218,6 +226,7 @@ resource "google_pubsub_topic" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Ingestion Confluent Cloud
 
 
@@ -242,6 +251,7 @@ resource "google_pubsub_topic" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Single Smt
 
 
@@ -267,6 +277,7 @@ EOF
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Multiple Smts
 
 
@@ -313,6 +324,7 @@ EOF
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Topic Tags
 
 
@@ -339,6 +351,7 @@ resource "google_tags_tag_binding" "binding" {
   tag_value = google_tags_tag_value.tag_value.id
 }
 ```
+
 ## Example Usage - Pubsub Topic Ai Inference
 
 

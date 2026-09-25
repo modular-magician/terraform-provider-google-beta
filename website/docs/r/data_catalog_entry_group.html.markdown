@@ -36,6 +36,7 @@ To get more information about EntryGroup, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Catalog Entry Group Basic
 
 
@@ -49,6 +50,7 @@ resource "google_data_catalog_entry_group" "basic_entry_group" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Catalog Entry Group Full
 
 

@@ -37,6 +37,7 @@ To get more information about CustomTargetType, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Clouddeploy Custom Target Type Basic
 
 
@@ -64,6 +65,7 @@ resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Clouddeploy Custom Target Type Git Skaffold Modules
 
 
@@ -91,6 +93,7 @@ resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Clouddeploy Custom Target Type Gcs Skaffold Modules
 
 
@@ -117,6 +120,7 @@ resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Clouddeploy Custom Target Type Gcb Repo Skaffold Modules
 
 
@@ -144,6 +148,7 @@ resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Clouddeploy Custom Target Type Tasks
 
 

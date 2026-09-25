@@ -35,6 +35,7 @@ To get more information about Instance, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Basic
 
 
@@ -51,6 +52,7 @@ resource "google_data_fusion_instance" "basic_instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Full
 
 
@@ -102,6 +104,7 @@ resource "google_compute_global_address" "private_ip_alloc" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Psc
 
 
@@ -151,6 +154,7 @@ resource "google_compute_network_attachment" "psc" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Cmek
 
 
@@ -200,6 +204,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Enterprise
 
 
@@ -217,6 +222,7 @@ resource "google_data_fusion_instance" "enterprise_instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Event
 
 
@@ -241,6 +247,7 @@ resource "google_pubsub_topic" "event" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Zone
 
 
@@ -257,6 +264,7 @@ resource "google_data_fusion_instance" "zone" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Data Fusion Instance Patch Revision
 
 

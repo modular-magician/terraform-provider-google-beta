@@ -55,6 +55,7 @@ To get more information about RegionBackendBucket, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Bucket Basic
 
 
@@ -83,6 +84,7 @@ resource "google_storage_bucket" "image_backend" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Bucket Internal Lb
 
 
@@ -124,6 +126,7 @@ resource "google_storage_bucket_object" "index" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Bucket External Lb
 
 

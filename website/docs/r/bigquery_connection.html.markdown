@@ -42,6 +42,7 @@ values will be stored in the raw state as plain text: `cloud_sql.credential.pass
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Cloud Resource
 
 
@@ -59,6 +60,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Basic
 
 
@@ -110,6 +112,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Full
 
 
@@ -162,6 +165,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Aws
 
 
@@ -183,6 +187,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Azure
 
 
@@ -203,6 +208,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Cloudspanner
 
 
@@ -223,6 +229,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Cloudspanner Databoost
 
 
@@ -245,6 +252,7 @@ resource "google_bigquery_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Spark
 
 
@@ -288,6 +296,7 @@ resource "google_dataproc_cluster" "basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Sql With Cmek
 
 
@@ -336,6 +345,7 @@ resource "google_bigquery_connection" "bq-connection-cmek" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Sql With Cmek Password Wo
 
 
@@ -385,6 +395,7 @@ resource "google_bigquery_connection" "bq-connection-cmek" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Connection Connector Configuration
 
 

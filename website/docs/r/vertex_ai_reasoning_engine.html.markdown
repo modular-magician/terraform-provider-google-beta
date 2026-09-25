@@ -35,6 +35,7 @@ To get more information about ReasoningEngine, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Source Based Deployment
 
 
@@ -64,6 +65,7 @@ resource "google_vertex_ai_reasoning_engine" "reasoning_engine" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Developer Connect Source
 
 
@@ -99,6 +101,7 @@ resource "google_vertex_ai_reasoning_engine" "reasoning_engine" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Image Spec
 
 
@@ -126,6 +129,7 @@ resource "google_vertex_ai_reasoning_engine" "reasoning_engine" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Byoc
 
 
@@ -184,6 +188,7 @@ resource "google_project_iam_member" "tenant_ar_reader" {
   member  = "serviceAccount:${jsondecode(data.google_vertex_ai_reasoning_engine_query.tenant_mds.output).output}"
 }
 ```
+
 ## Example Usage - Vertex Ai Reasoning Engine Psc Interface
 
 
@@ -291,6 +296,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Full
 
 
@@ -479,6 +485,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Context Spec
 
 
@@ -667,6 +674,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Granular Ttl
 
 
@@ -704,6 +712,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Reasoning Engine Traffic Config
 
 

@@ -30,6 +30,7 @@ This resource helps to create a GoldengateDeployment which enables running Oracl
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Deployment Basic
 
 
@@ -57,6 +58,7 @@ resource "google_oracle_database_goldengate_deployment" "deployment" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Deployment Full
 
 

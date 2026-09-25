@@ -30,6 +30,7 @@ Represents a collection of terms within a Glossary that are related to each othe
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataplex Glossary Term Basic
 
 
@@ -51,6 +52,7 @@ resource "google_dataplex_glossary_term" "term_test_id" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataplex Glossary Term Full
 
 

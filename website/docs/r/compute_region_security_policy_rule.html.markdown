@@ -35,6 +35,7 @@ To get more information about RegionSecurityPolicyRule, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy Rule Basic
 
 
@@ -66,6 +67,7 @@ resource "google_compute_region_security_policy_rule" "policy_rule" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy Rule Multiple Rules
 
 
@@ -112,6 +114,7 @@ resource "google_compute_region_security_policy_rule" "policy_rule_two" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy Rule Default Rule
 
 
@@ -157,6 +160,7 @@ resource "google_compute_region_security_policy_rule" "policy_rule" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy Rule With Preconfigured Waf Config
 
 
@@ -211,6 +215,7 @@ resource "google_compute_region_security_policy_rule" "policy_rule" {
   preview         = true
 }
 ```
+
 ## Example Usage - Region Security Policy Rule With Network Match
 
 

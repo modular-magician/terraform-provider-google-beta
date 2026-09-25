@@ -35,6 +35,7 @@ To get more information about DataPolicy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Datapolicyv2 Datapolicy Basic
 
 
@@ -50,6 +51,7 @@ resource "google_bigquery_datapolicyv2_data_policy" "basic_data_policy" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Datapolicyv2 Datapolicy Predefined Masking
 
 
@@ -68,6 +70,7 @@ resource "google_bigquery_datapolicyv2_data_policy" "predefined_masking_data_pol
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Datapolicyv2 Datapolicy Routine
 
 
@@ -101,6 +104,7 @@ resource "google_bigquery_routine" "custom_masking_routine" {
 	} 
 }
 ```
+
 ## Example Usage - Bigquery Datapolicyv2 Datapolicy Withgrantees
 
 

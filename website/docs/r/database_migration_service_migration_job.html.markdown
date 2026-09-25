@@ -35,6 +35,7 @@ To get more information about MigrationJob, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Database Migration Service Migration Job Mysql To Mysql
 
 
@@ -150,6 +151,7 @@ resource "google_database_migration_service_migration_job" "mysqltomysql" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Database Migration Service Migration Job Postgres To Postgres
 
 
@@ -250,6 +252,7 @@ resource "google_database_migration_service_migration_job" "psqltopsql" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Database Migration Service Migration Job Postgres To Postgres Objects
 
 
@@ -366,6 +369,7 @@ resource "google_database_migration_service_migration_job" "psqltopsqlobjects" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Database Migration Service Migration Job Postgres To Alloydb
 
 

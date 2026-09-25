@@ -30,6 +30,7 @@ To get more information about FoldersPolicyBinding, see:
 * How-to Guides
     * [Apply a policy binding](https://cloud.google.com/iam/docs/principal-access-boundary-policies-create#create_binding)
 
+
 ## Example Usage - Iam Folders Policy Binding
 
 

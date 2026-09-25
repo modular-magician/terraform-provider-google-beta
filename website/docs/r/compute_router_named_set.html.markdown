@@ -37,6 +37,7 @@ To get more information about RouterNamedSet, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Router Named Set Route Policy
 
 
@@ -101,6 +102,7 @@ resource "google_compute_router_route_policy" "my_route_policy" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Router Named Set Prefix
 
 
@@ -140,6 +142,7 @@ resource "google_compute_router_named_set" "prefix_set" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Router Named Set Community
 
 

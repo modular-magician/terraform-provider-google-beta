@@ -32,6 +32,7 @@ that you define for the host and path of an incoming URL.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Basic
 
 
@@ -110,6 +111,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Default Route Action
 
 
@@ -289,6 +291,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map L7 Ilb Path
 
 
@@ -400,6 +403,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map L7 Ilb Path Partial
 
 
@@ -479,6 +483,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map L7 Ilb Route
 
 
@@ -571,6 +576,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map L7 Ilb Route Partial
 
 
@@ -633,6 +639,7 @@ resource "google_compute_region_health_check" "default" {
   }
 }
 ```
+
 ## Example Usage - Int Https Lb Https Redirect
 
 
@@ -927,6 +934,7 @@ resource "google_compute_region_url_map" "redirect" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Path Template Match
 
 
@@ -1024,6 +1032,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Path Matcher Default Route Action
 
 
@@ -1212,6 +1221,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Default Mirror Percent
 
 
@@ -1280,6 +1290,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Path Matcher Default Mirror Percent
 
 
@@ -1348,6 +1359,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Path Rule Mirror Percent
 
 
@@ -1416,6 +1428,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Url Map Route Rule Mirror Percent
 
 

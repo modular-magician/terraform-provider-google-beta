@@ -35,6 +35,7 @@ To get more information about Spoke, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Linked Vpc Network Basic
 
 
@@ -78,6 +79,7 @@ resource "google_network_connectivity_spoke" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Linked Vpc Network Group
 
 
@@ -128,6 +130,7 @@ resource "google_network_connectivity_spoke" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Router Appliance Basic
 
 
@@ -196,6 +199,7 @@ resource "google_network_connectivity_spoke" "primary" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Vpn Tunnel Basic
 
 
@@ -337,6 +341,7 @@ resource "google_network_connectivity_spoke" "tunnel2" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Interconnect Attachment Basic
 
 
@@ -392,6 +397,7 @@ resource "google_network_connectivity_spoke" "primary" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Linked Producer Vpc Network Basic
 
 
@@ -452,6 +458,7 @@ resource "google_network_connectivity_spoke" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Center Group
 
 
@@ -497,6 +504,7 @@ resource "google_network_connectivity_spoke" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Linked Vpc Network Ipv6 Support
 
 
@@ -536,6 +544,7 @@ resource "google_network_connectivity_spoke" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Spoke Gateway
 
 

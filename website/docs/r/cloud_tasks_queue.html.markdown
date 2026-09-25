@@ -30,6 +30,7 @@ A named resource to which messages are sent by publishers.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Queue Basic
 
 
@@ -44,6 +45,7 @@ resource "google_cloud_tasks_queue" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloud Tasks Queue Advanced
 
 
@@ -81,6 +83,7 @@ resource "google_cloud_tasks_queue" "advanced_configuration" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloud Tasks Queue Http Target Oidc
 
 
@@ -132,6 +135,7 @@ resource "google_service_account" "oidc_service_account" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloud Tasks Queue Http Target Oauth
 
 

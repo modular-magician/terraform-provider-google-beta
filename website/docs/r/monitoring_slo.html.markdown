@@ -43,6 +43,7 @@ To get more information about Slo, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Slo Appengine
 
 
@@ -72,6 +73,7 @@ resource "google_monitoring_slo" "appeng_slo" {
   }
 }
 ```
+
 ## Example Usage - Monitoring Slo Request Based
 
 
@@ -104,6 +106,7 @@ resource "google_monitoring_slo" "request_based_slo" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Slo Windows Based Good Bad Metric Filter
 
 
@@ -134,6 +137,7 @@ resource "google_monitoring_slo" "windows_based" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Slo Windows Based Metric Mean
 
 
@@ -170,6 +174,7 @@ resource "google_monitoring_slo" "windows_based" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Slo Windows Based Metric Sum
 
 
@@ -206,6 +211,7 @@ resource "google_monitoring_slo" "windows_based" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Slo Windows Based Ratio Threshold
 
 

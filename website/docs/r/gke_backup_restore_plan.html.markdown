@@ -30,6 +30,7 @@ To get more information about RestorePlan, see:
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke)
 
+
 ## Example Usage - Gkebackup Restoreplan All Namespaces
 
 
@@ -81,6 +82,7 @@ resource "google_gke_backup_restore_plan" "all_ns" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Rollback Namespace
 
 
@@ -141,6 +143,7 @@ resource "google_gke_backup_restore_plan" "rollback_ns" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Protected Application
 
 
@@ -196,6 +199,7 @@ resource "google_gke_backup_restore_plan" "rollback_app" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan All Cluster Resources
 
 
@@ -246,6 +250,7 @@ resource "google_gke_backup_restore_plan" "all_cluster_resources" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Rename Namespace
 
 
@@ -323,6 +328,7 @@ resource "google_gke_backup_restore_plan" "rename_ns" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Second Transformation
 
 
@@ -398,6 +404,7 @@ resource "google_gke_backup_restore_plan" "transform_rule" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Gitops Mode
 
 
@@ -449,6 +456,7 @@ resource "google_gke_backup_restore_plan" "gitops_mode" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Restore Order
 
 
@@ -522,6 +530,7 @@ resource "google_gke_backup_restore_plan" "restore_order" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Restoreplan Volume Res
 
 

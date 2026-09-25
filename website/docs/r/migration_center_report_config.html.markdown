@@ -30,6 +30,7 @@ ReportConfig defines the configuration and criteria used to generate Migration C
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Migration Center Report Config Basic
 
 

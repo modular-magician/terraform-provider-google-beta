@@ -30,6 +30,7 @@ Description
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Agent Basic
 
 
@@ -225,6 +226,7 @@ resource "google_ces_agent" "ces_agent_basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Agent Remote A2a Agent
 
 
@@ -296,6 +298,7 @@ resource "google_ces_agent" "ces_agent_remote_a2a_agent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Agent Remote Dialogflow Agent
 
 
@@ -348,6 +351,7 @@ resource "google_ces_agent" "ces_agent_remote_dialogflow_agent" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Agent Remote Dialogflow Agent Interruption
 
 

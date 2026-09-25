@@ -35,6 +35,7 @@ To get more information about ConversationProfile, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflow Conversation Profile Basic
 
 
@@ -63,6 +64,7 @@ resource "google_dialogflow_conversation_profile" "basic_profile" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflow Conversation Profile Recognition Result Notification
 
 
@@ -85,6 +87,7 @@ resource "google_pubsub_topic" "recognition_result_notification_profile" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflow Conversation Profile Beta Bidi
 
 

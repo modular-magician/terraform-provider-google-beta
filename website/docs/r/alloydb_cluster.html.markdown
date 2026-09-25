@@ -53,6 +53,7 @@ values will be stored in the raw state as plain text: `initial_user.password`.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Alloydb Cluster Basic
 
 
@@ -78,6 +79,7 @@ resource "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Alloydb Cluster Before Upgrade
 
 
@@ -117,6 +119,7 @@ data "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Alloydb Cluster After Upgrade
 
 
@@ -156,6 +159,7 @@ data "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Alloydb Cluster Full
 
 
@@ -216,6 +220,7 @@ resource "google_compute_network" "default" {
   name = "alloydb-cluster-full"
 }
 ```
+
 ## Example Usage - Alloydb Cluster Restore
 
 
@@ -299,6 +304,7 @@ resource "google_service_networking_connection" "vpc_connection" {
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
 ```
+
 ## Example Usage - Alloydb Secondary Cluster Basic
 
 

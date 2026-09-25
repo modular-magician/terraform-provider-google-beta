@@ -30,6 +30,7 @@ To get more information about Schedule, see:
 * How-to Guides
     * [Schedule a notebook run](https://cloud.google.com/colab/docs/schedule-notebook-run)
 
+
 ## Example Usage - Colab Schedule Basic
 
 
@@ -122,6 +123,7 @@ resource "google_colab_schedule" "schedule" {
   ]
 }
 ```
+
 ## Example Usage - Colab Schedule Paused
 
 
@@ -216,6 +218,7 @@ resource "google_colab_schedule" "schedule" {
   ]
 }
 ```
+
 ## Example Usage - Colab Schedule Full
 
 
@@ -320,6 +323,7 @@ resource "google_colab_schedule" "schedule" {
   ]
 }
 ```
+
 ## Example Usage - Colab Schedule Notebook Full
 
 
@@ -441,6 +445,7 @@ resource "google_colab_schedule" "schedule" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Colab Schedule Pipeline
 
 

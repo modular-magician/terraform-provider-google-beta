@@ -39,6 +39,7 @@ values will be stored in the raw state as plain text: `password`.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Sql Source Representation Instance Basic
 
 
@@ -59,6 +60,7 @@ resource "google_sql_source_representation_instance" "instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Sql Source Representation Instance Postgres
 
 

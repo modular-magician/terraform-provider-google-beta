@@ -35,6 +35,7 @@ To get more information about PrivateConnection, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Datastream Private Connection Full
 
 
@@ -63,6 +64,7 @@ resource "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Datastream Private Connection Force Delete
 
 
@@ -87,6 +89,7 @@ resource "google_compute_network" "default" {
   name = "my-network"
 }
 ```
+
 ## Example Usage - Datastream Private Connection Psc Interface
 
 

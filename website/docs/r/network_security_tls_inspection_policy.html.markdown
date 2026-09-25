@@ -35,6 +35,7 @@ To get more information about TlsInspectionPolicy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Tls Inspection Policy Basic
 
 
@@ -121,6 +122,7 @@ resource "google_network_security_tls_inspection_policy" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Tls Inspection Policy Custom
 
 

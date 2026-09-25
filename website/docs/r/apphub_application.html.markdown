@@ -30,6 +30,7 @@ Application is a functional grouping of Services and Workloads that helps achiev
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Apphub Application Basic
 
 
@@ -47,6 +48,7 @@ resource "google_apphub_application" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Apphub Application Global Basic
 
 
@@ -64,6 +66,7 @@ resource "google_apphub_application" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Apphub Application Full
 
 

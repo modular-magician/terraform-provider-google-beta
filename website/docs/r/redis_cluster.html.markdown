@@ -111,6 +111,7 @@ To [detach](https://cloud.google.com/memorystore/docs/cluster/working-with-cross
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Ha With Labels
 
 
@@ -182,6 +183,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Ha
 
 
@@ -249,6 +251,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Ha Single Zone
 
 
@@ -310,6 +313,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Secondary
 
 
@@ -471,6 +475,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Rdb
 
 
@@ -545,6 +550,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Aof
 
 
@@ -617,6 +623,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Cmek
 
 
@@ -667,6 +674,7 @@ resource "google_compute_network" "consumer_net" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Cluster Flexible Ca
 
 

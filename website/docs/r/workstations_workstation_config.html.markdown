@@ -35,6 +35,7 @@ To get more information about WorkstationConfig, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Basic
 
 
@@ -113,6 +114,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Container
 
 
@@ -172,6 +174,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Hyperdisk
 
 
@@ -222,6 +225,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Hyperdisk Source Snapshot
 
 
@@ -299,6 +303,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Persistent Directories
 
 
@@ -363,6 +368,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Source Snapshot
 
 
@@ -419,6 +425,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Shielded Instance Config
 
 
@@ -473,6 +480,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Accelerators
 
 
@@ -527,6 +535,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Boost
 
 
@@ -592,6 +601,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Encryption Key
 
 
@@ -673,6 +683,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Allowed Ports
 
 
@@ -741,6 +752,7 @@ resource "google_workstations_workstation_config" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Workstation Config Idle Action
 
 

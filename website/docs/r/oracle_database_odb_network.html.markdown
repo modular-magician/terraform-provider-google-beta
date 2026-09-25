@@ -33,6 +33,7 @@ To get more information about OdbNetwork, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Odbnetwork Basic
 
 
@@ -58,6 +59,7 @@ data "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Odbnetwork Full
 
 

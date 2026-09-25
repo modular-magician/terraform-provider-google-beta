@@ -38,6 +38,7 @@ To get more information about ManagedZone, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Basic
 
 
@@ -60,6 +61,7 @@ resource "random_id" "rnd" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Private
 
 
@@ -94,6 +96,7 @@ resource "google_compute_network" "network-2" {
   auto_create_subnetworks = false
 }
 ```
+
 ## Example Usage - Dns Managed Zone Private Forwarding
 
 
@@ -142,6 +145,7 @@ resource "google_compute_network" "network-2" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Private Forwarding Ipv6
 
 
@@ -175,6 +179,7 @@ resource "google_compute_network" "network_1" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Private Gke
 
 
@@ -253,6 +258,7 @@ resource "google_container_cluster" "cluster-1" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Private Peering
 
 
@@ -292,6 +298,7 @@ resource "google_compute_network" "network-target" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Service Directory
 
 
@@ -331,6 +338,7 @@ resource "google_compute_network" "network" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Cloud Logging
 
 
@@ -353,6 +361,7 @@ resource "google_dns_managed_zone" "cloud-logging-enabled-zone" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dns Managed Zone Iam Condition
 
 

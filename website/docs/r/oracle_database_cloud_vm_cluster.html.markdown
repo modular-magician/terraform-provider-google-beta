@@ -35,6 +35,7 @@ To get more information about CloudVmCluster, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Cloud Vmcluster Basic
 
 
@@ -83,6 +84,7 @@ data "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Cloud Vmcluster Odbnetwork
 
 
@@ -126,6 +128,7 @@ resource "google_oracle_database_cloud_exadata_infrastructure" "cloudExadataInfr
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Cloud Vmcluster Full
 
 
@@ -201,6 +204,7 @@ data "google_oracle_database_db_servers" "mydbserver" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Cloud Vmcluster Exascale
 
 

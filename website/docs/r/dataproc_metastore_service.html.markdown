@@ -35,6 +35,7 @@ To get more information about Service, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Basic
 
 
@@ -64,6 +65,7 @@ resource "google_dataproc_metastore_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Deletion Protection
 
 
@@ -89,6 +91,7 @@ resource "google_dataproc_metastore_service" "default" {
     }
   }
 ```
+
 ## Example Usage - Dataproc Metastore Service Cmek Example
 
 
@@ -125,6 +128,7 @@ resource "google_kms_key_ring" "key_ring" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Private Service Connect
 
 
@@ -158,6 +162,7 @@ resource "google_dataproc_metastore_service" "default" {
   }
 }
 ```
+
 ## Example Usage - Dataproc Metastore Service Private Service Connect Custom Routes
 
 
@@ -199,6 +204,7 @@ resource "google_dataproc_metastore_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Dpms2
 
 
@@ -225,6 +231,7 @@ resource "google_dataproc_metastore_service" "dpms2" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Dpms2 Scaling Factor
 
 
@@ -251,6 +258,7 @@ resource "google_dataproc_metastore_service" "dpms2_scaling_factor" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Scheduled Backup
 
 
@@ -292,6 +300,7 @@ resource "google_storage_bucket" "bucket" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Autoscaling Max Scaling Factor
 
 
@@ -323,6 +332,7 @@ resource "google_dataproc_metastore_service" "test_resource" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Autoscaling Min And Max Scaling Factor
 
 
@@ -355,6 +365,7 @@ resource "google_dataproc_metastore_service" "test_resource" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Autoscaling Min Scaling Factor
 
 
@@ -386,6 +397,7 @@ resource "google_dataproc_metastore_service" "test_resource" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataproc Metastore Service Autoscaling No Limit Config
 
 

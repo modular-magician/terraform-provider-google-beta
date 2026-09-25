@@ -40,6 +40,7 @@ It is recommended to not set this field (or set it to true) until you're ready t
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Privateca Certificate Authority Basic
 
 
@@ -86,6 +87,7 @@ resource "google_privateca_certificate_authority" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Privateca Certificate Authority Basic No Org
 
 
@@ -131,6 +133,7 @@ resource "google_privateca_certificate_authority" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Privateca Certificate Authority Subordinate
 
 
@@ -216,6 +219,7 @@ resource "google_privateca_certificate_authority" "default" {
   type = "SUBORDINATE"
 }
 ```
+
 ## Example Usage - Privateca Certificate Authority Byo Key
 
 
@@ -289,6 +293,7 @@ resource "google_privateca_certificate_authority" "default" {
   ]
 }
 ```
+
 ## Example Usage - Privateca Certificate Authority Custom Ski
 
 
@@ -336,6 +341,7 @@ resource "google_privateca_certificate_authority" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Privateca Certificate Authority Basic With Custom Cdp Aia Urls
 
 

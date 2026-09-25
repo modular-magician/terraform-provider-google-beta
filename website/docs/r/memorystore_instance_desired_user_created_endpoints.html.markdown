@@ -39,6 +39,7 @@ If the corresponding forwarding rule is represented in your terraform configurat
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Memorystore Instance Desired User Created Endpoints
 
 
@@ -197,6 +198,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Memorystore Instance Desired User And Auto Created Endpoints
 
 

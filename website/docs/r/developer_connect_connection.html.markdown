@@ -30,6 +30,7 @@ To get more information about Connection, see:
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/developer-connect/docs/overview)
 
+
 ## Example Usage - Developer Connect Connection New
 
 
@@ -64,6 +65,7 @@ resource "google_project_iam_member" "devconnect-secret" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Existing Credentials
 
 
@@ -86,6 +88,7 @@ output "next_steps" {
   value = google_developer_connect_connection.my-connection.installation_state
 }
 ```
+
 ## Example Usage - Developer Connect Connection Existing Installation
 
 
@@ -141,6 +144,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Github
 
 
@@ -158,6 +162,7 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Developer Connect Connection Github Doc
 
 
@@ -210,6 +215,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Github Enterprise
 
 
@@ -227,6 +233,7 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Developer Connect Connection Github Enterprise Doc
 
 
@@ -298,6 +305,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Gitlab
 
 
@@ -319,6 +327,7 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Developer Connect Connection Gitlab Doc
 
 
@@ -410,6 +419,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Gitlab Enterprise
 
 
@@ -433,6 +443,7 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Developer Connect Connection Gitlab Enterprise Doc
 
 
@@ -526,6 +537,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Bbc
 
 
@@ -548,6 +560,7 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Developer Connect Connection Bbc Doc
 
 
@@ -641,6 +654,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Bbdc
 
 
@@ -664,6 +678,7 @@ resource "google_developer_connect_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Developer Connect Connection Bbdc Doc
 
 
@@ -757,6 +772,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Http Conn Basic
 
 
@@ -779,6 +795,7 @@ resource "google_developer_connect_connection" "my-connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Developer Connect Connection Http Conn Bearer
 
 

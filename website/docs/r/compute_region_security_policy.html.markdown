@@ -35,6 +35,7 @@ To get more information about RegionSecurityPolicy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy Basic
 
 
@@ -50,6 +51,7 @@ resource "google_compute_region_security_policy" "region-sec-policy-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy With Ddos Protection Config
 
 
@@ -69,6 +71,7 @@ resource "google_compute_region_security_policy" "region-sec-policy-ddos-protect
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy With User Defined Fields
 
 
@@ -98,6 +101,7 @@ resource "google_compute_region_security_policy" "region-sec-policy-user-defined
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Security Policy With Rules
 
 

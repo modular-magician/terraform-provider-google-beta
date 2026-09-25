@@ -35,6 +35,7 @@ To get more information about Routine, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Basic
 
 
@@ -57,6 +58,7 @@ resource "google_bigquery_routine" "sproc" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Json
 
 
@@ -88,6 +90,7 @@ resource "google_bigquery_routine" "sproc" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Tvf
 
 
@@ -119,6 +122,7 @@ resource "google_bigquery_routine" "sproc" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Table Type
 
 
@@ -152,6 +156,7 @@ resource "google_bigquery_routine" "sproc" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Pyspark
 
 
@@ -203,6 +208,7 @@ resource "google_bigquery_routine" "pyspark" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Pyspark Mainfile
 
 
@@ -238,6 +244,7 @@ resource "google_bigquery_routine" "pyspark_mainfile" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Spark Jar
 
 
@@ -276,6 +283,7 @@ resource "google_bigquery_routine" "spark_jar" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Data Governance Type
 
 
@@ -299,6 +307,7 @@ resource "google_bigquery_routine" "custom_masking_routine" {
   }
   
 ```
+
 ## Example Usage - Bigquery Routine Remote Function
 
 
@@ -336,6 +345,7 @@ resource "google_bigquery_routine" "remote_function" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Routine Python Function
 
 

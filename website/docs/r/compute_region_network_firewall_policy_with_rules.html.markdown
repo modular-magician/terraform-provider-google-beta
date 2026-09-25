@@ -25,6 +25,7 @@ The Compute NetworkFirewallPolicy with rules resource
 
 
 
+
 ## Example Usage - Compute Region Network Firewall Policy With Rules Full
 
 
@@ -205,6 +206,7 @@ resource "google_tags_tag_value" "secure_tag_value_1" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Region Network Firewall Policy With Rules Roce
 
 

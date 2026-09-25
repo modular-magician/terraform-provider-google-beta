@@ -36,6 +36,7 @@ To get more information about SecuritySettings, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Security Settings Basic
 
 
@@ -47,6 +48,7 @@ resource "google_dialogflow_cx_security_settings" "basic_security_settings" {
   retention_window_days = 7
 }
 ```
+
 ## Example Usage - Dialogflowcx Security Settings Full
 
 

@@ -30,6 +30,7 @@ To get more information about BackupPlan, see:
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke)
 
+
 ## Example Usage - Gkebackup Backupplan Basic
 
 
@@ -70,6 +71,7 @@ resource "google_gke_backup_backup_plan" "basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Gkebackup Backupplan Autopilot
 
 
@@ -104,6 +106,7 @@ resource "google_gke_backup_backup_plan" "autopilot" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Backupplan Cmek
 
 
@@ -154,6 +157,7 @@ resource "google_kms_key_ring" "key_ring" {
   location = "us-east1"
 }
 ```
+
 ## Example Usage - Gkebackup Backupplan Nslabels
 
 
@@ -194,6 +198,7 @@ resource "google_gke_backup_backup_plan" "nslabels" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Backupplan Full
 
 
@@ -245,6 +250,7 @@ resource "google_gke_backup_backup_plan" "full" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Backupplan Permissive
 
 
@@ -297,6 +303,7 @@ resource "google_gke_backup_backup_plan" "permissive" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Backupplan Rpo Daily Window
 
 
@@ -363,6 +370,7 @@ resource "google_gke_backup_backup_plan" "rpo_daily_window" {
   }
 }
 ```
+
 ## Example Usage - Gkebackup Backupplan Rpo Weekly Window
 
 

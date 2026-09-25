@@ -35,6 +35,7 @@ To get more information about DataExchange, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Data Exchange Basic
 
 
@@ -51,6 +52,7 @@ resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Data Exchange Dcr
 
 
@@ -70,6 +72,7 @@ resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Data Exchange Log Linked Dataset Query User
 
 
@@ -87,6 +90,7 @@ resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Public Data Exchange
 
 

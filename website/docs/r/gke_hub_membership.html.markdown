@@ -30,6 +30,7 @@ To get more information about Membership, see:
 * How-to Guides
     * [Registering a Cluster](https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster#register_cluster)
 
+
 ## Example Usage - Gkehub Membership Regional
 
 
@@ -58,6 +59,7 @@ resource "google_gke_hub_membership" "membership" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Gkehub Membership Basic
 
 
@@ -84,6 +86,7 @@ resource "google_gke_hub_membership" "membership" {
   }
 }
 ```
+
 ## Example Usage - Gkehub Membership Issuer
 
 

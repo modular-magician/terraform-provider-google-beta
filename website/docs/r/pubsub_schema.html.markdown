@@ -37,6 +37,7 @@ To get more information about Schema, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Pubsub Schema Basic
 
 
@@ -47,6 +48,7 @@ resource "google_pubsub_schema" "example" {
   definition = "{\n  \"type\" : \"record\",\n  \"name\" : \"Avro\",\n  \"fields\" : [\n    {\n      \"name\" : \"StringField\",\n      \"type\" : \"string\"\n    },\n    {\n      \"name\" : \"IntField\",\n      \"type\" : \"int\"\n    }\n  ]\n}\n"
 }
 ```
+
 ## Example Usage - Pubsub Schema Protobuf
 
 

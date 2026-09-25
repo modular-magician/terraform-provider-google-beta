@@ -39,6 +39,7 @@ values will be stored in the raw state as plain text: `tool.open_api_spec.authen
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Version Open Api
 
 
@@ -201,6 +202,7 @@ resource "google_dialogflow_cx_tool_version" "open_api_tool_version" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Version Data Store
 
 
@@ -273,6 +275,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Version Function
 
 
@@ -359,6 +362,7 @@ resource "google_dialogflow_cx_tool_version" "function_tool_version" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Version Connector
 
 

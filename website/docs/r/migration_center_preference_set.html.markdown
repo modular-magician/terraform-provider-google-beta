@@ -35,6 +35,7 @@ To get more information about PreferenceSet, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Preference Set Basic
 
 
@@ -58,6 +59,7 @@ resource "google_migration_center_preference_set" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Preference Set Full
 
 
@@ -103,6 +105,7 @@ resource "google_migration_center_preference_set" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Preference Set Compute Engine Preferences Disk Type
 
 

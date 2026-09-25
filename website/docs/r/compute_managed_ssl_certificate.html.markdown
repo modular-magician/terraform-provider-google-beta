@@ -53,6 +53,7 @@ In conclusion: Be extremely cautious.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Managed Ssl Certificate Basic
 
 
@@ -122,6 +123,7 @@ resource "google_compute_global_forwarding_rule" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Managed Ssl Certificate Recreation
 
 

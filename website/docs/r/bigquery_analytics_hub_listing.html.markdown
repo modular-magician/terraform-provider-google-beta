@@ -35,6 +35,7 @@ To get more information about Listing, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Basic
 
 
@@ -70,6 +71,7 @@ resource "google_bigquery_dataset" "listing" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Restricted
 
 
@@ -110,6 +112,7 @@ resource "google_bigquery_dataset" "listing" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Dcr
 
 
@@ -180,6 +183,7 @@ EOF
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Log Linked Dataset Query User
 
 
@@ -216,6 +220,7 @@ resource "google_bigquery_dataset" "listing_log_email" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Pubsub
 
 
@@ -252,6 +257,7 @@ resource "google_bigquery_analytics_hub_listing" "listing" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Dcr Routine
 
 
@@ -316,6 +322,7 @@ resource "google_bigquery_analytics_hub_listing" "listing" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Public Listing
 
 
@@ -354,6 +361,7 @@ resource "google_bigquery_dataset" "listing" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Analyticshub Listing Marketplace
 
 
@@ -386,6 +394,7 @@ resource "google_bigquery_dataset" "listing" {
   location                    = "US"
 }
 ```
+
 ## Example Usage - Bigquery Analyticshub Listing Multiregion
 
 

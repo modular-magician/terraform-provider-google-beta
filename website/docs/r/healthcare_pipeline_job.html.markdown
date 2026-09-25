@@ -37,6 +37,7 @@ To get more information about PipelineJob, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Pipeline Job Reconciliation
 
 
@@ -98,6 +99,7 @@ resource "google_storage_bucket_iam_member" "hsa" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Pipeline Job Backfill
 
 
@@ -121,6 +123,7 @@ resource "google_healthcare_dataset" "dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Pipeline Job Whistle Mapping
 
 
@@ -196,6 +199,7 @@ resource "google_storage_bucket_iam_member" "hsa" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Pipeline Job Mapping Recon Dest
 
 

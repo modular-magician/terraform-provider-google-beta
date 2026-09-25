@@ -46,6 +46,7 @@ To get more information about RegionNetworkEndpointGroup, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Functions
 
 
@@ -89,6 +90,7 @@ resource "google_storage_bucket_object" "archive" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Cloudrun
 
 
@@ -126,6 +128,7 @@ resource "google_cloud_run_service" "cloudrun_neg" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Appengine
 
 
@@ -211,6 +214,7 @@ resource "google_storage_bucket_object" "appengine_neg" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Appengine Empty
 
 
@@ -229,6 +233,7 @@ resource "google_compute_region_network_endpoint_group" "appengine_neg" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Psc
 
 
@@ -246,6 +251,7 @@ resource "google_compute_region_network_endpoint_group" "psc_neg" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Psc Service Attachment
 
 
@@ -324,6 +330,7 @@ resource "google_compute_region_network_endpoint_group" "psc_neg_service_attachm
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Internet Ip Port
 
 
@@ -345,6 +352,7 @@ resource "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Internet Fqdn Port
 
 
@@ -366,6 +374,7 @@ resource "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Network Endpoint Group Portmap
 
 

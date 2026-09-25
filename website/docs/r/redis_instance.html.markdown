@@ -35,6 +35,7 @@ To get more information about Instance, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Instance Basic
 
 
@@ -55,6 +56,7 @@ resource "google_redis_instance" "cache" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Instance Full
 
 
@@ -113,6 +115,7 @@ data "google_compute_network" "redis-network" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Instance Full With Persistence Config
 
 
@@ -135,6 +138,7 @@ resource "google_redis_instance" "cache-persis" {
   }
 }
 ```
+
 ## Example Usage - Redis Instance Private Service
 
 
@@ -192,6 +196,7 @@ resource "google_redis_instance" "cache" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Redis Instance Mrr
 
 
@@ -234,6 +239,7 @@ data "google_compute_network" "redis-network" {
   name = "redis-test-network"
 }
 ```
+
 ## Example Usage - Redis Instance Cmek
 
 

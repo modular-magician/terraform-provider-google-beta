@@ -37,6 +37,7 @@ To get more information about Job, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scheduler Job Pubsub
 
 
@@ -62,6 +63,7 @@ resource "google_cloud_scheduler_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scheduler Job Http
 
 
@@ -92,6 +94,7 @@ resource "google_cloud_scheduler_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scheduler Job Paused
 
 
@@ -123,6 +126,7 @@ resource "google_cloud_scheduler_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scheduler Job App Engine
 
 
@@ -154,6 +158,7 @@ resource "google_cloud_scheduler_job" "job" {
   }
 }
 ```
+
 ## Example Usage - Scheduler Job Oauth
 
 
@@ -183,6 +188,7 @@ resource "google_cloud_scheduler_job" "job" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Scheduler Job Oidc
 
 

@@ -35,6 +35,7 @@ To get more information about GdaObservabilitySetting, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Gemini Gda Observability Setting Basic
 
 
@@ -49,6 +50,7 @@ resource "google_gemini_gda_observability_setting" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Gemini Gda Observability Setting Full
 
 

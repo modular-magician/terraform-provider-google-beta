@@ -30,6 +30,7 @@ Service manages a service in a management boundary
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Agent Registry Service Basic
 
 
@@ -55,6 +56,7 @@ resource "google_agent_registry_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Agent Registry Service Mcp Server
 
 

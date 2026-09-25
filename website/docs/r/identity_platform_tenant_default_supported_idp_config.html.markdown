@@ -34,6 +34,7 @@ the marketplace prior to using this resource.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Identity Platform Tenant Default Supported Idp Config Basic
 
 

@@ -35,6 +35,7 @@ To get more information about Secret, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Config Basic
 
 
@@ -64,6 +65,7 @@ resource "google_secret_manager_secret" "secret-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret With Annotations
 
 
@@ -95,6 +97,7 @@ resource "google_secret_manager_secret" "secret-with-annotations" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret With Version Destroy Ttl
 
 
@@ -114,6 +117,7 @@ resource "google_secret_manager_secret" "secret-with-version-destroy-ttl" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret With Automatic Cmek
 
 

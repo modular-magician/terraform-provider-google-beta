@@ -35,6 +35,7 @@ To get more information about CloudExadataInfrastructure, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Cloud Exadata Infrastructure Basic
 
 
@@ -58,6 +59,7 @@ resource "google_oracle_database_cloud_exadata_infrastructure" "my-cloud-exadata
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Cloud Exadata Infrastructure Full
 
 

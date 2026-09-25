@@ -37,6 +37,7 @@ To get more information about RegionTargetHttpsProxy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Target Https Proxy Basic
 
 
@@ -101,6 +102,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Target Https Proxy Http Keep Alive Timeout
 
 
@@ -168,6 +170,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Target Https Proxy Mtls
 
 
@@ -279,6 +282,7 @@ resource "google_compute_region_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Target Https Proxy Certificate Manager Certificate
 
 

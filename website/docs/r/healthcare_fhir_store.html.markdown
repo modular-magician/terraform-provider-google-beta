@@ -36,6 +36,7 @@ To get more information about FhirStore, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Fhir Store Basic
 
 
@@ -75,6 +76,7 @@ resource "google_healthcare_dataset" "dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Fhir Store Streaming Config
 
 
@@ -130,6 +132,7 @@ resource "google_bigquery_dataset" "bq_dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Fhir Store Notification Configs
 
 
@@ -169,6 +172,7 @@ resource "google_healthcare_dataset" "dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Fhir Store Consent Config
 
 
@@ -225,6 +229,7 @@ resource "google_healthcare_dataset" "dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Healthcare Fhir Store Validation Config
 
 

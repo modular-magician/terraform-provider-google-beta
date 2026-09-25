@@ -39,6 +39,7 @@ To get more information about RegionalParameter, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter Basic
 
 
@@ -53,6 +54,7 @@ resource "google_parameter_manager_regional_parameter" "regional-parameter-basic
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter With Format
 
 
@@ -68,6 +70,7 @@ resource "google_parameter_manager_regional_parameter" "regional-parameter-with-
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter With Labels
 
 
@@ -90,6 +93,7 @@ resource "google_parameter_manager_regional_parameter" "regional-parameter-with-
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Parameter With Kms Key
 
 
@@ -103,6 +107,7 @@ resource "google_parameter_manager_regional_parameter" "regional-parameter-with-
   kms_key = "kms-key"
 }
 ```
+
 ## Example Usage - Regional Parameter With Tags
 
 

@@ -37,6 +37,7 @@ To get more information about NodeTemplate, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Node Template Basic
 
 
@@ -52,6 +53,7 @@ resource "google_compute_node_template" "template" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Node Template Server Binding
 
 
@@ -79,6 +81,7 @@ resource "google_compute_node_template" "template" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Node Template Accelerators
 
 
@@ -103,6 +106,7 @@ resource "google_compute_node_template" "template" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Node Template Disks
 
 

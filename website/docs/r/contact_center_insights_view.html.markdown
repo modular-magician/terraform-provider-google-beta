@@ -33,6 +33,7 @@ To get more information about View, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Contact Center Insights View Basic
 
 
@@ -48,6 +49,7 @@ resource "google_contact_center_insights_view" "basic_view" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Contact Center Insights View Full
 
 

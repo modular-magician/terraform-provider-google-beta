@@ -38,6 +38,7 @@ To get more information about RuntimeTemplate, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Colab Runtime Template Basic
 
 
@@ -61,6 +62,7 @@ resource "google_colab_runtime_template" "runtime-template" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Colab Runtime Template No Name
 
 
@@ -86,6 +88,7 @@ resource "google_colab_runtime_template" "runtime-template" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Colab Runtime Template Full
 
 

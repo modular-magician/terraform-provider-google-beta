@@ -35,6 +35,7 @@ To get more information about PolicyBasedRoute, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Policy Based Route Basic
 
 
@@ -58,6 +59,7 @@ resource "google_compute_network" "my_network" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Policy Based Route Full
 
 

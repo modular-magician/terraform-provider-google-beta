@@ -35,6 +35,7 @@ To get more information about Repository, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Repository Basic
 
 
@@ -61,6 +62,7 @@ resource "google_secure_source_manager_repository" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Repository Initial Config
 
 
@@ -95,6 +97,7 @@ resource "google_secure_source_manager_repository" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Repository Service Account
 
 
@@ -119,6 +122,7 @@ resource "google_secure_source_manager_repository" "default" {
   service_account = google_service_account.sa.email
 }
 ```
+
 ## Example Usage - Secure Source Manager Repository Secret Scanning
 
 
@@ -172,6 +176,7 @@ resource "google_secure_source_manager_repository" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Repository Secret Scanning Default
 
 

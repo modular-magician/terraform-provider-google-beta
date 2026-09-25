@@ -35,6 +35,7 @@ To get more information about BitbucketServerConfig, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Bitbucket Server Config
 
 
@@ -52,6 +53,7 @@ resource "google_cloudbuild_bitbucket_server_config" "bbs-config" {
     api_key = "<api-key>"
 }
 ```
+
 ## Example Usage - Cloudbuild Bitbucket Server Config Repositories
 
 
@@ -83,6 +85,7 @@ resource "google_cloudbuild_bitbucket_server_config" "bbs-config-with-repos" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuild Bitbucket Server Config Peered Network
 
 

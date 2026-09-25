@@ -39,6 +39,7 @@ To get more information about TargetTcpProxy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Tcp Proxy Basic
 
 
@@ -71,6 +72,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Tcp Proxy Basic Beta
 
 
@@ -108,6 +110,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Tcp Proxy Backendless
 
 
@@ -123,6 +126,7 @@ resource "google_compute_target_tcp_proxy" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Tcp Proxy Tls Route
 
 

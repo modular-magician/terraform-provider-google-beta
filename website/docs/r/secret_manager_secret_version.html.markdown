@@ -48,6 +48,7 @@ values will be stored in the raw state as plain text: `secret_data`.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Version Basic
 
 
@@ -76,6 +77,7 @@ resource "google_secret_manager_secret_version" "secret-version-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Version Basic Write Only
 
 
@@ -104,6 +106,7 @@ resource "google_secret_manager_secret_version" "secret-version-basic-write-only
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Version Deletion Policy Abandon
 
 
@@ -132,6 +135,7 @@ resource "google_secret_manager_secret_version" "secret-version-deletion-policy"
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Version Deletion Policy Disable
 
 
@@ -160,6 +164,7 @@ resource "google_secret_manager_secret_version" "secret-version-deletion-policy"
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Version With Base64 String Secret Data
 
 
@@ -188,6 +193,7 @@ resource "google_secret_manager_secret_version" "secret-version-base64" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secret Version With Base64 String Secret Data Write Only
 
 

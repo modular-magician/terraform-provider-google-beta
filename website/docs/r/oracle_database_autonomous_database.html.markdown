@@ -35,6 +35,7 @@ To get more information about AutonomousDatabase, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Autonomous Database Basic
 
 
@@ -67,6 +68,7 @@ data "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Autonomous Database Full
 
 
@@ -117,6 +119,7 @@ data "google_compute_network" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Autonomous Database Odbnetwork
 
 
@@ -144,6 +147,7 @@ resource "google_oracle_database_autonomous_database" "myADB"{
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Autonomous Database Publicip
 
 
@@ -170,6 +174,7 @@ resource "google_oracle_database_autonomous_database" "myADB"{
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Autonomous Database Disaster Recovery
 
 

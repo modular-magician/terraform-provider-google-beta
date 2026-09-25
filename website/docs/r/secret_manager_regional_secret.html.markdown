@@ -35,6 +35,7 @@ To get more information about RegionalSecret, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Config Basic
 
 
@@ -60,6 +61,7 @@ resource "google_secret_manager_regional_secret" "regional-secret-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret With Cmek
 
 
@@ -88,6 +90,7 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-cmek" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret With Rotation
 
 
@@ -127,6 +130,7 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-rotation"
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret With Ttl
 
 
@@ -155,6 +159,7 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-ttl" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret With Expire Time
 
 
@@ -181,6 +186,7 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-expire-ti
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret With Version Destroy Ttl
 
 

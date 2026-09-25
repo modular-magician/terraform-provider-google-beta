@@ -35,6 +35,7 @@ To get more information about Connection, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudbuildv2 Connection
 
 
@@ -52,6 +53,7 @@ resource "google_cloudbuildv2_connection" "my-connection" {
   }
 }
 ```
+
 ## Example Usage - Cloudbuildv2 Connection Ghe
 
 
@@ -119,6 +121,7 @@ resource "google_cloudbuildv2_connection" "my-connection" {
   ]
 }
 ```
+
 ## Example Usage - Cloudbuildv2 Connection Github
 
 

@@ -36,6 +36,7 @@ To get more information about Snapshot, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Filestore Snapshot Basic
 
 
@@ -67,6 +68,7 @@ resource "google_filestore_instance" "instance" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Filestore Snapshot Full
 
 

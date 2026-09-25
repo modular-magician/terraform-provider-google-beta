@@ -30,6 +30,7 @@ Description
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Basic
 
 
@@ -79,6 +80,7 @@ resource "google_ces_guardrail" "ces_guardrail_basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Transfer Agent Content Filter
 
 
@@ -126,6 +128,7 @@ resource "google_ces_guardrail" "ces_guardrail_transfer_agent_content_filter" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Generative Answer Llm Prompt Security
 
 
@@ -179,6 +182,7 @@ resource "google_ces_guardrail" "ces_guardrail_generative_answer_llm_prompt_secu
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Llm Prompt Security Fail Open
 
 
@@ -222,6 +226,7 @@ resource "google_ces_guardrail" "ces_guardrail_llm_prompt_security_fail_open" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Llm Prompt Security Default Settings
 
 
@@ -265,6 +270,7 @@ resource "google_ces_guardrail" "ces_guardrail_llm_prompt_security_default_setti
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Code Callback
 
 
@@ -328,6 +334,7 @@ resource "google_ces_guardrail" "ces_guardrail_code_callback" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Ces Guardrail Llm Policy
 
 

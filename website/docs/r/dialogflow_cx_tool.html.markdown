@@ -40,6 +40,7 @@ values will be stored in the raw state as plain text: `open_api_spec.authenticat
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Open Api
 
 
@@ -128,6 +129,7 @@ resource "google_dialogflow_cx_tool" "open_api_tool" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Data Store
 
 
@@ -179,6 +181,7 @@ data "google_project" "project" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Function
 
 
@@ -229,6 +232,7 @@ resource "google_dialogflow_cx_tool" "function_tool" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Tool Connector
 
 

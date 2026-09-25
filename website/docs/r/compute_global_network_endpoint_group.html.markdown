@@ -40,6 +40,7 @@ To get more information about GlobalNetworkEndpointGroup, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Global Network Endpoint Group
 
 
@@ -55,6 +56,7 @@ resource "google_compute_global_network_endpoint_group" "neg" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Global Network Endpoint Group Ip Address
 
 

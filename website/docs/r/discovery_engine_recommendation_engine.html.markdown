@@ -35,6 +35,7 @@ To get more information about RecommendationEngine, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Discoveryengine Recommendationengine Generic
 
 
@@ -65,6 +66,7 @@ resource "google_discovery_engine_recommendation_engine" "generic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Discoveryengine Recommendationengine Media
 
 

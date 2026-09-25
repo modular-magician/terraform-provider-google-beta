@@ -38,6 +38,7 @@ To get more information about Metric, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Logging Metric Basic
 
 
@@ -80,6 +81,7 @@ resource "google_logging_metric" "logging_metric" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Logging Metric Counter Basic
 
 
@@ -98,6 +100,7 @@ resource "google_logging_metric" "logging_metric" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Logging Metric Counter Labels
 
 
@@ -119,6 +122,7 @@ resource "google_logging_metric" "logging_metric" {
   }
 }
 ```
+
 ## Example Usage - Logging Metric Logging Bucket
 
 
@@ -140,6 +144,7 @@ resource "google_logging_metric" "logging_metric" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Logging Metric Disabled
 
 

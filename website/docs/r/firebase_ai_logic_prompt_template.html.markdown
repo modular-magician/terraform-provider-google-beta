@@ -39,6 +39,7 @@ To get more information about PromptTemplate, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Firebaseailogic Prompt Template File
 
 
@@ -55,6 +56,7 @@ resource "google_firebase_ai_logic_prompt_template" "file" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Firebaseailogic Prompt Template Global Only
 
 
@@ -72,6 +74,7 @@ resource "google_firebase_ai_logic_prompt_template" "global_only" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Firebaseailogic Prompt Template Basic
 
 

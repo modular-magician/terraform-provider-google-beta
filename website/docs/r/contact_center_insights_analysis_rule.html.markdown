@@ -39,6 +39,7 @@ To get more information about AnalysisRule, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Contact Center Insights Analysis Rule Basic
 
 
@@ -48,6 +49,7 @@ resource "google_contact_center_insights_analysis_rule" "analysis_rule_basic" {
   display_name = "analysis-rule-display-name"
 }
 ```
+
 ## Example Usage - Contact Center Insights Analysis Rule Full
 
 
@@ -81,6 +83,7 @@ resource "google_contact_center_insights_analysis_rule" "analysis_rule_full" {
   active    = true
 }
 ```
+
 ## Example Usage - Contact Center Insights Analysis Rule Profile
 
 

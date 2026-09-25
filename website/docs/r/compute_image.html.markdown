@@ -54,6 +54,7 @@ values will be stored in the raw state as plain text: `image_encryption_key.raw_
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Image Basic
 
 
@@ -82,6 +83,7 @@ resource "google_compute_image" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Image Guest Os
 
 
@@ -130,6 +132,7 @@ resource "google_compute_image" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Image Basic Storage Location
 
 

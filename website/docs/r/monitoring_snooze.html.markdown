@@ -41,6 +41,7 @@ To get more information about Snooze, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Snooze Basic
 
 
@@ -82,6 +83,7 @@ resource "google_monitoring_snooze" "snooze" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Monitoring Snooze Filter
 
 

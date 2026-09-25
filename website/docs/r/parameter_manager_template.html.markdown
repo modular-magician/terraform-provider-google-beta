@@ -32,6 +32,7 @@ See [Provider Versions](../guides/provider_versions.html.markdown) for more deta
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Template Config Basic
 
 
@@ -46,6 +47,7 @@ resource "google_parameter_manager_template" "template-basic" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Template With Format
 
 
@@ -61,6 +63,7 @@ resource "google_parameter_manager_template" "template-with-format" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Template With Labels
 
 

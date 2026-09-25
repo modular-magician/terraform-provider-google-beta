@@ -28,6 +28,7 @@ To get more information about CloudControl, see:
 
 * [API documentation](https://docs.cloud.google.com/security-command-center/docs/reference/cloudsecuritycompliance/rest/v1/organizations.locations.cloudControls)
 
+
 ## Example Usage - Cloudsecuritycompliance Cloudcontrol Org Basic
 
 
@@ -188,6 +189,7 @@ resource "google_cloud_security_compliance_cloud_control" "example" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Cloudsecuritycompliance Cloudcontrol Project Basic
 
 
@@ -344,6 +346,7 @@ resource "google_cloud_security_compliance_cloud_control" "example" {
   }
 }
 ```
+
 ## Example Usage - Cloudsecuritycompliance Cloudcontrol Org Basic Backward
 
 

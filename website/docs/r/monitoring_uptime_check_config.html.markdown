@@ -37,6 +37,7 @@ values will be stored in the raw state as plain text: `http_check.auth_info.pass
 ~> **Note:**  All arguments marked as write-only values will not be stored in the state: `http_check.auth_info.password_wo`.
 [Read more about Write-only Arguments](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/write-only-arguments).
 
+
 ## Example Usage - Uptime Check Config Http
 
 
@@ -81,6 +82,7 @@ resource "google_monitoring_uptime_check_config" "http" {
   checker_type = "STATIC_IP_CHECKERS"
 }
 ```
+
 ## Example Usage - Uptime Check Config Http Password Wo
 
 
@@ -129,6 +131,7 @@ resource "google_monitoring_uptime_check_config" "http" {
   checker_type = "STATIC_IP_CHECKERS"
 }
 ```
+
 ## Example Usage - Uptime Check Config Status Code
 
 
@@ -175,6 +178,7 @@ resource "google_monitoring_uptime_check_config" "status_code" {
   checker_type = "STATIC_IP_CHECKERS"
 }
 ```
+
 ## Example Usage - Uptime Check Config Https
 
 
@@ -213,6 +217,7 @@ resource "google_monitoring_uptime_check_config" "https" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Uptime Check Tcp
 
 
@@ -239,6 +244,7 @@ resource "google_monitoring_group" "check" {
   filter       = "resource.metadata.name=has_substring(\"foo\")"
 }
 ```
+
 ## Example Usage - Uptime Check Config Synthetic Monitor
 
 

@@ -35,6 +35,7 @@ To get more information about JobTemplate, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Transcoder Job Template Basic
 
 
@@ -129,6 +130,7 @@ resource "google_transcoder_job_template" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Transcoder Job Template Overlays
 
 
@@ -242,6 +244,7 @@ resource "google_transcoder_job_template" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Transcoder Job Template Encryptions
 
 
@@ -400,6 +403,7 @@ resource "google_transcoder_job_template" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Transcoder Job Template Pubsub
 
 

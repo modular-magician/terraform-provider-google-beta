@@ -30,6 +30,7 @@ A Managed Service for Apache Kafka ACL. Apache Kafka is a trademark owned by the
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Managedkafka Acl Basic
 
 

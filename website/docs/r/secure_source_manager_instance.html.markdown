@@ -35,6 +35,7 @@ To get more information about Instance, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Basic
 
 
@@ -55,6 +56,7 @@ resource "google_secure_source_manager_instance" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Cmek
 
 
@@ -86,6 +88,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Private
 
 
@@ -176,6 +179,7 @@ data "google_project" "project" {}
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Private Custom Host
 
 
@@ -272,6 +276,7 @@ resource "time_sleep" "wait_120_seconds" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Private Psc Backend
 
 
@@ -464,6 +469,7 @@ resource "google_dns_record_set" "ssm_instance_git_record" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Private Psc Endpoint
 
 
@@ -623,6 +629,7 @@ resource "google_dns_record_set" "ssm_instance_git_record" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Secure Source Manager Instance Workforce Identity Federation
 
 

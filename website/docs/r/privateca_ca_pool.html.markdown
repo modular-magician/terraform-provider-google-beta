@@ -37,6 +37,7 @@ To get more information about CaPool, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Privateca Capool Basic
 
 
@@ -59,6 +60,7 @@ resource "google_privateca_ca_pool" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Privateca Capool All Fields
 
 

@@ -37,6 +37,7 @@ To get more information about RepositoryReleaseConfig, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataform Repository Release Config
 
 
@@ -111,6 +112,7 @@ resource "google_dataform_repository_release_config" "release" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dataform Repository Release Config Disabled
 
 

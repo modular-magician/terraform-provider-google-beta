@@ -30,6 +30,7 @@ An Exascale Storage Vault Resource
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Exascale Db Storage Vault Basic
 
 
@@ -53,6 +54,7 @@ resource "google_oracle_database_exascale_db_storage_vault" "my_storage_vault"{
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Exascale Db Storage Vault Full
 
 
@@ -84,6 +86,7 @@ resource "google_oracle_database_exascale_db_storage_vault" "my_storage_vault"{
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Exascale Db Storage Vault Dedicated Exadata Infrastructure
 
 

@@ -48,6 +48,7 @@ values will be stored in the raw state as plain text: `secret_data`.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version Basic
 
 
@@ -67,6 +68,7 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version Basic Write Only
 
 
@@ -91,6 +93,7 @@ resource "google_secret_manager_regional_secret_version" "regional-secret-versio
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version With Base64 String Secret Data Write Only
 
 
@@ -113,6 +116,7 @@ resource "google_secret_manager_regional_secret_version" "regional-secret-versio
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version With Base64 Data
 
 
@@ -133,6 +137,7 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version Disabled
 
 
@@ -153,6 +158,7 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version Deletion Policy Abandon
 
 
@@ -173,6 +179,7 @@ resource "google_secret_manager_regional_secret_version" "regional_secret_versio
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Regional Secret Version Deletion Policy Disable
 
 

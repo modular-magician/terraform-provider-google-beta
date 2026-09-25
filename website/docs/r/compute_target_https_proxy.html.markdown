@@ -37,6 +37,7 @@ To get more information about TargetHttpsProxy, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Https Proxy Basic
 
 
@@ -97,6 +98,7 @@ resource "google_compute_http_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Https Proxy Http Keep Alive Timeout
 
 
@@ -158,6 +160,7 @@ resource "google_compute_http_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Https Proxy Mtls
 
 
@@ -260,6 +263,7 @@ resource "google_compute_http_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Https Proxy Certificate Manager Certificate
 
 
@@ -315,6 +319,7 @@ resource "google_compute_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Target Https Proxy Fingerprint
 
 

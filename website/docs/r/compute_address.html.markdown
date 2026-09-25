@@ -48,6 +48,7 @@ To get more information about Address, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Address Basic
 
 
@@ -61,6 +62,7 @@ resource "google_compute_address" "ip_address" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Address With Subnetwork
 
 
@@ -89,6 +91,7 @@ resource "google_compute_address" "internal_with_subnet_and_address" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Address With Gce Endpoint
 
 
@@ -104,6 +107,7 @@ resource "google_compute_address" "internal_with_gce_endpoint" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Instance With Ip
 
 
@@ -141,6 +145,7 @@ resource "google_compute_instance" "instance_with_ip" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Address Ipsec Interconnect
 
 
@@ -164,6 +169,7 @@ resource "google_compute_network" "network" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Compute Address Enhanced Byoip
 
 

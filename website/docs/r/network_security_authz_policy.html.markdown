@@ -28,6 +28,7 @@ To get more information about AuthzPolicy, see:
 
 * [API documentation](https://cloud.google.com/load-balancing/docs/reference/network-security/rest/v1beta1/projects.locations.authzPolicies)
 
+
 ## Example Usage - Network Security Authz Policy Advanced
 
 
@@ -271,6 +272,7 @@ resource "google_network_security_authz_policy" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Security Authz Policy Mcp
 
 
@@ -309,6 +311,7 @@ resource "google_network_security_authz_policy" "default" {
   }
 }
 ```
+
 ## Example Usage - Network Security Authz Policy With Network Rules
 
 

@@ -36,6 +36,7 @@ To get more information about PatchDeployment, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Patch Deployment Basic
 
 
@@ -57,6 +58,7 @@ resource "google_os_config_patch_deployment" "patch" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Patch Deployment Daily
 
 
@@ -87,6 +89,7 @@ resource "google_os_config_patch_deployment" "patch" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Patch Deployment Daily Midnight
 
 
@@ -117,6 +120,7 @@ resource "google_os_config_patch_deployment" "patch" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Patch Deployment Instance
 
 
@@ -186,6 +190,7 @@ resource "google_os_config_patch_deployment" "patch" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Os Config Patch Deployment Full
 
 

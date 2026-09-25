@@ -35,6 +35,7 @@ To get more information about Hub, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Hub Basic
 
 
@@ -52,6 +53,7 @@ resource "google_network_connectivity_hub" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Hub With Export Psc
 
 
@@ -67,6 +69,7 @@ resource "google_network_connectivity_hub" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Hub Mesh Topology
 
 
@@ -84,6 +87,7 @@ resource "google_network_connectivity_hub" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Hub Star Topology
 
 
@@ -103,6 +107,7 @@ resource "google_network_connectivity_hub" "primary"  {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Network Connectivity Hub Policy Mode
 
 

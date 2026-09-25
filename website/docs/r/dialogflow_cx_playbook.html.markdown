@@ -35,6 +35,7 @@ To get more information about Playbook, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Playbook Basic
 
 
@@ -89,6 +90,7 @@ resource "google_dialogflow_cx_playbook" "my-playbook" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Dialogflowcx Playbook Fulfillment
 
 

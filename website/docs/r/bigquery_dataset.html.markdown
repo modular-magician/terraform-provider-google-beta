@@ -39,6 +39,7 @@ showing permanent diff on each plan and apply operation.
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Dataset Basic
 
 
@@ -69,6 +70,7 @@ resource "google_service_account" "bqowner" {
   account_id = "bqowner"
 }
 ```
+
 ## Example Usage - Bigquery Dataset Cmek
 
 
@@ -100,6 +102,7 @@ resource "google_kms_key_ring" "key_ring" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Dataset Authorized Dataset
 
 
@@ -162,6 +165,7 @@ resource "google_service_account" "bqowner" {
   account_id = "bqowner"
 }
 ```
+
 ## Example Usage - Bigquery Dataset Authorized Routine
 
 
@@ -205,6 +209,7 @@ resource "google_bigquery_dataset" "private" {
   }
 }
 ```
+
 ## Example Usage - Bigquery Dataset External Reference Aws
 
 
@@ -226,6 +231,7 @@ resource "google_bigquery_dataset" "dataset" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Bigquery Dataset External Catalog Dataset Options
 
 

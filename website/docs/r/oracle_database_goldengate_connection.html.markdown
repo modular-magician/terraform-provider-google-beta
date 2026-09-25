@@ -30,6 +30,7 @@ GoldengateConnection is a resource that represents metadata to establish a conne
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Basic
 
 
@@ -59,6 +60,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Full
 
 
@@ -94,6 +96,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Mysql
 
 
@@ -133,6 +136,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Postgresql
 
 
@@ -164,6 +168,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Redis
 
 
@@ -194,6 +199,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Kafka
 
 
@@ -230,6 +236,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Iceberg
 
 
@@ -272,6 +279,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Snowflake
 
 
@@ -301,6 +309,7 @@ resource "google_oracle_database_goldengate_connection" "connection" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Oracledatabase Goldengate Connection Jms
 
 

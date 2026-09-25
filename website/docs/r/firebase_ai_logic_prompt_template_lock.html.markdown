@@ -29,6 +29,7 @@ When this resource is deleted, the template is unlocked.
 See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 
+
 ## Example Usage - Firebaseailogic Prompt Template Lock Basic
 
 
@@ -56,6 +57,7 @@ resource "google_firebase_ai_logic_prompt_template_lock" "basic_lock" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Firebaseailogic Prompt Template Lock Global Only
 
 

@@ -45,6 +45,7 @@ To get more information about RegionHealthCheck, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Tcp
 
 
@@ -65,6 +66,7 @@ resource "google_compute_region_health_check" "tcp-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Tcp Full
 
 
@@ -92,6 +94,7 @@ resource "google_compute_region_health_check" "tcp-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Ssl
 
 
@@ -112,6 +115,7 @@ resource "google_compute_region_health_check" "ssl-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Ssl Full
 
 
@@ -139,6 +143,7 @@ resource "google_compute_region_health_check" "ssl-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Http
 
 
@@ -159,6 +164,7 @@ resource "google_compute_region_health_check" "http-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Http Logs
 
 
@@ -185,6 +191,7 @@ resource "google_compute_region_health_check" "http-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Http Full
 
 
@@ -213,6 +220,7 @@ resource "google_compute_region_health_check" "http-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Https
 
 
@@ -233,6 +241,7 @@ resource "google_compute_region_health_check" "https-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Https Full
 
 
@@ -261,6 +270,7 @@ resource "google_compute_region_health_check" "https-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Http2
 
 
@@ -281,6 +291,7 @@ resource "google_compute_region_health_check" "http2-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Http2 Full
 
 
@@ -309,6 +320,7 @@ resource "google_compute_region_health_check" "http2-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Grpc
 
 
@@ -329,6 +341,7 @@ resource "google_compute_region_health_check" "grpc-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Grpc Full
 
 
@@ -351,6 +364,7 @@ resource "google_compute_region_health_check" "grpc-region-health-check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Grpc With Tls
 
 
@@ -371,6 +385,7 @@ resource "google_compute_region_health_check" "grpc-with-tls-region-health-check
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Health Check Grpc With Tls Full
 
 

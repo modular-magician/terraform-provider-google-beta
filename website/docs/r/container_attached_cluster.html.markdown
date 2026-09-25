@@ -36,6 +36,7 @@ To get more information about Cluster, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Container Attached Cluster Basic
 
 
@@ -68,6 +69,7 @@ resource "google_container_attached_cluster" "primary" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Container Attached Cluster Full
 
 
@@ -127,6 +129,7 @@ resource "google_container_attached_cluster" "primary" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Container Attached Cluster Ignore Errors
 
 

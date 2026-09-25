@@ -35,6 +35,7 @@ To get more information about Attestor, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Binary Authorization Attestor Basic
 
 
@@ -75,6 +76,7 @@ resource "google_container_analysis_note" "note" {
   }
 }
 ```
+
 ## Example Usage - Binary Authorization Attestor Kms
 
 

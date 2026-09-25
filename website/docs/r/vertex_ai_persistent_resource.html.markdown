@@ -36,6 +36,7 @@ To get more information about PersistentResource, see:
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Persistent Resource
 
 
@@ -59,6 +60,7 @@ resource "google_vertex_ai_persistent_resource" "persistent_resource" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Persistent Resource Autoscaling
 
 
@@ -82,6 +84,7 @@ resource "google_vertex_ai_persistent_resource" "persistent_resource" {
   }
 }
 ```
+
 ## Example Usage - Vertex Ai Persistent Resource Machine Spec
 
 
@@ -111,6 +114,7 @@ resource "google_vertex_ai_persistent_resource" "persistent_resource" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Vertex Ai Persistent Resource Network
 
 

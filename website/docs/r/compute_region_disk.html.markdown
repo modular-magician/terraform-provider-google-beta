@@ -57,6 +57,7 @@ values will be stored in the raw state as plain text: `disk_encryption_key.raw_k
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Disk Basic
 
 
@@ -90,6 +91,7 @@ resource "google_compute_snapshot" "snapdisk" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Disk Disk Encryption Key Wo
 
 
@@ -127,6 +129,7 @@ resource "google_compute_snapshot" "snapdisk" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Disk Rsa Encrypted Key Wo
 
 
@@ -164,6 +167,7 @@ resource "google_compute_snapshot" "snapdisk" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Disk Async
 
 
@@ -195,6 +199,7 @@ resource "google_compute_region_disk" "secondary" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Disk Features
 
 
@@ -227,6 +232,7 @@ resource "google_compute_region_disk" "regiondisk" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Disk Hyperdisk Balanced Ha Write Many
 
 

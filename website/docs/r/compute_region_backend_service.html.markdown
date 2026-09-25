@@ -44,6 +44,7 @@ values will be stored in the raw state as plain text: `iap.oauth2_client_secret`
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Basic
 
 
@@ -71,6 +72,7 @@ resource "google_compute_health_check" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service External Iap
 
 
@@ -92,6 +94,7 @@ resource "google_compute_region_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ilb Round Robin
 
 
@@ -117,6 +120,7 @@ resource "google_compute_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service External
 
 
@@ -145,6 +149,7 @@ resource "google_compute_region_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service External Weighted
 
 
@@ -172,6 +177,7 @@ resource "google_compute_region_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ilb Ring Hash
 
 
@@ -213,6 +219,7 @@ resource "google_compute_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ilb Stateful Session Affinity
 
 
@@ -250,6 +257,7 @@ resource "google_compute_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Balancing Mode
 
 
@@ -331,6 +339,7 @@ resource "google_compute_subnetwork" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Connection Tracking
 
 
@@ -365,6 +374,7 @@ resource "google_compute_region_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ip Address Selection Policy
 
 
@@ -393,6 +403,7 @@ resource "google_compute_region_health_check" "health_check" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ilb Custom Metrics
 
 
@@ -444,6 +455,7 @@ resource "google_compute_health_check" "health_check" {
   }
 }
 ```
+
 ## Example Usage - Region Backend Service Dynamic Backend Count
 
 
@@ -497,6 +509,7 @@ resource "google_compute_instance_group" "s1" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Dynamic Forwarding
 
 
@@ -518,6 +531,7 @@ resource "google_compute_region_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Dynamic Forwarding Forward Proxy Cloud Run
 
 
@@ -541,6 +555,7 @@ resource "google_compute_region_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Dynamic Forwarding Forward Proxy Direct Forwarding
 
 
@@ -564,6 +579,7 @@ resource "google_compute_region_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ha Policy
 
 
@@ -590,6 +606,7 @@ resource "google_compute_region_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Ha Policy Manual Leader
 
 
@@ -666,6 +683,7 @@ resource "google_compute_region_backend_service" "default" {
   connection_draining_timeout_sec = 0
 }
 ```
+
 ## Example Usage - Region Backend Service Ha Policy Internal Lb
 
 
@@ -755,6 +773,7 @@ resource "google_compute_region_backend_service" "default" {
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
+
 ## Example Usage - Region Backend Service Tls Settings
 
 
