@@ -1686,9 +1686,11 @@ func cloudrunv2ServiceTemplateContainersContainersEnvSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `Name of the environment variable. Must be a C_IDENTIFIER, and may not exceed 32768 characters.`,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringNotInSlice([]string{"PORT"}, false),
+				Description: `Name of the environment variable. Must be a C_IDENTIFIER, and may not exceed 32768 characters.
+The name 'PORT' is reserved and set automatically by Cloud Run; use 'ports.container_port' instead.`,
 			},
 			"value": {
 				Type:        schema.TypeString,

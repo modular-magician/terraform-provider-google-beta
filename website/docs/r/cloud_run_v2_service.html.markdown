@@ -1226,6 +1226,7 @@ When the field is set to false, deleting the service is allowed.
 * `name` -
   (Required)
   Name of the environment variable. Must be a C_IDENTIFIER, and may not exceed 32768 characters.
+  The name `PORT` is reserved and set automatically by Cloud Run; use `ports.container_port` instead.
 
 * `value` -
   (Optional)
