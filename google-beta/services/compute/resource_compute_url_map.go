@@ -651,7 +651,32 @@ This translates to the Access-Control-Max-Age header.`,
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+						},
+						"dynamic_compression_policy": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Specifies the dynamic compression policy for traffic matched by this route.
+When set, it overrides the compression mode configured on the target backend
+service or backend bucket. When not set, the backend's setting applies.
+Dynamic compression is configured independently of cachePolicy. Available
+only for Global EXTERNAL_MANAGED load balancer schemes.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"compression_mode": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"AUTOMATIC", "DISABLED"}),
+										Description: `Specifies the dynamic compression mode for responses matched by this route.
+AUTOMATIC: the load balancer compresses eligible text responses using Brotli
+or gzip, choosing the best encoding supported by the client as indicated by
+the Accept-Encoding request header. DISABLED: disables dynamic compression
+for this route, even if it is enabled on the backend; compressed responses
+already cached by Cloud CDN are not served to clients. Possible values: ["AUTOMATIC", "DISABLED"]`,
+									},
+								},
+							},
 						},
 						"fault_injection_policy": {
 							Type:     schema.TypeList,
@@ -738,7 +763,7 @@ The value must be between 0.0 and 100.0 inclusive.`,
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
 						},
 						"max_stream_duration": {
 							Type:     schema.TypeList,
@@ -791,7 +816,7 @@ The value must be between 0.0 and 100.0 inclusive.`,
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
 						},
 						"retry_policy": {
 							Type:        schema.TypeList,
@@ -862,7 +887,7 @@ Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.2
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
 						},
 						"timeout": {
 							Type:     schema.TypeList,
@@ -891,7 +916,7 @@ Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.2
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
 						},
 						"url_rewrite": {
 							Type:        schema.TypeList,
@@ -920,7 +945,7 @@ The value must be between 1 and 1024 characters.`,
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
 						},
 						"weighted_backend_services": {
 							Type:     schema.TypeList,
@@ -1042,7 +1067,7 @@ The value must be between 0 and 1000`,
 									},
 								},
 							},
-							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
+							AtLeastOneOf: []string{"default_route_action.0.cache_policy", "default_route_action.0.cors_policy", "default_route_action.0.dynamic_compression_policy", "default_route_action.0.fault_injection_policy", "default_route_action.0.request_mirror_policy", "default_route_action.0.retry_policy", "default_route_action.0.timeout", "default_route_action.0.url_rewrite", "default_route_action.0.weighted_backend_services"},
 							ExactlyOneOf: []string{"default_route_action.0.weighted_backend_services", "default_service", "default_url_redirect"},
 						},
 					},
@@ -1711,6 +1736,31 @@ An origin is allowed if it matches either an item in allowOrigins or an item in 
 													Optional: true,
 													Description: `Specifies how long results of a preflight request can be cached in seconds.
 This translates to the Access-Control-Max-Age header.`,
+												},
+											},
+										},
+									},
+									"dynamic_compression_policy": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `Specifies the dynamic compression policy for traffic matched by this route.
+When set, it overrides the compression mode configured on the target backend
+service or backend bucket. When not set, the backend's setting applies.
+Dynamic compression is configured independently of cachePolicy. Available
+only for Global EXTERNAL_MANAGED load balancer schemes.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"compression_mode": {
+													Type:         schema.TypeString,
+													Required:     true,
+													ValidateFunc: verify.ValidateEnum([]string{"AUTOMATIC", "DISABLED"}),
+													Description: `Specifies the dynamic compression mode for responses matched by this route.
+AUTOMATIC: the load balancer compresses eligible text responses using Brotli
+or gzip, choosing the best encoding supported by the client as indicated by
+the Accept-Encoding request header. DISABLED: disables dynamic compression
+for this route, even if it is enabled on the backend; compressed responses
+already cached by Cloud CDN are not served to clients. Possible values: ["AUTOMATIC", "DISABLED"]`,
 												},
 											},
 										},
@@ -2744,6 +2794,31 @@ origin is allowed if it matches either allow_origins or allow_origin_regex.`,
 																Optional: true,
 																Description: `Specifies how long the results of a preflight request can be cached. This
 translates to the content for the Access-Control-Max-Age header.`,
+															},
+														},
+													},
+												},
+												"dynamic_compression_policy": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Description: `Specifies the dynamic compression policy for traffic matched by this route.
+When set, it overrides the compression mode configured on the target backend
+service or backend bucket. When not set, the backend's setting applies.
+Dynamic compression is configured independently of cachePolicy. Available
+only for Global EXTERNAL_MANAGED load balancer schemes.`,
+													MaxItems: 1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"compression_mode": {
+																Type:         schema.TypeString,
+																Required:     true,
+																ValidateFunc: verify.ValidateEnum([]string{"AUTOMATIC", "DISABLED"}),
+																Description: `Specifies the dynamic compression mode for responses matched by this route.
+AUTOMATIC: the load balancer compresses eligible text responses using Brotli
+or gzip, choosing the best encoding supported by the client as indicated by
+the Accept-Encoding request header. DISABLED: disables dynamic compression
+for this route, even if it is enabled on the backend; compressed responses
+already cached by Cloud CDN are not served to clients. Possible values: ["AUTOMATIC", "DISABLED"]`,
 															},
 														},
 													},
@@ -4081,6 +4156,31 @@ which indicates that the CORS policy is in effect. Defaults to false.`,
 																Optional: true,
 																Description: `Specifies how long the results of a preflight request can be cached. This
 translates to the content for the Access-Control-Max-Age header.`,
+															},
+														},
+													},
+												},
+												"dynamic_compression_policy": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Description: `Specifies the dynamic compression policy for traffic matched by this route.
+When set, it overrides the compression mode configured on the target backend
+service or backend bucket. When not set, the backend's setting applies.
+Dynamic compression is configured independently of cachePolicy. Available
+only for Global EXTERNAL_MANAGED load balancer schemes.`,
+													MaxItems: 1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"compression_mode": {
+																Type:         schema.TypeString,
+																Required:     true,
+																ValidateFunc: verify.ValidateEnum([]string{"AUTOMATIC", "DISABLED"}),
+																Description: `Specifies the dynamic compression mode for responses matched by this route.
+AUTOMATIC: the load balancer compresses eligible text responses using Brotli
+or gzip, choosing the best encoding supported by the client as indicated by
+the Accept-Encoding request header. DISABLED: disables dynamic compression
+for this route, even if it is enabled on the backend; compressed responses
+already cached by Cloud CDN are not served to clients. Possible values: ["AUTOMATIC", "DISABLED"]`,
 															},
 														},
 													},
@@ -5670,6 +5770,8 @@ func flattenComputeUrlMapPathMatcherPathRuleRouteAction(v interface{}, d *schema
 		flattenComputeUrlMapPathMatcherPathRuleRouteActionWeightedBackendServices(original["weightedBackendServices"], d, config)
 	transformed["cache_policy"] =
 		flattenComputeUrlMapPathMatcherPathRuleRouteActionCachePolicy(original["cachePolicy"], d, config)
+	transformed["dynamic_compression_policy"] =
+		flattenComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicy(original["dynamicCompressionPolicy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeUrlMapPathMatcherPathRuleRouteActionCorsPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6435,6 +6537,23 @@ func flattenComputeUrlMapPathMatcherPathRuleRouteActionCachePolicyCacheKeyPolicy
 	return v
 }
 
+func flattenComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["compression_mode"] =
+		flattenComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicyCompressionMode(original["compressionMode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeUrlMapPathMatcherPathRuleUrlRedirect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -6892,6 +7011,8 @@ func flattenComputeUrlMapPathMatcherRouteRulesRouteAction(v interface{}, d *sche
 		flattenComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServices(original["weightedBackendServices"], d, config)
 	transformed["cache_policy"] =
 		flattenComputeUrlMapPathMatcherRouteRulesRouteActionCachePolicy(original["cachePolicy"], d, config)
+	transformed["dynamic_compression_policy"] =
+		flattenComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicy(original["dynamicCompressionPolicy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeUrlMapPathMatcherRouteRulesRouteActionCorsPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7663,6 +7784,23 @@ func flattenComputeUrlMapPathMatcherRouteRulesRouteActionCachePolicyCacheKeyPoli
 	return v
 }
 
+func flattenComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["compression_mode"] =
+		flattenComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicyCompressionMode(original["compressionMode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeUrlMapPathMatcherRouteRulesUrlRedirect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -7918,6 +8056,8 @@ func flattenComputeUrlMapPathMatcherDefaultRouteAction(v interface{}, d *schema.
 		flattenComputeUrlMapPathMatcherDefaultRouteActionFaultInjectionPolicy(original["faultInjectionPolicy"], d, config)
 	transformed["cache_policy"] =
 		flattenComputeUrlMapPathMatcherDefaultRouteActionCachePolicy(original["cachePolicy"], d, config)
+	transformed["dynamic_compression_policy"] =
+		flattenComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicy(original["dynamicCompressionPolicy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeUrlMapPathMatcherDefaultRouteActionWeightedBackendServices(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -8683,6 +8823,23 @@ func flattenComputeUrlMapPathMatcherDefaultRouteActionCachePolicyCacheKeyPolicyI
 	return v
 }
 
+func flattenComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["compression_mode"] =
+		flattenComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicyCompressionMode(original["compressionMode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeUrlMapDefaultCustomErrorResponsePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -8918,6 +9075,8 @@ func flattenComputeUrlMapDefaultRouteAction(v interface{}, d *schema.ResourceDat
 		flattenComputeUrlMapDefaultRouteActionFaultInjectionPolicy(original["faultInjectionPolicy"], d, config)
 	transformed["cache_policy"] =
 		flattenComputeUrlMapDefaultRouteActionCachePolicy(original["cachePolicy"], d, config)
+	transformed["dynamic_compression_policy"] =
+		flattenComputeUrlMapDefaultRouteActionDynamicCompressionPolicy(original["dynamicCompressionPolicy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeUrlMapDefaultRouteActionWeightedBackendServices(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -9680,6 +9839,23 @@ func flattenComputeUrlMapDefaultRouteActionCachePolicyCacheKeyPolicyIncludedHead
 }
 
 func flattenComputeUrlMapDefaultRouteActionCachePolicyCacheKeyPolicyIncludedCookieNames(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapDefaultRouteActionDynamicCompressionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["compression_mode"] =
+		flattenComputeUrlMapDefaultRouteActionDynamicCompressionPolicyCompressionMode(original["compressionMode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapDefaultRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -10538,6 +10714,13 @@ func expandComputeUrlMapPathMatcherPathRuleRouteAction(v interface{}, d tpgresou
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCachePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["cachePolicy"] = transformedCachePolicy
+	}
+
+	transformedDynamicCompressionPolicy, err := expandComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicy(original["dynamic_compression_policy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDynamicCompressionPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dynamicCompressionPolicy"] = transformedDynamicCompressionPolicy
 	}
 
 	return transformed, nil
@@ -11681,6 +11864,32 @@ func expandComputeUrlMapPathMatcherPathRuleRouteActionCachePolicyCacheKeyPolicyI
 	return v, nil
 }
 
+func expandComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCompressionMode, err := expandComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicyCompressionMode(original["compression_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCompressionMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["compressionMode"] = transformedCompressionMode
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeUrlMapPathMatcherPathRuleUrlRedirect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -12476,6 +12685,13 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteAction(v interface{}, d tpgres
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCachePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["cachePolicy"] = transformedCachePolicy
+	}
+
+	transformedDynamicCompressionPolicy, err := expandComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicy(original["dynamic_compression_policy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDynamicCompressionPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dynamicCompressionPolicy"] = transformedDynamicCompressionPolicy
 	}
 
 	return transformed, nil
@@ -13630,6 +13846,32 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteActionCachePolicyCacheKeyPolic
 	return v, nil
 }
 
+func expandComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCompressionMode, err := expandComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicyCompressionMode(original["compression_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCompressionMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["compressionMode"] = transformedCompressionMode
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeUrlMapPathMatcherRouteRulesUrlRedirect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -14051,6 +14293,13 @@ func expandComputeUrlMapPathMatcherDefaultRouteAction(v interface{}, d tpgresour
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCachePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["cachePolicy"] = transformedCachePolicy
+	}
+
+	transformedDynamicCompressionPolicy, err := expandComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicy(original["dynamic_compression_policy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDynamicCompressionPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dynamicCompressionPolicy"] = transformedDynamicCompressionPolicy
 	}
 
 	return transformed, nil
@@ -15194,6 +15443,32 @@ func expandComputeUrlMapPathMatcherDefaultRouteActionCachePolicyCacheKeyPolicyIn
 	return v, nil
 }
 
+func expandComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCompressionMode, err := expandComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicyCompressionMode(original["compression_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCompressionMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["compressionMode"] = transformedCompressionMode
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeUrlMapDefaultCustomErrorResponsePolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -15591,6 +15866,13 @@ func expandComputeUrlMapDefaultRouteAction(v interface{}, d tpgresource.Terrafor
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCachePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["cachePolicy"] = transformedCachePolicy
+	}
+
+	transformedDynamicCompressionPolicy, err := expandComputeUrlMapDefaultRouteActionDynamicCompressionPolicy(original["dynamic_compression_policy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDynamicCompressionPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dynamicCompressionPolicy"] = transformedDynamicCompressionPolicy
 	}
 
 	return transformed, nil
@@ -16731,6 +17013,32 @@ func expandComputeUrlMapDefaultRouteActionCachePolicyCacheKeyPolicyIncludedHeade
 }
 
 func expandComputeUrlMapDefaultRouteActionCachePolicyCacheKeyPolicyIncludedCookieNames(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapDefaultRouteActionDynamicCompressionPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCompressionMode, err := expandComputeUrlMapDefaultRouteActionDynamicCompressionPolicyCompressionMode(original["compression_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCompressionMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["compressionMode"] = transformedCompressionMode
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapDefaultRouteActionDynamicCompressionPolicyCompressionMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
