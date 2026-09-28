@@ -14,5 +14,15 @@ fields:
     - api_field: displayName
     - api_field: enableEmailLinkSignin
     - api_field: name
+    - api_field: passwordPolicyConfig.forceUpgradeOnSignin
+    - api_field: passwordPolicyConfig.lastUpdateTime
+    - api_field: passwordPolicyConfig.passwordPolicyEnforcementState
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.customStrengthOptions.containsLowercaseCharacter
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.customStrengthOptions.containsNonAlphanumericCharacter
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.customStrengthOptions.containsNumericCharacter
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.customStrengthOptions.containsUppercaseCharacter
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.customStrengthOptions.maxPasswordLength
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.customStrengthOptions.minPasswordLength
+    - api_field: passwordPolicyConfig.passwordPolicyVersions.schemaVersion
     - field: deletion_policy
       provider_only: true
