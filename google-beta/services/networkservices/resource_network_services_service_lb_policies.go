@@ -145,7 +145,7 @@ func ResourceNetworkServicesServiceLbPolicies() *schema.Resource {
 			"location": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: `The location of the service lb policy.`,
+				Description: `The location of the service lb policy. Supported values are 'global' and regional locations (e.g. 'us-central1').`,
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -188,10 +188,11 @@ func ResourceNetworkServicesServiceLbPolicies() *schema.Resource {
 				},
 			},
 			"isolation_config": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `Configuration to provide isolation support for the associated Backend Service.`,
-				MaxItems:    1,
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Configuration to provide isolation support for the associated Backend Service.
+Note that 'isolation_config' is only supported for global ServiceLbPolicy.`,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"isolation_granularity": {
@@ -223,7 +224,8 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"SPRAY_TO_REGION", "SPRAY_TO_WORLD", "WATERFALL_BY_REGION", "WATERFALL_BY_ZONE", ""}),
-				Description:  `The type of load balancing algorithm to be used. The default behavior is WATERFALL_BY_REGION. Possible values: ["SPRAY_TO_REGION", "SPRAY_TO_WORLD", "WATERFALL_BY_REGION", "WATERFALL_BY_ZONE"]`,
+				Description: `The type of load balancing algorithm to be used. The default behavior is WATERFALL_BY_REGION.
+Note that 'SPRAY_TO_WORLD' is only supported for global ServiceLbPolicy. Possible values: ["SPRAY_TO_REGION", "SPRAY_TO_WORLD", "WATERFALL_BY_REGION", "WATERFALL_BY_ZONE"]`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,
