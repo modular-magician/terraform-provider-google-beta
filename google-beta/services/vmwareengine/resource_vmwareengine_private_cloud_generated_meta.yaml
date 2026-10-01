@@ -49,6 +49,7 @@ fields:
       field: management_cluster.node_type_configs.node_count
     - api_field: managementCluster.stretchedClusterConfig.preferredLocation
     - api_field: managementCluster.stretchedClusterConfig.secondaryLocation
+    - api_field: managementCluster.vsanType
     - field: name
       provider_only: true
     - api_field: networkConfig.dnsServerIp
