@@ -38,6 +38,10 @@ fields:
       json: true
     - api_field: errors.code
     - api_field: errors.message
+    - api_field: federatedConfig.additionalParams
+      json: true
+    - api_field: federatedConfig.authParams
+      json: true
     - api_field: incrementalRefreshInterval
     - api_field: incrementalSyncDisabled
     - api_field: jsonParams

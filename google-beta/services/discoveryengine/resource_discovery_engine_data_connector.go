@@ -425,6 +425,36 @@ method, a DataStore is automatically created for each source entity.`,
 					},
 				},
 			},
+			"federated_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Configuration for unified data source that supports federated mode.
+Notice that mathematical intersection of ConnectorModes (specifically,
+both 'DATA_INGESTION' and 'FEDERATED' are set) indicates the unified
+data source is deployed in hybrid mode, in which case this field is
+required.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"additional_params": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ValidateFunc:     validation.StringIsJSON,
+							DiffSuppressFunc: DataConnectorJsonStructFieldsDiffSuppress,
+							StateFunc:        func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:      `Any additional parameters specific to federated mode in structured json format.`,
+						},
+						"auth_params": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ValidateFunc:     validation.StringIsJSON,
+							DiffSuppressFunc: DataConnectorJsonStructFieldsDiffSuppress,
+							StateFunc:        func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+							Description:      `Any authentication parameters specific to federated mode in structured json format.`,
+						},
+					},
+				},
+			},
 			"incremental_refresh_interval": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -773,6 +803,12 @@ func resourceDiscoveryEngineDataConnectorCreate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("metadata"); !tpgresource.IsEmptyValue(reflect.ValueOf(metadataProp)) && (ok || !reflect.DeepEqual(v, metadataProp)) {
 		obj["metadata"] = metadataProp
 	}
+	federatedConfigProp, err := expandDiscoveryEngineDataConnectorFederatedConfig(d.Get("federated_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("federated_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(federatedConfigProp)) && (ok || !reflect.DeepEqual(v, federatedConfigProp)) {
+		obj["federatedConfig"] = federatedConfigProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}:setUpDataConnectorV2?collectionId={{collection_id}}&collectionDisplayName={{collection_display_name}}")
 	if err != nil {
@@ -1067,6 +1103,12 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("incremental_sync_disabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, incrementalSyncDisabledProp)) {
 		obj["incrementalSyncDisabled"] = incrementalSyncDisabledProp
 	}
+	federatedConfigProp, err := expandDiscoveryEngineDataConnectorFederatedConfig(d.Get("federated_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("federated_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, federatedConfigProp)) {
+		obj["federatedConfig"] = federatedConfigProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/collections/{{collection_id}}/dataConnector")
 	if err != nil {
@@ -1128,6 +1170,10 @@ func resourceDiscoveryEngineDataConnectorUpdate(d *schema.ResourceData, meta int
 
 	if d.HasChange("incremental_sync_disabled") {
 		updateMask = append(updateMask, "incrementalSyncDisabled")
+	}
+
+	if d.HasChange("federated_config") {
+		updateMask = append(updateMask, "federatedConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1598,6 +1644,45 @@ func flattenDiscoveryEngineDataConnectorMetadataNote(v interface{}, d *schema.Re
 	return v
 }
 
+func flattenDiscoveryEngineDataConnectorFederatedConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["auth_params"] =
+		flattenDiscoveryEngineDataConnectorFederatedConfigAuthParams(original["authParams"], d, config)
+	transformed["additional_params"] =
+		flattenDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(original["additionalParams"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataConnectorFederatedConfigAuthParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
 func expandDiscoveryEngineDataConnectorDataSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1989,6 +2074,59 @@ func expandDiscoveryEngineDataConnectorMetadataAuthor(v interface{}, d tpgresour
 
 func expandDiscoveryEngineDataConnectorMetadataNote(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAuthParams, err := expandDiscoveryEngineDataConnectorFederatedConfigAuthParams(original["auth_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authParams"] = transformedAuthParams
+	}
+
+	transformedAdditionalParams, err := expandDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(original["additional_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAdditionalParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["additionalParams"] = transformedAdditionalParams
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfigAuthParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineDataConnectorFederatedConfigAdditionalParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func ResourceDiscoveryEngineDataConnectorUpgradeV0(_ context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
@@ -2439,6 +2577,9 @@ func ResourceDiscoveryEngineDataConnectorFlatten(d *schema.ResourceData, meta in
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
 	if err = d.Set("metadata", flattenDiscoveryEngineDataConnectorMetadata(res["metadata"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataConnector: %s", err)
+	}
+	if err = d.Set("federated_config", flattenDiscoveryEngineDataConnectorFederatedConfig(res["federatedConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
 

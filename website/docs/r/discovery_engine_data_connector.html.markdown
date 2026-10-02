@@ -345,6 +345,15 @@ The following arguments are supported:
   User-facing metadata for the connector.
   Structure is [documented below](#nested_metadata).
 
+* `federated_config` -
+  (Optional)
+  Configuration for unified data source that supports federated mode.
+  Notice that mathematical intersection of ConnectorModes (specifically,
+  both `DATA_INGESTION` and `FEDERATED` are set) indicates the unified
+  data source is deployed in hybrid mode, in which case this field is
+  required.
+  Structure is [documented below](#nested_federated_config).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -468,6 +477,16 @@ The following arguments are supported:
 * `note` -
   (Optional)
   Free-form, multi-line note about the connector's capabilities.
+
+<a name="nested_federated_config"></a>The `federated_config` block supports:
+
+* `auth_params` -
+  (Optional)
+  Any authentication parameters specific to federated mode in structured json format.
+
+* `additional_params` -
+  (Optional)
+  Any additional parameters specific to federated mode in structured json format.
 
 ## Attributes Reference
 
