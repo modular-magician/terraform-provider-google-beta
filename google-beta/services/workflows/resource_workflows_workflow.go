@@ -974,9 +974,9 @@ func resourceWorkflowsWorkflowEncoder(d *schema.ResourceData, meta interface{}, 
 	} else if v, ok := d.GetOk("name_prefix"); ok {
 		prefix := v.(string)
 		if len(prefix) > 37 {
-			ResName = tpgresource.ReducedPrefixedUniqueId(prefix)
+			ResName = tpgresource.ReducedPrefixedRandomId(prefix)
 		} else {
-			ResName = id.PrefixedUniqueId(prefix)
+			ResName = tpgresource.PrefixedRandomId(prefix)
 		}
 	} else {
 		ResName = id.UniqueId()

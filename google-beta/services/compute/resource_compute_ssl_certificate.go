@@ -588,9 +588,9 @@ func expandComputeSslCertificateName(v interface{}, d tpgresource.TerraformResou
 	} else if v, ok := d.GetOk("name_prefix"); ok {
 		prefix := v.(string)
 		if len(prefix) > 37 {
-			certName = tpgresource.ReducedPrefixedUniqueId(prefix)
+			certName = tpgresource.ReducedPrefixedRandomId(prefix)
 		} else {
-			certName = id.PrefixedUniqueId(prefix)
+			certName = tpgresource.PrefixedRandomId(prefix)
 		}
 	} else {
 		certName = id.UniqueId()
