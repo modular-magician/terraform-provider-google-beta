@@ -131,7 +131,7 @@ func ResourceComputeNetworkEndpoint() *schema.Resource {
 					},
 					"ip_address": {
 						Type:              schema.TypeString,
-						RequiredForImport: true,
+						OptionalForImport: true,
 					},
 					"zone": {
 						Type:              schema.TypeString,
@@ -153,14 +153,6 @@ func ResourceComputeNetworkEndpoint() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"ip_address": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				Description: `IPv4 address of network endpoint. The IP address must belong
-to a VM in GCE (either the primary IP or as part of an aliased IP
-range).`,
-			},
 			"network_endpoint_group": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -176,6 +168,24 @@ range).`,
 				Description: `The name for a specific VM instance that the IP address belongs to.
 This is required for network endpoints of type GCE_VM_IP_PORT.
 The instance must be in the same zone of network endpoint group.`,
+			},
+			"ip_address": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `IPv4 address of network endpoint. The IP address must belong
+to a VM in GCE (either the primary IP or as part of an aliased IP
+range).`,
+				AtLeastOneOf: []string{"ip_address", "ipv6_address"},
+			},
+			"ipv6_address": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: tpgresource.IpAddressDiffSuppress,
+				Description: `IPv6 address of network endpoint. The result of parsing the endpoint config,
+or empty if IPv6 is not used.`,
+				AtLeastOneOf: []string{"ip_address", "ipv6_address"},
 			},
 			"port": {
 				Type:     schema.TypeInt,
@@ -241,6 +251,12 @@ func resourceComputeNetworkEndpointCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("ip_address"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipAddressProp)) && (ok || !reflect.DeepEqual(v, ipAddressProp)) {
 		obj["ipAddress"] = ipAddressProp
+	}
+	ipv6AddressProp, err := expandNestedComputeNetworkEndpointIpv6Address(d.Get("ipv6_address"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("ipv6_address"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipv6AddressProp)) && (ok || !reflect.DeepEqual(v, ipv6AddressProp)) {
+		obj["ipv6Address"] = ipv6AddressProp
 	}
 
 	obj, err = resourceComputeNetworkEndpointEncoder(d, meta, obj)
@@ -553,7 +569,17 @@ func resourceComputeNetworkEndpointDelete(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-	toDelete["ipAddress"] = ipAddressProp
+	if ipAddressProp != nil && ipAddressProp != "" {
+		toDelete["ipAddress"] = ipAddressProp
+	}
+
+	ipv6AddressProp, err := expandNestedComputeNetworkEndpointIpv6Address(d.Get("ipv6_address"), d, config)
+	if err != nil {
+		return err
+	}
+	if ipv6AddressProp != nil && ipv6AddressProp != "" {
+		toDelete["ipv6Address"] = ipv6AddressProp
+	}
 
 	obj = map[string]interface{}{
 		"networkEndpoints": []map[string]interface{}{toDelete},
@@ -588,12 +614,12 @@ func resourceComputeNetworkEndpointDelete(d *schema.ResourceData, meta interface
 
 func resourceComputeNetworkEndpointImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	// instance is optional, so use * instead of + when reading the import id
+	// instance and ip_address are optional
 	if err := tpgresource.ParseImportId([]string{
-		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/networkEndpointGroups/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-		"(?P<zone>[^/]+)/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-		"(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
+		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/networkEndpointGroups/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]*)/(?P<port>[^/]+)",
+		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]*)/(?P<port>[^/]+)",
+		"(?P<zone>[^/]+)/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]*)/(?P<port>[^/]+)",
+		"(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]*)/(?P<port>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
@@ -627,6 +653,10 @@ func flattenNestedComputeNetworkEndpointIpAddress(v interface{}, d *schema.Resou
 	return v
 }
 
+func flattenNestedComputeNetworkEndpointIpv6Address(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return tpgresource.CanonicalizeIp(v)
+}
+
 func expandNestedComputeNetworkEndpointInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
 }
@@ -637,6 +667,10 @@ func expandNestedComputeNetworkEndpointPort(v interface{}, d tpgresource.Terrafo
 
 func expandNestedComputeNetworkEndpointIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandNestedComputeNetworkEndpointIpv6Address(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return tpgresource.CanonicalizeIp(v), nil
 }
 
 func resourceComputeNetworkEndpointEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
@@ -749,6 +783,9 @@ func ResourceComputeNetworkEndpointFlatten(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("Error reading NetworkEndpoint: %s", err)
 	}
 	if err = d.Set("ip_address", flattenNestedComputeNetworkEndpointIpAddress(res["ipAddress"], d, config)); err != nil {
+		return fmt.Errorf("Error reading NetworkEndpoint: %s", err)
+	}
+	if err = d.Set("ipv6_address", flattenNestedComputeNetworkEndpointIpv6Address(res["ipv6Address"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpoint: %s", err)
 	}
 
