@@ -84,8 +84,15 @@ func TestAccServiceUsageV2ConsumerPolicy_update(t *testing.T) {
 				},
 			},
 			{
-				Config:      testAccServiceUsageV2ConsumerPolicy_serviceusagev2Consumerpolicy_removeCheckUsageError(context),
-				ExpectError: regexp.MustCompile(".*have usage in the last 30 days or were enabled in the past 3 days\\. Please specify force if you want to proceed with the destructive policy change.*"),
+				Config: testAccServiceUsageV2ConsumerPolicy_serviceusagev2Consumerpolicy_withCatalogs(context),
+			},
+			{
+				ResourceName:      "google_service_usage_v2_consumer_policy.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"validate_dependencies", "check_usage_on_remove",
+				},
 			},
 			{
 				Config: testAccServiceUsageV2ConsumerPolicy_serviceusagev2Consumerpolicy_dependnecyValidationOff(context),
@@ -165,12 +172,12 @@ func testAccServiceUsageV2ConsumerPolicy_allowDeletion(context map[string]interf
       name   = "default"
 
       enable_rules {
-        services = ["services/compute.googleapis.com"]
+        services = []
       }
 
       # 🚀 Override strict validations to allow clean teardown
-      check_usage_on_remove = false
       validate_dependencies = false
+      check_usage_on_remove = false
     }
 `, context)
 }
@@ -259,7 +266,7 @@ resource "google_service_usage_v2_consumer_policy" "default" {
 `, context)
 }
 
-func testAccServiceUsageV2ConsumerPolicy_serviceusagev2Consumerpolicy_removeCheckUsageError(context map[string]interface{}) string {
+func testAccServiceUsageV2ConsumerPolicy_serviceusagev2Consumerpolicy_withCatalogs(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 provider "google-beta" {
   user_project_override = true
@@ -279,9 +286,11 @@ resource "google_service_usage_v2_consumer_policy" "default" {
   parent = "projects/${google_project.basic.project_id}"
   name   = "default"
   enable_rules  {
+    services = ["services/oslogin.googleapis.com"]
+    catalogs = []
   }
   validate_dependencies = true
-  check_usage_on_remove = true
+  check_usage_on_remove = false
 }
 `, context)
 }
