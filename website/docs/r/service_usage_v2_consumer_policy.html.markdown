@@ -69,6 +69,10 @@ The following arguments are supported:
   (Optional)
   (Optional): List of service names to be enabled in the format of services/<service_name>
 
+* `catalogs` -
+  (Optional)
+  (Optional): List of service catalog names to be enabled in the format of catalogs/<catalog_name>, for example catalogs/default-cloud-services.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:

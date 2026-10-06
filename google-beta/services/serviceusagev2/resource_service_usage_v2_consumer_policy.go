@@ -79,9 +79,15 @@ type ProposedPolicy struct {
 	EnableRules []map[string][]string `json:"enableRules"`
 }
 
-func NewAnalysisRequest(name string, services []string) map[string]any {
+func NewAnalysisRequest(name string, services []string, catalogs []string) map[string]any {
+	rule := map[string][]string{
+		"services": services,
+	}
+	if len(catalogs) > 0 {
+		rule["catalogs"] = catalogs
+	}
 	enableRules := []map[string][]string{
-		{"services": services},
+		rule,
 	}
 	return map[string]any{
 		"proposedPolicy": ProposedPolicy{Name: name, EnableRules: enableRules},
@@ -139,6 +145,27 @@ func getServices(rules interface{}) []string {
 			} else if servicesSlice, ok := services.([]interface{}); ok {
 				for _, service := range servicesSlice {
 					output = append(output, service.(string))
+				}
+			}
+		}
+	}
+	return output
+}
+
+func getCatalogs(rules interface{}) []string {
+	var output []string
+	for _, enableRules := range rules.([]interface{}) {
+		if enableRules == nil {
+			continue
+		}
+		if catalogs, ok := enableRules.(map[string]interface{})["catalogs"]; ok {
+			if catalogsSet, ok := catalogs.(*schema.Set); ok {
+				for _, catalog := range catalogsSet.List() {
+					output = append(output, catalog.(string))
+				}
+			} else if catalogsSlice, ok := catalogs.([]interface{}); ok {
+				for _, catalog := range catalogsSlice {
+					output = append(output, catalog.(string))
 				}
 			}
 		}
@@ -259,6 +286,15 @@ func ResourceServiceUsageV2ConsumerPolicy() *schema.Resource {
 				Description: `The consumer policy rule that defines enabled services. The structure is documented below.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"catalogs": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: `(Optional): List of service catalog names to be enabled in the format of catalogs/<catalog_name>, for example catalogs/default-cloud-services.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Set: schema.HashString,
+						},
 						"services": {
 							Type:        schema.TypeSet,
 							Optional:    true,
@@ -296,6 +332,7 @@ Used internally during updates.`,
 			"check_usage_on_remove": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Deprecated:  "`check_usage_on_remove` is deprecated and will be removed in a future major release.",
 				Description: `(Optional) Default value is false. If true, the usage of the service to be removed will be checked. If the service has been used within the past 30 days or was enabled in the last 3 days, an error will be thrown.`,
 				Default:     false,
 			},
@@ -354,13 +391,14 @@ func resourceServiceUsageV2ConsumerPolicyCreate(d *schema.ResourceData, meta int
 	headers := make(http.Header)
 	newRules := d.Get("enable_rules")
 	newServices := getServices(newRules)
+	newCatalogs := getCatalogs(newRules)
 
 	// check dependencies if the "respect_dependencies" flag is enabled
 	validateDependenciesEnabled := d.Get("validate_dependencies").(bool)
 
 	if validateDependenciesEnabled {
 		name := fmt.Sprintf("%s/consumerPolicies/%s", d.Get("parent"), d.Get("name"))
-		analysisRequest := NewAnalysisRequest(name, newServices)
+		analysisRequest := NewAnalysisRequest(name, newServices, newCatalogs)
 		req := transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "POST",
@@ -406,10 +444,8 @@ func resourceServiceUsageV2ConsumerPolicyCreate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if !d.Get("check_usage_on_remove").(bool) {
-		if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
-			return err
-		}
+	if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Update policy request: %v", obj)
@@ -611,13 +647,14 @@ func resourceServiceUsageV2ConsumerPolicyUpdate(d *schema.ResourceData, meta int
 
 	newRules := d.Get("enable_rules")
 	newServices := getServices(newRules)
+	newCatalogs := getCatalogs(newRules)
 
 	// check dependencies if the "respect_dependencies" flag is enabled
 	validateDependenciesEnabled := d.Get("validate_dependencies").(bool)
 
 	if validateDependenciesEnabled {
 		name := fmt.Sprintf("%s/consumerPolicies/%s", d.Get("parent"), d.Get("name"))
-		analysisRequest := NewAnalysisRequest(name, newServices)
+		analysisRequest := NewAnalysisRequest(name, newServices, newCatalogs)
 		req := transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "POST",
@@ -663,10 +700,8 @@ func resourceServiceUsageV2ConsumerPolicyUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if !d.Get("check_usage_on_remove").(bool) {
-		if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
-			return err
-		}
+	if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Update policy request: %v", obj)
@@ -735,13 +770,14 @@ func resourceServiceUsageV2ConsumerPolicyDelete(d *schema.ResourceData, meta int
 	headers := make(http.Header)
 	newRules := d.Get("enable_rules")
 	newServices := getServices(newRules)
+	newCatalogs := getCatalogs(newRules)
 
 	// check dependencies if the "respect_dependencies" flag is enabled
 	validateDependenciesEnabled := d.Get("validate_dependencies").(bool)
 
 	if validateDependenciesEnabled {
 		name := fmt.Sprintf("%s/consumerPolicies/%s", d.Get("parent"), d.Get("name"))
-		analysisRequest := NewAnalysisRequest(name, newServices)
+		analysisRequest := NewAnalysisRequest(name, newServices, newCatalogs)
 		req := transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "POST",
@@ -787,10 +823,8 @@ func resourceServiceUsageV2ConsumerPolicyDelete(d *schema.ResourceData, meta int
 		}
 	}
 
-	if !d.Get("check_usage_on_remove").(bool) {
-		if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
-			return err
-		}
+	if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Update policy request: %v", obj)
@@ -863,11 +897,19 @@ func flattenServiceUsageV2ConsumerPolicyEnableRules(v interface{}, d *schema.Res
 		}
 		transformed = append(transformed, map[string]interface{}{
 			"services": flattenServiceUsageV2ConsumerPolicyEnableRulesServices(original["services"], d, config),
+			"catalogs": flattenServiceUsageV2ConsumerPolicyEnableRulesCatalogs(original["catalogs"], d, config),
 		})
 	}
 	return transformed
 }
 func flattenServiceUsageV2ConsumerPolicyEnableRulesServices(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return schema.NewSet(schema.HashString, v.([]interface{}))
+}
+
+func flattenServiceUsageV2ConsumerPolicyEnableRulesCatalogs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
 	}
@@ -898,12 +940,24 @@ func expandServiceUsageV2ConsumerPolicyEnableRules(v interface{}, d tpgresource.
 			transformed["services"] = transformedServices
 		}
 
+		transformedCatalogs, err := expandServiceUsageV2ConsumerPolicyEnableRulesCatalogs(original["catalogs"], d, config)
+		if err != nil {
+			return nil, err
+		} else {
+			transformed["catalogs"] = transformedCatalogs
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
 }
 
 func expandServiceUsageV2ConsumerPolicyEnableRulesServices(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	v = v.(*schema.Set).List()
+	return v, nil
+}
+
+func expandServiceUsageV2ConsumerPolicyEnableRulesCatalogs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
@@ -917,7 +971,6 @@ func resourceServiceUsageV2ConsumerPolicyPostCreateFailure(d *schema.ResourceDat
 	// Post-create failure QoL log hints
 	log.Printf("[WARN] Service Usage Policy creation failed.")
 	log.Printf("[WARN] Hint 1: If due to concurrent modification (SU_CONFLICTING_CONCURRENT_MODIFICATION), re-sync and retry.")
-	log.Printf("[WARN] Hint 2: If due to active service usage (COMMON_SU_SERVICES_HAVE_USAGE), set check_usage_on_remove to false.")
 	return err
 }
 
