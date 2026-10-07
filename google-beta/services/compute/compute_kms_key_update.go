@@ -22,6 +22,8 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 // updateKmsKey only supports CMEK -> CMEK. It rejects non-CMEK resources and
@@ -48,6 +50,10 @@ func forceNewOnUnsupportedKmsKeyChange(keyPath, serviceAccountPath string) schem
 			return nil
 		}
 		oldKey, newKey := d.GetChange(keyPath)
+		// HasChange ignores DiffSuppressFunc.
+		if d.NewValueKnown(keyPath) && tpgresource.CompareKmsKeyNames(keyPath, oldKey.(string), newKey.(string), nil) {
+			return nil
+		}
 		serviceAccountSet := false
 		if serviceAccountPath != "" {
 			oldServiceAccount, newServiceAccount := d.GetChange(serviceAccountPath)

@@ -227,9 +227,13 @@ done in place; other changes to this block recreate the snapshot.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"kms_key_self_link": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `The name of the encryption key that is stored in Google Cloud KMS.`,
+							Type:             schema.TypeString,
+							Optional:         true,
+							DiffSuppressFunc: tpgresource.CompareKmsKeyNames,
+							Description: `The name of the encryption key that is stored in Google Cloud KMS.
+
+Specify the key without a '/cryptoKeyVersions/' suffix. A version on
+the current key is ignored.`,
 						},
 						"kms_key_service_account": {
 							Type:     schema.TypeString,

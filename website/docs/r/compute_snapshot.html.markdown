@@ -315,6 +315,8 @@ The following arguments are supported:
 * `kms_key_self_link` -
   (Optional)
   The name of the encryption key that is stored in Google Cloud KMS.
+  Specify the key without a `/cryptoKeyVersions/` suffix. A version on
+  the current key is ignored.
 
 * `kms_key_service_account` -
   (Optional)
