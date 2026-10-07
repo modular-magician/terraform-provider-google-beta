@@ -1521,12 +1521,6 @@ func resourceMemorystoreInstanceUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("shard_count"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, shardCountProp)) {
 		obj["shardCount"] = shardCountProp
 	}
-	nodeTypeProp, err := expandMemorystoreInstanceNodeType(d.Get("node_type"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("node_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeTypeProp)) {
-		obj["nodeType"] = nodeTypeProp
-	}
 	persistenceConfigProp, err := expandMemorystoreInstancePersistenceConfig(d.Get("persistence_config"), d, config)
 	if err != nil {
 		return err
@@ -1550,12 +1544,6 @@ func resourceMemorystoreInstanceUpdate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("engine_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, engineVersionProp)) {
 		obj["engineVersion"] = engineVersionProp
-	}
-	engineConfigsProp, err := expandMemorystoreInstanceEngineConfigs(d.Get("engine_configs"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("engine_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, engineConfigsProp)) {
-		obj["engineConfigs"] = engineConfigsProp
 	}
 	deletionProtectionEnabledProp, err := expandMemorystoreInstanceDeletionProtectionEnabled(d.Get("deletion_protection_enabled"), d, config)
 	if err != nil {
@@ -1606,10 +1594,6 @@ func resourceMemorystoreInstanceUpdate(d *schema.ResourceData, meta interface{})
 		updateMask = append(updateMask, "shardCount")
 	}
 
-	if d.HasChange("node_type") {
-		updateMask = append(updateMask, "nodeType")
-	}
-
 	if d.HasChange("persistence_config") {
 		updateMask = append(updateMask, "persistenceConfig")
 	}
@@ -1624,10 +1608,6 @@ func resourceMemorystoreInstanceUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("engine_version") {
 		updateMask = append(updateMask, "engineVersion")
-	}
-
-	if d.HasChange("engine_configs") {
-		updateMask = append(updateMask, "engineConfigs")
 	}
 
 	if d.HasChange("deletion_protection_enabled") {
@@ -1680,6 +1660,61 @@ func resourceMemorystoreInstanceUpdate(d *schema.ResourceData, meta interface{})
 			return err
 		}
 	}
+	d.Partial(true)
+
+	if d.HasChange("node_type") || d.HasChange("engine_configs") {
+		obj := make(map[string]interface{})
+
+		nodeTypeProp, err := expandMemorystoreInstanceNodeType(d.Get("node_type"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("node_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeTypeProp)) {
+			obj["nodeType"] = nodeTypeProp
+		}
+		engineConfigsProp, err := expandMemorystoreInstanceEngineConfigs(d.Get("engine_configs"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("engine_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, engineConfigsProp)) {
+			obj["engineConfigs"] = engineConfigsProp
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/instances/{{instance_id}}")
+		if err != nil {
+			return err
+		}
+
+		headers := make(http.Header)
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating Instance %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating Instance %q: %#v", d.Id(), res)
+		}
+
+		err = MemorystoreOperationWaitTime(
+			config, res, project, "Updating Instance", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
+
+	d.Partial(false)
 
 	return resourceMemorystoreInstanceRead(d, meta)
 }
