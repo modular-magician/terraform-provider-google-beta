@@ -795,19 +795,21 @@ func TestAccDataplexDatascan_dataplexDatascanDocumentationExample(t *testing.T) 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"location":      envvar.GetTestRegionFromEnv(),
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"datascan_name": "datadocumentation" + randomSuffix,
-		"sql_dialect":   "GOOGLE_SQL",
-		"random_suffix": randomSuffix,
+		"location":            envvar.GetTestRegionFromEnv(),
+		"project_name":        envvar.GetTestProjectFromEnv(),
+		"custom_instructions": "example custom instructions",
+		"datascan_name":       "datadocumentation" + randomSuffix,
+		"sql_dialect":         "GOOGLE_SQL",
+		"random_suffix":       randomSuffix,
 	}
 
 	context_1 := map[string]interface{}{
-		"location":      envvar.GetTestRegionFromEnv(),
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"datascan_name": "datadocumentation" + randomSuffix,
-		"sql_dialect":   "SPARK_SQL",
-		"random_suffix": randomSuffix,
+		"location":            envvar.GetTestRegionFromEnv(),
+		"project_name":        envvar.GetTestProjectFromEnv(),
+		"custom_instructions": "updated custom instructions",
+		"datascan_name":       "datadocumentation" + randomSuffix,
+		"sql_dialect":         "SPARK_SQL",
+		"random_suffix":       randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -933,6 +935,7 @@ resource "google_dataplex_datascan" "documentation" {
   }
 
   data_documentation_spec {
+    custom_instructions        = "%{custom_instructions}"
     catalog_publishing_enabled = true
     sql_dialect                = "%{sql_dialect}"
   }

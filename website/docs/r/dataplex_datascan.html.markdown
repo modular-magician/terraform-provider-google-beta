@@ -544,6 +544,7 @@ resource "google_dataplex_datascan" "documentation" {
   }
 
   data_documentation_spec {
+    custom_instructions        = "example custom instructions"
     catalog_publishing_enabled = true
     sql_dialect                = "GOOGLE_SQL"
   }
@@ -1702,6 +1703,11 @@ The following arguments are supported:
   Whether to disable the inference of data types for JSON data. If true, all columns are registered as their primitive types (strings, number, or boolean).
 
 <a name="nested_data_documentation_spec"></a>The `data_documentation_spec` block supports:
+
+* `custom_instructions` -
+  (Optional)
+  Specifies optional custom instructions for generating documentation scan.
+  The maximum length is 2,048 characters.
 
 * `catalog_publishing_enabled` -
   (Optional)
