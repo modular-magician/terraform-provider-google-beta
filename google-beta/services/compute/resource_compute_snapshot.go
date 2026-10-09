@@ -113,7 +113,7 @@ func ResourceComputeSnapshot() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
-			forceNewOnUnsupportedKmsKeyChange("snapshot_encryption_key.0.kms_key_self_link", "snapshot_encryption_key.0.kms_key_service_account"),
+			validateKmsKeyChange("snapshot_encryption_key.0.kms_key_self_link", "snapshot_encryption_key.0.kms_key_service_account", "snapshot_encryption_key.0.sha256"),
 			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
@@ -206,7 +206,6 @@ and values are in the format tagValues/456.`,
 			"snapshot_encryption_key": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				Description: `Encrypts the snapshot using a customer-supplied encryption key.
 
 After you encrypt a snapshot using a customer-supplied key, you must
@@ -221,15 +220,20 @@ If you do not provide an encryption key when creating the snapshot,
 then the snapshot will be encrypted using an automatically generated
 key and you do not need to provide a key to use the snapshot later.
 
-~>**NOTE** Only changing 'kms_key_self_link' between Cloud KMS keys is
-done in place; other changes to this block recreate the snapshot.`,
+~>**NOTE** 'kms_key_self_link' can be added or changed in place.
+Removing it, or changing it while 'kms_key_service_account' is set,
+fails at plan time. Other changes to this block recreate the snapshot.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"kms_key_self_link": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `The name of the encryption key that is stored in Google Cloud KMS.`,
+							Type:             schema.TypeString,
+							Optional:         true,
+							DiffSuppressFunc: tpgresource.CompareKmsKeyNames,
+							Description: `The name of the encryption key that is stored in Google Cloud KMS.
+
+Specify the key without a '/cryptoKeyVersions/' suffix. A version on
+the current key is ignored; a version on a different key fails at plan time.`,
 						},
 						"kms_key_service_account": {
 							Type:     schema.TypeString,
@@ -797,11 +801,10 @@ func resourceComputeSnapshotUpdate(d *schema.ResourceData, meta interface{}) err
 	// Nested fields aren't handled by the generated update. Runs after
 	// d.Partial(false), so set d.Partial(true) on error to keep the old state.
 	if d.HasChange("snapshot_encryption_key.0.kms_key_self_link") {
-		oldKey, newKey := d.GetChange("snapshot_encryption_key.0.kms_key_self_link")
-		kmsKeyObj, err := kmsKeyUpdateRequestBody(oldKey.(string), newKey.(string), d.Get("snapshot_encryption_key.0.kms_key_service_account").(string))
+		kmsKeyObj, err := kmsKeyUpdateRequestBody(d.Get("snapshot_encryption_key.0.kms_key_self_link").(string), d.Get("snapshot_encryption_key.0.kms_key_service_account").(string))
 		if err != nil {
 			d.Partial(true)
-			return fmt.Errorf("Error updating Snapshot %q KMS key: %s", d.Id(), err)
+			return fmt.Errorf("error updating Snapshot %q KMS key: %w", d.Id(), err)
 		}
 
 		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/snapshots/{{name}}/updateKmsKey")
@@ -825,7 +828,7 @@ func resourceComputeSnapshotUpdate(d *schema.ResourceData, meta interface{}) err
 		})
 		if err != nil {
 			d.Partial(true)
-			return fmt.Errorf("Error updating Snapshot %q KMS key: %s", d.Id(), err)
+			return fmt.Errorf("error updating Snapshot %q KMS key: %w", d.Id(), err)
 		}
 
 		err = ComputeOperationWaitTime(config, res, project, "Updating Snapshot KMS Key", userAgent, d.Timeout(schema.TimeoutUpdate))

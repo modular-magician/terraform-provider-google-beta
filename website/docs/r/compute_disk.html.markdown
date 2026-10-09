@@ -221,8 +221,9 @@ The following arguments are supported:
   If you do not provide an encryption key when creating the disk, then
   the disk will be encrypted using an automatically generated key and
   you do not need to provide a key to use the disk later.
-  ~>**NOTE** Only changing `kms_key_self_link` between Cloud KMS keys is
-  done in place; other changes to this block recreate the disk.
+  ~>**NOTE** `kms_key_self_link` can be added or changed in place.
+  Removing it, or changing it while `kms_key_service_account` is set,
+  fails at plan time. Other changes to this block recreate the disk.
   Structure is [documented below](#nested_disk_encryption_key).
 
 * `source_snapshot_encryption_key` -
@@ -469,6 +470,8 @@ The name of the snapshot by default will be `{{disk-name}}-YYYYMMDD-HHmm`
   (`service-{{PROJECT_NUMBER}}@compute-system.iam.gserviceaccount.com`) must have
   `roles/cloudkms.cryptoKeyEncrypterDecrypter` to use this feature.
   See https://cloud.google.com/compute/docs/disks/customer-managed-encryption#encrypt_a_new_persistent_disk_with_your_own_keys
+  Specify the key without a `/cryptoKeyVersions/` suffix. A version on
+  the current key is ignored; a version on a different key fails at plan time.
 
 * `kms_key_service_account` -
   (Optional)

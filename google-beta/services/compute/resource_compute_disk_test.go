@@ -20,6 +20,7 @@ import (
 	"fmt"
 	neturl "net/url"
 	"os"
+	"regexp"
 	"testing"
 	"time"
 
@@ -739,15 +740,7 @@ func TestAccComputeDisk_encryptionKMSUpdate(t *testing.T) {
 		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeDisk_encryptionKMSUpdateNoKey(diskName),
-			},
-			{
 				Config: testAccComputeDisk_encryptionKMSUpdateKey(diskName, key1),
-				ConfigPlanChecks: resource.ConfigPlanChecks{
-					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectResourceAction("google_compute_disk.foobar", plancheck.ResourceActionReplace),
-					},
-				},
 			},
 			{
 				ResourceName:      "google_compute_disk.foobar",
@@ -780,10 +773,47 @@ func TestAccComputeDisk_encryptionKMSUpdate(t *testing.T) {
 				},
 			},
 			{
+				// A version of the current key is ignored.
+				Config:   testAccComputeDisk_encryptionKMSUpdateKey(diskName, key2+"/cryptoKeyVersions/1"),
+				PlanOnly: true,
+			},
+			{
+				Config:      testAccComputeDisk_encryptionKMSUpdateKey(diskName, key1+"/cryptoKeyVersions/1"),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile("includes a crypto key version"),
+			},
+			{
+				Config:      testAccComputeDisk_encryptionKMSUpdateNoKey(diskName),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile("removing the Cloud KMS key isn't supported"),
+			},
+		},
+	})
+}
+
+// Adding a key plans an update. Not applied: the API rejects it until it
+// supports adding a key to a disk without one.
+func TestAccComputeDisk_encryptionKMSAdd(t *testing.T) {
+	t.Parallel()
+
+	key1 := kms.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name
+	diskName := fmt.Sprintf("tf-test-%s", acctest.RandString(t, 10))
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
 				Config: testAccComputeDisk_encryptionKMSUpdateNoKey(diskName),
+			},
+			{
+				Config:             testAccComputeDisk_encryptionKMSUpdateKey(diskName, key1),
+				PlanOnly:           true,
+				ExpectNonEmptyPlan: true,
 				ConfigPlanChecks: resource.ConfigPlanChecks{
-					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectResourceAction("google_compute_disk.foobar", plancheck.ResourceActionReplace),
+					PostApplyPreRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_disk.foobar", plancheck.ResourceActionUpdate),
 					},
 				},
 			},
@@ -791,7 +821,7 @@ func TestAccComputeDisk_encryptionKMSUpdate(t *testing.T) {
 	})
 }
 
-// updateKmsKey drops kms_key_service_account, so key changes with a service account set still recreate the disk.
+// updateKmsKey drops kms_key_service_account, so key changes with a service account set fail at plan time.
 func TestAccComputeDisk_encryptionKMSUpdateWithServiceAccount(t *testing.T) {
 	t.Parallel()
 
@@ -828,12 +858,9 @@ func TestAccComputeDisk_encryptionKMSUpdateWithServiceAccount(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeDisk_encryptionKMSUpdateKeyWithServiceAccount(diskName, key2, serviceAccount),
-				ConfigPlanChecks: resource.ConfigPlanChecks{
-					PreApply: []plancheck.PlanCheck{
-						plancheck.ExpectResourceAction("google_compute_disk.foobar", plancheck.ResourceActionReplace),
-					},
-				},
+				Config:      testAccComputeDisk_encryptionKMSUpdateKeyWithServiceAccount(diskName, key2, serviceAccount),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile("while kms_key_service_account is set"),
 			},
 		},
 	})

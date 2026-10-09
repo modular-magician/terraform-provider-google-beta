@@ -271,8 +271,8 @@ The following arguments are supported:
   If you do not provide an encryption key when creating the disk, then
   the disk will be encrypted using an automatically generated key and
   you do not need to provide a key to use the disk later.
-  ~>**NOTE** Only changing `kms_key_name` between Cloud KMS keys is done
-  in place; other changes to this block recreate the disk.
+  ~>**NOTE** `kms_key_name` can be added or changed in place. Removing it
+  fails at plan time. Other changes to this block recreate the disk.
   Structure is [documented below](#nested_disk_encryption_key).
 
 * `source_image_encryption_key` -
@@ -445,6 +445,8 @@ The name of the snapshot by default will be `{{disk-name}}-YYYYMMDD-HHmm`
 * `kms_key_name` -
   (Optional)
   The name of the encryption key that is stored in Google Cloud KMS.
+  Specify the key without a `/cryptoKeyVersions/` suffix. A version on
+  the current key is ignored; a version on a different key fails at plan time.
 
 * `raw_key_wo` -
   (Optional, Write-Only)
