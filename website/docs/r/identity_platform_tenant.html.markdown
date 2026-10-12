@@ -71,6 +71,11 @@ The following arguments are supported:
   the disabled tenant are not allowed to sign-in. Admins of the disabled tenant
   are not able to manage its users.
 
+* `password_policy_config` -
+  (Optional)
+  The configuration for the password policy on the tenant.
+  Structure is [documented below](#nested_password_policy_config).
+
 * `client` -
   (Optional)
   Options related to how clients making requests on behalf of a tenant should be configured.
@@ -86,6 +91,65 @@ The following arguments are supported:
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
 
+
+<a name="nested_password_policy_config"></a>The `password_policy_config` block supports:
+
+* `password_policy_enforcement_state` -
+  (Optional)
+  Which enforcement mode to use for the password policy.
+  Possible values are: `OFF`, `ENFORCE`.
+
+* `password_policy_versions` -
+  (Optional)
+  Must be of length 1. Contains the strength attributes for the password policy.
+  Structure is [documented below](#nested_password_policy_config_password_policy_versions).
+
+* `force_upgrade_on_signin` -
+  (Optional)
+  Users must have a password compliant with the password policy to sign-in.
+
+* `last_update_time` -
+  (Output)
+  The last time the password policy on the tenant was updated.
+
+
+<a name="nested_password_policy_config_password_policy_versions"></a>The `password_policy_versions` block supports:
+
+* `custom_strength_options` -
+  (Optional)
+  The custom strength options enforced by the password policy.
+  Structure is [documented below](#nested_password_policy_config_password_policy_versions_custom_strength_options).
+
+* `schema_version` -
+  (Output)
+  Schema version number for the password policy.
+
+
+<a name="nested_password_policy_config_password_policy_versions_custom_strength_options"></a>The `custom_strength_options` block supports:
+
+* `min_password_length` -
+  (Optional)
+  Minimum password length. Range from 6 to 30.
+
+* `max_password_length` -
+  (Optional)
+  Maximum password length. No default max length.
+
+* `contains_lowercase_character` -
+  (Optional)
+  The password must contain a lower case character.
+
+* `contains_uppercase_character` -
+  (Optional)
+  The password must contain an upper case character.
+
+* `contains_numeric_character` -
+  (Optional)
+  The password must contain a number.
+
+* `contains_non_alphanumeric_character` -
+  (Optional)
+  The password must contain a non alpha numeric character.
 
 <a name="nested_client"></a>The `client` block supports:
 
