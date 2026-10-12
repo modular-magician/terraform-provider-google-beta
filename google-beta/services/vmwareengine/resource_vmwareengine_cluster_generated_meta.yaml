@@ -53,5 +53,6 @@ fields:
     - api_field: state
     - api_field: uid
     - api_field: updateTime
+    - api_field: vsanType
     - field: deletion_policy
       provider_only: true

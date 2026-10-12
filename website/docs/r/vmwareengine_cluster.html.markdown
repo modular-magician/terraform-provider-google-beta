@@ -407,6 +407,14 @@ The following arguments are supported:
   Configuration of the autoscaling applied to this cluster
   Structure is [documented below](#nested_autoscaling_settings).
 
+* `vsan_type` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Optional. The type of the vSAN.
+  Possible values:
+  * `VSAN_TYPE_OSA`: Standard (OSA) vSAN.
+  * `VSAN_TYPE_ESA`: Express Storage Architecture (ESA) vSAN.
+  Possible values are: `VSAN_TYPE_OSA`, `VSAN_TYPE_ESA`.
+
 * `datastore_mount_config` -
   (Optional)
   Optional. Configuration to mount a datastore.
