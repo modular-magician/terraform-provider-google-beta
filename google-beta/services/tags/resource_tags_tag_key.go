@@ -54,6 +54,37 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+func tagsTagKeyPurposeDataDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	switch k {
+	case "purpose_data.organization":
+		if new == "auto" && old != "" {
+			return true
+		}
+		return strings.TrimPrefix(old, "organizations/") == strings.TrimPrefix(new, "organizations/")
+	case "purpose_data.network":
+		if tpgresource.CompareSelfLinkOrResourceName("", old, new, d) {
+			return true
+		}
+		oldParts := strings.Split(old, "/")
+		newParts := strings.Split(new, "/")
+		if len(oldParts) >= 2 && len(newParts) >= 2 {
+			oldNet := oldParts[len(oldParts)-1]
+			newNet := newParts[len(newParts)-1]
+			if oldNet == newNet {
+				return true
+			}
+			if len(oldParts) >= 4 && oldParts[len(oldParts)-4] == "projects" && len(newParts) == 2 {
+				if oldParts[len(oldParts)-3] == newParts[0] {
+					return true
+				}
+			}
+		}
+		return false
+	default:
+		return old == new
+	}
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -166,9 +197,10 @@ The short name can have a maximum length of 256 characters. The permitted charac
 A purpose denotes that this Tag is intended for use in policies of a specific policy engine, and will involve that policy engine in management operations involving this Tag. Possible values: ["GCE_FIREWALL", "DATA_GOVERNANCE"]`,
 			},
 			"purpose_data": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: true,
+				Type:             schema.TypeMap,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: tagsTagKeyPurposeDataDiffSuppress,
 				Description: `Optional. Purpose data cannot be changed once set.
 
 Purpose data corresponds to the policy system that the tag is intended for. For example, the GCE_FIREWALL purpose expects data in the following format: 'network = "<project-name>/<vpc-name>"'.`,
@@ -640,6 +672,10 @@ func flattenTagsTagKeyPurpose(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
+func flattenTagsTagKeyPurposeData(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenTagsTagKeyAllowedValuesRegex(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -700,6 +736,9 @@ func ResourceTagsTagKeyFlatten(d *schema.ResourceData, meta interface{}, res map
 		return fmt.Errorf("Error reading TagKey: %s", err)
 	}
 	if err = d.Set("purpose", flattenTagsTagKeyPurpose(res["purpose"], d, config)); err != nil {
+		return fmt.Errorf("Error reading TagKey: %s", err)
+	}
+	if err = d.Set("purpose_data", flattenTagsTagKeyPurposeData(res["purposeData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagKey: %s", err)
 	}
 	if err = d.Set("allowed_values_regex", flattenTagsTagKeyAllowedValuesRegex(res["allowedValuesRegex"], d, config)); err != nil {
