@@ -384,6 +384,12 @@ Cloud Storage bucket (//storage.googleapis.com/projects/PROJECT_ID/buckets/BUCKE
 							Optional:    true,
 							Description: `If set, the latest DataScan job result will be published to Knowledge Catalog.`,
 						},
+						"custom_instructions": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `Specifies optional custom instructions for generating documentation scan.
+The maximum length is 2,048 characters.`,
+						},
 						"sql_dialect": {
 							Type:         schema.TypeString,
 							Computed:     true,
@@ -2430,12 +2436,18 @@ func flattenDataplexDatascanDataDocumentationSpec(v interface{}, d *schema.Resou
 	}
 	original := v.(map[string]interface{})
 	transformed := make(map[string]interface{})
+	transformed["custom_instructions"] =
+		flattenDataplexDatascanDataDocumentationSpecCustomInstructions(original["customInstructions"], d, config)
 	transformed["catalog_publishing_enabled"] =
 		flattenDataplexDatascanDataDocumentationSpecCatalogPublishingEnabled(original["catalogPublishingEnabled"], d, config)
 	transformed["sql_dialect"] =
 		flattenDataplexDatascanDataDocumentationSpecSqlDialect(original["sqlDialect"], d, config)
 	return []interface{}{transformed}
 }
+func flattenDataplexDatascanDataDocumentationSpecCustomInstructions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDataplexDatascanDataDocumentationSpecCatalogPublishingEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -4002,6 +4014,13 @@ func expandDataplexDatascanDataDocumentationSpec(v interface{}, d tpgresource.Te
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
+	transformedCustomInstructions, err := expandDataplexDatascanDataDocumentationSpecCustomInstructions(original["custom_instructions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomInstructions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customInstructions"] = transformedCustomInstructions
+	}
+
 	transformedCatalogPublishingEnabled, err := expandDataplexDatascanDataDocumentationSpecCatalogPublishingEnabled(original["catalog_publishing_enabled"], d, config)
 	if err != nil {
 		return nil, err
@@ -4017,6 +4036,10 @@ func expandDataplexDatascanDataDocumentationSpec(v interface{}, d tpgresource.Te
 	}
 
 	return transformed, nil
+}
+
+func expandDataplexDatascanDataDocumentationSpecCustomInstructions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDataplexDatascanDataDocumentationSpecCatalogPublishingEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
