@@ -493,6 +493,90 @@ resource "google_billing_budget" "budget" {
 `, context)
 }
 
+func TestAccBillingBudgetsBudget_billingBudgetSpendCapExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"billing_acct":  envvar.GetTestMasterBillingAccountFromEnv(t),
+		"display_name":  "Example Spend Cap Budget" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBillingBudgetsBudget_billingBudgetSpendCapExample(context),
+			},
+			{
+				ResourceName:            "google_billing_budget.budget",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account"},
+			},
+			{
+				ResourceName:       "google_billing_budget.budget",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccBillingBudgetsBudget_billingBudgetSpendCapExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_billing_account" "account" {
+  billing_account = "%{billing_acct}"
+}
+
+data "google_project" "project" {
+}
+
+resource "google_billing_budget" "budget" {
+  billing_account = data.google_billing_account.account.id
+  display_name    = "%{display_name}"
+
+  budget_filter {
+    projects               = ["projects/${data.google_project.project.number}"]
+    services               = ["services/C7E2-9256-1C43"] # Vertex AI
+    credit_types_treatment = "EXCLUDE_ALL_CREDITS"
+    calendar_period        = "MONTH"
+  }
+
+  amount {
+    specified_amount {
+      currency_code = "USD"
+      units         = "100"
+    }
+  }
+
+  threshold_rules {
+    threshold_percent = 0.5
+  }
+  threshold_rules {
+    threshold_percent = 0.8
+  }
+  threshold_rules {
+    threshold_percent = 1.0
+  }
+
+  all_updates_rule {
+    monitoring_notification_channels = []
+    enable_project_level_recipients  = true
+  }
+
+  spend_cap {
+    input_state = "CONFIGURED"
+  }
+}
+`, context)
+}
+
 func TestAccBillingBudgetsBudget_billingBudgetOptionalExample(t *testing.T) {
 	t.Parallel()
 

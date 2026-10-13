@@ -260,6 +260,55 @@ resource "google_billing_budget" "budget" {
   }
 }
 ```
+## Example Usage - Billing Budget Spend Cap
+
+
+```hcl
+data "google_billing_account" "account" {
+  billing_account = "000000-0000000-0000000-000000"
+}
+
+data "google_project" "project" {
+}
+
+resource "google_billing_budget" "budget" {
+  billing_account = data.google_billing_account.account.id
+  display_name    = "Example Spend Cap Budget"
+
+  budget_filter {
+    projects               = ["projects/${data.google_project.project.number}"]
+    services               = ["services/C7E2-9256-1C43"] # Vertex AI
+    credit_types_treatment = "EXCLUDE_ALL_CREDITS"
+    calendar_period        = "MONTH"
+  }
+
+  amount {
+    specified_amount {
+      currency_code = "USD"
+      units         = "100"
+    }
+  }
+
+  threshold_rules {
+    threshold_percent = 0.5
+  }
+  threshold_rules {
+    threshold_percent = 0.8
+  }
+  threshold_rules {
+    threshold_percent = 1.0
+  }
+
+  all_updates_rule {
+    monitoring_notification_channels = []
+    enable_project_level_recipients  = true
+  }
+
+  spend_cap {
+    input_state = "CONFIGURED"
+  }
+}
+```
 
 ## Argument Reference
 
@@ -305,6 +354,19 @@ The following arguments are supported:
   The ownership scope of the budget. The ownership scope and users'
   IAM permissions determine who has full access to the budget's data.
   Possible values are: `OWNERSHIP_SCOPE_UNSPECIFIED`, `ALL_USERS`, `BILLING_ACCOUNT`.
+
+* `spend_cap` -
+  (Optional)
+  The spend cap configured for this budget. When set, usage of the
+  budget's service is paused once spend exceeds the budget amount, until
+  the next period or until the cap is lifted. Spend cap budgets must
+  filter on exactly one project and one eligible service, use
+  `EXCLUDE_ALL_CREDITS`, a `MONTH` calendar period, a `specified_amount`,
+  threshold rules of 0.5, 0.8 and 1.0 on `CURRENT_SPEND`, and
+  `enable_project_level_recipients = true`. See
+  https://cloud.google.com/billing/docs/how-to/budgets-spend-caps.
+  While `output_state` is `ENFORCED`, only `input_state` can be changed.
+  Structure is [documented below](#nested_spend_cap).
 
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
@@ -512,6 +574,23 @@ The following arguments are supported:
   notifications will be sent to project level recipients of that project.
   This field will be ignored if the budget has multiple or no project configured.
   Currently, project level recipients are the users with Owner role on a cloud project.
+
+<a name="nested_spend_cap"></a>The `spend_cap` block supports:
+
+* `input_state` -
+  (Required)
+  The desired state of the spend cap. Must be `CONFIGURED` on create.
+  Set to `AWAITING_NEXT_PERIOD` to lift an enforced cap until the next
+  period starts.
+  Possible values are: `CONFIGURED`, `AWAITING_NEXT_PERIOD`.
+
+* `output_state` -
+  (Output)
+  The actual resting state of the spend cap.
+
+* `reconciling` -
+  (Output)
+  Whether the server is processing a state transition.
 
 ## Attributes Reference
 

@@ -40,6 +40,9 @@ fields:
     - api_field: displayName
     - api_field: name
     - api_field: ownershipScope
+    - api_field: spendCap.inputState
+    - api_field: spendCap.outputState
+    - api_field: spendCap.reconciling
     - api_field: thresholdRules.spendBasis
     - api_field: thresholdRules.thresholdPercent
     - field: deletion_policy
