@@ -19,17 +19,13 @@ package transport_test
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/provider"
-	compute_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	googleoauth "golang.org/x/oauth2/google"
 )
@@ -69,9 +65,9 @@ func TestHandleSDKDefaults_BillingProject(t *testing.T) {
 		t.Run(tn, func(t *testing.T) {
 
 			// Arrange
-			// Create empty schema.ResourceData using the SDK Provider schema
+			// Create empty schema.ResourceData using the SDK Provider schema fields read by HandleSDKDefaults
 			emptyConfigMap := map[string]interface{}{}
-			d := schema.TestResourceDataRaw(t, provider.Provider().Schema, emptyConfigMap)
+			d := schema.TestResourceDataRaw(t, transport_tpg.HandleSDKDefaultsSchema, emptyConfigMap)
 
 			// Set config value(s)
 			if tc.ConfigValue != "" {
@@ -172,9 +168,9 @@ func TestHandleSDKDefaults_UserProjectOverride(t *testing.T) {
 	for tn, tc := range cases {
 		t.Run(tn, func(t *testing.T) {
 			// Arrange
-			// Create empty schema.ResourceData using the SDK Provider schema
+			// Create empty schema.ResourceData using the SDK Provider schema fields read by HandleSDKDefaults
 			emptyConfigMap := map[string]interface{}{}
-			d := schema.TestResourceDataRaw(t, provider.Provider().Schema, emptyConfigMap)
+			d := schema.TestResourceDataRaw(t, transport_tpg.HandleSDKDefaultsSchema, emptyConfigMap)
 
 			// Set config value(s)
 			if tc.SetViaConfig {
@@ -228,7 +224,7 @@ func TestConfigLoadAndValidate_accountFilePath(t *testing.T) {
 }
 
 func TestConfigLoadAndValidate_accountFileJSON(t *testing.T) {
-	contents, err := ioutil.ReadFile(transport_tpg.TestFakeCredentialsPath)
+	contents, err := os.ReadFile(transport_tpg.TestFakeCredentialsPath)
 	if err != nil {
 		t.Fatalf("error: %v", err)
 	}
@@ -283,7 +279,7 @@ func TestAccConfigLoadValidate_credentials(t *testing.T) {
 	if os.Getenv(envvar.TestEnvVar) == "" {
 		t.Skipf("Network access not allowed; use %s=1 to enable", envvar.TestEnvVar)
 	}
-	acctest.AccTestPreCheck(t)
+	envvar.AccTestPreCheck(t)
 
 	creds := envvar.GetTestCredsFromEnv()
 	proj := envvar.GetTestProjectFromEnv()
@@ -299,7 +295,13 @@ func TestAccConfigLoadValidate_credentials(t *testing.T) {
 		t.Fatalf("error: %v", err)
 	}
 
-	_, err = compute_tpg.DEPRECATED_LegacyApiaryClient(config, config.UserAgent).Zones.Get(proj, "us-central1-a").Do()
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   proj,
+		RawURL:    fmt.Sprintf("https://compute.googleapis.com/compute/v1/projects/%s/zones/us-central1-a", proj),
+		UserAgent: config.UserAgent,
+	})
 	if err != nil {
 		t.Fatalf("expected call with loaded config client to work, got error: %s", err)
 	}
@@ -309,7 +311,7 @@ func TestAccConfigLoadValidate_impersonated(t *testing.T) {
 	if os.Getenv(envvar.TestEnvVar) == "" {
 		t.Skipf("Network access not allowed; use %s=1 to enable", envvar.TestEnvVar)
 	}
-	acctest.AccTestPreCheck(t)
+	envvar.AccTestPreCheck(t)
 
 	serviceaccount := envvar.MultiEnvSearch([]string{"IMPERSONATE_SERVICE_ACCOUNT_ACCTEST"})
 	creds := envvar.GetTestCredsFromEnv()
@@ -327,7 +329,13 @@ func TestAccConfigLoadValidate_impersonated(t *testing.T) {
 		t.Fatalf("error: %v", err)
 	}
 
-	_, err = compute_tpg.DEPRECATED_LegacyApiaryClient(config, config.UserAgent).Zones.Get(proj, "us-central1-a").Do()
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   proj,
+		RawURL:    fmt.Sprintf("https://compute.googleapis.com/compute/v1/projects/%s/zones/us-central1-a", proj),
+		UserAgent: config.UserAgent,
+	})
 	if err != nil {
 		t.Fatalf("expected API call with loaded config to work, got error: %s", err)
 	}
@@ -337,7 +345,7 @@ func TestAccConfigLoadValidate_accessTokenImpersonated(t *testing.T) {
 	if os.Getenv(envvar.TestEnvVar) == "" {
 		t.Skipf("Network access not allowed; use %s=1 to enable", envvar.TestEnvVar)
 	}
-	acctest.AccTestPreCheck(t)
+	envvar.AccTestPreCheck(t)
 
 	creds := envvar.GetTestCredsFromEnv()
 	proj := envvar.GetTestProjectFromEnv()
@@ -365,7 +373,13 @@ func TestAccConfigLoadValidate_accessTokenImpersonated(t *testing.T) {
 		t.Fatalf("error: %v", err)
 	}
 
-	_, err = compute_tpg.DEPRECATED_LegacyApiaryClient(config, config.UserAgent).Zones.Get(proj, "us-central1-a").Do()
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   proj,
+		RawURL:    fmt.Sprintf("https://compute.googleapis.com/compute/v1/projects/%s/zones/us-central1-a", proj),
+		UserAgent: config.UserAgent,
+	})
 	if err != nil {
 		t.Fatalf("expected API call with loaded config to work, got error: %s", err)
 	}
@@ -375,7 +389,7 @@ func TestAccConfigLoadValidate_accessToken(t *testing.T) {
 	if os.Getenv(envvar.TestEnvVar) == "" {
 		t.Skipf("Network access not allowed; use %s=1 to enable", envvar.TestEnvVar)
 	}
-	acctest.AccTestPreCheck(t)
+	envvar.AccTestPreCheck(t)
 
 	creds := envvar.GetTestCredsFromEnv()
 	proj := envvar.GetTestProjectFromEnv()
@@ -401,7 +415,13 @@ func TestAccConfigLoadValidate_accessToken(t *testing.T) {
 		t.Fatalf("error: %v", err)
 	}
 
-	_, err = compute_tpg.DEPRECATED_LegacyApiaryClient(config, config.UserAgent).Zones.Get(proj, "us-central1-a").Do()
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   proj,
+		RawURL:    fmt.Sprintf("https://compute.googleapis.com/compute/v1/projects/%s/zones/us-central1-a", proj),
+		UserAgent: config.UserAgent,
+	})
 	if err != nil {
 		t.Fatalf("expected API call with loaded config to work, got error: %s", err)
 	}
