@@ -173,6 +173,11 @@ The following arguments are supported:
   range).
   **Note** `ip_address` is required unless the Network Endpoint Group is created with the type of `GCE_VM_IP_DEDICATED_BACKEND`
 
+* `ipv6_address` -
+  (Optional)
+  IPv6 address of network endpoint. The result of parsing the endpoint config,
+  or empty if IPv6 is not used.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:

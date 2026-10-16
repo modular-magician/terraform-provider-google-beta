@@ -99,12 +99,6 @@ resource "google_compute_subnetwork" "default" {
 The following arguments are supported:
 
 
-* `ip_address` -
-  (Required)
-  IPv4 address of network endpoint. The IP address must belong
-  to a VM in GCE (either the primary IP or as part of an aliased IP
-  range).
-
 * `network_endpoint_group` -
   (Required)
   The network endpoint group this endpoint is part of.
@@ -121,6 +115,17 @@ The following arguments are supported:
   Port number of network endpoint.
   **Note** `port` is required unless the Network Endpoint Group is created
   with the type of `GCE_VM_IP`
+
+* `ip_address` -
+  (Optional)
+  IPv4 address of network endpoint. The IP address must belong
+  to a VM in GCE (either the primary IP or as part of an aliased IP
+  range).
+
+* `ipv6_address` -
+  (Optional)
+  IPv6 address of network endpoint. The result of parsing the endpoint config,
+  or empty if IPv6 is not used.
 
 * `zone` -
   (Optional)
@@ -169,7 +174,7 @@ import {
   identity = {
     instance = "<-optional value->"
     port = "<-optional value->"
-    ipAddress = "<-required value->"
+    ipAddress = "<-optional value->"
     zone = "<-optional value->"
     networkEndpointGroup = "<-required value->"
     project = "<-optional value->"
