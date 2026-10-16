@@ -807,12 +807,6 @@ func flattenBigqueryDataTransferDataSourceEnrollmentMinimumScheduleInterval(v in
 	return v
 }
 
-func resourceBigqueryDataTransferDataSourceEnrollmentEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	return map[string]interface{}{
-		"dataSourceIds": []string{d.Get("data_source_id").(string)},
-	}, nil
-}
-
 func ResourceBigqueryDataTransferDataSourceEnrollmentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

@@ -652,14 +652,6 @@ func expandIAMWorkforcePoolOauthClientCredentialDisplayName(v interface{}, d tpg
 	return v, nil
 }
 
-func resourceIAMWorkforcePoolOauthClientCredentialDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-
-	return res, nil
-}
-
 func ResourceIAMWorkforcePoolOauthClientCredentialFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

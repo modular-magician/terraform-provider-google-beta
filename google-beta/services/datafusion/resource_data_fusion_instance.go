@@ -1145,13 +1145,6 @@ func resourceDataFusionInstanceImport(d *schema.ResourceData, meta interface{}) 
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenDataFusionInstanceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenDataFusionInstanceDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1501,10 +1494,6 @@ func flattenDataFusionInstanceTerraformLabels(v interface{}, d *schema.ResourceD
 
 func flattenDataFusionInstanceEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandDataFusionInstanceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/instances/{{name}}")
 }
 
 func expandDataFusionInstanceDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

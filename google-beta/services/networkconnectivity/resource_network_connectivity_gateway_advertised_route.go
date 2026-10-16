@@ -687,11 +687,6 @@ func resourceNetworkConnectivityGatewayAdvertisedRouteImport(d *schema.ResourceD
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenNetworkConnectivityGatewayAdvertisedRouteName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenNetworkConnectivityGatewayAdvertisedRouteCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

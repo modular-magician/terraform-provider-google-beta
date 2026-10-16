@@ -587,25 +587,7 @@ func resourceComputeNetworkEndpointDelete(d *schema.ResourceData, meta interface
 }
 
 func resourceComputeNetworkEndpointImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	// instance is optional, so use * instead of + when reading the import id
-	if err := tpgresource.ParseImportId([]string{
-		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/networkEndpointGroups/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-		"(?P<zone>[^/]+)/(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-		"(?P<network_endpoint_group>[^/]+)/(?P<instance>[^/]*)/(?P<ip_address>[^/]+)/(?P<port>[^/]+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{zone}}/{{network_endpoint_group}}/{{instance}}/{{ip_address}}/{{port}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceComputeNetworkEndpointCustomImport(d, meta)
 }
 
 func flattenNestedComputeNetworkEndpointInstance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -615,20 +597,8 @@ func flattenNestedComputeNetworkEndpointInstance(v interface{}, d *schema.Resour
 	return tpgresource.ConvertSelfLinkToV1(v.(string))
 }
 
-func flattenNestedComputeNetworkEndpointPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles int given in float64 format
-	if floatVal, ok := v.(float64); ok {
-		return int(floatVal)
-	}
-	return v
-}
-
 func flattenNestedComputeNetworkEndpointIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandNestedComputeNetworkEndpointInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
 }
 
 func expandNestedComputeNetworkEndpointPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -637,18 +607,6 @@ func expandNestedComputeNetworkEndpointPort(v interface{}, d tpgresource.Terrafo
 
 func expandNestedComputeNetworkEndpointIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeNetworkEndpointEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Network Endpoint Group is a URL parameter only, so replace self-link/path with resource name only.
-	if err := d.Set("network_endpoint_group", tpgresource.GetResourceNameFromSelfLink(d.Get("network_endpoint_group").(string))); err != nil {
-		return nil, fmt.Errorf("Error setting network_endpoint_group: %s", err)
-	}
-
-	wrappedReq := map[string]interface{}{
-		"networkEndpoints": []interface{}{obj},
-	}
-	return wrappedReq, nil
 }
 
 func flattenNestedComputeNetworkEndpoint(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
@@ -729,14 +687,6 @@ func resourceComputeNetworkEndpointFindNestedObjectInList(d *schema.ResourceData
 		return idx, item, nil
 	}
 	return -1, nil, nil
-}
-func resourceComputeNetworkEndpointDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	v, ok := res["networkEndpoint"]
-	if !ok || v == nil {
-		return res, nil
-	}
-
-	return v.(map[string]interface{}), nil
 }
 
 func ResourceComputeNetworkEndpointFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

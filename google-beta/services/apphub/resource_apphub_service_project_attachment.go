@@ -460,10 +460,6 @@ func flattenApphubServiceProjectAttachmentName(v interface{}, d *schema.Resource
 	return v
 }
 
-func flattenApphubServiceProjectAttachmentServiceProject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return nil
-}
-
 func flattenApphubServiceProjectAttachmentCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -474,13 +470,6 @@ func flattenApphubServiceProjectAttachmentUid(v interface{}, d *schema.ResourceD
 
 func flattenApphubServiceProjectAttachmentState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandApphubServiceProjectAttachmentServiceProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-
-	service_project := "projects/" + d.Get("service_project_attachment_id").(string)
-
-	return service_project, nil
 }
 
 func ResourceApphubServiceProjectAttachmentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

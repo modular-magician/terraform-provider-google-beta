@@ -612,14 +612,6 @@ func expandIAMWorkforcePoolWorkforcePoolProviderScimTokenDisplayName(v interface
 	return v, nil
 }
 
-func resourceIAMWorkforcePoolWorkforcePoolProviderScimTokenDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-
-	return res, nil
-}
-
 func ResourceIAMWorkforcePoolWorkforcePoolProviderScimTokenFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

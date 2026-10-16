@@ -576,32 +576,6 @@ func expandCloudbuildv2RepositoryEffectiveAnnotations(v interface{}, d tpgresour
 	return m, nil
 }
 
-func resourceCloudbuildv2RepositoryEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	// Extract any empty fields from the parent_connection field.
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, fmt.Errorf("error getting project: %s", err)
-	}
-	parent_connection := d.Get("parent_connection").(string)
-	project, err = tpgresource.ExtractFieldByPattern("project", project, parent_connection, "projects/([a-z0-9A-Z-]*)/locations/.*")
-	if err != nil {
-		return nil, fmt.Errorf("error extracting project field: %s", err)
-	}
-	location := d.Get("location").(string)
-	location, err = tpgresource.ExtractFieldByPattern("location", location, parent_connection, "projects/[a-z0-9A-Z-]*/locations/([a-z0-9-]*)/connections/.*")
-	if err != nil {
-		return nil, fmt.Errorf("error extracting location field: %s", err)
-	}
-	// Set project to the extracted value.
-	d.Set("project", project)
-	// Set all the other fields to their short forms before forming url and setting ID.
-	name := d.Get("name").(string)
-	d.Set("location", location)
-	d.Set("name", name)
-	return obj, nil
-}
-
 func ResourceCloudbuildv2RepositoryFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

@@ -566,60 +566,7 @@ email/password or email link.`,
 }
 
 func resourceIdentityPlatformConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/identityPlatform:initializeAuth")
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for Config: %s", err)
-	}
-	billingProject = project
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
-	if err != nil {
-		return fmt.Errorf("Error creating Config: %s", err)
-	}
-	if err := d.Set("name", flattenIdentityPlatformConfigName(res["name"], d, config)); err != nil {
-		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
-	}
-
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/config")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	// Update the resource after initializing auth to set fields.
-	if err := resourceIdentityPlatformConfigUpdate(d, meta); err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Finished creating Config %q: %#v", d.Id(), res)
-
-	return resourceIdentityPlatformConfigRead(d, meta)
+	return resourceIdentityPlatformConfigCustomCreate(d, meta)
 }
 
 func resourceIdentityPlatformConfigRead(d *schema.ResourceData, meta interface{}) error {
@@ -916,66 +863,6 @@ func flattenIdentityPlatformConfigSignIn(v interface{}, d *schema.ResourceData, 
 		flattenIdentityPlatformConfigSignInHashConfig(original["hashConfig"], d, config)
 	return []interface{}{transformed}
 }
-func flattenIdentityPlatformConfigSignInEmail(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	if v == nil {
-		transformed["enabled"] = false
-	} else {
-		original := v.(map[string]interface{})
-
-		if original["enabled"] == nil {
-			transformed["enabled"] = false
-		} else {
-			transformed["enabled"] = original["enabled"]
-		}
-
-		if original["passwordRequired"] != nil {
-			transformed["password_required"] = original["passwordRequired"]
-		}
-	}
-
-	return []interface{}{transformed}
-}
-
-func flattenIdentityPlatformConfigSignInPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	if v == nil {
-		transformed["enabled"] = false
-	} else {
-		original := v.(map[string]interface{})
-
-		if original["enabled"] == nil {
-			transformed["enabled"] = false
-		} else {
-			transformed["enabled"] = original["enabled"]
-		}
-
-		if original["testPhoneNumbers"] != nil {
-			transformed["test_phone_numbers"] = original["testPhoneNumbers"]
-		}
-	}
-
-	return []interface{}{transformed}
-}
-
-func flattenIdentityPlatformConfigSignInAnonymous(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	if original["enabled"] == nil {
-		transformed["enabled"] = false
-	} else {
-		transformed["enabled"] = original["enabled"]
-	}
-
-	return []interface{}{transformed}
-}
 
 func flattenIdentityPlatformConfigSignInAllowDuplicateEmails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -1085,38 +972,6 @@ func flattenIdentityPlatformConfigBlockingFunctionsTriggersFunctionUri(v interfa
 
 func flattenIdentityPlatformConfigBlockingFunctionsTriggersUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenIdentityPlatformConfigBlockingFunctionsForwardInboundCredentials(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	if v == nil {
-		transformed["id_token"] = false
-		transformed["access_token"] = false
-		transformed["refresh_token"] = false
-	} else {
-		original := v.(map[string]interface{})
-
-		if original["idToken"] == nil {
-			transformed["id_token"] = false
-		} else {
-			transformed["id_token"] = original["idToken"]
-		}
-
-		if original["accessToken"] == nil {
-			transformed["access_token"] = false
-		} else {
-			transformed["access_token"] = original["accessToken"]
-		}
-
-		if original["refreshToken"] == nil {
-			transformed["refresh_token"] = false
-		} else {
-			transformed["refresh_token"] = original["refreshToken"]
-		}
-	}
-
-	return []interface{}{transformed}
 }
 
 func flattenIdentityPlatformConfigQuota(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1244,28 +1099,6 @@ func flattenIdentityPlatformConfigClient(v interface{}, d *schema.ResourceData, 
 		flattenIdentityPlatformConfigClientFirebaseSubdomain(original["firebaseSubdomain"], d, config)
 	return []interface{}{transformed}
 }
-func flattenIdentityPlatformConfigClientPermissions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	if original["disabledUserSignup"] == nil {
-		transformed["disabled_user_signup"] = false
-	} else {
-		transformed["disabled_user_signup"] = original["disabledUserSignup"]
-	}
-
-	if original["disabledUserDeletion"] == nil {
-		transformed["disabled_user_deletion"] = false
-	} else {
-		transformed["disabled_user_deletion"] = original["disabledUserDeletion"]
-	}
-
-	return []interface{}{transformed}
-}
 
 func flattenIdentityPlatformConfigClientApiKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -1354,28 +1187,6 @@ func flattenIdentityPlatformConfigMfaProviderConfigsTotpProviderConfigAdjacentIn
 	return v // let terraform core handle it otherwise
 }
 
-func flattenIdentityPlatformConfigMultiTenant(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-
-	if v == nil {
-		return nil
-	} else {
-		original := v.(map[string]interface{})
-
-		if original["allowTenants"] == nil {
-			transformed["allow_tenants"] = false
-		} else {
-			transformed["allow_tenants"] = original["allowTenants"]
-		}
-
-		if original["defaultTenantLocation"] != nil {
-			transformed["default_tenant_location"] = original["defaultTenantLocation"]
-		}
-	}
-
-	return []interface{}{transformed}
-}
-
 func flattenIdentityPlatformConfigMonitoring(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1387,22 +1198,6 @@ func flattenIdentityPlatformConfigMonitoring(v interface{}, d *schema.ResourceDa
 	transformed := make(map[string]interface{})
 	transformed["request_logging"] =
 		flattenIdentityPlatformConfigMonitoringRequestLogging(original["requestLogging"], d, config)
-	return []interface{}{transformed}
-}
-func flattenIdentityPlatformConfigMonitoringRequestLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	original := v.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	if original["enabled"] == nil {
-		transformed["enabled"] = false
-	} else {
-		transformed["enabled"] = original["enabled"]
-	}
-
 	return []interface{}{transformed}
 }
 

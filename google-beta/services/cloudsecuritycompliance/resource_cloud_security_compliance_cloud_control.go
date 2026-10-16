@@ -37,7 +37,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cty/cty"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/id"
@@ -2111,28 +2110,7 @@ func resourceCloudSecurityComplianceCloudControlDelete(d *schema.ResourceData, m
 }
 
 func resourceCloudSecurityComplianceCloudControlImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^(?P<parent>.*)/locations/(?P<location>[^/]+)/cloudControls/(?P<cloud_control_id>[^/]+)$",
-		"^organizations/(?P<organization>[^/]+)/locations/(?P<location>[^/]+)/cloudControls/(?P<cloud_control_id>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Seamlessly map the overlapping parameters
-	if d.Get("organization").(string) == "" && d.Get("parent").(string) != "" {
-		if strings.HasPrefix(d.Get("parent").(string), "organizations/") {
-			d.Set("organization", strings.TrimPrefix(d.Get("parent").(string), "organizations/"))
-		}
-	} else if d.Get("parent").(string) == "" && d.Get("organization").(string) != "" {
-		d.Set("parent", "organizations/"+d.Get("organization").(string))
-	}
-
-	// Manually construct the ID without relying on the identity generator
-	id := fmt.Sprintf("%s/locations/%s/cloudControls/%s", d.Get("parent").(string), d.Get("location").(string), d.Get("cloud_control_id").(string))
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceCloudSecurityComplianceCloudControlCustomImport(d, meta)
 }
 
 func flattenCloudSecurityComplianceCloudControlCategories(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2313,18 +2291,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofVal
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofValueParameterValueOneofValueParameterValueNumberValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2610,18 +2576,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersDefault
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersDefaultValueOneofValueParameterValueOneofValueParameterValueNumberValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersDefaultValueOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersDefaultValueOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2914,18 +2868,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersValidat
 	return v
 }
 
-func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -3133,18 +3075,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubPara
 	return v
 }
 
-func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersDefaultValueOneofValueParameterValueOneofValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersDefaultValueOneofValueParameterValueStringListValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -3257,18 +3187,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubPara
 	return v
 }
 
-func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersSubParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -3376,18 +3294,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubPara
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidationAllowedValuesValuesOneofValueParameterValueNumberValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidationAllowedValuesValuesOneofValueParameterValueOneofValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidationAllowedValuesValuesOneofValueParameterValueStringListValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3635,18 +3541,6 @@ func flattenCloudSecurityComplianceCloudControlParameterSpecValidationAllowedVal
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueNumberValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudSecurityComplianceCloudControlParameterSpecValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenCloudSecurityComplianceCloudControlParameterSpecValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4182,18 +4076,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofValu
 	return v, nil
 }
 
-func expandCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandCloudSecurityComplianceCloudControlParameterSpecDefaultValueOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -4705,18 +4587,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersDefaultV
 	return v, nil
 }
 
-func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersDefaultValueOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersDefaultValueOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -5208,18 +5078,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersValidati
 	return v, nil
 }
 
-func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -5603,18 +5461,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParam
 	return v, nil
 }
 
-func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersDefaultValueOneofValueParameterValueOneofValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersDefaultValueOneofValueParameterValueStringListValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -5773,18 +5619,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParam
 
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersSubstitutionRulesPlaceholderSubstitutionRuleAttribute(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersSubParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -5995,18 +5829,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParam
 
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidationAllowedValuesValuesOneofValueParameterValueNumberValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidationAllowedValuesValuesOneofValueParameterValueOneofValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func expandCloudSecurityComplianceCloudControlParameterSpecSubParametersSubParametersValidationAllowedValuesValuesOneofValueParameterValueStringListValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -6441,18 +6263,6 @@ func expandCloudSecurityComplianceCloudControlParameterSpecValidationAllowedValu
 	return v, nil
 }
 
-func expandCloudSecurityComplianceCloudControlParameterSpecValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueOneofValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	var j interface{}
-	if err := json.Unmarshal(b, &j); err != nil {
-		return nil, err
-	}
-	return j, nil
-}
-
 func expandCloudSecurityComplianceCloudControlParameterSpecValidationAllowedValuesValuesOneofValueParameterValueOneofValueParameterValueStringListValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -6726,52 +6536,6 @@ func expandCloudSecurityComplianceCloudControlSeverity(v interface{}, d tpgresou
 
 func expandCloudSecurityComplianceCloudControlSupportedCloudProviders(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceCloudSecurityComplianceCloudControlEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Build the fullname for the CloudControl resource from the provided
-	// parent, location and cloud_control_id fields and set it on the
-	// API object that will be sent in the request.
-	// Extract the parent scope, falling back to organization for backward compatibility
-	var parentStr string
-	if parent, ok := d.GetOk("parent"); ok && parent.(string) != "" {
-		parentStr = parent.(string)
-	} else if org, ok := d.GetOk("organization"); ok && org.(string) != "" {
-		parentStr = fmt.Sprintf("organizations/%s", org.(string))
-	} else {
-		return nil, fmt.Errorf("either parent or organization must be provided")
-	}
-	loc, ok := d.Get("location").(string)
-	if !ok || loc == "" {
-		return nil, fmt.Errorf("location is required and must be a non-empty string")
-	}
-	ccid, ok := d.Get("cloud_control_id").(string)
-	if !ok || ccid == "" {
-		return nil, fmt.Errorf("cloud_control_id is required and must be a non-empty string")
-	}
-	// Compose the resource name in the expected API format.
-	// The parent already includes the resource type (e.g. projects/my-project)
-	name := fmt.Sprintf("%s/locations/%s/cloudControls/%s", parentStr, loc, ccid)
-	obj["name"] = name
-	return obj, nil
-}
-
-func identityCloudSecurityComplianceCloudControlResourceV1() tftypes.Type {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"organization":     tftypes.String,
-			"location":         tftypes.String,
-			"cloud_control_id": tftypes.String,
-		},
-	}
-}
-
-func IdentityCloudSecurityComplianceCloudControlUpgradeV1(ctx context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
-	if org, ok := rawState["organization"].(string); ok && org != "" {
-		rawState["parent"] = "organizations/" + org
-		delete(rawState, "organization")
-	}
-	return rawState, nil
 }
 
 func ResourceCloudSecurityComplianceCloudControlFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

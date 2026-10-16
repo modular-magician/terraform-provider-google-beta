@@ -1451,13 +1451,6 @@ func expandColabNotebookExecutionServiceAccount(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
-func resourceColabNotebookExecutionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := res["name"].(string); ok && v != "" {
-		res["notebookExecutionJobId"] = tpgresource.GetResourceNameFromSelfLink(v)
-	}
-	return res, nil
-}
-
 func ResourceColabNotebookExecutionFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

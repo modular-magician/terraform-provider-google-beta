@@ -1003,11 +1003,6 @@ func flattenChronicleEnvironmentWeight(v interface{}, d *schema.ResourceData, co
 	return v // let terraform core handle it otherwise
 }
 
-func flattenChronicleEnvironmentEnvironmentId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleEnvironmentDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

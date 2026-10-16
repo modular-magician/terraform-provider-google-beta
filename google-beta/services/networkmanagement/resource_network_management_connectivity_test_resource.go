@@ -929,13 +929,6 @@ func resourceNetworkManagementConnectivityTestImport(d *schema.ResourceData, met
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenNetworkManagementConnectivityTestName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenNetworkManagementConnectivityTestDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1219,15 +1212,6 @@ func flattenNetworkManagementConnectivityTestTerraformLabels(v interface{}, d *s
 
 func flattenNetworkManagementConnectivityTestEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandNetworkManagementConnectivityTestName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// projects/X/tests/Y - note not "connectivityTests"
-	f, err := tpgresource.ParseGlobalFieldValue("tests", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandNetworkManagementConnectivityTestDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

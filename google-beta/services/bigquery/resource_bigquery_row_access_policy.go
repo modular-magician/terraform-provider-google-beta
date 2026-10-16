@@ -554,18 +554,6 @@ func flattenBigQueryRowAccessPolicyLastModifiedTime(v interface{}, d *schema.Res
 	return v
 }
 
-func expandBigQueryRowAccessPolicyRowAccessPolicyReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	transformed := make(map[string]interface{})
-
-	project, _ := tpgresource.GetProject(d, config)
-	transformed["projectId"] = project
-	transformed["datasetId"] = d.Get("dataset_id")
-	transformed["tableId"] = d.Get("table_id")
-	transformed["policyId"] = d.Get("policy_id")
-
-	return transformed, nil
-}
-
 func expandBigQueryRowAccessPolicyFilterPredicate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

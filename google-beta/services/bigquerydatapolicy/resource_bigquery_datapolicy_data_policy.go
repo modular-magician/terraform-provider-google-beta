@@ -612,24 +612,6 @@ func flattenBigqueryDatapolicyDataPolicyDataPolicyId(v interface{}, d *schema.Re
 	return v
 }
 
-func flattenBigqueryDatapolicyDataPolicyPolicyTag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	if _, ok := v.(string); !ok {
-		return v
-	}
-
-	re := regexp.MustCompile(`(projects/.*)(/locations/.*/)(policyTags/.*)`)
-	result := re.ReplaceAllStringFunc(v.(string), func(match string) string {
-		matches := re.FindStringSubmatch(match)
-		return matches[1] + strings.ToLower(matches[2]) + matches[3]
-	})
-
-	return result
-}
-
 func flattenBigqueryDatapolicyDataPolicyDataPolicyType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

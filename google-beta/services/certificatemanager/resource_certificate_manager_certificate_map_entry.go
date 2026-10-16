@@ -742,13 +742,6 @@ func flattenCertificateManagerCertificateMapEntryEffectiveLabels(v interface{}, 
 	return v
 }
 
-func flattenCertificateManagerCertificateMapEntryName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandCertificateManagerCertificateMapEntryDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -774,10 +767,6 @@ func expandCertificateManagerCertificateMapEntryEffectiveLabels(v interface{}, d
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandCertificateManagerCertificateMapEntryName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
 }
 
 func ResourceCertificateManagerCertificateMapEntryFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

@@ -796,15 +796,7 @@ func resourceSecurityScannerScanConfigDelete(d *schema.ResourceData, meta interf
 }
 
 func resourceSecurityScannerScanConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceSecurityScannerScanConfigCustomImport(d, meta)
 }
 
 func flattenSecurityScannerScanConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -870,10 +862,6 @@ func flattenSecurityScannerScanConfigAuthenticationGoogleAccountUsername(v inter
 	return v
 }
 
-func flattenSecurityScannerScanConfigAuthenticationGoogleAccountPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("authentication.0.custom_account.0.password")
-}
-
 func flattenSecurityScannerScanConfigAuthenticationCustomAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -893,10 +881,6 @@ func flattenSecurityScannerScanConfigAuthenticationCustomAccount(v interface{}, 
 }
 func flattenSecurityScannerScanConfigAuthenticationCustomAccountUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenSecurityScannerScanConfigAuthenticationCustomAccountPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("authentication.0.google_account.0.password")
 }
 
 func flattenSecurityScannerScanConfigAuthenticationCustomAccountLoginUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

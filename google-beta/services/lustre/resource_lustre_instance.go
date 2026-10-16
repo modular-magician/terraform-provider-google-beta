@@ -2318,21 +2318,6 @@ func expandLustreInstanceEffectiveLabels(v interface{}, d tpgresource.TerraformR
 	return m, nil
 }
 
-func resourceLustreInstanceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// The API rejects target_version at create, and Terraform sends every
-	// configured property on create, so drop it here. This also covers the create
-	// half of a recreate.
-	delete(obj, "targetVersion")
-	return obj, nil
-}
-
-func resourceLustreInstanceUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Exists only to shadow the create encoder: MMv1 falls back to
-	// custom_code.encoder on update when update_encoder is unset, which would strip
-	// target_version from every PATCH. Update needs no rewriting of its own.
-	return obj, nil
-}
-
 func ResourceLustreInstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

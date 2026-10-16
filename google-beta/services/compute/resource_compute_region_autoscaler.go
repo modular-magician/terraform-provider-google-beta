@@ -1262,14 +1262,6 @@ func flattenComputeRegionAutoscalerAutoscalingPolicyCpuUtilizationTarget(v inter
 	return v
 }
 
-func flattenComputeRegionAutoscalerAutoscalingPolicyCpuUtilizationPredictiveMethod(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "NONE"
-	}
-
-	return v
-}
-
 func flattenComputeRegionAutoscalerAutoscalingPolicyMetric(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1886,14 +1878,6 @@ func expandComputeRegionAutoscalerAutoscalingPolicyScalingSchedulesDescription(v
 
 func expandComputeRegionAutoscalerTarget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeRegionAutoscalerRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeRegionAutoscalerFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

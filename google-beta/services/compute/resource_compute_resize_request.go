@@ -788,78 +788,7 @@ func resourceComputeResizeRequestDelete(d *schema.ResourceData, meta interface{}
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing ResizeRequest %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	// Get project id
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for resize request: %s", err)
-	}
-
-	// Get cancel url
-	var cancelUrl string
-	cancelUrl, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}/cancel")
-
-	if err != nil {
-		return err
-	}
-
-	// Get delete url
-	var deleteUrl string
-	deleteUrl, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
-	if err != nil {
-		return err
-	}
-
-	// If a resize request is in the CREATING or ACCEPTED state, it must be canceled before it can be
-	// deleted. If a resize request is NOT in any of the mentioned state, it can be directly deleted.
-	if d.Get("state") == "CREATING" || d.Get("state") == "ACCEPTED" {
-		// cancel resize request
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   project,
-			RawURL:    cancelUrl,
-			UserAgent: userAgent,
-			Timeout:   d.Timeout(schema.TimeoutDelete),
-		})
-
-		if err != nil {
-			return transport_tpg.HandleNotFoundError(err, d, "ResizeRequest")
-		}
-
-		err = ComputeOperationWaitTime(
-			config, res, project, "Cancelling the resize request", userAgent,
-			d.Timeout(schema.TimeoutDelete))
-
-		if err != nil {
-			return err
-		}
-	}
-
-	// delete resize request
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   project,
-		RawURL:    deleteUrl,
-		UserAgent: userAgent,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
-
-	err = ComputeOperationWaitTime(
-		config, res, project, "Deleting the resize request", userAgent,
-		d.Timeout(schema.TimeoutDelete))
-
-	if err != nil {
-		return err
-	}
-	return nil
-
+	return resourceComputeResizeRequestCustomDelete(d, meta)
 }
 
 func resourceComputeResizeRequestImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -1440,13 +1369,6 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalize
 	return v
 }
 
-func flattenComputeResizeRequestZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandComputeResizeRequestName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1494,14 +1416,6 @@ func expandComputeResizeRequestRequestedRunDurationSeconds(v interface{}, d tpgr
 
 func expandComputeResizeRequestRequestedRunDurationNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeResizeRequestZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeResizeRequestFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

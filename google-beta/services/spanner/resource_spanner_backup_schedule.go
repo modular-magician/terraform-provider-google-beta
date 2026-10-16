@@ -745,13 +745,6 @@ func resourceSpannerBackupScheduleImport(d *schema.ResourceData, meta interface{
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenSpannerBackupScheduleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenSpannerBackupScheduleRetentionDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -971,42 +964,6 @@ func expandSpannerBackupScheduleEncryptionConfigKmsKeyName(v interface{}, d tpgr
 
 func expandSpannerBackupScheduleEncryptionConfigKmsKeyNames(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceSpannerBackupScheduleEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	obj["name"] = d.Get("name").(string)
-	if obj["name"] == nil || obj["name"] == "" {
-		if err := d.Set("name", id.PrefixedUniqueId("tfgen-spanid-")[:30]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	}
-	config := meta.(*transport_tpg.Config)
-	var err error
-	obj["name"], err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/databases/{{database}}/backupSchedules/{{name}}")
-	if err != nil {
-		return obj, err
-	}
-	delete(obj, "instance")
-	delete(obj, "database")
-	return obj, nil
-}
-
-func resourceSpannerBackupScheduleDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	d.SetId(res["name"].(string))
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/instances/(?P<instance>[^/]+)/databases/(?P<database>[^/]+)/backupSchedules/(?P<name>[^/]+)"}, d, config); err != nil {
-		return nil, err
-	}
-	res["project"] = d.Get("project").(string)
-	res["instance"] = d.Get("instance").(string)
-	res["database"] = d.Get("database").(string)
-	res["name"] = d.Get("name").(string)
-	id, err := tpgresource.ReplaceVars(d, config, "{{instance}}/{{database}}/{{name}}")
-	if err != nil {
-		return nil, err
-	}
-	d.SetId(id)
-	return res, nil
 }
 
 func ResourceSpannerBackupScheduleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

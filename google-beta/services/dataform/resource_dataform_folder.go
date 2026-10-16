@@ -571,11 +571,6 @@ func flattenDataformFolderName(v interface{}, d *schema.ResourceData, config *tr
 	return v
 }
 
-func flattenDataformFolderFolderId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenDataformFolderDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

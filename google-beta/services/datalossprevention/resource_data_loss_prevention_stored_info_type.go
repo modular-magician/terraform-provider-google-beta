@@ -810,45 +810,7 @@ func resourceDataLossPreventionStoredInfoTypeDelete(d *schema.ResourceData, meta
 }
 
 func resourceDataLossPreventionStoredInfoTypeImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	parts := strings.Split(d.Get("name").(string), "/")
-	if len(parts) == 6 {
-		if err := d.Set("name", parts[5]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(parts) == 4 {
-		if err := d.Set("name", parts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf("Unexpected import id: %s, expected form {{parent}}/storedInfoType/{{name}}", d.Get("name").(string))
-	}
-	// Remove "/storedInfoType/{{name}}" from the id
-	parts = parts[:len(parts)-2]
-	if err := d.Set("parent", strings.Join(parts, "/")); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/storedInfoTypes/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDataLossPreventionStoredInfoTypeName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDataLossPreventionStoredInfoTypeCustomImport(d, meta)
 }
 
 func flattenDataLossPreventionStoredInfoTypeDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1360,48 +1322,6 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldFie
 	return v, nil
 }
 
-func resourceDataLossPreventionStoredInfoTypeEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["config"] = obj
-	storedInfoTypeIdProp, ok := d.GetOk("stored_info_type_id")
-	if ok && storedInfoTypeIdProp != nil {
-		newObj["storedInfoTypeId"] = storedInfoTypeIdProp
-	}
-	return newObj, nil
-}
-
-func resourceDataLossPreventionStoredInfoTypeUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["config"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionStoredInfoTypeDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Stored info types come back nested with previous versions. We only want the current
-	// version in the unwrapped form
-	name := res["name"].(string)
-	v, ok := res["currentVersion"]
-	if !ok || v == nil {
-		return nil, nil
-	}
-
-	current := v.(map[string]interface{})
-	configRaw, ok := current["config"]
-	if !ok || configRaw == nil {
-		return nil, nil
-	}
-
-	config := configRaw.(map[string]interface{})
-	// Name comes back on the top level, so set here
-	config["name"] = name
-
-	configMeta := meta.(*transport_tpg.Config)
-	if err := d.Set("stored_info_type_id", flattenDataLossPreventionStoredInfoTypeName(res["name"], d, configMeta)); err != nil {
-		return nil, fmt.Errorf("Error reading StoredInfoType: %s", err)
-	}
-
-	return config, nil
-}
 func resourceDataLossPreventionStoredInfoTypePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	if err := d.Set("name", flattenDataLossPreventionStoredInfoTypeName(res["name"], d, config)); err != nil {

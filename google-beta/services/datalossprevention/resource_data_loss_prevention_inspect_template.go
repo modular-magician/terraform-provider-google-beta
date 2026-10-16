@@ -1249,45 +1249,7 @@ func resourceDataLossPreventionInspectTemplateDelete(d *schema.ResourceData, met
 }
 
 func resourceDataLossPreventionInspectTemplateImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	parts := strings.Split(d.Get("name").(string), "/")
-	if len(parts) == 6 {
-		if err := d.Set("name", parts[5]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else if len(parts) == 4 {
-		if err := d.Set("name", parts[3]); err != nil {
-			return nil, fmt.Errorf("Error setting name: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf("Unexpected import id: %s, expected form {{parent}}/inspectTemplate/{{name}}", d.Get("name").(string))
-	}
-	// Remove "/inspectTemplate/{{name}}" from the id
-	parts = parts[:len(parts)-2]
-	if err := d.Set("parent", strings.Join(parts, "/")); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/inspectTemplates/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDataLossPreventionInspectTemplateName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDataLossPreventionInspectTemplateCustomImport(d, meta)
 }
 
 func flattenDataLossPreventionInspectTemplateDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3610,29 +3572,6 @@ func expandDataLossPreventionInspectTemplateAllowLimitedAvailabilityInfoTypes(v 
 	return v, nil
 }
 
-func resourceDataLossPreventionInspectTemplateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["inspectTemplate"] = obj
-	templateIdProp, ok := d.GetOk("template_id")
-	if ok && templateIdProp != nil {
-		newObj["templateId"] = templateIdProp
-	}
-	return newObj, nil
-}
-
-func resourceDataLossPreventionInspectTemplateUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["inspectTemplate"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionInspectTemplateDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := d.Set("template_id", flattenDataLossPreventionInspectTemplateName(res["name"], d, config)); err != nil {
-		return nil, fmt.Errorf("Error reading InspectTemplate: %s", err)
-	}
-	return res, nil
-}
 func resourceDataLossPreventionInspectTemplatePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceDataLossPreventionInspectTemplateDecoder(d, meta, res)

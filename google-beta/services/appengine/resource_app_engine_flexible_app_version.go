@@ -1626,89 +1626,7 @@ func resourceAppEngineFlexibleAppVersionDelete(d *schema.ResourceData, meta inte
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing FlexibleAppVersion %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	if d.Get("noop_on_destroy") == true {
-		log.Printf("[DEBUG] Keeping the AppVersion %q", d.Id())
-		return nil
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return err
-	}
-
-	lockName, err := tpgresource.ReplaceVars(d, config, "apps/{{project}}/services/{{service}}")
-	if err != nil {
-		return err
-	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
-
-	if d.Get("delete_service_on_destroy") == true {
-		url, err := tpgresource.ReplaceVars(d, config, "{{AppEngineBasePath}}apps/{{project}}/services/{{service}}")
-		if err != nil {
-			return err
-		}
-		var obj map[string]interface{}
-		log.Printf("[DEBUG] Deleting Service %q", d.Id())
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:               config,
-			Method:               "DELETE",
-			Project:              project,
-			RawURL:               url,
-			UserAgent:            userAgent,
-			Body:                 obj,
-			Timeout:              d.Timeout(schema.TimeoutDelete),
-			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsAppEngineRetryableError},
-		})
-		if err != nil {
-			return transport_tpg.HandleNotFoundError(err, d, "Service")
-		}
-		err = AppEngineOperationWaitTime(
-			config, res, project, "Deleting Service", userAgent,
-			d.Timeout(schema.TimeoutDelete))
-
-		if err != nil {
-			return err
-		}
-		log.Printf("[DEBUG] Finished deleting Service %q: %#v", d.Id(), res)
-		return nil
-	} else {
-		url, err := tpgresource.ReplaceVars(d, config, "{{AppEngineBasePath}}apps/{{project}}/services/{{service}}/versions/{{version_id}}")
-		if err != nil {
-			return err
-		}
-		var obj map[string]interface{}
-		log.Printf("[DEBUG] Deleting AppVersion %q", d.Id())
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:               config,
-			Method:               "DELETE",
-			Project:              project,
-			RawURL:               url,
-			UserAgent:            userAgent,
-			Body:                 obj,
-			Timeout:              d.Timeout(schema.TimeoutDelete),
-			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsAppEngineRetryableError},
-		})
-		if err != nil {
-			return transport_tpg.HandleNotFoundError(err, d, "AppVersion")
-		}
-		err = AppEngineOperationWaitTime(
-			config, res, project, "Deleting AppVersion", userAgent,
-			d.Timeout(schema.TimeoutDelete))
-
-		if err != nil {
-			return err
-		}
-		log.Printf("[DEBUG] Finished deleting AppVersion %q: %#v", d.Id(), res)
-		return nil
-
-	}
+	return resourceAppEngineFlexibleAppVersionCustomDelete(d, meta)
 }
 
 func resourceAppEngineFlexibleAppVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -4057,11 +3975,6 @@ func expandAppEngineFlexibleAppVersionManualScaling(v interface{}, d tpgresource
 
 func expandAppEngineFlexibleAppVersionManualScalingInstances(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceAppEngineFlexibleAppVersionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	obj["env"] = "flex"
-	return obj, nil
 }
 
 func ResourceAppEngineFlexibleAppVersionFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

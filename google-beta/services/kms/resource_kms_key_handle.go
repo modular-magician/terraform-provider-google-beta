@@ -411,18 +411,6 @@ func expandKMSKeyHandleResourceTypeSelector(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func resourceKMSKeyHandleDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Modify the name to be the user specified form.
-	// We can't just ignore_read on `name` as the linter will
-	// complain that the returned `res` is never used afterwards.
-	// Some field needs to be actually set, and we chose `name`.
-	v := d.Get("name")
-	if v != nil {
-		res["name"] = v.(string)
-	}
-	return res, nil
-}
-
 func ResourceKMSKeyHandleFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

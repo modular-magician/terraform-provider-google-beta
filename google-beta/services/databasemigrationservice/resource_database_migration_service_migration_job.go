@@ -1281,25 +1281,6 @@ func flattenDatabaseMigrationServiceMigrationJobState(v interface{}, d *schema.R
 	return v
 }
 
-func flattenDatabaseMigrationServiceMigrationJobDesiredState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return "NOT_STARTED"
-	}
-
-	switch v.(string) {
-	case "DRAFT", "NOT_STARTED":
-		return "NOT_STARTED"
-	case "FAILED":
-		if phase, ok := d.Get("phase").(string); ok && phase == "PROMOTE_IN_PROGRESS" {
-			return "RUNNING"
-		}
-		return "NOT_STARTED"
-	default:
-		// Map all other active states (RUNNING, COMPLETED, STOPPED, etc.) to RUNNING
-		return "RUNNING"
-	}
-}
-
 func flattenDatabaseMigrationServiceMigrationJobPhase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1340,31 +1321,6 @@ func flattenDatabaseMigrationServiceMigrationJobErrorCode(v interface{}, d *sche
 
 func flattenDatabaseMigrationServiceMigrationJobErrorMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDatabaseMigrationServiceMigrationJobErrorDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	detailsArray := v.([]interface{})
-	for i, raw := range detailsArray {
-		m := raw.(map[string]interface{})
-		if len(m) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		for k, val := range m {
-			if _, ok := val.(string); !ok {
-				b, err := json.Marshal(v)
-				if err != nil {
-					return err
-				}
-				m[k] = string(b)
-			}
-		}
-		detailsArray[i] = m
-	}
-	return detailsArray
 }
 
 func flattenDatabaseMigrationServiceMigrationJobType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

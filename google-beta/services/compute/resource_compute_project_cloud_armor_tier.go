@@ -416,15 +416,7 @@ func resourceComputeProjectCloudArmorTierDelete(d *schema.ResourceData, meta int
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing ProjectCloudArmorTier %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[WARNING] Resource [%s] will be only removed from Terraform state, but will be left intact on GCP. %s", d.Id(), userAgent)
-
-	return schema.RemoveFromState(d, meta)
+	return resourceComputeProjectCloudArmorTierCustomDelete(d, meta)
 }
 
 func resourceComputeProjectCloudArmorTierImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {

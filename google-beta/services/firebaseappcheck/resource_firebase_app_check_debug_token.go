@@ -558,13 +558,6 @@ func resourceFirebaseAppCheckDebugTokenImport(d *schema.ResourceData, meta inter
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenFirebaseAppCheckDebugTokenDebugTokenId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenFirebaseAppCheckDebugTokenDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

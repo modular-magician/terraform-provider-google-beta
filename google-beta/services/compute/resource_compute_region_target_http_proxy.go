@@ -664,13 +664,6 @@ func flattenComputeRegionTargetHttpProxyHttpKeepAliveTimeoutSec(v interface{}, d
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeRegionTargetHttpProxyRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandComputeRegionTargetHttpProxyDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -679,24 +672,8 @@ func expandComputeRegionTargetHttpProxyName(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func expandComputeRegionTargetHttpProxyUrlMap(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("urlMaps", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for url_map: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeRegionTargetHttpProxyHttpKeepAliveTimeoutSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeRegionTargetHttpProxyRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeRegionTargetHttpProxyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

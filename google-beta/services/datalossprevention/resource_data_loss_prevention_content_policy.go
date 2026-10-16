@@ -1968,41 +1968,7 @@ func resourceDataLossPreventionContentPolicyDelete(d *schema.ResourceData, meta 
 }
 
 func resourceDataLossPreventionContentPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-	parts := strings.Split(d.Get("name").(string), "/")
-	if len(parts) == 6 && parts[4] == "contentPolicies" {
-		if err := d.Set("name", parts[5]); err != nil {
-			return nil, fmt.Errorf("error setting name: %w", err)
-		}
-	} else {
-		return nil, fmt.Errorf("unexpected import id: %s, expected form {{parent}}/contentPolicies/{{name}}", d.Get("name").(string))
-	}
-	// Remove "/contentPolicies/name" from the id
-	parts = parts[:len(parts)-2]
-	if err := d.Set("parent", strings.Join(parts, "/")); err != nil {
-		return nil, fmt.Errorf("error setting parent: %w", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/contentPolicies/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("error constructing id: %w", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenDataLossPreventionContentPolicyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return resourceDataLossPreventionContentPolicyCustomImport(d, meta)
 }
 
 func flattenDataLossPreventionContentPolicyDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3801,31 +3767,6 @@ func flattenDataLossPreventionContentPolicyErrorsDetailsCode(v interface{}, d *s
 
 func flattenDataLossPreventionContentPolicyErrorsDetailsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDataLossPreventionContentPolicyErrorsDetailsDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	detailsArray := v.([]interface{})
-	for i, raw := range detailsArray {
-		m := raw.(map[string]interface{})
-		if len(m) < 1 {
-			// Do not include empty json objects coming back from the API
-			continue
-		}
-		for k, val := range m {
-			if _, ok := val.(string); !ok {
-				b, err := json.Marshal(v)
-				if err != nil {
-					return err
-				}
-				m[k] = string(b)
-			}
-		}
-		detailsArray[i] = m
-	}
-	return detailsArray
 }
 
 func flattenDataLossPreventionContentPolicyErrorsTimestamps(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6566,26 +6507,6 @@ func expandDataLossPreventionContentPolicyLoggingConfigsLogToBigQueryTableId(v i
 	return v, nil
 }
 
-func resourceDataLossPreventionContentPolicyEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["contentPolicy"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionContentPolicyUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["contentPolicy"] = obj
-	return newObj, nil
-}
-
-func resourceDataLossPreventionContentPolicyDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	v, ok := res["contentPolicy"]
-	if !ok || v == nil {
-		return res, nil
-	}
-
-	return v.(map[string]interface{}), nil
-}
 func resourceDataLossPreventionContentPolicyPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceDataLossPreventionContentPolicyDecoder(d, meta, res)

@@ -673,15 +673,6 @@ func expandFirebaseDatabaseInstanceType(v interface{}, d tpgresource.TerraformRe
 	return v, nil
 }
 
-func resourceFirebaseDatabaseInstanceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-	res["desired_state"] = res["state"]
-
-	return res, nil
-}
-
 func ResourceFirebaseDatabaseInstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

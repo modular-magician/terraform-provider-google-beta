@@ -653,13 +653,6 @@ func resourceBinaryAuthorizationAttestorImport(d *schema.ResourceData, meta inte
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenBinaryAuthorizationAttestorName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenBinaryAuthorizationAttestorDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -746,10 +739,6 @@ func flattenBinaryAuthorizationAttestorAttestationAuthorityNoteDelegationService
 	return v
 }
 
-func expandBinaryAuthorizationAttestorName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/attestors/{{name}}")
-}
-
 func expandBinaryAuthorizationAttestorDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -788,20 +777,6 @@ func expandBinaryAuthorizationAttestorAttestationAuthorityNote(v interface{}, d 
 	}
 
 	return transformed, nil
-}
-
-func expandBinaryAuthorizationAttestorAttestationAuthorityNoteNoteReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	r := regexp.MustCompile("projects/(.+)/notes/(.+)")
-	if r.MatchString(v.(string)) {
-		return v.(string), nil
-	}
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	return fmt.Sprintf("projects/%s/notes/%s", project, v.(string)), nil
 }
 
 func expandBinaryAuthorizationAttestorAttestationAuthorityNotePublicKeys(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -588,10 +588,6 @@ func flattenSQLSourceRepresentationInstanceOnPremisesConfigurationUsername(v int
 	return v
 }
 
-func flattenSQLSourceRepresentationInstanceOnPremisesConfigurationPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("password")
-}
-
 func flattenSQLSourceRepresentationInstanceOnPremisesConfigurationDumpFilePath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -711,33 +707,6 @@ func expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientCertifica
 
 func expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceSQLSourceRepresentationInstanceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	opc := obj["onPremisesConfiguration"].(map[string]interface{})
-	opc["hostPort"] = fmt.Sprintf("%v:%v", opc["host"], opc["port"])
-	delete(opc, "host")
-	delete(opc, "port")
-	return obj, nil
-}
-
-func resourceSQLSourceRepresentationInstanceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v, ok := res["onPremisesConfiguration"]; ok {
-		opc := v.(map[string]interface{})
-		hostPort := opc["hostPort"]
-		spl := strings.Split(hostPort.(string), ":")
-		if len(spl) != 2 {
-			return nil, fmt.Errorf("unexpected value for hostPort, expected [host]:[port], got %q", hostPort)
-		}
-		opc["host"] = spl[0]
-		p, err := strconv.Atoi(spl[1])
-		if err != nil {
-			return nil, fmt.Errorf("error converting port %q to int: %v", spl[1], err)
-		}
-		opc["port"] = p
-		delete(opc, "hostPort")
-	}
-	return res, nil
 }
 
 func ResourceSQLSourceRepresentationInstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

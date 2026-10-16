@@ -694,13 +694,6 @@ func resourceSecurityCenterOrganizationCustomModuleImport(d *schema.ResourceData
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenSecurityCenterOrganizationCustomModuleName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenSecurityCenterOrganizationCustomModuleDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

@@ -1090,13 +1090,6 @@ func resourceVertexAIOnlineEvaluatorImport(d *schema.ResourceData, meta interfac
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenVertexAIOnlineEvaluatorName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenVertexAIOnlineEvaluatorDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1506,17 +1499,6 @@ func flattenVertexAIOnlineEvaluatorMetricSources(v interface{}, d *schema.Resour
 		})
 	}
 	return transformed
-}
-func flattenVertexAIOnlineEvaluatorMetricSourcesMetric(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenVertexAIOnlineEvaluatorMetricSourcesMetricResourceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2248,18 +2230,6 @@ func expandVertexAIOnlineEvaluatorMetricSources(v interface{}, d tpgresource.Ter
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandVertexAIOnlineEvaluatorMetricSourcesMetric(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandVertexAIOnlineEvaluatorMetricSourcesMetricResourceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

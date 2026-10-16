@@ -1847,98 +1847,7 @@ func resourceVertexAIEndpointWithModelGardenDeploymentUpdate(d *schema.ResourceD
 		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
 		return resourceVertexAIEndpointWithModelGardenDeploymentRead(d, meta)
 	}
-
-	config := meta.(*transport_tpg.Config)
-	// `config` is declared in the enclosing generated Update body; do not redeclare.
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for EndpointWithModelGardenDeployment: %s", err)
-	}
-	billingProject = project
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	deployedModelId, _ := d.Get("deployed_model_id").(string)
-	if deployedModelId == "" {
-		return fmt.Errorf("cannot update EndpointWithModelGardenDeployment %q: deployed_model_id is empty (resource may be in an inconsistent state)", d.Id())
-	}
-
-	dedicatedResources := map[string]interface{}{}
-	updateMask := []string{}
-
-	if d.HasChange("deploy_config.0.dedicated_resources.0.min_replica_count") {
-		dedicatedResources["minReplicaCount"] = d.Get("deploy_config.0.dedicated_resources.0.min_replica_count")
-		updateMask = append(updateMask, "dedicatedResources.minReplicaCount")
-	}
-	if d.HasChange("deploy_config.0.dedicated_resources.0.max_replica_count") {
-		dedicatedResources["maxReplicaCount"] = d.Get("deploy_config.0.dedicated_resources.0.max_replica_count")
-		updateMask = append(updateMask, "dedicatedResources.maxReplicaCount")
-	}
-	if d.HasChange("deploy_config.0.dedicated_resources.0.required_replica_count") {
-		dedicatedResources["requiredReplicaCount"] = d.Get("deploy_config.0.dedicated_resources.0.required_replica_count")
-		updateMask = append(updateMask, "dedicatedResources.requiredReplicaCount")
-	}
-	if d.HasChange("deploy_config.0.dedicated_resources.0.autoscaling_metric_specs") {
-		expanded, err := expandVertexAIEndpointWithModelGardenDeploymentDeployConfigDedicatedResourcesAutoscalingMetricSpecs(
-			d.Get("deploy_config.0.dedicated_resources.0.autoscaling_metric_specs"), d, config)
-		if err != nil {
-			return err
-		}
-		dedicatedResources["autoscalingMetricSpecs"] = expanded
-		updateMask = append(updateMask, "dedicatedResources.autoscalingMetricSpecs")
-	}
-
-	if len(updateMask) == 0 {
-		return resourceVertexAIEndpointWithModelGardenDeploymentRead(d, meta)
-	}
-
-	body := map[string]interface{}{
-		"deployedModel": map[string]interface{}{
-			"id":                 deployedModelId,
-			"dedicatedResources": dedicatedResources,
-		},
-		"updateMask": strings.Join(updateMask, ","),
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{location}}/endpoints/{{endpoint}}:mutateDeployedModel")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Updating EndpointWithModelGardenDeployment %q via mutateDeployedModel with mask %q", d.Id(), strings.Join(updateMask, ","))
-
-	headers := make(http.Header)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      body,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-		Headers:   headers,
-	})
-	if err != nil {
-		return fmt.Errorf("Error updating EndpointWithModelGardenDeployment %q: %s", d.Id(), err)
-	}
-
-	err = VertexAIOperationWaitTime(
-		config, res, project, tpgresource.LocationFromId(d.Id()), "Updating EndpointWithModelGardenDeployment", userAgent,
-		d.Timeout(schema.TimeoutUpdate))
-	if err != nil {
-		return fmt.Errorf("Error waiting to update EndpointWithModelGardenDeployment %q: %s", d.Id(), err)
-	}
-
-	log.Printf("[DEBUG] Finished updating EndpointWithModelGardenDeployment %q", d.Id())
-
-	return resourceVertexAIEndpointWithModelGardenDeploymentRead(d, meta)
+	return resourceVertexAIEndpointWithModelGardenDeploymentCustomUpdate(d, meta)
 }
 
 func resourceVertexAIEndpointWithModelGardenDeploymentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -1949,112 +1858,7 @@ func resourceVertexAIEndpointWithModelGardenDeploymentDelete(d *schema.ResourceD
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing EndpointWithModelGardenDeployment %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Beginning custom_delete for Vertex AI Endpoint with Model Garden Deployment")
-
-	// Log resource ID for debugging purposes
-	log.Printf("[DEBUG] Resource ID: %s", d.Id())
-
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for EndpointWithModelGardenDeployment: %s", err)
-	}
-	billingProject = project
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	// Retrieve deployed model ID and display name from Terraform fields
-	deployedModelId, ok := d.Get("deployed_model_id").(string)
-	if !ok {
-		return fmt.Errorf("wrong type for deployedModelId field (%T), expected string", d.Get("deployedModelId"))
-	}
-
-	deployedModelDisplayName, ok := d.Get("deployed_model_display_name").(string)
-	if !ok {
-		return fmt.Errorf("wrong type for deployedModelDisplayName field (%T), expected string", d.Get("deployedModelDisplayName"))
-	}
-
-	// Undeploy the model
-	undeployUrl, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{location}}/endpoints/{{endpoint}}:undeployModel")
-	if err != nil {
-		return err
-	}
-	undeployHeaders := make(http.Header)
-
-	undeployBody := map[string]interface{}{
-		"deployedModelId": deployedModelId,
-	}
-
-	log.Printf("[DEBUG] Undeploying model %s from EndpointWithModelGardenDeployment %q", deployedModelDisplayName, d.Id())
-
-	undeployRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    undeployUrl,
-		UserAgent: userAgent,
-		Body:      undeployBody,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   undeployHeaders,
-	})
-	if err != nil {
-		return fmt.Errorf("Error undeploying model from EndpointWithModelGardenDeployment: %s", err)
-	}
-
-	err = VertexAIOperationWaitTime(
-		config, undeployRes, project, tpgresource.LocationFromId(d.Id()), fmt.Sprintf("Undeploying model %s from EndpointWithModelGardenDeployment", deployedModelDisplayName), userAgent,
-		d.Timeout(schema.TimeoutDelete))
-
-	if err != nil {
-		// The model could not be undeployed
-		return fmt.Errorf("Error waiting to undeploy model %s from EndpointWithModelGardenDeployment: %s", deployedModelDisplayName, err)
-	}
-
-	log.Printf("[DEBUG] Finished undeploying model %s from EndpointWithModelGardenDeployment %q: %#v", deployedModelDisplayName, d.Id(), undeployRes)
-
-	// Delete Endpoint
-	deleteUrl, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{location}}/endpoints/{{endpoint}}")
-	if err != nil {
-		return err
-	}
-	deleteHeaders := make(http.Header)
-	var deleteBody map[string]interface{}
-
-	log.Printf("[DEBUG] Deleting EndpointWithModelGardenDeployment %q", d.Id())
-	deleteRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    deleteUrl,
-		UserAgent: userAgent,
-		Body:      deleteBody,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   deleteHeaders,
-	})
-	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, "EndpointWithModelGardenDeployment")
-	}
-
-	err = VertexAIOperationWaitTime(
-		config, deleteRes, project, tpgresource.LocationFromId(d.Id()), "Deleting EndpointWithModelGardenDeployment", userAgent,
-		d.Timeout(schema.TimeoutDelete))
-
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Finished deleting EndpointWithModelGardenDeployment %q: %#v", d.Id(), deleteRes)
-	return nil
+	return resourceVertexAIEndpointWithModelGardenDeploymentCustomDelete(d, meta)
 }
 
 func flattenVertexAIEndpointWithModelGardenDeploymentDeployedModelId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2071,14 +1875,6 @@ func flattenVertexAIEndpointWithModelGardenDeploymentPublisherModelName(v interf
 
 func flattenVertexAIEndpointWithModelGardenDeploymentHuggingFaceModelId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenVertexAIEndpointWithModelGardenDeploymentModelConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("model_config")
-}
-
-func flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("endpoint_config")
 }
 
 func flattenVertexAIEndpointWithModelGardenDeploymentDeployConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2124,9 +1920,6 @@ func flattenVertexAIEndpointWithModelGardenDeploymentDeployConfigDedicatedResour
 	transformed["spot"] =
 		flattenVertexAIEndpointWithModelGardenDeploymentDeployConfigDedicatedResourcesSpot(original["spot"], d, config)
 	return []interface{}{transformed}
-}
-func flattenVertexAIEndpointWithModelGardenDeploymentDeployConfigDedicatedResourcesMachineSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("deploy_config.0.dedicated_resources.0.machine_spec")
 }
 
 func flattenVertexAIEndpointWithModelGardenDeploymentDeployConfigDedicatedResourcesMinReplicaCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3914,68 +3707,6 @@ func expandVertexAIEndpointWithModelGardenDeploymentDeployConfigDedicatedResourc
 
 func expandVertexAIEndpointWithModelGardenDeploymentDeployConfigFastTryoutEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceVertexAIEndpointWithModelGardenDeploymentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	deployedModelId, _ := d.Get("deployed_model_id").(string)
-
-	deployedModels, _ := res["deployedModels"].([]interface{})
-	var deployedModel map[string]interface{}
-	for _, raw := range deployedModels {
-		m, ok := raw.(map[string]interface{})
-		if !ok {
-			continue
-		}
-		if id, _ := m["id"].(string); id == deployedModelId {
-			deployedModel = m
-			break
-		}
-	}
-	if deployedModel == nil {
-		d.SetId("")
-		return nil, nil
-	}
-
-	apiResources, _ := deployedModel["dedicatedResources"].(map[string]interface{})
-	if apiResources == nil {
-		apiResources = map[string]interface{}{}
-	}
-
-	const resourcesPrefix = "deploy_config.0.dedicated_resources.0."
-
-	dedicatedResources := map[string]interface{}{
-		"spot":                   d.Get(resourcesPrefix + "spot"),
-		"autoscalingMetricSpecs": d.Get(resourcesPrefix + "autoscaling_metric_specs"),
-	}
-
-	// The API omits these when they hold their zero value, so fall back to state
-	// rather than reporting drift that isn't there.
-	for apiKey, stateKey := range map[string]string{
-		"minReplicaCount":      "min_replica_count",
-		"maxReplicaCount":      "max_replica_count",
-		"requiredReplicaCount": "required_replica_count",
-	} {
-		if v, ok := apiResources[apiKey]; ok {
-			dedicatedResources[apiKey] = v
-		} else {
-			dedicatedResources[apiKey] = d.Get(resourcesPrefix + stateKey)
-		}
-	}
-
-	res["deployConfig"] = map[string]interface{}{
-		"dedicatedResources": dedicatedResources,
-		"systemLabels":       d.Get("deploy_config.0.system_labels"),
-		"fastTryoutEnabled":  d.Get("deploy_config.0.fast_tryout_enabled"),
-	}
-
-	res["publisherModelName"] = d.Get("publisher_model_name")
-	res["huggingFaceModelId"] = d.Get("hugging_face_model_id")
-	res["deployedModelId"] = deployedModelId
-	if v, ok := deployedModel["displayName"]; ok {
-		res["deployedModelDisplayName"] = v
-	}
-
-	return res, nil
 }
 
 func ResourceVertexAIEndpointWithModelGardenDeploymentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

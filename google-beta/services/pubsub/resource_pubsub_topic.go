@@ -1167,13 +1167,6 @@ func resourcePubsubTopicImport(d *schema.ResourceData, meta interface{}) ([]*sch
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenPubsubTopicName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenPubsubTopicKmsKeyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1637,10 +1630,6 @@ func flattenPubsubTopicTerraformLabels(v interface{}, d *schema.ResourceData, co
 
 func flattenPubsubTopicEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandPubsubTopicName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.GetResourceNameFromSelfLink(v.(string)), nil
 }
 
 func expandPubsubTopicKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2419,17 +2408,6 @@ func expandPubsubTopicEffectiveLabels(v interface{}, d tpgresource.TerraformReso
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourcePubsubTopicEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "name")
-	return obj, nil
-}
-
-func resourcePubsubTopicUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["topic"] = obj
-	return newObj, nil
 }
 
 func ResourcePubsubTopicFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

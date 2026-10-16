@@ -755,11 +755,6 @@ func flattenChronicleCaseTagDefinitionValue(v interface{}, d *schema.ResourceDat
 	return v
 }
 
-func flattenChronicleCaseTagDefinitionCaseTagDefinitionId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleCaseTagDefinitionCanBeCaseTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

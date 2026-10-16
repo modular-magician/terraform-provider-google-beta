@@ -871,11 +871,6 @@ func flattenChronicleNativeDashboardName(v interface{}, d *schema.ResourceData, 
 	return v
 }
 
-func flattenChronicleNativeDashboardDashboardId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func flattenChronicleNativeDashboardAccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

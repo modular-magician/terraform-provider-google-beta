@@ -554,32 +554,7 @@ func resourceComputeGlobalNetworkEndpointDelete(d *schema.ResourceData, meta int
 }
 
 func resourceComputeGlobalNetworkEndpointImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	// FQDN, port and ip_address are optional, so use * instead of + when reading the import id
-	if err := tpgresource.ParseImportId([]string{
-		"projects/(?P<project>[^/]+)/global/networkEndpointGroups/(?P<global_network_endpoint_group>[^/]+)/(?P<ip_address>[^/]*)/(?P<fqdn>[^/]*)/(?P<port>[^/]+)",
-		"(?P<project>[^/]+)/(?P<global_network_endpoint_group>[^/]+)/(?P<ip_address>[^/]*)/(?P<fqdn>[^/]*)/(?P<port>[^/]*)",
-		"(?P<global_network_endpoint_group>[^/]+)/(?P<ip_address>[^/]*)/(?P<fqdn>[^/]*)/(?P<port>[^/]*)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{global_network_endpoint_group}}/{{ip_address}}/{{fqdn}}/{{port}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenNestedComputeGlobalNetworkEndpointPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles int given in float64 format
-	if floatVal, ok := v.(float64); ok {
-		return int(floatVal)
-	}
-	return v
+	return resourceComputeGlobalNetworkEndpointCustomImport(d, meta)
 }
 
 func flattenNestedComputeGlobalNetworkEndpointIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -600,18 +575,6 @@ func expandNestedComputeGlobalNetworkEndpointIpAddress(v interface{}, d tpgresou
 
 func expandNestedComputeGlobalNetworkEndpointFqdn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeGlobalNetworkEndpointEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Network Endpoint Group is a URL parameter only, so replace self-link/path with resource name only.
-	if err := d.Set("global_network_endpoint_group", tpgresource.GetResourceNameFromSelfLink(d.Get("global_network_endpoint_group").(string))); err != nil {
-		return nil, fmt.Errorf("Error setting global_network_endpoint_group: %s", err)
-	}
-
-	wrappedReq := map[string]interface{}{
-		"networkEndpoints": []interface{}{obj},
-	}
-	return wrappedReq, nil
 }
 
 func flattenNestedComputeGlobalNetworkEndpoint(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
@@ -692,14 +655,6 @@ func resourceComputeGlobalNetworkEndpointFindNestedObjectInList(d *schema.Resour
 		return idx, item, nil
 	}
 	return -1, nil, nil
-}
-func resourceComputeGlobalNetworkEndpointDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	v, ok := res["networkEndpoint"]
-	if !ok || v == nil {
-		return res, nil
-	}
-
-	return v.(map[string]interface{}), nil
 }
 
 func ResourceComputeGlobalNetworkEndpointFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

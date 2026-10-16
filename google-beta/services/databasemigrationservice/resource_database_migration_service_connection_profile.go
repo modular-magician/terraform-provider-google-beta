@@ -1537,10 +1537,6 @@ func flattenDatabaseMigrationServiceConnectionProfileMysqlUsername(v interface{}
 	return v
 }
 
-func flattenDatabaseMigrationServiceConnectionProfileMysqlPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("mysql.0.password")
-}
-
 func flattenDatabaseMigrationServiceConnectionProfileMysqlPasswordSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1566,18 +1562,6 @@ func flattenDatabaseMigrationServiceConnectionProfileMysqlSsl(v interface{}, d *
 }
 func flattenDatabaseMigrationServiceConnectionProfileMysqlSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileMysqlSslClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("mysql.0.ssl.0.client_key")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileMysqlSslClientCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("mysql.0.ssl.0.client_certificate")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileMysqlSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("mysql.0.ssl.0.ca_certificate")
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileMysqlCloudSqlId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1642,10 +1626,6 @@ func flattenDatabaseMigrationServiceConnectionProfilePostgresqlUsername(v interf
 	return v
 }
 
-func flattenDatabaseMigrationServiceConnectionProfilePostgresqlPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("postgresql.0.password")
-}
-
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlPasswordSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1675,18 +1655,6 @@ func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSsl(v interface{}
 }
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("postgresql.0.ssl.0.client_key")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslClientCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("postgresql.0.ssl.0.client_certificate")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("postgresql.0.ssl.0.ca_certificate")
 }
 
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1774,10 +1742,6 @@ func flattenDatabaseMigrationServiceConnectionProfileOracleUsername(v interface{
 	return v
 }
 
-func flattenDatabaseMigrationServiceConnectionProfileOraclePassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("oracle.0.password")
-}
-
 func flattenDatabaseMigrationServiceConnectionProfileOraclePasswordSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1807,18 +1771,6 @@ func flattenDatabaseMigrationServiceConnectionProfileOracleSsl(v interface{}, d 
 }
 func flattenDatabaseMigrationServiceConnectionProfileOracleSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileOracleSslClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("oracle.0.ssl.0.client_key")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileOracleSslClientCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("oracle.0.ssl.0.client_certificate")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileOracleSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("oracle.0.ssl.0.ca_certificate")
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileOracleStaticServiceIpConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1873,14 +1825,6 @@ func flattenDatabaseMigrationServiceConnectionProfileOracleForwardSshConnectivit
 	}
 
 	return v // let terraform core handle it otherwise
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileOracleForwardSshConnectivityPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("oracle.0.forward_ssh_connectivity.0.password")
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileOracleForwardSshConnectivityPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("oracle.0.forward_ssh_connectivity.0.private_key")
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileOraclePrivateConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2081,10 +2025,6 @@ func flattenDatabaseMigrationServiceConnectionProfileCloudsqlSettingsSourceId(v 
 	return v
 }
 
-func flattenDatabaseMigrationServiceConnectionProfileCloudsqlSettingsRootPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("cloudsql.0.settings.0.root_password")
-}
-
 func flattenDatabaseMigrationServiceConnectionProfileCloudsqlSettingsRootPasswordSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2166,10 +2106,6 @@ func flattenDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUser(
 }
 func flattenDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserUser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("alloydb.0.settings.0.initial_user.0.password")
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserPasswordSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

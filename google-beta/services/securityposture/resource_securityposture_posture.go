@@ -1426,17 +1426,6 @@ func flattenSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstrain
 		flattenSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintCustomCustomConstraintResourceTypes(original["resourceTypes"], d, config)
 	return []interface{}{transformed}
 }
-func flattenSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintCustomCustomConstraintName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-
-	revisionIdLength := 8
-	name := v.(string)
-	name = name[:len(name)-revisionIdLength]
-
-	return name
-}
 
 func flattenSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintCustomCustomConstraintDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -2801,38 +2790,6 @@ func expandSecurityposturePosturePolicySetsPoliciesConstraintSecurityHealthAnaly
 
 func expandSecurityposturePosturePolicySetsPoliciesConstraintSecurityHealthAnalyticsCustomModuleConfigRecommendation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceSecurityposturePostureEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if policySets, ok := obj["policySets"].([]interface{}); ok {
-		for _, ps := range policySets {
-			if psMap, ok := ps.(map[string]interface{}); ok {
-				if policies, ok := psMap["policies"].([]interface{}); ok {
-					for _, p := range policies {
-						if pMap, ok := p.(map[string]interface{}); ok {
-							if constraint, ok := pMap["constraint"].(map[string]interface{}); ok {
-								if opc, ok := constraint["orgPolicyConstraint"].(map[string]interface{}); ok {
-									if rules, ok := opc["policyRules"].([]interface{}); ok {
-										for _, r := range rules {
-											if rule, ok := r.(map[string]interface{}); ok {
-												_, isList := rule["values"]
-												_, hasAllow := rule["allowAll"]
-												_, hasDeny := rule["denyAll"]
-												if isList || hasAllow || hasDeny {
-													delete(rule, "enforce") // enforce is only valid for boolean constraints
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	return obj, nil
 }
 
 func ResourceSecurityposturePostureFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

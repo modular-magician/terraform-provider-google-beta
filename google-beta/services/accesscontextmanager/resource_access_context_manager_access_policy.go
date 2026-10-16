@@ -544,13 +544,6 @@ func resourceAccessContextManagerAccessPolicyImport(d *schema.ResourceData, meta
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenAccessContextManagerAccessPolicyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenAccessContextManagerAccessPolicyCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

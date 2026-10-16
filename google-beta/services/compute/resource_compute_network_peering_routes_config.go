@@ -594,14 +594,6 @@ func expandNestedComputeNetworkPeeringRoutesConfigImportSubnetRoutesWithPublicIp
 	return v, nil
 }
 
-func resourceComputeNetworkPeeringRoutesConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Stick request in a networkPeering block as in
-	// https://cloud.google.com/compute/docs/reference/rest/v1/networks/updatePeering
-	newObj := make(map[string]interface{})
-	newObj["networkPeering"] = obj
-	return newObj, nil
-}
-
 func flattenNestedComputeNetworkPeeringRoutesConfig(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	var v interface{}
 	var ok bool

@@ -475,51 +475,7 @@ func resourceTagsTagBindingDelete(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceTagsTagBindingImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"tagBindings/(?P<name>.+)",
-		"(?P<name>.+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	d.SetId(name)
-
-	parts := strings.Split(name, "/")
-	if len(parts) < 3 {
-		return nil, fmt.Errorf("Error parsing binding name. Should be in form {{parent}}/{{tag_type}}/{{tag_value}}")
-	}
-	if err := d.Set("parent", parts[0]); err != nil {
-		return nil, fmt.Errorf("Error setting parent, %s", err)
-	}
-
-	typePart := parts[1]
-	idPart := parts[2]
-	if typePart == "tagValues" {
-		// Curated Tag Binding: Set tag_value to the id format to maintain backward compatibility for imports.
-		tagValueId := fmt.Sprintf("tagValues/%s", idPart)
-		if err := d.Set("tag_value", tagValueId); err != nil {
-			return nil, fmt.Errorf("Error setting tag_value for curated tag import: %s", err)
-		}
-	} else if typePart == "tagKeys" {
-		// Dynamic Tag Binding: We don't set tag_value here. The subsequent Read call will fetch the binding
-		// using the 'name' and populate 'tag_value' with the dynamic tag value namespaced name.
-	} else {
-		return nil, fmt.Errorf("Invalid binding name format, expected .../tagValues/{id} or .../tagKeys/{id}: %s", name)
-	}
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenTagsTagBindingName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	parts := strings.Split(v.(string), "/")
-	return strings.Join(parts[len(parts)-3:], "/")
+	return resourceTagsTagBindingCustomImport(d, meta)
 }
 
 func flattenTagsTagBindingParent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

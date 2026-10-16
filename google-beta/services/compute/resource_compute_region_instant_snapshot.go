@@ -830,13 +830,6 @@ func flattenComputeRegionInstantSnapshotSourceDisk(v interface{}, d *schema.Reso
 	return tpgresource.ConvertSelfLinkToV1(v.(string))
 }
 
-func flattenComputeRegionInstantSnapshotRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandComputeRegionInstantSnapshotName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -891,22 +884,6 @@ func expandComputeRegionInstantSnapshotEffectiveLabels(v interface{}, d tpgresou
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandComputeRegionInstantSnapshotSourceDisk(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("disks", v.(string), "project", "region", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for source_disk: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func expandComputeRegionInstantSnapshotRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeRegionInstantSnapshotFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

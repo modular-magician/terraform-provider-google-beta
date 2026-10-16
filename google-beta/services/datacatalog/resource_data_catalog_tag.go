@@ -559,25 +559,7 @@ func resourceDataCatalogTagDelete(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceDataCatalogTagImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	egRegex := regexp.MustCompile("(.+)/tags")
-
-	parts := egRegex.FindStringSubmatch(name)
-	if len(parts) != 2 {
-		return nil, fmt.Errorf("entry name does not fit the format %s", egRegex)
-	}
-
-	if err := d.Set("parent", parts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting parent: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceDataCatalogTagCustomImport(d, meta)
 }
 
 func flattenNestedDataCatalogTagName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -648,14 +630,6 @@ func flattenNestedDataCatalogTagFieldsBoolValue(v interface{}, d *schema.Resourc
 
 func flattenNestedDataCatalogTagFieldsTimestampValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenNestedDataCatalogTagFieldsEnumValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-
-	return v.(map[string]interface{})["displayName"]
 }
 
 func flattenNestedDataCatalogTagColumn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -757,39 +731,8 @@ func expandNestedDataCatalogTagFieldsTimestampValue(v interface{}, d tpgresource
 	return v, nil
 }
 
-func expandNestedDataCatalogTagFieldsEnumValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	// we flattened the original["enum_value"]["display_name"] object to be just original["enum_value"] so here,
-	// v is the value we want from the config
-	transformed := make(map[string]interface{})
-	if val := reflect.ValueOf(v); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["displayName"] = v
-	}
-
-	return transformed, nil
-}
-
 func expandNestedDataCatalogTagColumn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceDataCatalogTagEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if obj["fields"] != nil {
-		// IsEmptyValue() does not work for a boolean as it shows
-		// false when it is 'empty'. Filter boolValue here based on
-		// the rule api does not take more than 1 'value'
-		fields := obj["fields"].(map[string]interface{})
-		for _, elements := range fields {
-			values := elements.(map[string]interface{})
-			if len(values) > 1 {
-				for val := range values {
-					if val == "boolValue" {
-						delete(values, "boolValue")
-					}
-				}
-			}
-		}
-	}
-	return obj, nil
 }
 
 func flattenNestedDataCatalogTag(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
