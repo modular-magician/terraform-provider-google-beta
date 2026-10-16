@@ -92,7 +92,7 @@ func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBas
 				ResourceName:            "google_resource_manager_capability_config.capability_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"capability_config_id", "parent"},
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
 			},
 			{
 				ResourceName:       "google_resource_manager_capability_config.capability_config",
@@ -112,7 +112,7 @@ func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBas
 				ResourceName:            "google_resource_manager_capability_config.capability_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"capability_config_id", "parent"},
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
 			},
 			{
 				ResourceName:       "google_resource_manager_capability_config.capability_config",
@@ -132,7 +132,7 @@ func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBas
 				ResourceName:            "google_resource_manager_capability_config.capability_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"capability_config_id", "parent"},
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
 			},
 			{
 				ResourceName:       "google_resource_manager_capability_config.capability_config",
@@ -151,6 +151,7 @@ resource "google_resource_manager_capability_config" "capability_config" {
   capability_config_id = "%{capability_config_id}"
   display_name         = "%{display_name}"
   types                = ["AGENT_MANAGEMENT"]
+  boundaries           = ["organizations/%{org_id}/boundaries/boundary-1"]
 }
 `, context)
 }
@@ -162,6 +163,10 @@ resource "google_resource_manager_capability_config" "capability_config" {
   capability_config_id = "%{capability_config_id}"
   display_name         = "Updated Display Name"
   types                = ["AGENT_MANAGEMENT"]
+  boundaries           = [
+    "organizations/%{org_id}/boundaries/boundary-1",
+    "organizations/%{org_id}/boundaries/boundary-2",
+  ]
 }
 `, context)
 }
@@ -172,6 +177,7 @@ resource "google_resource_manager_capability_config" "capability_config" {
   parent               = "organizations/%{org_id}"
   capability_config_id = "%{capability_config_id}"
   types                = ["AGENT_MANAGEMENT"]
+  boundaries           = []
 }
 `, context)
 }

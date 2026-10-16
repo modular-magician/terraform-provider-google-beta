@@ -41,6 +41,7 @@ resource "google_resource_manager_capability_config" "capability_config" {
   capability_config_id = "capcfg"
   display_name         = "capdisp"
   types                = ["AGENT_MANAGEMENT"]
+  boundaries           = ["organizations/123456789/boundaries/boundary-1"]
 }
 ```
 ## Example Usage - Resource Manager Capability Config Folder
@@ -136,6 +137,11 @@ The following arguments are supported:
   The management project for the capability config. If unspecified, a project will be created automatically.
   Must be specified for project-scoped capability config.
   Format: `projects/{project_number}`.
+
+* `boundaries` -
+  (Optional)
+  The list of Boundaries associated with this capability config.
+  Format: `organizations/{organization}/boundaries/{boundary}`, `folders/{folder}/boundaries/{boundary}`, or `projects/{project}/boundaries/{boundary}`.
 
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
