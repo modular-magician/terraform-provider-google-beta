@@ -613,14 +613,6 @@ func expandComputeMachineImageDescription(v interface{}, d tpgresource.Terraform
 	return v, nil
 }
 
-func expandComputeMachineImageSourceInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseZonalFieldValue("instances", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for source_instance: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
 func expandComputeMachineImageGuestFlush(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

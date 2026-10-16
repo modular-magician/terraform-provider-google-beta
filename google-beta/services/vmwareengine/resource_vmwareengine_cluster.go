@@ -1868,13 +1868,6 @@ func expandVmwareengineClusterDatastoreMountConfigIgnoreColocation(v interface{}
 	return v, nil
 }
 
-func resourceVmwareengineClusterEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// datastoreMountConfig is sent as post_create and post_update but not sent during create and update methods.
-	delete(obj, "datastoreMountConfig")
-	log.Printf("[DEBUG] After removal of datastoreMountConfig Cluster request %q: %#v", d.Id(), obj)
-	return obj, nil
-}
-
 func ResourceVmwareengineClusterFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

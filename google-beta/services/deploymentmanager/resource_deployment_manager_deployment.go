@@ -978,25 +978,6 @@ func expandDeploymentManagerDeploymentTargetImportsName(v interface{}, d tpgreso
 	return v, nil
 }
 
-func resourceDeploymentManagerDeploymentPostCreateFailure(d *schema.ResourceData, meta interface{}, err error) error {
-	log.Printf("[DEBUG] Error before post_create_failure hook: %v", err)
-	log.Printf("[WARN] Attempt to clean up Deployment if it still exists")
-	var cleanErr error
-	if cleanErr = resourceDeploymentManagerDeploymentRead(d, meta); cleanErr == nil {
-		if d.Id() != "" {
-			log.Printf("[WARN] Deployment %q still exists, attempting to delete...", d.Id())
-			if cleanErr = resourceDeploymentManagerDeploymentDelete(d, meta); cleanErr == nil {
-				log.Printf("[WARN] Invalid Deployment was successfully deleted")
-				d.SetId("")
-			}
-		}
-	}
-	if cleanErr != nil {
-		log.Printf("[WARN] Could not confirm cleanup of Deployment if created in error state: %v", cleanErr)
-	}
-	return err
-}
-
 func ResourceDeploymentManagerDeploymentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

@@ -734,25 +734,7 @@ func resourceModelArmorGlobalFloorsettingDelete(d *schema.ResourceData, meta int
 }
 
 func resourceModelArmorGlobalFloorsettingImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	if err := tpgresource.ParseImportId([]string{
-		"^(?P<parent>.+)/locations/(?P<location>[^/]+)/floorSetting$",
-		"^(?P<parent>.+)/(?P<location>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/locations/{{location}}/floorSetting")
-
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceModelArmorGlobalFloorsettingCustomImport(d, meta)
 }
 
 func flattenModelArmorGlobalFloorsettingName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -996,25 +978,6 @@ func flattenModelArmorGlobalFloorsettingFloorSettingMetadata(v interface{}, d *s
 	transformed := make(map[string]interface{})
 	transformed["multi_language_detection"] =
 		flattenModelArmorGlobalFloorsettingFloorSettingMetadataMultiLanguageDetection(original["multiLanguageDetection"], d, config)
-	return []interface{}{transformed}
-}
-func flattenModelArmorGlobalFloorsettingFloorSettingMetadataMultiLanguageDetection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return []interface{}{map[string]interface{}{"enable_multi_language_detection": false}}
-	}
-	original, ok := v.(map[string]interface{})
-	if !ok {
-		return nil // Should not happen if API is consistent
-	}
-	// Populating the field even if the returned block is empty.
-	transformed := make(map[string]interface{})
-
-	if val, ok := original["enableMultiLanguageDetection"]; ok {
-		transformed["enable_multi_language_detection"] = val
-	} else {
-		// Since the field is REQUIRED in the schema and the block exists, default to false if the key is missing from the API response.
-		transformed["enable_multi_language_detection"] = false
-	}
 	return []interface{}{transformed}
 }
 

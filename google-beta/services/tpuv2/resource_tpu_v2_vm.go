@@ -1109,13 +1109,6 @@ func resourceTpuV2VmImport(d *schema.ResourceData, meta interface{}) ([]*schema.
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenTpuV2VmName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenTpuV2VmRuntimeVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }

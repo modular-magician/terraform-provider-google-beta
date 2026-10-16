@@ -1303,15 +1303,7 @@ func resourceMonitoringSloDelete(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceMonitoringSloImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceMonitoringSloCustomImport(d, meta)
 }
 
 func flattenMonitoringSloName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1324,21 +1316,6 @@ func flattenMonitoringSloDisplayName(v interface{}, d *schema.ResourceData, conf
 
 func flattenMonitoringSloGoal(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandMonitoringSloRollingPeriodDays(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	i, ok := v.(int)
-	if !ok {
-		return nil, fmt.Errorf("unexpected value is not int: %v", v)
-	}
-	if i == 0 {
-		return "", nil
-	}
-	// Day = 86400s
-	return fmt.Sprintf("%ds", i*86400), nil
 }
 
 func flattenMonitoringSloCalendarPeriod(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1423,15 +1400,6 @@ func flattenMonitoringSloServiceLevelIndicatorBasicSliLatency(v interface{}, d *
 }
 func flattenMonitoringSloServiceLevelIndicatorBasicSliLatencyThreshold(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenMonitoringSloServiceLevelIndicatorBasicSliAvailability(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["enabled"] = true
-	return []interface{}{transformed}
 }
 
 func flattenMonitoringSloServiceLevelIndicatorRequestBasedSli(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1715,15 +1683,6 @@ func flattenMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThres
 	return v
 }
 
-func flattenMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailability(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["enabled"] = true
-	return []interface{}{transformed}
-}
-
 func flattenMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRange(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1808,33 +1767,12 @@ func flattenMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRan
 	return v
 }
 
-func flattenMonitoringSloSloId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandMonitoringSloDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandMonitoringSloGoal(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func flattenMonitoringSloRollingPeriodDays(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	if v.(string) == "" {
-		return nil
-	}
-	dur, err := time.ParseDuration(v.(string))
-	if err != nil {
-		return nil
-	}
-	return int(dur / (time.Hour * 24))
 }
 
 func expandMonitoringSloCalendarPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2646,36 +2584,6 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRang
 
 func expandMonitoringSloSloId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceMonitoringSloEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Name/Service Level Objective ID is a query parameter and cannot
-	// be given in data
-	delete(obj, "sloId")
-	Sli := obj["serviceLevelIndicator"].(map[string]interface{})
-	if basicSli, ok := Sli["basicSli"].(map[string]interface{}); ok {
-		//Removing the dummy `enabled` attribute
-		if availability, ok := basicSli["availability"]; ok {
-			transAvailability := availability.(map[string]interface{})
-			delete(transAvailability, "enabled")
-			basicSli["availability"] = transAvailability
-		}
-	}
-
-	if windowBasedSli, ok := Sli["windowsBased"].(map[string]interface{}); ok {
-		if goodTotalRatioThreshold, ok := windowBasedSli["goodTotalRatioThreshold"].(map[string]interface{}); ok {
-			if basicSli, ok := goodTotalRatioThreshold["basicSliPerformance"].(map[string]interface{}); ok {
-				//Removing the dummy `enabled` attribute
-				if availability, ok := basicSli["availability"]; ok {
-					transAvailability := availability.(map[string]interface{})
-					delete(transAvailability, "enabled")
-					basicSli["availability"] = transAvailability
-				}
-			}
-		}
-	}
-
-	return obj, nil
 }
 
 func resourceMonitoringSloPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {

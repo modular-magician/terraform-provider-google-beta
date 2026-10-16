@@ -465,36 +465,7 @@ func resourceParameterManagerRegionalRegionalParameterVersionDelete(d *schema.Re
 }
 
 func resourceParameterManagerRegionalRegionalParameterVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	parameterRegex := regexp.MustCompile("(projects/.+/locations/.+/parameters/.+)/versions/.+$")
-	versionRegex := regexp.MustCompile("projects/(.+)/locations/(.+)/parameters/(.+)/versions/(.+)$")
-
-	parts := parameterRegex.FindStringSubmatch(name)
-	if len(parts) != 2 {
-		return nil, fmt.Errorf("Version name does not fit the format `projects/{{project}}/locations/{{location}}/parameters/{{parameter_id}}/versions/{{parameter_version_id}}`")
-	}
-	if err := d.Set("parameter", parts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting parameter: %s", err)
-	}
-
-	parts = versionRegex.FindStringSubmatch(name)
-
-	if err := d.Set("parameter_version_id", parts[4]); err != nil {
-		return nil, fmt.Errorf("Error setting parameter_version_id: %s", err)
-	}
-
-	if err := d.Set("location", parts[2]); err != nil {
-		return nil, fmt.Errorf("Error setting location: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceParameterManagerRegionalRegionalParameterVersionCustomImport(d, meta)
 }
 
 func flattenParameterManagerRegionalRegionalParameterVersionName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -511,26 +482,6 @@ func flattenParameterManagerRegionalRegionalParameterVersionUpdateTime(v interfa
 
 func flattenParameterManagerRegionalRegionalParameterVersionDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenParameterManagerRegionalRegionalParameterVersionPayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	data, err := base64.StdEncoding.DecodeString(original["data"].(string))
-	if err != nil {
-		return err
-	}
-	transformed["parameter_data"] = string(data)
-	if val, ok := original["dataCrc32c"]; ok && val != nil {
-		transformed["data_crc32c"] = fmt.Sprintf("%v", val)
-	}
-	return []interface{}{transformed}
 }
 
 func flattenParameterManagerRegionalRegionalParameterVersionKmsKeyVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -558,14 +509,6 @@ func expandParameterManagerRegionalRegionalParameterVersionPayload(v interface{}
 	}
 
 	return transformed, nil
-}
-
-func expandParameterManagerRegionalRegionalParameterVersionPayloadParameterData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
 }
 
 func expandParameterManagerRegionalRegionalParameterVersionPayloadDataCrc32c(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

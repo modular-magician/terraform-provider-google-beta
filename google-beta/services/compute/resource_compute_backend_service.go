@@ -2914,13 +2914,6 @@ func flattenComputeBackendServiceBackendDescription(v interface{}, d *schema.Res
 	return v
 }
 
-func flattenComputeBackendServiceBackendGroup(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
-}
-
 func flattenComputeBackendServiceBackendMaxConnections(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -3686,13 +3679,6 @@ func flattenComputeBackendServiceDescription(v interface{}, d *schema.ResourceDa
 
 func flattenComputeBackendServiceEnableCDN(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenComputeBackendServiceHealthChecks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.ConvertAndMapStringArr(v.([]interface{}), tpgresource.ConvertSelfLinkToV1)
 }
 
 func flattenComputeBackendServiceGeneratedId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5298,120 +5284,6 @@ func expandComputeBackendServiceCdnPolicySignedUrlCacheMaxAgeSec(v interface{}, 
 	return v, nil
 }
 
-// expandComputeBackendServiceCdnPolicyDefaultTtl uses raw config inspection so that an explicitly
-// configured `default_ttl = 0` reaches the API, while an unconfigured field stays out
-// of the request entirely.
-//
-// `default_ttl` is Optional + Computed, and 0 is the zero value for ints in Terraform
-// SDKv2, so resource data alone cannot distinguish "the practitioner asked for 0" from "the
-// practitioner said nothing". Neither of the two simple options works:
-//
-//   - Omitting every 0 (the default expander behavior) drops a configured 0, the API substitutes
-//     its own default, and the next plan shows a permanent diff.
-//   - Sending every 0 (send_empty_value) makes unconfigured TTLs explicit, which both overrides the
-//     API-side default and breaks cache modes that forbid TTLs, e.g. the API rejects
-//     "default_ttl cannot be specified with USE_ORIGIN_HEADERS cache_mode".
-//
-// Returning a *int64 threads the needle: a non-nil pointer is not an empty value, so a configured 0
-// is included in the request, while nil leaves the field out.
-func expandComputeBackendServiceCdnPolicyDefaultTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	ttl, ok := v.(int)
-	if !ok {
-		return nil, nil
-	}
-	if ttl != 0 {
-		return ttl, nil
-	}
-
-	// A 0 is only meaningful when it came from the configuration rather than from the zero value of
-	// an unset field.
-	if rd, ok := d.(*schema.ResourceData); ok {
-		path := cty.GetAttrPath("cdn_policy").IndexInt(0).GetAttr("default_ttl")
-		if val, _ := rd.GetRawConfigAt(path); !val.IsNull() && val.IsKnown() {
-			zero := int64(0)
-			return &zero, nil
-		}
-	}
-
-	return nil, nil
-}
-
-// expandComputeBackendServiceCdnPolicyMaxTtl uses raw config inspection so that an explicitly
-// configured `max_ttl = 0` reaches the API, while an unconfigured field stays out
-// of the request entirely.
-//
-// `max_ttl` is Optional + Computed, and 0 is the zero value for ints in Terraform
-// SDKv2, so resource data alone cannot distinguish "the practitioner asked for 0" from "the
-// practitioner said nothing". Neither of the two simple options works:
-//
-//   - Omitting every 0 (the default expander behavior) drops a configured 0, the API substitutes
-//     its own default, and the next plan shows a permanent diff.
-//   - Sending every 0 (send_empty_value) makes unconfigured TTLs explicit, which both overrides the
-//     API-side default and breaks cache modes that forbid TTLs, e.g. the API rejects
-//     "default_ttl cannot be specified with USE_ORIGIN_HEADERS cache_mode".
-//
-// Returning a *int64 threads the needle: a non-nil pointer is not an empty value, so a configured 0
-// is included in the request, while nil leaves the field out.
-func expandComputeBackendServiceCdnPolicyMaxTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	ttl, ok := v.(int)
-	if !ok {
-		return nil, nil
-	}
-	if ttl != 0 {
-		return ttl, nil
-	}
-
-	// A 0 is only meaningful when it came from the configuration rather than from the zero value of
-	// an unset field.
-	if rd, ok := d.(*schema.ResourceData); ok {
-		path := cty.GetAttrPath("cdn_policy").IndexInt(0).GetAttr("max_ttl")
-		if val, _ := rd.GetRawConfigAt(path); !val.IsNull() && val.IsKnown() {
-			zero := int64(0)
-			return &zero, nil
-		}
-	}
-
-	return nil, nil
-}
-
-// expandComputeBackendServiceCdnPolicyClientTtl uses raw config inspection so that an explicitly
-// configured `client_ttl = 0` reaches the API, while an unconfigured field stays out
-// of the request entirely.
-//
-// `client_ttl` is Optional + Computed, and 0 is the zero value for ints in Terraform
-// SDKv2, so resource data alone cannot distinguish "the practitioner asked for 0" from "the
-// practitioner said nothing". Neither of the two simple options works:
-//
-//   - Omitting every 0 (the default expander behavior) drops a configured 0, the API substitutes
-//     its own default, and the next plan shows a permanent diff.
-//   - Sending every 0 (send_empty_value) makes unconfigured TTLs explicit, which both overrides the
-//     API-side default and breaks cache modes that forbid TTLs, e.g. the API rejects
-//     "default_ttl cannot be specified with USE_ORIGIN_HEADERS cache_mode".
-//
-// Returning a *int64 threads the needle: a non-nil pointer is not an empty value, so a configured 0
-// is included in the request, while nil leaves the field out.
-func expandComputeBackendServiceCdnPolicyClientTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	ttl, ok := v.(int)
-	if !ok {
-		return nil, nil
-	}
-	if ttl != 0 {
-		return ttl, nil
-	}
-
-	// A 0 is only meaningful when it came from the configuration rather than from the zero value of
-	// an unset field.
-	if rd, ok := d.(*schema.ResourceData); ok {
-		path := cty.GetAttrPath("cdn_policy").IndexInt(0).GetAttr("client_ttl")
-		if val, _ := rd.GetRawConfigAt(path); !val.IsNull() && val.IsKnown() {
-			zero := int64(0)
-			return &zero, nil
-		}
-	}
-
-	return nil, nil
-}
-
 func expandComputeBackendServiceCdnPolicyNegativeCaching(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -6643,81 +6515,6 @@ func expandComputeBackendServiceParamsResourceManagerTags(v interface{}, d tpgre
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceComputeBackendServiceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	backendsRaw, ok := obj["backends"]
-	if !ok {
-		return obj, nil
-	}
-	backends := backendsRaw.([]interface{})
-	for _, backendRaw := range backends {
-		backend := backendRaw.(map[string]interface{})
-
-		if isNegBackend(backend) {
-			// Remove `max_utilization` from any backend that belongs to an NEG. This field
-			// has a default value and causes API validation errors
-			backend["maxUtilization"] = nil
-		}
-	}
-
-	// This custom encoding helps prevent sending 0 for clientTtl, defaultTtl and
-	// maxTtl in API calls to update these values  when unset in the provider
-	// (doing so results in an API level error)
-	c, cdnPolicyOk := d.GetOk("cdn_policy")
-
-	// Only apply during updates
-	if !cdnPolicyOk || obj["cdnPolicy"] == nil {
-		return obj, nil
-	}
-
-	currentCdnPolicies := c.([]interface{})
-
-	// state does not contain cdnPolicy, so we can return early here as well
-	if len(currentCdnPolicies) == 0 {
-		return obj, nil
-	}
-
-	futureCdnPolicy := obj["cdnPolicy"].(map[string]interface{})
-	currentCdnPolicy := currentCdnPolicies[0].(map[string]interface{})
-
-	cacheMode, ok := futureCdnPolicy["cache_mode"].(string)
-	// Fallback to state if doesn't exist in object
-	if !ok {
-		cacheMode = currentCdnPolicy["cache_mode"].(string)
-	}
-
-	switch cacheMode {
-	case "USE_ORIGIN_HEADERS":
-		if _, ok := futureCdnPolicy["clientTtl"]; ok {
-			delete(futureCdnPolicy, "clientTtl")
-		}
-		if _, ok := futureCdnPolicy["defaultTtl"]; ok {
-			delete(futureCdnPolicy, "defaultTtl")
-		}
-		if _, ok := futureCdnPolicy["maxTtl"]; ok {
-			delete(futureCdnPolicy, "maxTtl")
-		}
-	}
-
-	return obj, nil
-}
-
-func resourceComputeBackendServiceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Requests with consistentHash will error for specific values of
-	// localityLbPolicy. However, the API will not remove it if the backend
-	// service is updated to from supporting to non-supporting localityLbPolicy
-	// (e.g. RING_HASH to RANDOM), which causes an error on subsequent update.
-	// In order to prevent errors, we ignore any consistentHash returned
-	// from the API when the localityLbPolicy doesn't support it.
-	if v, ok := res["localityLbPolicy"]; ok {
-		lbPolicy := v.(string)
-		if lbPolicy != "MAGLEV" && lbPolicy != "RING_HASH" {
-			delete(res, "consistentHash")
-		}
-	}
-
-	return res, nil
 }
 
 func ResourceComputeBackendServiceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

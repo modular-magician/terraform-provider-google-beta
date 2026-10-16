@@ -556,27 +556,7 @@ func resourceCloudIdentityPolicyDelete(d *schema.ResourceData, meta interface{})
 }
 
 func resourceCloudIdentityPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	// 1. Get the ID the user typed (e.g., "policies/12345" or just "12345")
-	id := d.Id()
-
-	// 2. Normalize: Ensure the ID strictly starts with "policies/"
-	// This protects against users (or tests) who might import just the number.
-	if !strings.HasPrefix(id, "policies/") {
-		id = fmt.Sprintf("policies/%s", id)
-	}
-
-	// 3. Set the corrected ID back into the Terraform state
-	d.SetId(id)
-
-	// 4. The 'Read' function uses name to build the URL.
-	// If we don't set this, the URL will be empty.
-	if err := d.Set("name", id); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	// 5. Return success. Terraform will now call Read() automatically.
-	// Since d.Id() is now "policies/12345", the Read URL will be correct.
-	return []*schema.ResourceData{d}, nil
+	return resourceCloudIdentityPolicyCustomImport(d, meta)
 }
 
 func flattenCloudIdentityPolicyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -652,21 +632,6 @@ func flattenCloudIdentityPolicySetting(v interface{}, d *schema.ResourceData, co
 }
 func flattenCloudIdentityPolicySettingType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenCloudIdentityPolicySettingValueJson(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return ""
-	}
-
-	// v should be a map[string]interface{} coming back from the API for google.protobuf.Struct.
-	b, err := json.Marshal(v)
-	if err != nil {
-		// Flatten signature can't return an error; best effort fallback.
-		return ""
-	}
-
-	return string(b)
 }
 
 func expandCloudIdentityPolicyCustomer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -763,59 +728,6 @@ func expandCloudIdentityPolicySetting(v interface{}, d tpgresource.TerraformReso
 
 func expandCloudIdentityPolicySettingType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandCloudIdentityPolicySettingValueJson(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	s, ok := v.(string)
-	if !ok {
-		return nil, fmt.Errorf("expected ValueJson to be a string")
-	}
-	if s == "" {
-		return nil, fmt.Errorf("ValueJson cannot be empty")
-	}
-
-	// The API field is google.protobuf.Struct (JSON object).
-	var out interface{}
-	if err := json.Unmarshal([]byte(s), &out); err != nil {
-		return nil, fmt.Errorf("ValueJson must be valid JSON: %w", err)
-	}
-
-	// protobuf Struct must be a JSOM obect (not array/string/number/bool/null)
-	m, ok := out.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("ValueJson must be a JSON object (e.g. {\"key\":\"value\"})")
-	}
-
-	return m, nil
-}
-
-func resourceCloudIdentityPolicyUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// 1. Check if policy_query exists in the state
-	// (It should, because it's required/immutable)
-	if v, ok := d.GetOk("policy_query"); ok {
-		// 2. We need to convert the Terraform schema format back to the API map format.
-		// Since 'policy_query' is a nested object, we can use the generated expander function.
-		// Magic Modules generates functions named expand<Resource><Field>.
-		// For 'google_cloud_identity_policy' and field 'policy_query':
-		expandedQuery, err := expandCloudIdentityPolicyPolicyQuery(v, d, meta.(*transport_tpg.Config))
-		if err != nil {
-			return nil, err
-		}
-
-		// 3. Inject it into the request body
-		obj["policyQuery"] = expandedQuery
-	}
-
-	// 4. Also ensure 'name' is in the body if the API requires it (some do)
-	if name, ok := d.GetOk("name"); ok {
-		obj["name"] = name
-	}
-
-	return obj, nil
 }
 
 func ResourceCloudIdentityPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

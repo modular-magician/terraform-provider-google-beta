@@ -1023,41 +1023,7 @@ func resourceDialogflowToolDelete(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceDialogflowToolImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf(
-			"Could not split project from name: %s",
-			d.Get("name"),
-		)
-	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
-	}
-
-	var location string
-	for i, part := range stringParts {
-		if part == "locations" && i+1 < len(stringParts) {
-			location = stringParts[i+1]
-			break
-		}
-	}
-	if location == "" {
-		return nil, fmt.Errorf("Could not extract location from name: %s", d.Get("name"))
-	}
-	if err := d.Set("location", location); err != nil {
-		return nil, fmt.Errorf("Error setting location: %s", err)
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceDialogflowToolCustomImport(d, meta)
 }
 
 func flattenDialogflowToolName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1335,29 +1301,6 @@ func flattenDialogflowToolFunctionSpec(v interface{}, d *schema.ResourceData, co
 		flattenDialogflowToolFunctionSpecMethodType(original["methodType"], d, config)
 	return []interface{}{transformed}
 }
-func flattenDialogflowToolFunctionSpecInputSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
-func flattenDialogflowToolFunctionSpecOutputSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
 
 func flattenDialogflowToolFunctionSpecMethodType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -1437,11 +1380,6 @@ func flattenDialogflowToolConnectorSpecActionsEntityOperationEntityId(v interfac
 
 func flattenDialogflowToolConnectorSpecActionsEntityOperationOperation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDialogflowToolToolId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
 }
 
 func expandDialogflowToolToolKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1882,30 +1820,6 @@ func expandDialogflowToolFunctionSpec(v interface{}, d tpgresource.TerraformReso
 	}
 
 	return transformed, nil
-}
-
-func expandDialogflowToolFunctionSpecInputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func expandDialogflowToolFunctionSpecOutputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandDialogflowToolFunctionSpecMethodType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

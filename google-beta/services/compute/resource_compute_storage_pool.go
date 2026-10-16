@@ -1136,13 +1136,6 @@ func flattenComputeStoragePoolEffectiveLabels(v interface{}, d *schema.ResourceD
 	return v
 }
 
-func flattenComputeStoragePoolZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandComputeStoragePoolName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1165,14 +1158,6 @@ func expandComputeStoragePoolPoolProvisionedThroughput(v interface{}, d tpgresou
 
 func expandComputeStoragePoolLabelFingerprint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeStoragePoolStoragePoolType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseZonalFieldValue("storagePoolTypes", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for storage_pool_type: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func expandComputeStoragePoolCapacityProvisioningType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1225,14 +1210,6 @@ func expandComputeStoragePoolEffectiveLabels(v interface{}, d tpgresource.Terraf
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandComputeStoragePoolZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for zone: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeStoragePoolFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

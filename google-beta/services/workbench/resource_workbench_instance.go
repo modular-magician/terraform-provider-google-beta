@@ -1775,13 +1775,6 @@ func flattenWorkbenchInstanceGceSetupComputeInstanceId(v interface{}, d *schema.
 	return v
 }
 
-func flattenWorkbenchInstanceGceSetupMachineType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenWorkbenchInstanceGceSetupAcceleratorConfigs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1864,10 +1857,6 @@ func flattenWorkbenchInstanceGceSetupServiceAccountsScopes(v interface{}, d *sch
 	return v
 }
 
-func flattenWorkbenchInstanceGceSetupVmImage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("gce_setup.0.vm_image")
-}
-
 func flattenWorkbenchInstanceGceSetupContainerImage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1914,10 +1903,6 @@ func flattenWorkbenchInstanceGceSetupBootDiskDiskSizeGb(v interface{}, d *schema
 	return v
 }
 
-func flattenWorkbenchInstanceGceSetupBootDiskDiskType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("gce_setup.0.boot_disk.0.disk_type")
-}
-
 func flattenWorkbenchInstanceGceSetupBootDiskDiskEncryption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1951,10 +1936,6 @@ func flattenWorkbenchInstanceGceSetupDataDisks(v interface{}, d *schema.Resource
 }
 func flattenWorkbenchInstanceGceSetupDataDisksDiskSizeGb(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenWorkbenchInstanceGceSetupDataDisksDiskType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("gce_setup.0.data_disks.0.disk_type")
 }
 
 func flattenWorkbenchInstanceGceSetupDataDisksDiskEncryption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

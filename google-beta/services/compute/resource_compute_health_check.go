@@ -1853,19 +1853,6 @@ func flattenComputeHealthCheckGrpcTlsHealthCheckGrpcServiceName(v interface{}, d
 	return v
 }
 
-func flattenComputeHealthCheckLogConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	transformed := make(map[string]interface{})
-	if v == nil {
-		// Disabled by default, but API will not return object if value is false
-		transformed["enable"] = false
-		return []interface{}{transformed}
-	}
-
-	original := v.(map[string]interface{})
-	transformed["enable"] = original["enable"]
-	return []interface{}{transformed}
-}
-
 func expandComputeHealthCheckCheckIntervalSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2463,110 +2450,6 @@ func expandComputeHealthCheckLogConfig(v interface{}, d tpgresource.TerraformRes
 
 func expandComputeHealthCheckLogConfigEnable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceComputeHealthCheckEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if _, ok := d.GetOk("http_health_check"); ok {
-		hc := d.Get("http_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-		pn := hc.(map[string]interface{})["port_name"]
-
-		if ps == "USE_FIXED_PORT" || (ps == "" && pn == "") {
-			m := obj["httpHealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				m["port"] = 80
-			}
-		}
-		obj["type"] = "HTTP"
-		return obj, nil
-	}
-	if _, ok := d.GetOk("https_health_check"); ok {
-		hc := d.Get("https_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-		pn := hc.(map[string]interface{})["port_name"]
-
-		if ps == "USE_FIXED_PORT" || (ps == "" && pn == "") {
-			m := obj["httpsHealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				m["port"] = 443
-			}
-		}
-		obj["type"] = "HTTPS"
-		return obj, nil
-	}
-	if _, ok := d.GetOk("http2_health_check"); ok {
-		hc := d.Get("http2_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-		pn := hc.(map[string]interface{})["port_name"]
-
-		if ps == "USE_FIXED_PORT" || (ps == "" && pn == "") {
-			m := obj["http2HealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				m["port"] = 443
-			}
-		}
-		obj["type"] = "HTTP2"
-		return obj, nil
-	}
-	if _, ok := d.GetOk("tcp_health_check"); ok {
-		hc := d.Get("tcp_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-		pn := hc.(map[string]interface{})["port_name"]
-
-		if ps == "USE_FIXED_PORT" || (ps == "" && pn == "") {
-			m := obj["tcpHealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				m["port"] = 80
-			}
-		}
-		obj["type"] = "TCP"
-		return obj, nil
-	}
-	if _, ok := d.GetOk("ssl_health_check"); ok {
-		hc := d.Get("ssl_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-		pn := hc.(map[string]interface{})["port_name"]
-
-		if ps == "USE_FIXED_PORT" || (ps == "" && pn == "") {
-			m := obj["sslHealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				m["port"] = 443
-			}
-		}
-		obj["type"] = "SSL"
-		return obj, nil
-	}
-
-	if _, ok := d.GetOk("grpc_health_check"); ok {
-		hc := d.Get("grpc_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-		pn := hc.(map[string]interface{})["port_name"]
-
-		if ps == "USE_FIXED_PORT" || (ps == "" && pn == "") {
-			m := obj["grpcHealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				return nil, fmt.Errorf("error in HealthCheck %s: `port` must be set for GRPC health checks`.", d.Get("name").(string))
-			}
-		}
-		obj["type"] = "GRPC"
-		return obj, nil
-	}
-
-	if _, ok := d.GetOk("grpc_tls_health_check"); ok {
-		hc := d.Get("grpc_tls_health_check").([]interface{})[0]
-		ps := hc.(map[string]interface{})["port_specification"]
-
-		if ps == "USE_FIXED_PORT" || ps == "" {
-			m := obj["grpcTlsHealthCheck"].(map[string]interface{})
-			if m["port"] == nil {
-				return nil, fmt.Errorf("error in HealthCheck %s: `port` must be set for GRPC with TLS health checks`.", d.Get("name").(string))
-			}
-		}
-		obj["type"] = "GRPC_WITH_TLS"
-		return obj, nil
-	}
-
-	return nil, fmt.Errorf("error in HealthCheck %s: No health check block specified.", d.Get("name").(string))
 }
 
 func ResourceComputeHealthCheckFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

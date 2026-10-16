@@ -714,13 +714,6 @@ func expandStorageHmacKeyState(v interface{}, d tpgresource.TerraformResourceDat
 	return v, nil
 }
 
-func resourceStorageHmacKeyDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-
-	return res, nil
-}
 func resourceStorageHmacKeyPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	if err := d.Set("access_id", flattenStorageHmacKeyAccessId(res["accessId"], d, config)); err != nil {

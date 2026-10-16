@@ -608,11 +608,6 @@ func flattenChronicleCaseStageDefinitionName(v interface{}, d *schema.ResourceDa
 	return v
 }
 
-func flattenChronicleCaseStageDefinitionCaseStageDefinitionId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	parts := strings.Split(d.Get("name").(string), "/")
-	return parts[len(parts)-1]
-}
-
 func expandChronicleCaseStageDefinitionDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

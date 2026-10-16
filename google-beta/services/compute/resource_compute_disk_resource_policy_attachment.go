@@ -539,35 +539,6 @@ func expandNestedComputeDiskResourcePolicyAttachmentName(v interface{}, d tpgres
 	return v, nil
 }
 
-func resourceComputeDiskResourcePolicyAttachmentEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	zone, err := tpgresource.GetZone(d, config)
-	if err != nil {
-		return nil, err
-	}
-	if zone == "" {
-		return nil, fmt.Errorf("zone must be non-empty - set in resource or at provider-level")
-	}
-
-	// resourcePolicies are referred to by region but affixed to zonal disks.
-	// We construct the regional name from the zone:
-	//
-	//	projects/{project}/regions/{region}/resourcePolicies/{resourceId}
-	region := tpgresource.GetRegionFromZone(zone)
-	if region == "" {
-		return nil, fmt.Errorf("invalid zone %q, unable to infer region from zone", zone)
-	}
-
-	obj["resourcePolicies"] = []interface{}{fmt.Sprintf("projects/%s/regions/%s/resourcePolicies/%s", project, region, obj["name"])}
-	delete(obj, "name")
-	return obj, nil
-}
-
 func flattenNestedComputeDiskResourcePolicyAttachment(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	var v interface{}
 	var ok bool
@@ -627,10 +598,6 @@ func resourceComputeDiskResourcePolicyAttachmentFindNestedObjectInList(d *schema
 		return idx, item, nil
 	}
 	return -1, nil, nil
-}
-func resourceComputeDiskResourcePolicyAttachmentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	res["name"] = tpgresource.GetResourceNameFromSelfLink(res["name"].(string))
-	return res, nil
 }
 
 func ResourceComputeDiskResourcePolicyAttachmentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

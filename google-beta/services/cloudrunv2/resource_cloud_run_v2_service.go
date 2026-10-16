@@ -4764,44 +4764,6 @@ func expandCloudRunV2ServiceTemplateAnnotations(v interface{}, d tpgresource.Ter
 	return m, nil
 }
 
-// expandCloudRunV2ServiceTemplateScaling uses raw config inspection to support explicitly
-// disabling autoscaling signals by setting `cpu_utilization = 0` or `concurrency_utilization = 0`.
-//
-// In Terraform SDKv2, 0.0 is the zero value for floats and is omitted by default. Conversely,
-// unconfigured float fields default to 0.0 in schema data, which if sent unconditionally triggers
-// Cloud Run API 400 errors ("CPU and concurrency scaling cannot both be disabled").
-// Using GetRawConfigAt ensures 0.0 is only included in the payload when explicitly specified in HCL.
-func expandCloudRunV2ServiceTemplateScaling(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	original := l[0].(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	if min, ok := original["min_instance_count"].(int); ok && min > 0 {
-		transformed["minInstanceCount"] = min
-	}
-	if max, ok := original["max_instance_count"].(int); ok && max > 0 {
-		transformed["maxInstanceCount"] = max
-	}
-	if rd, ok := d.(*schema.ResourceData); ok {
-		cpuPath := cty.GetAttrPath("template").IndexInt(0).GetAttr("scaling").IndexInt(0).GetAttr("cpu_utilization")
-		if val, _ := rd.GetRawConfigAt(cpuPath); !val.IsNull() && val.IsKnown() {
-			transformed["cpuUtilization"] = original["cpu_utilization"]
-		}
-		concurrencyPath := cty.GetAttrPath("template").IndexInt(0).GetAttr("scaling").IndexInt(0).GetAttr("concurrency_utilization")
-		if val, _ := rd.GetRawConfigAt(concurrencyPath); !val.IsNull() && val.IsKnown() {
-			transformed["concurrencyUtilization"] = original["concurrency_utilization"]
-		}
-	}
-
-	return transformed, nil
-}
-
 func expandCloudRunV2ServiceTemplateVpcAccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil

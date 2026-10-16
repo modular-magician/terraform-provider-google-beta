@@ -374,24 +374,7 @@ func resourceApigeeEnvironmentKeyvaluemapsEntriesDelete(d *schema.ResourceData, 
 }
 
 func resourceApigeeEnvironmentKeyvaluemapsEntriesImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
-		"(?P<env_keyvaluemap_id>.+)/entries/(?P<name>.+)",
-		"(?P<env_keyvaluemap_id>.+)/(?P<name>.+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{env_keyvaluemap_id}}/entries/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceApigeeEnvironmentKeyvaluemapsEntriesCustomImport(d, meta)
 }
 
 func flattenApigeeEnvironmentKeyvaluemapsEntriesName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

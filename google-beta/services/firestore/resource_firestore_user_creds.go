@@ -507,17 +507,6 @@ func flattenFirestoreUserCredsResourceIdentityPrincipal(v interface{}, d *schema
 	return v
 }
 
-func flattenFirestoreUserCredsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
-func expandFirestoreUserCredsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/databases/{{database}}/userCreds/{{name}}")
-}
-
 func ResourceFirestoreUserCredsFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

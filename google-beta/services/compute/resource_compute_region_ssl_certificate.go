@@ -615,13 +615,6 @@ func flattenComputeRegionSslCertificatePrivateKeyWoVersion(v interface{}, d *sch
 	return d.Get("private_key_wo_version")
 }
 
-func flattenComputeRegionSslCertificateRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func expandComputeRegionSslCertificateCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -630,43 +623,12 @@ func expandComputeRegionSslCertificateDescription(v interface{}, d tpgresource.T
 	return v, nil
 }
 
-func expandComputeRegionSslCertificateName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	var certName string
-	if v, ok := d.GetOk("name"); ok {
-		certName = v.(string)
-	} else if v, ok := d.GetOk("name_prefix"); ok {
-		prefix := v.(string)
-		if len(prefix) > 37 {
-			certName = tpgresource.ReducedPrefixedUniqueId(prefix)
-		} else {
-			certName = id.PrefixedUniqueId(prefix)
-		}
-	} else {
-		certName = id.UniqueId()
-	}
-
-	// We need to get the {{name}} into schema to set the ID using tpgresource.ReplaceVars
-	if err := d.Set("name", certName); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	return certName, nil
-}
-
 func expandComputeRegionSslCertificatePrivateKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandComputeRegionSslCertificatePrivateKeyWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandComputeRegionSslCertificateRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("regions", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for region: %s", err)
-	}
-	return f.RelativeLink(), nil
 }
 
 func ResourceComputeRegionSslCertificateFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

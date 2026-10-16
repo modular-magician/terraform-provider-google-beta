@@ -540,16 +540,6 @@ func expandComputeSnapshotSettingsStorageLocationLocationsName(v interface{}, d 
 	return v, nil
 }
 
-func resourceComputeSnapshotSettingsEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if storageLocation, ok := obj["storageLocation"].(map[string]interface{}); ok {
-		if _, ok := storageLocation["locations"]; !ok {
-			storageLocation["locations"] = nil
-		}
-	}
-
-	return obj, nil
-}
-
 func ResourceComputeSnapshotSettingsFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

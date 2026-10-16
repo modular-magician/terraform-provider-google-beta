@@ -494,22 +494,6 @@ func expandCloudBillingProjectInfoBillingAccount(v interface{}, d tpgresource.Te
 	return v, nil
 }
 
-func resourceCloudBillingProjectInfoEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	ba := d.Get("billing_account").(string)
-	if ba == "" {
-		obj["billingAccountName"] = ""
-	} else {
-		obj["billingAccountName"] = "billingAccounts/" + ba
-	}
-	delete(obj, "billing_account")
-	return obj, nil
-}
-
-func resourceCloudBillingProjectInfoDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	res["billing_account"] = strings.TrimPrefix(res["billingAccountName"].(string), "billingAccounts/")
-	return res, nil
-}
-
 func ResourceCloudBillingProjectInfoFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

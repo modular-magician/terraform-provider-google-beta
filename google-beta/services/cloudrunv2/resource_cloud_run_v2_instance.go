@@ -3813,12 +3813,6 @@ func expandCloudRunV2InstanceEffectiveAnnotations(v interface{}, d tpgresource.T
 	return m, nil
 }
 
-func resourceCloudRunV2InstanceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-
-	setCloudRunV2ClientDefaults(d, obj)
-	return obj, nil
-}
-
 func ResourceCloudRunV2InstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

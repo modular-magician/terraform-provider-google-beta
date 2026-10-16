@@ -323,26 +323,6 @@ func resourceKMSSecretCiphertextDelete(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
-func expandKMSSecretCiphertextPlaintext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
-}
-
-func expandKMSSecretCiphertextAdditionalAuthenticatedData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-
-	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
-}
-
-func resourceKMSSecretCiphertextDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	return res, nil
-}
-
 func ResourceKMSSecretCiphertextFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
 
 	return nil

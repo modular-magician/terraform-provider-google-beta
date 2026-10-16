@@ -581,29 +581,6 @@ func expandComputeSslCertificateDescription(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func expandComputeSslCertificateName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	var certName string
-	if v, ok := d.GetOk("name"); ok {
-		certName = v.(string)
-	} else if v, ok := d.GetOk("name_prefix"); ok {
-		prefix := v.(string)
-		if len(prefix) > 37 {
-			certName = tpgresource.ReducedPrefixedUniqueId(prefix)
-		} else {
-			certName = id.PrefixedUniqueId(prefix)
-		}
-	} else {
-		certName = id.UniqueId()
-	}
-
-	// We need to get the {{name}} into schema to set the ID using tpgresource.ReplaceVars
-	if err := d.Set("name", certName); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	return certName, nil
-}
-
 func expandComputeSslCertificatePrivateKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

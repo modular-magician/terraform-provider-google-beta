@@ -1013,13 +1013,6 @@ func resourceSpannerDatabaseImport(d *schema.ResourceData, meta interface{}) ([]
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenSpannerDatabaseName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenSpannerDatabaseVersionRetentionPeriod(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1045,38 +1038,6 @@ func flattenSpannerDatabaseEncryptionConfig(v interface{}, d *schema.ResourceDat
 }
 func flattenSpannerDatabaseEncryptionConfigKmsKeyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenSpannerDatabaseEncryptionConfigKmsKeyNames(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Ignore `kms_key_names` if `kms_key_name` is set, because that field takes precedence.
-	_, kmsNameSet := d.GetOk("encryption_config.0.kms_key_name")
-	if kmsNameSet {
-		return nil
-	}
-
-	rawConfigValue := d.Get("encryption_config.0.kms_key_names")
-
-	// Convert config value to []string
-	configValue, err := tpgresource.InterfaceSliceToStringSlice(rawConfigValue)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert config value: %s", err)
-		return v
-	}
-
-	// Convert v to []string
-	apiStringValue, err := tpgresource.InterfaceSliceToStringSlice(v)
-	if err != nil {
-		log.Printf("[ERROR] Failed to convert API value: %s", err)
-		return v
-	}
-
-	sortedStrings, err := tpgresource.SortStringsByConfigOrder(configValue, apiStringValue)
-	if err != nil {
-		log.Printf("[ERROR] Could not sort API response value: %s", err)
-		return v
-	}
-
-	return sortedStrings
 }
 
 func flattenSpannerDatabaseDatabaseDialect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1149,84 +1110,6 @@ func expandSpannerDatabaseDatabaseDialect(v interface{}, d tpgresource.Terraform
 
 func expandSpannerDatabaseEnableDropProtection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandSpannerDatabaseInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseGlobalFieldValue("instances", v.(string), "project", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for instance: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func resourceSpannerDatabaseEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	obj["createStatement"] = fmt.Sprintf("CREATE DATABASE `%s`", obj["name"])
-	if dialect, ok := obj["databaseDialect"]; ok && dialect == "POSTGRESQL" {
-		obj["createStatement"] = fmt.Sprintf("CREATE DATABASE \"%s\"", obj["name"])
-	}
-
-	// Extra DDL statements are removed from the create request and instead applied to the database in
-	// a post-create action, to accommodate retrictions when creating PostgreSQL-enabled databases.
-	// https://cloud.google.com/spanner/docs/create-manage-databases#create_a_database
-	log.Printf("[DEBUG] Preparing to create new Database. Any extra DDL statements will be applied to the Database in a separate API call")
-
-	delete(obj, "name")
-	delete(obj, "instance")
-
-	delete(obj, "versionRetentionPeriod")
-	delete(obj, "extraStatements")
-	delete(obj, "enableDropProtection")
-	return obj, nil
-}
-
-func resourceSpannerDatabaseUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	if obj["versionRetentionPeriod"] != nil || obj["extraStatements"] != nil {
-		old, new := d.GetChange("ddl")
-		oldDdls := old.([]interface{})
-		newDdls := new.([]interface{})
-		updateDdls := []string{}
-
-		//Only new ddl statments to be add to update call
-		for i := len(oldDdls); i < len(newDdls); i++ {
-			if newDdls[i] != nil {
-				updateDdls = append(updateDdls, newDdls[i].(string))
-			}
-		}
-
-		//Add statement to update version_retention_period property, if needed
-		if d.HasChange("version_retention_period") {
-			dbName := d.Get("name")
-			retentionDdl := fmt.Sprintf("ALTER DATABASE `%s` SET OPTIONS (version_retention_period=\"%s\")", dbName, obj["versionRetentionPeriod"])
-			if dialect, ok := d.GetOk("database_dialect"); ok && dialect == "POSTGRESQL" {
-				retentionDdl = fmt.Sprintf("ALTER DATABASE \"%s\" SET spanner.version_retention_period TO \"%s\"", dbName, obj["versionRetentionPeriod"])
-			}
-			updateDdls = append(updateDdls, retentionDdl)
-		}
-
-		obj["statements"] = updateDdls
-		delete(obj, "name")
-		delete(obj, "versionRetentionPeriod")
-		delete(obj, "instance")
-		delete(obj, "extraStatements")
-	}
-	return obj, nil
-}
-
-func resourceSpannerDatabaseDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	d.SetId(res["name"].(string))
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/instances/(?P<instance>[^/]+)/databases/(?P<name>[^/]+)"}, d, config); err != nil {
-		return nil, err
-	}
-	res["project"] = d.Get("project").(string)
-	res["instance"] = d.Get("instance").(string)
-	res["name"] = d.Get("name").(string)
-	id, err := tpgresource.ReplaceVars(d, config, "{{instance}}/{{name}}")
-	if err != nil {
-		return nil, err
-	}
-	d.SetId(id)
-	return res, nil
 }
 
 func ResourceSpannerDatabaseFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

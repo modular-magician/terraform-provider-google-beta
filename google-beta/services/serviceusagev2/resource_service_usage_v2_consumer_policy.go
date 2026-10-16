@@ -872,44 +872,6 @@ func resourceServiceUsageV2ConsumerPolicyImport(d *schema.ResourceData, meta int
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenServiceUsageV2ConsumerPolicyEnableRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return []interface{}{map[string]interface{}{}}
-	}
-	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for i, raw := range l {
-		_ = i
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"services": flattenServiceUsageV2ConsumerPolicyEnableRulesServices(original["services"], d, config),
-			"catalogs": flattenServiceUsageV2ConsumerPolicyEnableRulesCatalogs(original["catalogs"], d, config),
-		})
-	}
-	if len(transformed) == 0 {
-		return []interface{}{map[string]interface{}{}}
-	}
-	return transformed
-}
-
-func flattenServiceUsageV2ConsumerPolicyEnableRulesServices(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return schema.NewSet(schema.HashString, v.([]interface{}))
-}
-
-func flattenServiceUsageV2ConsumerPolicyEnableRulesCatalogs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return schema.NewSet(schema.HashString, v.([]interface{}))
-}
-
 func flattenServiceUsageV2ConsumerPolicyEtag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -958,28 +920,6 @@ func expandServiceUsageV2ConsumerPolicyEnableRulesCatalogs(v interface{}, d tpgr
 
 func expandServiceUsageV2ConsumerPolicyEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceServiceUsageV2ConsumerPolicyPostCreateFailure(d *schema.ResourceData, meta interface{}, err error) error {
-	log.Printf("[DEBUG] Error before post_create_failure hook: %v", err)
-	if ok, _ := isCommonOpError(err, ApiErrorSuConflictingConcurrentModification); ok || isTimeoutError(err) {
-		return fmt.Errorf("The consumer policy might have been changed from other toolings. Please try again: %w", err)
-	}
-	return err
-}
-func resourceServiceUsageV2ConsumerPolicyPostUpdateFailure(d *schema.ResourceData, meta interface{}, err error) error {
-	log.Printf("[DEBUG] Error before post_update_failure hook: %v", err)
-	if ok, _ := isCommonOpError(err, ApiErrorSuConflictingConcurrentModification); ok || isTimeoutError(err) {
-		return fmt.Errorf("The consumer policy might have been changed from other toolings. Please try again: %w", err)
-	}
-	return err
-}
-func resourceServiceUsageV2ConsumerPolicyPostDeleteFailure(d *schema.ResourceData, meta interface{}, err error) error {
-	log.Printf("[DEBUG] Error before post_delete_failure hook: %v", err)
-	if ok, _ := isCommonOpError(err, ApiErrorSuConflictingConcurrentModification); ok || isTimeoutError(err) {
-		return fmt.Errorf("The consumer policy might have been changed from other toolings. Please try again: %w", err)
-	}
-	return err
 }
 
 func ResourceServiceUsageV2ConsumerPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

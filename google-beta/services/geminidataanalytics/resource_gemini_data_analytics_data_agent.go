@@ -3089,16 +3089,6 @@ func expandGeminiDataAnalyticsDataAgentEffectiveLabels(v interface{}, d tpgresou
 	return m, nil
 }
 
-func resourceGeminiDataAnalyticsDataAgentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// deleteSync soft-deletes: GET keeps returning the agent with deleteTime set for 30 days.
-	// Treat it as gone so out-of-band deletes show as drift instead of a live resource.
-	if deleteTime, ok := res["deleteTime"].(string); ok && deleteTime != "" {
-		return nil, nil
-	}
-
-	return res, nil
-}
-
 func ResourceGeminiDataAnalyticsDataAgentFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

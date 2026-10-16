@@ -2345,45 +2345,6 @@ func expandComputeRegionNetworkFirewallPolicyWithRulesFingerprint(v interface{},
 	return v, nil
 }
 
-func resourceComputeRegionNetworkFirewallPolicyWithRulesEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	delete(obj, "rules") // Rules are not supported in the create API
-	return obj, nil
-}
-
-func resourceComputeRegionNetworkFirewallPolicyWithRulesUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-
-	predefinedRulesProp, err := expandComputeRegionNetworkFirewallPolicyWithRulesRule(d.Get("predefined_rules"), d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	rules := obj["rules"].([]interface{})
-	obj["rules"] = append(rules, predefinedRulesProp)
-
-	return obj, nil
-
-}
-
-func resourceComputeRegionNetworkFirewallPolicyWithRulesDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	rules, predefinedRules, err := regionNetworkFirewallPolicyWithRulesSplitPredefinedRules(res["rules"].([]interface{}))
-
-	if err != nil {
-		return nil, fmt.Errorf("Error occurred while splitting pre-defined rules: %s", err)
-	}
-
-	res["rules"] = rules
-	res["predefinedRules"] = predefinedRules
-
-	config := meta.(*transport_tpg.Config)
-
-	if err := d.Set("predefined_rules", flattenComputeRegionNetworkFirewallPolicyWithRulesPredefinedRules(predefinedRules, d, config)); err != nil {
-		return nil, fmt.Errorf("Error occurred while setting pre-defined rules: %s", err)
-	}
-
-	return res, nil
-}
-
 func ResourceComputeRegionNetworkFirewallPolicyWithRulesFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

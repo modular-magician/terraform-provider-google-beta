@@ -1233,66 +1233,6 @@ func flattenClouddomainsRegistrationContactSettingsPrivacy(v interface{}, d *sch
 	return v
 }
 
-func flattenClouddomainsRegistrationContactSettingsRegistrantContact(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-
-	// Skip reading the following due to ambiguous accept vs return values
-	transformed["phone_number"] = d.Get("contact_settings.0.registrant_contact.0.phone_number")
-	transformed["fax_number"] = d.Get("contact_settings.0.registrant_contact.0.fax_number")
-	transformed["postal_address"] = d.Get("contact_settings.0.registrant_contact.0.postal_address")
-
-	// Don't skip email as it is not normalized
-	transformed["email"] = original["email"]
-	return []interface{}{transformed}
-}
-
-func flattenClouddomainsRegistrationContactSettingsAdminContact(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-
-	// Skip reading the following due to ambiguous accept vs return values
-	transformed["phone_number"] = d.Get("contact_settings.0.admin_contact.0.phone_number")
-	transformed["fax_number"] = d.Get("contact_settings.0.admin_contact.0.fax_number")
-	transformed["postal_address"] = d.Get("contact_settings.0.admin_contact.0.postal_address")
-
-	// Don't skip email as it is not normalized
-	transformed["email"] = original["email"]
-	return []interface{}{transformed}
-}
-
-func flattenClouddomainsRegistrationContactSettingsTechnicalContact(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-
-	// Skip reading the following due to ambiguous accept vs return values
-	transformed["phone_number"] = d.Get("contact_settings.0.technical_contact.0.phone_number")
-	transformed["fax_number"] = d.Get("contact_settings.0.technical_contact.0.fax_number")
-	transformed["postal_address"] = d.Get("contact_settings.0.technical_contact.0.postal_address")
-
-	// Don't skip email as it is not normalized
-	transformed["email"] = original["email"]
-	return []interface{}{transformed}
-}
-
 func flattenClouddomainsRegistrationTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -2085,24 +2025,6 @@ func expandClouddomainsRegistrationEffectiveLabels(v interface{}, d tpgresource.
 
 func expandClouddomainsRegistrationDomainName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceClouddomainsRegistrationEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Request body is registration object with additional fields
-	// See https://cloud.google.com/domains/docs/reference/rest/v1beta1/projects.locations.registrations/register
-
-	newObj := make(map[string]interface{})
-
-	newObj["domainNotices"] = obj["domainNotices"]
-	delete(obj, "domainNotices")
-	newObj["contactNotices"] = obj["contactNotices"]
-	delete(obj, "contactNotices")
-	newObj["yearlyPrice"] = obj["yearlyPrice"]
-	delete(obj, "yearlyPrice")
-
-	newObj["registration"] = obj
-
-	return newObj, nil
 }
 
 func ResourceClouddomainsRegistrationFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

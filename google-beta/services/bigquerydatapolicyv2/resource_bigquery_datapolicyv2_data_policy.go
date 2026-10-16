@@ -881,19 +881,6 @@ func expandBigqueryDatapolicyv2DataPolicyDataGovernanceTagValue(v interface{}, d
 	return v, nil
 }
 
-func resourceBigqueryDatapolicyv2DataPolicyEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// The create request is not in the same format as the resource.
-	// The API request needs resource to be nested inside the "data_policy" field.
-	newObj := make(map[string]interface{})
-	newObj["dataPolicy"] = obj
-	newObj["dataPolicyId"] = obj["dataPolicyId"].(string)
-	return newObj, nil
-}
-
-func resourceBigqueryDatapolicyv2DataPolicyUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	return obj, nil
-}
-
 func ResourceBigqueryDatapolicyv2DataPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

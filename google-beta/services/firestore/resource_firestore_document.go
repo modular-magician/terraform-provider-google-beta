@@ -504,34 +504,7 @@ func resourceFirestoreDocumentDelete(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceFirestoreDocumentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	re := regexp.MustCompile("^projects/([^/]+)/databases/([^/]+)/documents/(.+)/([^/]+)$")
-	match := re.FindStringSubmatch(d.Get("name").(string))
-	if len(match) > 0 {
-		if err := d.Set("project", match[1]); err != nil {
-			return nil, fmt.Errorf("Error setting project: %s", err)
-		}
-		if err := d.Set("database", match[2]); err != nil {
-			return nil, fmt.Errorf("Error setting project: %s", err)
-		}
-		if err := d.Set("collection", match[3]); err != nil {
-			return nil, fmt.Errorf("Error setting project: %s", err)
-		}
-		if err := d.Set("document_id", match[4]); err != nil {
-			return nil, fmt.Errorf("Error setting project: %s", err)
-		}
-	} else {
-		return nil, fmt.Errorf("import did not match the regex ^projects/([^/]+)/databases/([^/]+)/documents/(.+)/([^/]+)$")
-	}
-
-	return []*schema.ResourceData{d}, nil
+	return resourceFirestoreDocumentCustomImport(d, meta)
 }
 
 func flattenFirestoreDocumentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -542,18 +515,6 @@ func flattenFirestoreDocumentPath(v interface{}, d *schema.ResourceData, config 
 	return v
 }
 
-func flattenFirestoreDocumentFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func flattenFirestoreDocumentCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -562,29 +523,6 @@ func flattenFirestoreDocumentUpdateTime(v interface{}, d *schema.ResourceData, c
 	return v
 }
 
-func expandFirestoreDocumentFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func resourceFirestoreDocumentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// We use this decoder to add the path field
-	if name, ok := res["name"]; ok {
-		re := regexp.MustCompile("^projects/[^/]+/databases/[^/]+/documents/(.+)$")
-		match := re.FindStringSubmatch(name.(string))
-		if len(match) > 0 {
-			res["path"] = match[1]
-		}
-	}
-	return res, nil
-}
 func resourceFirestoreDocumentPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	res, err := resourceFirestoreDocumentDecoder(d, meta, res)

@@ -1495,13 +1495,6 @@ func resourceArtifactRegistryRepositoryImport(d *schema.ResourceData, meta inter
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenArtifactRegistryRepositoryName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
-}
-
 func flattenArtifactRegistryRepositoryFormat(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1568,14 +1561,6 @@ func flattenArtifactRegistryRepositoryMavenConfig(v interface{}, d *schema.Resou
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryMavenConfigAllowSnapshotOverwrites(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenArtifactRegistryRepositoryMavenConfigVersionPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "VERSION_POLICY_UNSPECIFIED"
-	}
-
 	return v
 }
 
@@ -2052,10 +2037,6 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigUpstreamCredentialsU
 	return v
 }
 
-func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDisableUpstreamValidation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("remote_repository_config.0.disable_upstream_validation")
-}
-
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNoCache(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2392,70 +2373,6 @@ func expandArtifactRegistryRepositoryCleanupPoliciesConditionVersionNamePrefixes
 
 func expandArtifactRegistryRepositoryCleanupPoliciesConditionPackageNamePrefixes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandArtifactRegistryRepositoryCleanupPoliciesConditionOlderThan(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	val, ok := v.(string)
-	if !ok {
-		return nil, fmt.Errorf("unexpected value is not string: %v", v)
-	}
-	if len(val) == 0 {
-		return nil, nil
-	}
-	n, err := strconv.Atoi(val[:len(val)-1])
-	if err != nil {
-		return nil, fmt.Errorf("unexpected value is not duration: %v", v)
-	}
-	// time.ParseDuration does not support 'd'
-	var seconds int
-	switch val[len(val)-1] {
-	case 's':
-		seconds = n
-	case 'm':
-		seconds = n * 60
-	case 'h':
-		seconds = n * 3600
-	case 'd':
-		seconds = n * 86400
-	default:
-		return nil, fmt.Errorf("unexpected duration has unknown unit: %c", val[len(val)-1])
-	}
-	return fmt.Sprintf("%ds", seconds), nil
-}
-
-func expandArtifactRegistryRepositoryCleanupPoliciesConditionNewerThan(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	val, ok := v.(string)
-	if !ok {
-		return nil, fmt.Errorf("unexpected value is not string: %v", v)
-	}
-	if len(val) == 0 {
-		return nil, nil
-	}
-	n, err := strconv.Atoi(val[:len(val)-1])
-	if err != nil {
-		return nil, fmt.Errorf("unexpected value is not duration: %v", v)
-	}
-	// time.ParseDuration does not support 'd'
-	var seconds int
-	switch val[len(val)-1] {
-	case 's':
-		seconds = n
-	case 'm':
-		seconds = n * 60
-	case 'h':
-		seconds = n * 3600
-	case 'd':
-		seconds = n * 86400
-	default:
-		return nil, fmt.Errorf("unexpected duration has unknown unit: %c", val[len(val)-1])
-	}
-	return fmt.Sprintf("%ds", seconds), nil
 }
 
 func expandArtifactRegistryRepositoryCleanupPoliciesMostRecentVersions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -3113,20 +3030,6 @@ func expandArtifactRegistryRepositoryEffectiveLabels(v interface{}, d tpgresourc
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceArtifactRegistryRepositoryEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	config := meta.(*transport_tpg.Config)
-	if _, ok := d.GetOk("location"); !ok {
-		location, err := tpgresource.GetRegion(d, config)
-		if err != nil {
-			return nil, fmt.Errorf("Cannot determine location: set in this resource, or set provider-level 'region' or 'zone'.")
-		}
-		if err := d.Set("location", location); err != nil {
-			return nil, fmt.Errorf("Error setting location: %s", err)
-		}
-	}
-	return obj, nil
 }
 
 func ResourceArtifactRegistryRepositoryFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

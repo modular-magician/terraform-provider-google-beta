@@ -340,14 +340,7 @@ Examples: "2014-10-02T15:01:23Z", "2014-10-02T15:01:23.045123456Z" or "2014-10-0
 }
 
 func resourcePrivilegedAccessManagerSettingsCreate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*transport_tpg.Config)
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/locations/{{location}}/settings")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return resourcePrivilegedAccessManagerSettingsUpdate(d, meta)
+	return resourcePrivilegedAccessManagerSettingsCustomCreate(d, meta)
 }
 
 func resourcePrivilegedAccessManagerSettingsRead(d *schema.ResourceData, meta interface{}) error {

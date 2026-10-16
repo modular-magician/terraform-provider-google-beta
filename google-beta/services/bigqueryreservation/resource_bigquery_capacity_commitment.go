@@ -602,28 +602,7 @@ func resourceBigqueryReservationCapacityCommitmentDelete(d *schema.ResourceData,
 }
 
 func resourceBigqueryReservationCapacityCommitmentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/capacityCommitments/(?P<capacity_commitment_id>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<capacity_commitment_id>[^/]+)$",
-		"^(?P<location>[^/]+)/(?P<capacity_commitment_id>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Set name based on the components
-	if err := d.Set("name", "projects/{{project}}/locations/{{location}}/capacityCommitments/{{capacity_commitment_id}}"); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, d.Get("name").(string))
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
+	return resourceBigqueryReservationCapacityCommitmentCustomImport(d, meta)
 }
 
 func flattenBigqueryReservationCapacityCommitmentName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

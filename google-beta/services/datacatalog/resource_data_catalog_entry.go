@@ -746,27 +746,7 @@ func resourceDataCatalogEntryDelete(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceDataCatalogEntryImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
-
-	name := d.Get("name").(string)
-	egRegex := regexp.MustCompile("(projects/.+/locations/.+/entryGroups/.+)/entries/(.+)")
-
-	parts := egRegex.FindStringSubmatch(name)
-	if len(parts) != 3 {
-		return nil, fmt.Errorf("entry name does not fit the format %s", egRegex)
-	}
-	if err := d.Set("entry_group", parts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting entry_group: %s", err)
-	}
-	if err := d.Set("entry_id", parts[2]); err != nil {
-		return nil, fmt.Errorf("Error setting entry_id: %s", err)
-	}
-	return []*schema.ResourceData{d}, nil
+	return resourceDataCatalogEntryCustomImport(d, meta)
 }
 
 func flattenDataCatalogEntryName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -783,18 +763,6 @@ func flattenDataCatalogEntryDisplayName(v interface{}, d *schema.ResourceData, c
 
 func flattenDataCatalogEntryDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenDataCatalogEntrySchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(v)
-	if err != nil {
-		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
-		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
-	}
-	return string(b)
 }
 
 func flattenDataCatalogEntryType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -980,18 +948,6 @@ func expandDataCatalogEntryDisplayName(v interface{}, d tpgresource.TerraformRes
 
 func expandDataCatalogEntryDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandDataCatalogEntrySchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	b := []byte(v.(string))
-	if len(b) == 0 {
-		return nil, nil
-	}
-	m := make(map[string]interface{})
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 func expandDataCatalogEntryType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -562,52 +562,7 @@ func resourceAccessApprovalFolderSettingsDelete(d *schema.ResourceData, meta int
 		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing FolderSettings %q from Terraform state without deletion", d.Id())
 		return nil
 	}
-	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	obj := make(map[string]interface{})
-	obj["notificationEmails"] = []string{}
-	obj["enrolledServices"] = []string{}
-	obj["activeKeyVersion"] = ""
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{AccessApprovalBasePath}}folders/{{folder_id}}/accessApprovalSettings")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Emptying FolderSettings %q: %#v", d.Id(), obj)
-	updateMask := []string{}
-
-	updateMask = append(updateMask, "notificationEmails")
-	updateMask = append(updateMask, "enrolledServices")
-	updateMask = append(updateMask, "activeKeyVersion")
-
-	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
-	// won't set it
-	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
-	if err != nil {
-		return err
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
-
-	if err != nil {
-		return fmt.Errorf("Error emptying FolderSettings %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished emptying FolderSettings %q: %#v", d.Id(), res)
-	}
-
-	return nil
+	return resourceAccessApprovalFolderSettingsCustomDelete(d, meta)
 }
 
 func resourceAccessApprovalFolderSettingsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {

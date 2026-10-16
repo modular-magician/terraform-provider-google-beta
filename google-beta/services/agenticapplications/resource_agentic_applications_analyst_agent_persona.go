@@ -3083,40 +3083,6 @@ func flattenAgenticApplicationsAnalystAgentPersonaMathRenderingMode(v interface{
 	return v
 }
 
-func flattenAgenticApplicationsAnalystAgentPersonaMcpDataSources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for i, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		item := map[string]interface{}{
-			"api_key_header":  original["apiKeyHeader"],
-			"api_key_name":    original["apiKeyName"],
-			"client_id":       original["clientId"],
-			"description":     original["description"],
-			"display_name":    original["displayName"],
-			"enabled":         original["enabled"],
-			"oauth_token_url": original["oauthTokenUrl"],
-			"prompt":          original["prompt"],
-			"server_url":      original["serverUrl"],
-		}
-		if apiKey, ok := d.GetOk(fmt.Sprintf("mcp_data_sources.%d.api_key", i)); ok {
-			item["api_key"] = apiKey
-		}
-		if clientSecret, ok := d.GetOk(fmt.Sprintf("mcp_data_sources.%d.client_secret", i)); ok {
-			item["client_secret"] = clientSecret
-		}
-		transformed = append(transformed, item)
-	}
-	return transformed
-}
-
 func flattenAgenticApplicationsAnalystAgentPersonaModelDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -5699,15 +5665,6 @@ func expandAgenticApplicationsAnalystAgentPersonaWebSearchConfigDisabled(v inter
 
 func expandAgenticApplicationsAnalystAgentPersonaWebSearchConfigExcludedDomains(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceAgenticApplicationsAnalystAgentPersonaEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	name, err := tpgresource.ReplaceVars(d, meta.(*transport_tpg.Config), "projects/{{project}}/locations/{{location}}/analystAgentPersonas/{{analyst_agent_persona_id}}")
-	if err != nil {
-		return nil, err
-	}
-	obj["name"] = name
-	return obj, nil
 }
 
 func ResourceAgenticApplicationsAnalystAgentPersonaFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

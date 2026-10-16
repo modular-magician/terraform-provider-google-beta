@@ -651,22 +651,8 @@ func resourceServiceUsageConsumerQuotaOverrideImport(d *schema.ResourceData, met
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenNestedServiceUsageConsumerQuotaOverrideOverrideValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return "0"
-	}
-	return v
-}
-
 func flattenNestedServiceUsageConsumerQuotaOverrideDimensions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenNestedServiceUsageConsumerQuotaOverrideName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func expandNestedServiceUsageConsumerQuotaOverrideOverrideValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

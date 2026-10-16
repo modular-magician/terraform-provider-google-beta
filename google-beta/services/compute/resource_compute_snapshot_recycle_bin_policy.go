@@ -606,29 +606,6 @@ func expandComputeSnapshotRecycleBinPolicyRulesStandardSnapshotsRetentionDuratio
 	return v, nil
 }
 
-func resourceComputeSnapshotRecycleBinPolicyEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// The rules map in SnapshotRecycleBinPolicy is authoritative.
-	// When a rule is removed from the Terraform configuration, it should be deleted from the API.
-	// Since the API uses PATCH, we must explicitly set removed keys to nil (null in JSON) to delete them.
-
-	if rules, ok := obj["rules"].(map[string]interface{}); ok {
-		// Get the old rules from the terraform state to identify deletions
-		oldRulesRaw, ok := d.GetOk("rules")
-		if ok {
-			if oldRules, ok := oldRulesRaw.(map[string]interface{}); ok {
-				for k := range oldRules {
-					if _, ok := rules[k]; !ok {
-						// Rule exists in state but not in new config -> set to nil to delete via PATCH
-						rules[k] = nil
-					}
-				}
-			}
-		}
-	}
-
-	return obj, nil
-}
-
 func ResourceComputeSnapshotRecycleBinPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

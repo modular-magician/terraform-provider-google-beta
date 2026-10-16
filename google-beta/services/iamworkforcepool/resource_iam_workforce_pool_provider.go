@@ -1412,24 +1412,6 @@ func flattenIAMWorkforcePoolWorkforcePoolProviderOidcClientSecret(v interface{},
 		flattenIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValue(original["value"], d, config)
 	return []interface{}{transformed}
 }
-func flattenIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["thumbprint"] = original["thumbprint"]
-	transformed["plain_text_wo_version"] = d.Get("oidc.0.client_secret.0.value.0.plain_text_wo_version")
-	// Trigger a diff based on the plain_text if there is no change in the thumbprint,
-	// otherwise leave plain_text empty to always trigger a diff.
-	if original["thumbprint"].(string) == d.Get("oidc.0.client_secret.0.value.0.thumbprint").(string) {
-		transformed["plain_text"] = d.Get("oidc.0.client_secret.0.value.0.plain_text")
-	}
-	return []interface{}{transformed}
-}
 
 func flattenIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
@@ -1506,24 +1488,6 @@ func flattenIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClie
 		flattenIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClientSecretValue(original["value"], d, config)
 	return []interface{}{transformed}
 }
-func flattenIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClientSecretValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["thumbprint"] = original["thumbprint"]
-	transformed["plain_text_wo_version"] = d.Get("extra_attributes_oauth2_client.0.client_secret.0.value.0.plain_text_wo_version")
-	// Trigger a diff based on the plain_text if there is no change in the thumbprint,
-	// otherwise leave plain_text empty to always trigger a diff.
-	if original["thumbprint"].(string) == d.Get("extra_attributes_oauth2_client.0.client_secret.0.value.0.thumbprint").(string) {
-		transformed["plain_text"] = d.Get("extra_attributes_oauth2_client.0.client_secret.0.value.0.plain_text")
-	}
-	return []interface{}{transformed}
-}
 
 func flattenIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientAttributesType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -1586,24 +1550,6 @@ func flattenIAMWorkforcePoolWorkforcePoolProviderExtendedAttributesOauth2ClientC
 	transformed := make(map[string]interface{})
 	transformed["value"] =
 		flattenIAMWorkforcePoolWorkforcePoolProviderExtendedAttributesOauth2ClientClientSecretValue(original["value"], d, config)
-	return []interface{}{transformed}
-}
-func flattenIAMWorkforcePoolWorkforcePoolProviderExtendedAttributesOauth2ClientClientSecretValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["thumbprint"] = original["thumbprint"]
-	transformed["plain_text_wo_version"] = d.Get("extended_attributes_oauth2_client.0.client_secret.0.value.0.plain_text_wo_version")
-	// Trigger a diff based on the plain_text if there is no change in the thumbprint,
-	// otherwise leave plain_text empty to always trigger a diff.
-	if original["thumbprint"].(string) == d.Get("extended_attributes_oauth2_client.0.client_secret.0.value.0.thumbprint").(string) {
-		transformed["plain_text"] = d.Get("extended_attributes_oauth2_client.0.client_secret.0.value.0.plain_text")
-	}
 	return []interface{}{transformed}
 }
 
@@ -2203,14 +2149,6 @@ func expandIAMWorkforcePoolWorkforcePoolProviderScimUsage(v interface{}, d tpgre
 
 func expandIAMWorkforcePoolWorkforcePoolProviderDetailedAuditLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceIAMWorkforcePoolWorkforcePoolProviderDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-
-	return res, nil
 }
 
 func ResourceIAMWorkforcePoolWorkforcePoolProviderFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {

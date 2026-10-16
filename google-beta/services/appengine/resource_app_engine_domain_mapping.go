@@ -763,27 +763,6 @@ func expandAppEngineDomainMappingDomainName(v interface{}, d tpgresource.Terrafo
 	return v, nil
 }
 
-func resourceAppEngineDomainMappingDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// sslManagementType does not get returned with the beta endpoint. Hence, if sslSettings is set
-	// and sslManagementType is set, we return that value. Otherwise, we carry over the old value
-	// from state by calling d.Get("ssl_settings.0.ssl_management_type")
-	if v, ok := res["sslSettings"]; ok {
-		original := v.(map[string]interface{})
-		if _, ok := original["sslManagementType"]; !ok {
-			original["sslManagementType"] = d.Get("ssl_settings.0.ssl_management_type")
-		}
-		res["sslSettings"] = original
-	} else {
-		// If ssl_settings is not set, we call d.Get("ssl_settings.0.ssl_management_type"), create sslSettings,
-		// and store the retrieved value in sslManagementType
-		transformed := make(map[string]interface{})
-		transformed["sslManagementType"] = d.Get("ssl_settings.0.ssl_management_type")
-		res["sslSettings"] = transformed
-	}
-
-	return res, nil
-}
-
 func ResourceAppEngineDomainMappingFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

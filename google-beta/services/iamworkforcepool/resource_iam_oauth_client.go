@@ -808,14 +808,6 @@ func expandIAMWorkforcePoolOauthClientAllowedRedirectUris(v interface{}, d tpgre
 	return v, nil
 }
 
-func resourceIAMWorkforcePoolOauthClientDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if v := res["state"]; v == "DELETED" {
-		return nil, nil
-	}
-
-	return res, nil
-}
-
 func ResourceIAMWorkforcePoolOauthClientFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

@@ -1086,12 +1086,6 @@ func expandCloudBuildBitbucketServerConfigSslCa(v interface{}, d tpgresource.Ter
 	return v, nil
 }
 
-func resourceCloudBuildBitbucketServerConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// connectedRepositories is needed for batchCreate on the config after creation.
-	delete(obj, "connectedRepositories")
-	return obj, nil
-}
-
 func ResourceCloudBuildBitbucketServerConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

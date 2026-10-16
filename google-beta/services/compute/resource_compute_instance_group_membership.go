@@ -491,56 +491,7 @@ func resourceComputeInstanceGroupMembershipDelete(d *schema.ResourceData, meta i
 }
 
 func resourceComputeInstanceGroupMembershipImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-
-	if err := tpgresource.ParseImportId([]string{
-		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroups/(?P<instance_group>[^/]+)/(?P<instance>.+)",
-		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<instance_group>[^/]+)/(?P<instance>.+)",
-		"(?P<zone>[^/]+)/(?P<instance_group>[^/]+)/(?P<instance>.+)",
-		"(?P<instance_group>[^/]+)/(?P<instance>.+)",
-	}, d, config); err != nil {
-		return nil, err
-	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{zone}}/{{instance_group}}/{{instance}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	return []*schema.ResourceData{d}, nil
-}
-
-func flattenNestedComputeInstanceGroupMembershipInstance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	relative, err := tpgresource.GetRelativePath(v.(string))
-	if err != nil {
-		return v
-	}
-	return relative
-}
-
-func expandNestedComputeInstanceGroupMembershipInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseZonalFieldValue("instances", v.(string), "project", "zone", d, config, true)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid value for instance: %s", err)
-	}
-	return f.RelativeLink(), nil
-}
-
-func resourceComputeInstanceGroupMembershipEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// Instance Group is a URL parameter only, so replace self-link/path with resource name only.
-	if err := d.Set("instance_group", tpgresource.GetResourceNameFromSelfLink(d.Get("instance_group").(string))); err != nil {
-		return nil, fmt.Errorf("Error setting instance_group: %s", err)
-	}
-
-	wrappedReq := map[string]interface{}{
-		"instances": []interface{}{obj},
-	}
-	return wrappedReq, nil
+	return resourceComputeInstanceGroupMembershipCustomImport(d, meta)
 }
 
 func flattenNestedComputeInstanceGroupMembership(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

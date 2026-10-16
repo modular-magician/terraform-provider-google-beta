@@ -1214,22 +1214,6 @@ func expandApiGatewayApiConfigEffectiveLabels(v interface{}, d tpgresource.Terra
 	return m, nil
 }
 
-func resourceApiGatewayApiConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	var apiConfigId string
-	if v, ok := d.GetOk("api_config_id"); ok {
-		apiConfigId = v.(string)
-	} else if v, ok := d.GetOk("api_config_id_prefix"); ok {
-		apiConfigId = id.PrefixedUniqueId(v.(string))
-	} else {
-		apiConfigId = id.UniqueId()
-	}
-
-	if err := d.Set("api_config_id", apiConfigId); err != nil {
-		return nil, fmt.Errorf("Error setting api_config_id: %s", err)
-	}
-	return obj, nil
-}
-
 func ResourceApiGatewayApiConfigFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

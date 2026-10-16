@@ -3203,36 +3203,6 @@ func expandVertexAIModelDevelopmentClusterEffectiveLabels(v interface{}, d tpgre
 	return m, nil
 }
 
-func resourceVertexAIModelDevelopmentClusterDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if rawPools, ok := res["nodePools"].([]interface{}); ok && len(rawPools) > 0 {
-		apiData := make([]map[string]interface{}, 0, len(rawPools))
-		for _, raw := range rawPools {
-			if m, ok := raw.(map[string]interface{}); ok {
-				apiData = append(apiData, m)
-			}
-		}
-		configData := []map[string]interface{}{}
-		if rawConfig, ok := d.Get("node_pools").([]interface{}); ok {
-			for _, item := range rawConfig {
-				if m, ok := item.(map[string]interface{}); ok {
-					configData = append(configData, m)
-				}
-			}
-		}
-		if sorted, err := tpgresource.SortMapsByConfigOrder(configData, apiData, "id"); err == nil {
-			sortedInterfaces := make([]interface{}, len(sorted))
-			for i, item := range sorted {
-				sortedInterfaces[i] = item
-			}
-			res["nodePools"] = sortedInterfaces
-		} else {
-			log.Printf("[ERROR] Could not sort nodePools in API response: %s", err)
-		}
-	}
-
-	return res, nil
-}
-
 func ResourceVertexAIModelDevelopmentClusterFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 

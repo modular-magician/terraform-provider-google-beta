@@ -1279,89 +1279,6 @@ func flattenNetworkSecuritySecurityProfileThreatPreventionProfileAntivirusOverri
 	return v
 }
 
-func flattenNetworkSecuritySecurityProfileUrlFilteringProfile(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["url_filters"] =
-		flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFilters(original["urlFilters"], d, config)
-
-	// We check again the length after removing the default url_filter
-	if transformed["url_filters"].(*schema.Set).Len() == 0 {
-		return nil
-	}
-	return []interface{}{transformed}
-}
-func flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFilters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-
-	// We check if the user included the default filter in his config
-	resourceDataContainsDefaultFilter := false
-	resourceData, ok := d.GetOk("url_filtering_profile.0.url_filters")
-	if ok {
-		for _, raw := range resourceData.(*schema.Set).List() {
-			if raw.(map[string]interface{})["priority"] == 2147483647 {
-				resourceDataContainsDefaultFilter = true
-				break
-			}
-		}
-	}
-
-	l := v.([]interface{})
-	transformed := schema.NewSet(schema.HashResource(networksecuritySecurityProfileUrlFilteringProfileUrlFiltersSchema()), []interface{}{})
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-
-		priorityFlatten := flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFiltersPriority(original["priority"], d, config)
-		// Do not include the auto created default url_filter coming back from the api unless the user included it in his config
-		if priorityFlatten == 2147483647 && !resourceDataContainsDefaultFilter {
-			continue
-		}
-
-		transformed.Add(map[string]interface{}{
-			"filtering_action": flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFiltersFilteringAction(original["filteringAction"], d, config),
-			"urls":             flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFiltersUrls(original["urls"], d, config),
-			"priority":         priorityFlatten,
-		})
-	}
-	return transformed
-}
-func flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFiltersFilteringAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFiltersUrls(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkSecuritySecurityProfileUrlFilteringProfileUrlFiltersPriority(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
 func flattenNetworkSecuritySecurityProfileCustomMirroringProfile(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2514,48 +2431,6 @@ func expandNetworkSecuritySecurityProfileEffectiveLabels(v interface{}, d tpgres
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func resourceNetworkSecuritySecurityProfileDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-
-	// Once a wildfireAnalysisProfile has been set, the API keeps returning it
-	// (with only default values, e.g. {"wildfireRealtimeLookup": false}) even
-	// after it is cleared. If it carries no data and the user hasn't configured
-	// the block, drop it so it doesn't cause a permadiff.
-	var isEmptyValue func(v interface{}) bool
-	isEmptyValue = func(v interface{}) bool {
-		switch t := v.(type) {
-		case nil:
-			return true
-		case bool:
-			return !t
-		case string:
-			return t == ""
-		case float64:
-			return t == 0
-		case []interface{}:
-			for _, e := range t {
-				if !isEmptyValue(e) {
-					return false
-				}
-			}
-			return true
-		case map[string]interface{}:
-			for _, e := range t {
-				if !isEmptyValue(e) {
-					return false
-				}
-			}
-			return true
-		}
-		return false
-	}
-	if profile, ok := res["wildfireAnalysisProfile"]; ok {
-		if _, configured := d.GetOk("wildfire_analysis_profile"); !configured && isEmptyValue(profile) {
-			delete(res, "wildfireAnalysisProfile")
-		}
-	}
-	return res, nil
 }
 
 func ResourceNetworkSecuritySecurityProfileFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, userAgent string, billingProject string, url string, headers http.Header) error {
