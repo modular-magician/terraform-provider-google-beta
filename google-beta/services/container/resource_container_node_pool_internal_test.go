@@ -25,8 +25,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-
-	container "google.golang.org/api/container/v1beta1"
 )
 
 func TestPerformanceMonitoringUnitStandardPlan(t *testing.T) {
@@ -160,7 +158,7 @@ func TestUnitFlattenNodePool(t *testing.T) {
 	cases := []struct {
 		name                   string
 		d                      *schema.ResourceData
-		np                     *container.NodePool
+		np                     map[string]interface{}
 		prepopulateCache       bool
 		expectedNodeCount      int
 		expectedIgmUrls        []string
@@ -169,12 +167,12 @@ func TestUnitFlattenNodePool(t *testing.T) {
 		{
 			name: "Standard flow (ignore_node_count_changes=false) fetches from IGM",
 			d:    schema.TestResourceDataRaw(t, resourceSchema, map[string]interface{}{}),
-			np: &container.NodePool{
-				Name: "pool-1",
-				InstanceGroupUrls: []string{
+			np: map[string]interface{}{
+				"name": "pool-1",
+				"instanceGroupUrls": []interface{}{
 					"https://www.googleapis.com/compute/v1/projects/ci-project/zones/us-central1-a/instanceGroupManagers/gke-pool-1-grp",
 				},
-				Locations: []string{"us-central1-a"},
+				"locations": []interface{}{"us-central1-a"},
 			},
 			prepopulateCache:  true,
 			expectedNodeCount: nodeCountFromAPI,
@@ -191,11 +189,11 @@ func TestUnitFlattenNodePool(t *testing.T) {
 				"ignore_node_count_changes": true,
 				"node_count":                10,
 			}),
-			np: &container.NodePool{
-				Name:              "pool-1",
-				InitialNodeCount:  3,
-				InstanceGroupUrls: []string{"https://www.googleapis.com/compute/v1/projects/ci-project/zones/us-central1-a/instanceGroupManagers/gke-pool-1-grp"},
-				Locations:         []string{"us-central1-a"},
+			np: map[string]interface{}{
+				"name":              "pool-1",
+				"initialNodeCount":  float64(3),
+				"instanceGroupUrls": []interface{}{"https://www.googleapis.com/compute/v1/projects/ci-project/zones/us-central1-a/instanceGroupManagers/gke-pool-1-grp"},
+				"locations":         []interface{}{"us-central1-a"},
 			},
 			prepopulateCache:  false, // Cache is empty, proving we skipped the API fetch
 			expectedNodeCount: 10,
@@ -209,11 +207,11 @@ func TestUnitFlattenNodePool(t *testing.T) {
 			d: schema.TestResourceDataRaw(t, resourceSchema, map[string]interface{}{
 				"ignore_node_count_changes": true,
 			}),
-			np: &container.NodePool{
-				Name:              "pool-1",
-				InitialNodeCount:  3,
-				InstanceGroupUrls: []string{"https://www.googleapis.com/compute/v1/projects/ci-project/zones/us-central1-a/instanceGroupManagers/gke-pool-1-grp"},
-				Locations:         []string{"us-central1-a"},
+			np: map[string]interface{}{
+				"name":              "pool-1",
+				"initialNodeCount":  float64(3),
+				"instanceGroupUrls": []interface{}{"https://www.googleapis.com/compute/v1/projects/ci-project/zones/us-central1-a/instanceGroupManagers/gke-pool-1-grp"},
+				"locations":         []interface{}{"us-central1-a"},
 			},
 			prepopulateCache:  false,
 			expectedNodeCount: 3,

@@ -31,79 +31,77 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/googleapi"
-
-	container "google.golang.org/api/container/v1beta1"
 )
 
 func TestValidateNodePoolAutoConfig(t *testing.T) {
-	withTags := &container.NodePoolAutoConfig{
-		NetworkTags: &container.NetworkTags{
-			Tags: []string{"not-empty"},
+	withTags := map[string]interface{}{
+		"networkTags": map[string]interface{}{
+			"tags": []string{"not-empty"},
 		},
 	}
-	noTags := &container.NodePoolAutoConfig{}
+	noTags := map[string]interface{}{}
 
 	cases := map[string]struct {
-		Input       *container.Cluster
+		Input       map[string]interface{}
 		ExpectError bool
 	}{
 		"with tags, nap nil, autopilot nil": {
-			Input:       &container.Cluster{NodePoolAutoConfig: withTags},
+			Input:       map[string]interface{}{"nodePoolAutoConfig": withTags},
 			ExpectError: true,
 		},
 		"with tags, autopilot disabled": {
-			Input: &container.Cluster{
-				Autopilot:          &container.Autopilot{Enabled: false},
-				NodePoolAutoConfig: withTags,
+			Input: map[string]interface{}{
+				"autopilot":          map[string]interface{}{"enabled": false},
+				"nodePoolAutoConfig": withTags,
 			},
 			ExpectError: true,
 		},
 		"with tags, nap disabled": {
-			Input: &container.Cluster{
-				Autoscaling:        &container.ClusterAutoscaling{EnableNodeAutoprovisioning: false},
-				NodePoolAutoConfig: withTags,
+			Input: map[string]interface{}{
+				"autoscaling":        map[string]interface{}{"enableNodeAutoprovisioning": false},
+				"nodePoolAutoConfig": withTags,
 			},
 			ExpectError: true,
 		},
 		"with tags, autopilot enabled": {
-			Input: &container.Cluster{
-				Autopilot:          &container.Autopilot{Enabled: true},
-				NodePoolAutoConfig: withTags,
+			Input: map[string]interface{}{
+				"autopilot":          map[string]interface{}{"enabled": true},
+				"nodePoolAutoConfig": withTags,
 			},
 			ExpectError: false,
 		},
 		"with tags, nap enabled": {
-			Input: &container.Cluster{
-				Autoscaling:        &container.ClusterAutoscaling{EnableNodeAutoprovisioning: true},
-				NodePoolAutoConfig: withTags,
+			Input: map[string]interface{}{
+				"autoscaling":        map[string]interface{}{"enableNodeAutoprovisioning": true},
+				"nodePoolAutoConfig": withTags,
 			},
 			ExpectError: false,
 		},
 		"no tags, autopilot enabled": {
-			Input: &container.Cluster{
-				Autopilot:          &container.Autopilot{Enabled: true},
-				NodePoolAutoConfig: noTags,
+			Input: map[string]interface{}{
+				"autopilot":          map[string]interface{}{"enabled": true},
+				"nodePoolAutoConfig": noTags,
 			},
 			ExpectError: false,
 		},
 		"no tags, nap enabled": {
-			Input: &container.Cluster{
-				Autoscaling:        &container.ClusterAutoscaling{EnableNodeAutoprovisioning: true},
-				NodePoolAutoConfig: noTags,
+			Input: map[string]interface{}{
+				"autoscaling":        map[string]interface{}{"enableNodeAutoprovisioning": true},
+				"nodePoolAutoConfig": noTags,
 			},
 			ExpectError: false,
 		},
 		"no tags, autopilot disabled": {
-			Input: &container.Cluster{
-				Autopilot:          &container.Autopilot{Enabled: false},
-				NodePoolAutoConfig: noTags,
+			Input: map[string]interface{}{
+				"autopilot":          map[string]interface{}{"enabled": false},
+				"nodePoolAutoConfig": noTags,
 			},
 			ExpectError: false,
 		},
 		"no tags, nap disabled": {
-			Input: &container.Cluster{
-				Autoscaling:        &container.ClusterAutoscaling{EnableNodeAutoprovisioning: false},
-				NodePoolAutoConfig: noTags,
+			Input: map[string]interface{}{
+				"autoscaling":        map[string]interface{}{"enableNodeAutoprovisioning": false},
+				"nodePoolAutoConfig": noTags,
 			},
 			ExpectError: false,
 		},
@@ -466,7 +464,7 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 
 	cases := []struct {
 		name   string
-		config *container.UserManagedKeysConfig
+		config map[string]interface{}
 		want   []map[string]interface{}
 	}{
 		{
@@ -474,12 +472,12 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name:   "empty",
-			config: &container.UserManagedKeysConfig{},
+			config: map[string]interface{}{},
 		},
 		{
 			name: "cluster_ca",
-			config: &container.UserManagedKeysConfig{
-				ClusterCa: "value",
+			config: map[string]interface{}{
+				"clusterCa": "value",
 			},
 			want: []map[string]interface{}{
 				{
@@ -494,8 +492,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "etcd_api_ca",
-			config: &container.UserManagedKeysConfig{
-				EtcdApiCa: "value",
+			config: map[string]interface{}{
+				"etcdApiCa": "value",
 			},
 			want: []map[string]interface{}{
 				{
@@ -510,8 +508,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "etcd_peer_ca",
-			config: &container.UserManagedKeysConfig{
-				EtcdPeerCa: "value",
+			config: map[string]interface{}{
+				"etcdPeerCa": "value",
 			},
 			want: []map[string]interface{}{
 				{
@@ -526,8 +524,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "aggregation_ca",
-			config: &container.UserManagedKeysConfig{
-				AggregationCa: "value",
+			config: map[string]interface{}{
+				"aggregationCa": "value",
 			},
 			want: []map[string]interface{}{
 				{
@@ -542,8 +540,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "control_plane_disk_encryption_key",
-			config: &container.UserManagedKeysConfig{
-				ControlPlaneDiskEncryptionKey: "value",
+			config: map[string]interface{}{
+				"controlPlaneDiskEncryptionKey": "value",
 			},
 			want: []map[string]interface{}{
 				{
@@ -558,8 +556,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "gkeops_etcd_backup_encryption_key",
-			config: &container.UserManagedKeysConfig{
-				GkeopsEtcdBackupEncryptionKey: "value",
+			config: map[string]interface{}{
+				"gkeopsEtcdBackupEncryptionKey": "value",
 			},
 			want: []map[string]interface{}{
 				{
@@ -574,8 +572,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "service_account_signing_keys",
-			config: &container.UserManagedKeysConfig{
-				ServiceAccountSigningKeys: []string{"value"},
+			config: map[string]interface{}{
+				"serviceAccountSigningKeys": []interface{}{"value"},
 			},
 			want: []map[string]interface{}{
 				{
@@ -591,8 +589,8 @@ func TestContainerCluster_flattenUserManagedKeysConfig(t *testing.T) {
 		},
 		{
 			name: "service_account_verification_keys",
-			config: &container.UserManagedKeysConfig{
-				ServiceAccountVerificationKeys: []string{"value"},
+			config: map[string]interface{}{
+				"serviceAccountVerificationKeys": []interface{}{"value"},
 			},
 			want: []map[string]interface{}{
 				{
@@ -689,7 +687,7 @@ func TestUnitFlattenClusterNodePools(t *testing.T) {
 	cases := []struct {
 		name        string
 		d           *schema.ResourceData
-		c           []*container.NodePool
+		c           []interface{}
 		expected    []map[string]interface{}
 		expectError bool
 	}{
@@ -701,15 +699,15 @@ func TestUnitFlattenClusterNodePools(t *testing.T) {
 					map[string]interface{}{"name": "pool-2"},
 				},
 			}),
-			c: []*container.NodePool{
-				&container.NodePool{Name: "pool-1"},
-				&container.NodePool{Name: "pool-2"},
+			c: []interface{}{
+				map[string]interface{}{"name": "pool-1"},
+				map[string]interface{}{"name": "pool-2"},
 			},
 			expected: []map[string]interface{}{
 				{
 					"name":                        "pool-1",
 					"name_prefix":                 "",
-					"initial_node_count":          int64(0),
+					"initial_node_count":          0,
 					"node_locations":              schema.NewSet(schema.HashString, []interface{}{}),
 					"node_count":                  0,
 					"node_config":                 []map[string]interface{}{},
@@ -722,7 +720,7 @@ func TestUnitFlattenClusterNodePools(t *testing.T) {
 				{
 					"name":                        "pool-2",
 					"name_prefix":                 "",
-					"initial_node_count":          int64(0),
+					"initial_node_count":          0,
 					"node_locations":              schema.NewSet(schema.HashString, []interface{}{}),
 					"node_count":                  0,
 					"node_config":                 []map[string]interface{}{},
@@ -740,7 +738,7 @@ func TestUnitFlattenClusterNodePools(t *testing.T) {
 			d: schema.TestResourceDataRaw(t, resourceSchema, map[string]interface{}{
 				"node_pool": []interface{}{map[string]interface{}{"name": "default-pool"}},
 			}),
-			c:           []*container.NodePool{},
+			c:           []interface{}{},
 			expected:    []map[string]interface{}{},
 			expectError: false,
 		},
@@ -753,9 +751,9 @@ func TestUnitFlattenClusterNodePools(t *testing.T) {
 				},
 				"skip_node_pool_refresh": true,
 			}),
-			c: []*container.NodePool{
-				&container.NodePool{Name: "pool-1"},
-				&container.NodePool{Name: "pool-2"},
+			c: []interface{}{
+				map[string]interface{}{"name": "pool-1"},
+				map[string]interface{}{"name": "pool-2"},
 			},
 			expected:    nil,
 			expectError: false,
@@ -765,7 +763,7 @@ func TestUnitFlattenClusterNodePools(t *testing.T) {
 			d: schema.TestResourceDataRaw(t, resourceSchema, map[string]interface{}{
 				"skip_node_pool_refresh": true,
 			}),
-			c:           []*container.NodePool{&container.NodePool{Name: "pool-1"}},
+			c:           []interface{}{map[string]interface{}{"name": "pool-1"}},
 			expected:    nil,
 			expectError: false,
 		},
@@ -1133,14 +1131,14 @@ func TestUnitContainerCluster_flattenManagedOpenTelemetryConfig(t *testing.T) {
 	t.Parallel()
 
 	cases := map[string]struct {
-		in   *container.ManagedOpenTelemetryConfig
+		in   map[string]interface{}
 		want []map[string]interface{}
 	}{
 		"nil":   {nil, nil},
-		"empty": {&container.ManagedOpenTelemetryConfig{}, []map[string]interface{}{map[string]interface{}{"scope": ""}}},
-		"NONE":  {&container.ManagedOpenTelemetryConfig{Scope: "NONE"}, []map[string]interface{}{map[string]interface{}{"scope": "NONE"}}},
+		"empty": {map[string]interface{}{}, []map[string]interface{}{map[string]interface{}{"scope": ""}}},
+		"NONE":  {map[string]interface{}{"scope": "NONE"}, []map[string]interface{}{map[string]interface{}{"scope": "NONE"}}},
 		"COLLECTION": {
-			&container.ManagedOpenTelemetryConfig{Scope: "COLLECTION_AND_INSTRUMENTATION_COMPONENTS"},
+			map[string]interface{}{"scope": "COLLECTION_AND_INSTRUMENTATION_COMPONENTS"},
 			[]map[string]interface{}{map[string]interface{}{"scope": "COLLECTION_AND_INSTRUMENTATION_COMPONENTS"}},
 		},
 	}
