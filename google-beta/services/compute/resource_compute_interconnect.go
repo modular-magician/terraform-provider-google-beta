@@ -174,7 +174,6 @@ Specifies the location inside Google's Networks.`,
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ForceNew:     true,
 				ValidateFunc: verify.ValidateRegexp(`^[a-z]([-a-z0-9]*[a-z0-9])?$`),
 				Description: `Name of the resource. Provided by the client when the resource is created. The name must be
 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters
@@ -391,6 +390,7 @@ federation.`,
 						"resource_manager_tags": {
 							Type:     schema.TypeMap,
 							Optional: true,
+							ForceNew: true,
 							Description: `Resource manager tags to be bound to the interconnect. Tag keys and values have the
 same definition as resource manager tags. Keys must be in the format tagKeys/{tag_key_id},
 and values are in the format tagValues/456.`,
@@ -1033,99 +1033,6 @@ func resourceComputeInterconnectUpdate(d *schema.ResourceData, meta interface{})
 	}
 	billingProject = project
 
-	obj := make(map[string]interface{})
-	descriptionProp, err := expandComputeInterconnectDescription(d.Get("description"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
-		obj["description"] = descriptionProp
-	}
-	locationProp, err := expandComputeInterconnectLocation(d.Get("location"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("location"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, locationProp)) {
-		obj["location"] = locationProp
-	}
-	requestedLinkCountProp, err := expandComputeInterconnectRequestedLinkCount(d.Get("requested_link_count"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("requested_link_count"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, requestedLinkCountProp)) {
-		obj["requestedLinkCount"] = requestedLinkCountProp
-	}
-	adminEnabledProp, err := expandComputeInterconnectAdminEnabled(d.Get("admin_enabled"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("admin_enabled"); ok || !reflect.DeepEqual(v, adminEnabledProp) {
-		obj["adminEnabled"] = adminEnabledProp
-	}
-	nocContactEmailProp, err := expandComputeInterconnectNocContactEmail(d.Get("noc_contact_email"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("noc_contact_email"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nocContactEmailProp)) {
-		obj["nocContactEmail"] = nocContactEmailProp
-	}
-	macsecProp, err := expandComputeInterconnectMacsec(d.Get("macsec"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("macsec"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, macsecProp)) {
-		obj["macsec"] = macsecProp
-	}
-	macsecEnabledProp, err := expandComputeInterconnectMacsecEnabled(d.Get("macsec_enabled"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("macsec_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, macsecEnabledProp)) {
-		obj["macsecEnabled"] = macsecEnabledProp
-	}
-	aaiEnabledProp, err := expandComputeInterconnectAaiEnabled(d.Get("aai_enabled"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("aai_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, aaiEnabledProp)) {
-		obj["aaiEnabled"] = aaiEnabledProp
-	}
-	applicationAwareInterconnectProp, err := expandComputeInterconnectApplicationAwareInterconnect(d.Get("application_aware_interconnect"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("application_aware_interconnect"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, applicationAwareInterconnectProp)) {
-		obj["applicationAwareInterconnect"] = applicationAwareInterconnectProp
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/global/interconnects/{{name}}")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Updating Interconnect %q: %#v", d.Id(), obj)
-	headers := make(http.Header)
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-		Headers:   headers,
-	})
-
-	if err != nil {
-		return fmt.Errorf("Error updating Interconnect %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished updating Interconnect %q: %#v", d.Id(), res)
-	}
-
-	err = ComputeOperationWaitTime(
-		config, res, project, "Updating Interconnect", userAgent,
-		d.Timeout(schema.TimeoutUpdate))
-
-	if err != nil {
-		return err
-	}
 	d.Partial(true)
 
 	if d.HasChange("label_fingerprint") || d.HasChange("effective_labels") {
@@ -1179,9 +1086,148 @@ func resourceComputeInterconnectUpdate(d *schema.ResourceData, meta interface{})
 			return err
 		}
 	}
+	if d.HasChange("description") || d.HasChange("location") || d.HasChange("requested_link_count") || d.HasChange("admin_enabled") || d.HasChange("noc_contact_email") || d.HasChange("macsec") || d.HasChange("macsec_enabled") || d.HasChange("aai_enabled") || d.HasChange("application_aware_interconnect") {
+		obj := make(map[string]interface{})
+
+		descriptionProp, err := expandComputeInterconnectDescription(d.Get("description"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+			obj["description"] = descriptionProp
+		}
+		locationProp, err := expandComputeInterconnectLocation(d.Get("location"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("location"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, locationProp)) {
+			obj["location"] = locationProp
+		}
+		requestedLinkCountProp, err := expandComputeInterconnectRequestedLinkCount(d.Get("requested_link_count"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("requested_link_count"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, requestedLinkCountProp)) {
+			obj["requestedLinkCount"] = requestedLinkCountProp
+		}
+		adminEnabledProp, err := expandComputeInterconnectAdminEnabled(d.Get("admin_enabled"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("admin_enabled"); ok || !reflect.DeepEqual(v, adminEnabledProp) {
+			obj["adminEnabled"] = adminEnabledProp
+		}
+		nocContactEmailProp, err := expandComputeInterconnectNocContactEmail(d.Get("noc_contact_email"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("noc_contact_email"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nocContactEmailProp)) {
+			obj["nocContactEmail"] = nocContactEmailProp
+		}
+		macsecProp, err := expandComputeInterconnectMacsec(d.Get("macsec"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("macsec"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, macsecProp)) {
+			obj["macsec"] = macsecProp
+		}
+		macsecEnabledProp, err := expandComputeInterconnectMacsecEnabled(d.Get("macsec_enabled"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("macsec_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, macsecEnabledProp)) {
+			obj["macsecEnabled"] = macsecEnabledProp
+		}
+		aaiEnabledProp, err := expandComputeInterconnectAaiEnabled(d.Get("aai_enabled"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("aai_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, aaiEnabledProp)) {
+			obj["aaiEnabled"] = aaiEnabledProp
+		}
+		applicationAwareInterconnectProp, err := expandComputeInterconnectApplicationAwareInterconnect(d.Get("application_aware_interconnect"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("application_aware_interconnect"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, applicationAwareInterconnectProp)) {
+			obj["applicationAwareInterconnect"] = applicationAwareInterconnectProp
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/global/interconnects/{{name}}")
+		if err != nil {
+			return err
+		}
+
+		headers := make(http.Header)
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating Interconnect %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating Interconnect %q: %#v", d.Id(), res)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, project, "Updating Interconnect", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
 
 	d.Partial(false)
 
+	if d.HasChange("name") {
+		oldName, newName := d.GetChange("name")
+		obj := map[string]interface{}{
+			"name":        newName,
+			"currentName": oldName,
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/interconnects/"+oldName.(string)+"/setName")
+		if err != nil {
+			d.Partial(true)
+			return err
+		}
+
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+		})
+		if err != nil {
+			d.Partial(true)
+			return fmt.Errorf("Error updating Interconnect %q name: %s", d.Id(), err)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, project, "Updating Interconnect Name", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			d.Partial(true)
+			return err
+		}
+
+		id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/global/interconnects/{{name}}")
+		if err != nil {
+			d.Partial(true)
+			return fmt.Errorf("Error constructing id: %s", err)
+		}
+		d.SetId(id)
+	}
 	return resourceComputeInterconnectRead(d, meta)
 }
 
