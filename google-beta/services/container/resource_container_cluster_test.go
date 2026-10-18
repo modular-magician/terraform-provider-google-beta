@@ -38,6 +38,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/tags"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	cloudkms "google.golang.org/api/cloudkms/v1"
 )
 
@@ -9318,14 +9319,22 @@ func testAccContainerCluster_masterAuthorizedNetworksDisabled(t *testing.T, reso
 		config := acctest.GoogleProviderConfig(t)
 		attributes := rs.Primary.Attributes
 
-		cluster, err := container.NewClient(config, config.UserAgent).Projects.Zones.Clusters.Get(
-			config.Project, attributes["location"], attributes["name"]).Do()
+		url := fmt.Sprintf("%sprojects/%s/zones/%s/clusters/%s", transport_tpg.BaseUrl(container.Product, config), config.Project, attributes["location"], attributes["name"])
+		cluster, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   config.Project,
+			RawURL:    url,
+			UserAgent: config.UserAgent,
+		})
 		if err != nil {
 			return err
 		}
 
-		if cluster.MasterAuthorizedNetworksConfig.Enabled {
-			return fmt.Errorf("Cluster's master authorized networks config is enabled, but expected to be disabled.")
+		if manc, ok := cluster["masterAuthorizedNetworksConfig"].(map[string]interface{}); ok {
+			if enabled, ok := manc["enabled"].(bool); ok && enabled {
+				return fmt.Errorf("Cluster's master authorized networks config is enabled, but expected to be disabled.")
+			}
 		}
 
 		return nil
@@ -9342,8 +9351,14 @@ func testAccCheckContainerClusterDestroyProducer(t *testing.T) func(s *terraform
 			}
 
 			attributes := rs.Primary.Attributes
-			_, err := container.NewClient(config, config.UserAgent).Projects.Locations.Clusters.Get(
-				fmt.Sprintf("projects/%s/locations/%s/clusters/%s", config.Project, attributes["location"], attributes["name"])).Do()
+			url := fmt.Sprintf("%sprojects/%s/locations/%s/clusters/%s", transport_tpg.BaseUrl(container.Product, config), config.Project, attributes["location"], attributes["name"])
+			_, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "GET",
+				Project:   config.Project,
+				RawURL:    url,
+				UserAgent: config.UserAgent,
+			})
 			if err == nil {
 				return fmt.Errorf("Cluster still exists")
 			}
@@ -20571,16 +20586,22 @@ func testAccCheckContainerClusterEmulatedVersion(t *testing.T, resourceName stri
 		location := rs.Primary.Attributes["location"]
 		project := rs.Primary.Attributes["project"]
 
-		// Retrieve the live GKE cluster object from Google's REST GKE API client
-		cluster, err := container.NewClient(config, config.UserAgent).Projects.Locations.Clusters.Get(
-			fmt.Sprintf("projects/%s/locations/%s/clusters/%s", project, location, clusterName)).Do()
+		// Retrieve the live GKE cluster object from Google's REST GKE API
+		url := fmt.Sprintf("%sprojects/%s/locations/%s/clusters/%s", transport_tpg.BaseUrl(container.Product, config), project, location, clusterName)
+		cluster, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   project,
+			RawURL:    url,
+			UserAgent: config.UserAgent,
+		})
 		if err != nil {
 			return fmt.Errorf("failed to get GKE cluster details from API: %v", err)
 		}
 
 		// Verify GKE emulated version has advanced on the server side and is cleared post-upgrade
-		if cluster.CurrentEmulatedVersion != "" {
-			return fmt.Errorf("expected emulated version to be empty post-upgrade, but live GKE cluster has %q", cluster.CurrentEmulatedVersion)
+		if cev, ok := cluster["currentEmulatedVersion"].(string); ok && cev != "" {
+			return fmt.Errorf("expected emulated version to be empty post-upgrade, but live GKE cluster has %q", cev)
 		}
 
 		return nil

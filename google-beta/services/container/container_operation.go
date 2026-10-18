@@ -25,24 +25,23 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-
-	container "google.golang.org/api/container/v1beta1"
 )
 
 type ContainerOperationWaiter struct {
-	Service             *container.Service
-	Context             context.Context
-	Op                  *container.Operation
-	Project             string
-	Location            string
-	UserProjectOverride bool
+	Config    *transport_tpg.Config
+	UserAgent string
+	Context   context.Context
+	Op        map[string]interface{}
+	Project   string
+	Location  string
 }
 
 func (w *ContainerOperationWaiter) State() string {
 	if w == nil || w.Op == nil {
 		return "<nil>"
 	}
-	return w.Op.Status
+	status, _ := w.Op["status"].(string)
+	return status
 }
 
 func (w *ContainerOperationWaiter) Error() error {
@@ -53,14 +52,15 @@ func (w *ContainerOperationWaiter) Error() error {
 	// Error gets called during operation polling to see if there is an error.
 	// Since container's operation doesn't have an "error" field, we must wait
 	// until it's done and check the status message
+	status, _ := w.Op["status"].(string)
 	for _, pending := range w.PendingStates() {
-		if w.Op.Status == pending {
+		if status == pending {
 			return nil
 		}
 	}
 
-	if w.Op.StatusMessage != "" {
-		return fmt.Errorf("%s", w.Op.StatusMessage)
+	if statusMessage, _ := w.Op["statusMessage"].(string); statusMessage != "" {
+		return fmt.Errorf("%s", statusMessage)
 	}
 
 	return nil
@@ -72,7 +72,7 @@ func (w *ContainerOperationWaiter) IsRetryable(error) bool {
 
 func (w *ContainerOperationWaiter) SetOp(op interface{}) error {
 	var ok bool
-	w.Op, ok = op.(*container.Operation)
+	w.Op, ok = op.(map[string]interface{})
 	if !ok {
 		return fmt.Errorf("Unable to set operation. Bad type!")
 	}
@@ -83,10 +83,11 @@ func (w *ContainerOperationWaiter) QueryOp() (interface{}, error) {
 	if w == nil || w.Op == nil {
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
+	opName, _ := w.Op["name"].(string)
 	name := fmt.Sprintf("projects/%s/locations/%s/operations/%s",
-		w.Project, w.Location, w.Op.Name)
+		w.Project, w.Location, opName)
 
-	var op *container.Operation
+	var op map[string]interface{}
 	select {
 	case <-w.Context.Done():
 		log.Println("[WARN] request has been cancelled early")
@@ -94,26 +95,22 @@ func (w *ContainerOperationWaiter) QueryOp() (interface{}, error) {
 	default:
 		// default must be here to keep the previous case from blocking
 	}
-	err := transport_tpg.Retry(transport_tpg.RetryOptions{
-		RetryFunc: func() (opErr error) {
-			opGetCall := w.Service.Projects.Locations.Operations.Get(name)
-			if w.UserProjectOverride {
-				opGetCall.Header().Add("X-Goog-User-Project", w.Project)
-			}
-			op, opErr = opGetCall.Do()
-			return opErr
-		},
-		Timeout: transport_tpg.DefaultRequestTimeout,
+	url := fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, w.Config), name)
+	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    w.Config,
+		Method:    "GET",
+		Project:   w.Project,
+		RawURL:    url,
+		UserAgent: w.UserAgent,
 	})
-
-	return op, err
 }
 
 func (w *ContainerOperationWaiter) OpName() string {
 	if w == nil || w.Op == nil {
 		return "<nil>"
 	}
-	return w.Op.Name
+	opName, _ := w.Op["name"].(string)
+	return opName
 }
 
 func (w *ContainerOperationWaiter) PendingStates() []string {
@@ -124,14 +121,14 @@ func (w *ContainerOperationWaiter) TargetStates() []string {
 	return []string{"DONE"}
 }
 
-func ContainerOperationWait(config *transport_tpg.Config, op *container.Operation, project, location, activity, userAgent string, timeout time.Duration) error {
+func ContainerOperationWait(config *transport_tpg.Config, op map[string]interface{}, project, location, activity, userAgent string, timeout time.Duration) error {
 	w := &ContainerOperationWaiter{
-		Service:             NewClient(config, userAgent),
-		Context:             config.Context,
-		Op:                  op,
-		Project:             project,
-		Location:            location,
-		UserProjectOverride: config.UserProjectOverride,
+		Config:    config,
+		UserAgent: userAgent,
+		Context:   config.Context,
+		Op:        op,
+		Project:   project,
+		Location:  location,
 	}
 
 	if err := w.SetOp(op); err != nil {
