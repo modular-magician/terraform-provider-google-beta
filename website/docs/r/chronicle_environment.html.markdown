@@ -56,6 +56,7 @@ resource "google_chronicle_environment" "sample" {
   parallel_instance = "projects/my-project-name/locations/us/instances/00000000-0000-0000-0000-000000000001"
   weight = 1
 
+  environment_allowed_for_all_users = true
   deletion_protection  = false
 }
 ```
@@ -139,6 +140,11 @@ The following arguments are supported:
   The weight of the environment, enabling customers to control distribution
   of resources between the separate environments in a single instance of
   Chronicle SOAR.
+
+* `environment_allowed_for_all_users` -
+  (Optional)
+  If set to true, automatically assigns the new environment to all
+  existing users and API keys.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

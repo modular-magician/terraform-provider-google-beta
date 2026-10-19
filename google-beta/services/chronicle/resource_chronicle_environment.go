@@ -233,6 +233,13 @@ MAX_NAME_LENGTH = 256`,
 					},
 				},
 			},
+			"environment_allowed_for_all_users": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+				Description: `If set to true, automatically assigns the new environment to all
+existing users and API keys.`,
+			},
 			"instance_uri": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -382,6 +389,12 @@ func resourceChronicleEnvironmentCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("weight"); !tpgresource.IsEmptyValue(reflect.ValueOf(weightProp)) && (ok || !reflect.DeepEqual(v, weightProp)) {
 		obj["weight"] = weightProp
+	}
+	environmentAllowedForAllUsersProp, err := expandChronicleEnvironmentEnvironmentAllowedForAllUsers(d.Get("environment_allowed_for_all_users"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("environment_allowed_for_all_users"); !tpgresource.IsEmptyValue(reflect.ValueOf(environmentAllowedForAllUsersProp)) && (ok || !reflect.DeepEqual(v, environmentAllowedForAllUsersProp)) {
+		obj["environmentAllowedForAllUsers"] = environmentAllowedForAllUsersProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/instances/{{instance}}/environments")
@@ -1003,6 +1016,10 @@ func flattenChronicleEnvironmentWeight(v interface{}, d *schema.ResourceData, co
 	return v // let terraform core handle it otherwise
 }
 
+func flattenChronicleEnvironmentEnvironmentAllowedForAllUsers(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenChronicleEnvironmentEnvironmentId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	parts := strings.Split(d.Get("name").(string), "/")
 	return parts[len(parts)-1]
@@ -1107,6 +1124,10 @@ func expandChronicleEnvironmentWeight(v interface{}, d tpgresource.TerraformReso
 	return v, nil
 }
 
+func expandChronicleEnvironmentEnvironmentAllowedForAllUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourceChronicleEnvironmentPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	// Setting `name` field so that `id_from_name` flattener will work properly.
@@ -1162,6 +1183,9 @@ func ResourceChronicleEnvironmentFlatten(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
 	if err = d.Set("weight", flattenChronicleEnvironmentWeight(res["weight"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Environment: %s", err)
+	}
+	if err = d.Set("environment_allowed_for_all_users", flattenChronicleEnvironmentEnvironmentAllowedForAllUsers(res["environmentAllowedForAllUsers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Environment: %s", err)
 	}
 	if err = d.Set("environment_id", flattenChronicleEnvironmentEnvironmentId(res["environmentId"], d, config)); err != nil {

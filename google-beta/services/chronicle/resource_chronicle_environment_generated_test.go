@@ -140,6 +140,7 @@ resource "google_chronicle_environment" "sample" {
   parallel_instance = "projects/%{project_name}/locations/us/instances/00000000-0000-0000-0000-000000000001"
   weight = 1
 
+  environment_allowed_for_all_users = true
   deletion_protection  = false
 }
 `, context)
@@ -169,6 +170,7 @@ resource "google_chronicle_environment" "sample" {
   parallel_instance = "projects/%{project_name}/locations/us/instances/00000000-0000-0000-0000-000000000002"
   weight = 2
 
+  environment_allowed_for_all_users = true
   deletion_protection  = false
 }
 `, context)

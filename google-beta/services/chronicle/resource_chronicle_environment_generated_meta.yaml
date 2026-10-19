@@ -22,6 +22,7 @@ fields:
     - api_field: dynamicParameters.dynamicParameterId
     - api_field: dynamicParameters.environmentId
     - api_field: dynamicParameters.value
+    - api_field: environmentAllowedForAllUsers
     - api_field: environmentId
     - field: instance
       provider_only: true
