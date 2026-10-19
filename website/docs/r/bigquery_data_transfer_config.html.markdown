@@ -152,6 +152,65 @@ resource "google_bigquery_data_transfer_config" "salesforce_config" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=bigquerydatatransfer_config_schedule_options_v2&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Bigquerydatatransfer Config Schedule Options V2
+
+
+```hcl
+resource "google_pubsub_topic" "event_driven" {
+  name = "my-topic"
+}
+
+resource "google_pubsub_subscription" "event_driven" {
+  name  = "my-subscription"
+  topic = google_pubsub_topic.event_driven.id
+}
+
+resource "google_storage_bucket" "event_driven" {
+  name                        = "my-bucket"
+  location                    = "US"
+  uniform_bucket_level_access = true
+  force_destroy               = true
+}
+
+resource "google_bigquery_dataset" "event_driven" {
+  dataset_id    = "my_dataset"
+  friendly_name = "foo"
+  description   = "bar"
+  location      = "US"
+}
+
+resource "google_bigquery_table" "event_driven" {
+  deletion_protection = false
+  dataset_id          = google_bigquery_dataset.event_driven.dataset_id
+  table_id            = "my_table"
+  schema              = "[{\"name\":\"name\",\"type\":\"STRING\"}]"
+}
+
+resource "google_bigquery_data_transfer_config" "event_driven_config" {
+  display_name           = "my-event-driven-config"
+  location               = google_bigquery_dataset.event_driven.location
+  data_source_id         = "google_cloud_storage"
+  destination_dataset_id = google_bigquery_dataset.event_driven.dataset_id
+
+  schedule_options_v2 {
+    event_driven_schedule {
+      pubsub_subscription = google_pubsub_subscription.event_driven.id
+    }
+  }
+
+  params = {
+    data_path_template              = "${google_storage_bucket.event_driven.url}/*.json"
+    destination_table_name_template = google_bigquery_table.event_driven.table_id
+    file_format                     = "JSON"
+    write_disposition               = "APPEND"
+  }
+}
+```
 
 ## Argument Reference
 
@@ -194,6 +253,15 @@ The following arguments are supported:
   (Optional)
   Options customizing the data transfer schedule.
   Structure is [documented below](#nested_schedule_options).
+
+* `schedule_options_v2` -
+  (Optional)
+  Options customizing the type of data transfer schedule.
+  Only the event-driven schedule is exposed here; time-based and manual
+  schedules are configured through the `schedule` and `schedule_options`
+  fields instead. This field cannot be used together with `schedule` or
+  `schedule_options`.
+  Structure is [documented below](#nested_schedule_options_v2).
 
 * `email_preferences` -
   (Optional)
@@ -279,6 +347,23 @@ The following arguments are supported:
   scheduled at or after the end time. The end time can be changed at any
   moment. The time when a data transfer can be triggered manually is not
   limited by this option.
+
+<a name="nested_schedule_options_v2"></a>The `schedule_options_v2` block supports:
+
+* `event_driven_schedule` -
+  (Optional)
+  Event-driven transfer schedule options. If set, the transfer will be
+  scheduled upon events arriving.
+  Structure is [documented below](#nested_schedule_options_v2_event_driven_schedule).
+
+
+<a name="nested_schedule_options_v2_event_driven_schedule"></a>The `event_driven_schedule` block supports:
+
+* `pubsub_subscription` -
+  (Required)
+  Pub/Sub subscription name used to receive events. Only the
+  Google Cloud Storage data source supports this option. Format:
+  projects/{project}/subscriptions/{subscription}.
 
 <a name="nested_email_preferences"></a>The `email_preferences` block supports:
 
