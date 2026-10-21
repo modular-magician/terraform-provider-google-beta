@@ -190,7 +190,7 @@ func resourceTagsTagBindingCreate(d *schema.ResourceData, meta interface{}) erro
 	transport_tpg.MutexStore.Lock(lockName)
 	defer transport_tpg.MutexStore.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"tagBindings")
+	url, err := tpgresource.ReplaceVars(d, config, "{{TagsBasePath}}tagBindings")
 	if err != nil {
 		return err
 	}
@@ -214,18 +214,106 @@ func resourceTagsTagBindingCreate(d *schema.ResourceData, meta interface{}) erro
 		obj["tagValueNamespacedName"] = tagValueInput
 		delete(obj, "tagValue") // Ensure the other key is not present
 	}
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
-	})
-	if err != nil {
-		return fmt.Errorf("Error creating TagBinding: %s", err)
+
+	// Create the binding, handle EXISTING_BINDING by deleting the conflicting binding and retrying.
+	var res map[string]interface{}
+	var opRes map[string]interface{}
+
+	// Wrap the request in a retry loop limited to 1 retry
+	for i := 0; i < 2; i++ {
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutCreate),
+			Headers:   headers,
+		})
+
+		if err != nil {
+			if transport_tpg.IsGoogleApiErrorWithCode(err, 400) || transport_tpg.IsGoogleApiErrorWithCode(err, 409) {
+				if i == 0 && strings.Contains(err.Error(), "EXISTING_BINDING") {
+					subjectRegex := regexp.MustCompile(`"?subject"?:\s*"?(?:[^"]*?)(tagValues/[0-9]+)"?`)
+					matches := subjectRegex.FindStringSubmatch(err.Error())
+					if len(matches) > 1 {
+						conflictingTagValue := matches[1]
+						listUrl, listUrlErr := tpgresource.ReplaceVars(d, config, "{{TagsBasePath}}tagBindings/?parent={{parent}}&pageSize=300")
+						if listUrlErr == nil {
+							deleted := false
+							pageToken := ""
+							for !deleted {
+								reqUrl := listUrl
+								if pageToken != "" {
+									var tokenErr error
+									reqUrl, tokenErr = transport_tpg.AddQueryParams(reqUrl, map[string]string{"pageToken": pageToken})
+									if tokenErr != nil {
+										break
+									}
+								}
+								listRes, listErr := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+									Config:    config,
+									Method:    "GET",
+									Project:   billingProject,
+									RawURL:    reqUrl,
+									UserAgent: userAgent,
+								})
+								if listErr != nil {
+									break
+								}
+								if bindings, ok := listRes["tagBindings"].([]interface{}); ok {
+									for _, b := range bindings {
+										binding, ok := b.(map[string]interface{})
+										if !ok {
+											continue
+										}
+										if binding["tagValue"] == conflictingTagValue {
+											nameStr, ok := binding["name"].(string)
+											if !ok {
+												continue
+											}
+											deleteUrl, deleteUrlErr := tpgresource.ReplaceVars(d, config, fmt.Sprintf("{{TagsBasePath}}%s", nameStr))
+											if deleteUrlErr == nil {
+												deleteRes, deleteErr := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+													Config:    config,
+													Method:    "DELETE",
+													Project:   billingProject,
+													RawURL:    deleteUrl,
+													UserAgent: userAgent,
+												})
+												if deleteErr == nil {
+													var delOpRes map[string]interface{}
+													waitErr := TagsOperationWaitTimeWithResponse(
+														config, deleteRes, &delOpRes, "Deleting conflicting TagBinding", userAgent,
+														d.Timeout(schema.TimeoutCreate))
+													if waitErr == nil {
+														deleted = true
+														break
+													}
+												}
+											}
+										}
+									}
+								}
+								if nextToken, ok := listRes["nextPageToken"].(string); ok && nextToken != "" {
+									pageToken = nextToken
+								} else {
+									break
+								}
+							}
+							if deleted {
+								continue
+							}
+						}
+					}
+				}
+			}
+			return fmt.Errorf("Error creating TagBinding: %s", err)
+		}
+
+		// If we succeed, break
+		break
 	}
 
 	// Store the ID now
@@ -235,9 +323,6 @@ func resourceTagsTagBindingCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
-	var opRes map[string]interface{}
 	err = TagsOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating TagBinding", userAgent,
 		d.Timeout(schema.TimeoutCreate))
