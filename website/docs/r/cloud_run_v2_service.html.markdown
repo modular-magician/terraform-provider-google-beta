@@ -1135,6 +1135,11 @@ When the field is set to false, deleting the service is allowed.
   (Optional)
   A reference to a customer managed encryption key (CMEK) to use to encrypt this container image. For more information, go to https://cloud.google.com/run/docs/securing/using-cmek
 
+* `encryption_key_revocation_action` -
+  (Optional)
+  The action to take if the encryption key is revoked. Possible values are `PREVENT_NEW`, which prevents new instances from starting, and `SHUTDOWN`, which also shuts down existing instances.
+  If not set, the value returned by the API is kept. For more information, go to https://cloud.google.com/run/docs/reference/rest/v2/EncryptionKeyRevocationAction
+
 * `max_instance_request_concurrency` -
   (Optional)
   Sets the maximum number of requests that each serving instance can receive.

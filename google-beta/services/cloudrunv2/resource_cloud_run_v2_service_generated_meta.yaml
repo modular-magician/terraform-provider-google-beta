@@ -125,6 +125,7 @@ fields:
     - api_field: template.containers.volumeMounts.subPath
     - api_field: template.containers.workingDir
     - api_field: template.encryptionKey
+    - api_field: template.encryptionKeyRevocationAction
     - api_field: template.executionEnvironment
     - api_field: template.gpuZonalRedundancyDisabled
     - api_field: template.healthCheckDisabled

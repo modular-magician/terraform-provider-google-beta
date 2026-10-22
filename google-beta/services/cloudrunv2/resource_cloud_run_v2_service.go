@@ -699,6 +699,13 @@ If not specified, defaults to the same value as container.ports[0].containerPort
 							Optional:    true,
 							Description: `A reference to a customer managed encryption key (CMEK) to use to encrypt this container image. For more information, go to https://cloud.google.com/run/docs/securing/using-cmek`,
 						},
+						"encryption_key_revocation_action": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Optional: true,
+							Description: `The action to take if the encryption key is revoked. Possible values are 'PREVENT_NEW', which prevents new instances from starting, and 'SHUTDOWN', which also shuts down existing instances.
+If not set, the value returned by the API is kept. For more information, go to https://cloud.google.com/run/docs/reference/rest/v2/EncryptionKeyRevocationAction`,
+						},
 						"execution_environment": {
 							Type:         schema.TypeString,
 							Optional:     true,
@@ -2584,6 +2591,8 @@ func flattenCloudRunV2ServiceTemplate(v interface{}, d *schema.ResourceData, con
 		flattenCloudRunV2ServiceTemplateExecutionEnvironment(original["executionEnvironment"], d, config)
 	transformed["encryption_key"] =
 		flattenCloudRunV2ServiceTemplateEncryptionKey(original["encryptionKey"], d, config)
+	transformed["encryption_key_revocation_action"] =
+		flattenCloudRunV2ServiceTemplateEncryptionKeyRevocationAction(original["encryptionKeyRevocationAction"], d, config)
 	transformed["max_instance_request_concurrency"] =
 		flattenCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(original["maxInstanceRequestConcurrency"], d, config)
 	transformed["session_affinity"] =
@@ -3854,6 +3863,10 @@ func flattenCloudRunV2ServiceTemplateEncryptionKey(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenCloudRunV2ServiceTemplateEncryptionKeyRevocationAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -4677,6 +4690,13 @@ func expandCloudRunV2ServiceTemplate(v interface{}, d tpgresource.TerraformResou
 		return nil, err
 	} else if val := reflect.ValueOf(transformedEncryptionKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["encryptionKey"] = transformedEncryptionKey
+	}
+
+	transformedEncryptionKeyRevocationAction, err := expandCloudRunV2ServiceTemplateEncryptionKeyRevocationAction(original["encryption_key_revocation_action"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEncryptionKeyRevocationAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["encryptionKeyRevocationAction"] = transformedEncryptionKeyRevocationAction
 	}
 
 	transformedMaxInstanceRequestConcurrency, err := expandCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(original["max_instance_request_concurrency"], d, config)
@@ -6394,6 +6414,10 @@ func expandCloudRunV2ServiceTemplateExecutionEnvironment(v interface{}, d tpgres
 }
 
 func expandCloudRunV2ServiceTemplateEncryptionKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateEncryptionKeyRevocationAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
