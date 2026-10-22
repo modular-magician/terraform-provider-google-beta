@@ -85,6 +85,32 @@ func ValidateWorkloadIdentityPoolId(v interface{}, k string) (ws []string, error
 	return
 }
 
+func isWorkloadIdentityPoolInDeletedState(config *transport_tpg.Config, d *schema.ResourceData, billingProject string, userAgent string) (bool, error) {
+	url, err := tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}")
+	if err != nil {
+		return false, err
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+	})
+	if err != nil {
+		return false, transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("IAMBetaWorkloadIdentityPool %q", d.Id()))
+	}
+
+	if res != nil {
+		if state, ok := res["state"].(string); ok && state == "DELETED" {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -497,6 +523,21 @@ func resourceIAMBetaWorkloadIdentityPoolCreate(d *schema.ResourceData, meta inte
 		ruleObj["attestationRules"] = attestationRulesProp
 		delete(obj, "attestationRules")
 	}
+
+	var wasUndeleted bool
+	deleted, err := isWorkloadIdentityPoolInDeletedState(config, d, billingProject, userAgent)
+	if err != nil {
+		return fmt.Errorf("checking if WorkloadIdentityPool %q is in deleted state: %w", d.Id(), err)
+	}
+	if deleted {
+		log.Printf("[DEBUG] WorkloadIdentityPool exists in deleted state - undeleting instead of creating")
+		url, err = tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}:undelete")
+		if err != nil {
+			return err
+		}
+		obj = make(map[string]interface{})
+		wasUndeleted = true
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -528,16 +569,59 @@ func resourceIAMBetaWorkloadIdentityPoolCreate(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error waiting to create WorkloadIdentityPool: %s", err)
 	}
 
+	if wasUndeleted {
+		patchObj := make(map[string]interface{})
+		patchObj["displayName"] = displayNameProp
+		patchObj["description"] = descriptionProp
+		patchObj["disabled"] = disabledProp
+		updateMask := []string{"displayName", "description", "disabled"}
+
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(inlineCertificateIssuanceConfigProp)) {
+			patchObj["inlineCertificateIssuanceConfig"] = inlineCertificateIssuanceConfigProp
+			updateMask = append(updateMask, "inlineCertificateIssuanceConfig")
+		}
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(inlineTrustConfigProp)) {
+			patchObj["inlineTrustConfig"] = inlineTrustConfigProp
+			updateMask = append(updateMask, "inlineTrustConfig")
+		}
+
+		patchUrl, err := tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}")
+		if err != nil {
+			return err
+		}
+		patchUrl, err = transport_tpg.AddQueryParams(patchUrl, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+		if err != nil {
+			return err
+		}
+
+		patchRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    patchUrl,
+			UserAgent: userAgent,
+			Body:      patchObj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("updating WorkloadIdentityPool %q after undelete: %w", d.Id(), err)
+		}
+
+		err = IAMBetaOperationWaitTime(
+			config, patchRes, project, "Updating WorkloadIdentityPool", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return fmt.Errorf("waiting to update WorkloadIdentityPool %q after undelete: %w", d.Id(), err)
+		}
+	}
+
 	// create attestation_rules
 	if hasRule {
-		qIdx := strings.Index(url, "?")
-		var basePath string
-		if qIdx != -1 {
-			basePath = url[:qIdx]
-		} else {
-			basePath = url
+		ruleUrl, err := tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}:setAttestationRules")
+		if err != nil {
+			return err
 		}
-		ruleUrl := basePath + "/" + d.Get("workload_identity_pool_id").(string) + ":setAttestationRules"
 
 		ruleRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 			Config:    config,

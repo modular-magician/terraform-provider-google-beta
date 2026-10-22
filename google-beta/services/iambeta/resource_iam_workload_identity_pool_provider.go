@@ -100,6 +100,32 @@ func jwksJsonDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
 	return reflect.DeepEqual(oldJson, newJson)
 }
 
+func isWorkloadIdentityPoolProviderInDeletedState(config *transport_tpg.Config, d *schema.ResourceData, billingProject string, userAgent string) (bool, error) {
+	url, err := tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}/providers/{{workload_identity_pool_provider_id}}")
+	if err != nil {
+		return false, err
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+	})
+	if err != nil {
+		return false, transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("IAMBetaWorkloadIdentityPoolProvider %q", d.Id()))
+	}
+
+	if res != nil {
+		if state, ok := res["state"].(string); ok && state == "DELETED" {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -586,6 +612,20 @@ func resourceIAMBetaWorkloadIdentityPoolProviderCreate(d *schema.ResourceData, m
 	}
 
 	headers := make(http.Header)
+	var wasUndeleted bool
+	deleted, err := isWorkloadIdentityPoolProviderInDeletedState(config, d, billingProject, userAgent)
+	if err != nil {
+		return fmt.Errorf("checking if WorkloadIdentityPoolProvider %q is in deleted state: %w", d.Id(), err)
+	}
+	if deleted {
+		log.Printf("[DEBUG] WorkloadIdentityPoolProvider exists in deleted state - undeleting instead of creating")
+		url, err = tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}/providers/{{workload_identity_pool_provider_id}}:undelete")
+		if err != nil {
+			return err
+		}
+		obj = make(map[string]interface{})
+		wasUndeleted = true
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -615,6 +655,63 @@ func resourceIAMBetaWorkloadIdentityPoolProviderCreate(d *schema.ResourceData, m
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create WorkloadIdentityPoolProvider: %s", err)
+	}
+
+	if wasUndeleted {
+		patchObj := make(map[string]interface{})
+		patchObj["displayName"] = displayNameProp
+		patchObj["description"] = descriptionProp
+		patchObj["disabled"] = disabledProp
+		patchObj["attributeMapping"] = attributeMappingProp
+		patchObj["attributeCondition"] = attributeConditionProp
+		updateMask := []string{"displayName", "description", "disabled", "attributeMapping", "attributeCondition"}
+
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(awsProp)) {
+			patchObj["aws"] = awsProp
+			updateMask = append(updateMask, "aws")
+		}
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(oidcProp)) {
+			patchObj["oidc"] = oidcProp
+			updateMask = append(updateMask, "oidc.allowedAudiences", "oidc.issuerUri", "oidc.jwksJson")
+		}
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(samlProp)) {
+			patchObj["saml"] = samlProp
+			updateMask = append(updateMask, "saml")
+		}
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(x509Prop)) {
+			patchObj["x509"] = x509Prop
+			updateMask = append(updateMask, "x509")
+		}
+
+		patchUrl, err := tpgresource.ReplaceVars(d, config, "{{IAMBetaBasePath}}projects/{{project}}/locations/global/workloadIdentityPools/{{workload_identity_pool_id}}/providers/{{workload_identity_pool_provider_id}}")
+		if err != nil {
+			return err
+		}
+		patchUrl, err = transport_tpg.AddQueryParams(patchUrl, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+		if err != nil {
+			return err
+		}
+
+		patchRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    patchUrl,
+			UserAgent: userAgent,
+			Body:      patchObj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("updating WorkloadIdentityPoolProvider %q after undelete: %w", d.Id(), err)
+		}
+
+		err = IAMBetaOperationWaitTime(
+			config, patchRes, project, "Updating WorkloadIdentityPoolProvider", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return fmt.Errorf("waiting to update WorkloadIdentityPoolProvider %q after undelete: %w", d.Id(), err)
+		}
 	}
 
 	log.Printf("[DEBUG] Finished creating WorkloadIdentityPoolProvider %q: %#v", d.Id(), res)
