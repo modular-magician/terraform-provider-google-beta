@@ -2159,6 +2159,7 @@ func resourceSqlDatabaseInstanceCreate(d *schema.ResourceData, meta interface{})
 			return err
 		}
 	}
+
 	if d.HasChange("blue_green_deployment") {
 		if err := handleBlueGreenDeploymentUpdate(d, config, project, region, d.Timeout(schema.TimeoutCreate), userAgent); err != nil {
 			return err
@@ -2879,6 +2880,13 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 			}
 		}
 	}
+
+	if isBlueGreenDelete(d) {
+		if err := handleBlueGreenDeploymentDelete(d, config, project, d.Get("region").(string), d.Timeout(schema.TimeoutUpdate), userAgent); err != nil {
+			return err
+		}
+	}
+
 	if !isBlueGreenSwitchover(d) {
 		var op *sqladmin.Operation
 		var instance *sqladmin.DatabaseInstance
@@ -3340,7 +3348,7 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("blue_green_deployment") {
+	if d.HasChange("blue_green_deployment") && !isBlueGreenDelete(d) {
 		if err := handleBlueGreenDeploymentUpdate(d, config, project, d.Get("region").(string), d.Timeout(schema.TimeoutUpdate), userAgent); err != nil {
 			_ = resourceSqlDatabaseInstanceRead(d, meta)
 			return err
@@ -3488,6 +3496,7 @@ func resourceSqlDatabaseInstanceDelete(d *schema.ResourceData, meta interface{})
 	if d.Get("deletion_protection").(bool) {
 		return fmt.Errorf("Error, failed to delete instance because deletion_protection is set to true. Set it to false to proceed with instance deletion")
 	}
+
 	if bgdStateMap := getExistingBgdStateMap(d); bgdStateMap != nil {
 		deploymentName, _ := bgdStateMap["deployment_name"].(string)
 		deleteOldSourceCfg, _ := bgdStateMap["delete_old_source_on_destroy"].(bool)
@@ -4380,6 +4389,7 @@ func normalizeDRReplicaName(drReplicaName, project string) string {
 	}
 	return fmt.Sprintf("%s:%s", project, drReplicaName)
 }
+
 func blueGreenDeploymentCustomizeDiff(_ context.Context, d *schema.ResourceDiff, meta interface{}) error {
 	if d.Id() != "" && d.HasChange("database_version") {
 		if _, n := d.GetChange("blue_green_deployment"); len(n.([]interface{})) > 0 && n.([]interface{})[0] != nil {
@@ -4477,6 +4487,22 @@ func isBlueGreenSwitchover(d *schema.ResourceData) bool {
 	oldEnv, _ := oldMap["active_environment"].(string)
 	newEnv, _ := newMap["active_environment"].(string)
 	return oldEnv == "SOURCE" && newEnv == "TARGET"
+}
+
+func isBlueGreenDelete(d *schema.ResourceData) bool {
+	if !d.HasChange("blue_green_deployment") {
+		return false
+	}
+	oldVal, newVal := d.GetChange("blue_green_deployment")
+	oldList, okOld := oldVal.([]interface{})
+	if !okOld || len(oldList) == 0 || oldList[0] == nil {
+		return false
+	}
+	if newVal == nil {
+		return true
+	}
+	newList, okNew := newVal.([]interface{})
+	return okNew && len(newList) == 0
 }
 
 var skipGreenComparisonFields = map[string]bool{
@@ -4735,10 +4761,25 @@ func readBlueGreenDeployment(d *schema.ResourceData, config *transport_tpg.Confi
 	return nil
 }
 
+func handleBlueGreenDeploymentDelete(d *schema.ResourceData, config *transport_tpg.Config, project, region string, timeout time.Duration, userAgent string) error {
+	instanceName := d.Get("name").(string)
+
+	oldVal, _ := d.GetChange("blue_green_deployment")
+	if oldList, ok := oldVal.([]interface{}); ok && len(oldList) > 0 && oldList[0] != nil {
+		oldMap := oldList[0].(map[string]interface{})
+		deploymentName, _ := oldMap["deployment_name"].(string)
+		deleteOldSourceCfg, _ := oldMap["delete_old_source_on_destroy"].(bool)
+
+		return deleteBlueGreenDeployment(d, config, project, instanceName, region, deploymentName, deleteOldSourceCfg, timeout, userAgent)
+	}
+
+	return nil
+}
+
 func handleBlueGreenDeploymentUpdate(d *schema.ResourceData, config *transport_tpg.Config, project, region string, timeout time.Duration, userAgent string) error {
 	oldVal, newVal := d.GetChange("blue_green_deployment")
-	oldList := oldVal.([]interface{})
-	newList := newVal.([]interface{})
+	oldList, _ := oldVal.([]interface{})
+	newList, _ := newVal.([]interface{})
 
 	instanceName := d.Get("name").(string)
 
@@ -4751,16 +4792,10 @@ func handleBlueGreenDeploymentUpdate(d *schema.ResourceData, config *transport_t
 		return createBlueGreenDeployment(d, config, project, instanceName, region, deploymentName, targetDbVersion, timeout, userAgent)
 	}
 
-	// Case 2: Removing an existing blue_green_deployment block (or deleting out-of-band BGD in Scenario A)
-	if len(oldList) > 0 && len(newList) == 0 && oldList[0] != nil {
-		oldMap := oldList[0].(map[string]interface{})
-		deploymentName, _ := oldMap["deployment_name"].(string)
-		deleteOldSourceCfg, _ := oldMap["delete_old_source_on_destroy"].(bool)
-
-		return deleteBlueGreenDeployment(d, config, project, instanceName, region, deploymentName, deleteOldSourceCfg, d.Timeout(schema.TimeoutUpdate), userAgent)
-	}
-
-	// Case 3: Modifying an existing blue_green_deployment block
+	// Case 2: Modifying an existing blue_green_deployment block (switchover)
+	// Note: Deleting a blue_green_deployment block is handled at the start of
+	// resourceSqlDatabaseInstanceUpdate via handleBlueGreenDeploymentDelete to unblock
+	// in-place major version upgrades and settings updates within the same terraform apply.
 	if len(oldList) > 0 && len(newList) > 0 && oldList[0] != nil && newList[0] != nil {
 		oldMap := oldList[0].(map[string]interface{})
 		newMap := newList[0].(map[string]interface{})
