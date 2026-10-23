@@ -98,19 +98,19 @@ resource "google_bigtable_instance" "instance" {
   cluster {
     cluster_id   = "cluster-1"
     zone         = "us-central1-a"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
   cluster {
     cluster_id   = "cluster-2"
     zone         = "us-central1-b"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
   cluster {
     cluster_id   = "cluster-3"
     zone         = "us-central1-c"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
 
@@ -173,7 +173,7 @@ resource "google_bigtable_instance" "instance" {
   cluster {
     cluster_id   = "cluster-1"
     zone         = "us-central1-b"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
 
@@ -239,19 +239,19 @@ resource "google_bigtable_instance" "instance" {
   cluster {
     cluster_id   = "cluster-1"
     zone         = "us-central1-a"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
   cluster {
     cluster_id   = "cluster-2"
     zone         = "us-central1-b"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
   cluster {
     cluster_id   = "cluster-3"
     zone         = "us-central1-c"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
 
@@ -315,7 +315,7 @@ resource "google_bigtable_instance" "instance" {
   cluster {
     cluster_id   = "cluster-1"
     zone         = "us-central1-b"
-    num_nodes    = 3
+    num_nodes    = 1
     storage_type = "HDD"
   }
 
