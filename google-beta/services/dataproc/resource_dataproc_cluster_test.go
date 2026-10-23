@@ -835,7 +835,7 @@ func TestAccDataprocCluster_spotWithAuxiliaryNodeGroups(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.with_auxiliary_node_groups", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.roles.0", "DRIVER"),
-					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.node_group_config.0.num_instances", "2"),
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.node_group_config.0.num_instances", "1"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.node_group_config.0.machine_type", "n1-standard-2"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.node_group_config.0.min_cpu_platform", "Intel Haswell"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.node_group_config.0.disk_config.0.boot_disk_size_gb", "35"),
@@ -2388,7 +2388,7 @@ resource "google_dataproc_cluster" "with_min_num_instances" {
       }
     }
     worker_config {
-      num_instances     = 3
+      num_instances     = 2
       min_num_instances = 2
       machine_type      = "n4-standard-2"
       disk_config {
@@ -2495,7 +2495,7 @@ resource "google_compute_node_group" "nodes" {
   name = "test-nodegroup-%s"
   zone = "us-east1-b"
 
-  initial_size	= 3
+  initial_size	= 1
   node_template = google_compute_node_template.nodetmpl.self_link
 }
 
@@ -2811,7 +2811,7 @@ resource "google_dataproc_cluster" "all_instance_flexibility_policy" {
     }
 
     preemptible_worker_config {
-      num_instances = "3"
+      num_instances = "1"
       disk_config {
         boot_disk_type    = "hyperdisk-balanced"
         boot_disk_size_gb = 35
@@ -2910,7 +2910,7 @@ resource "google_dataproc_cluster" "master_instance_flexibility_policy" {
     }
 
     preemptible_worker_config {
-      num_instances = "3"
+      num_instances = "1"
       disk_config {
         boot_disk_type    = "hyperdisk-balanced"
         boot_disk_size_gb = 35
@@ -2946,7 +2946,7 @@ resource "google_dataproc_cluster" "spot_with_instance_flexibility_policy" {
     }
 
     preemptible_worker_config {
-      num_instances = "3"
+      num_instances = "1"
       preemptibility = "SPOT"
 	  instance_flexibility_policy {
         instance_selection_list {
@@ -2993,7 +2993,7 @@ resource "google_dataproc_cluster" "spot_mixing" {
     }
 
     preemptible_worker_config {
-      num_instances = "3"
+      num_instances = "2"
       preemptibility = "SPOT"
       disk_config {
         boot_disk_type    = "hyperdisk-balanced"
@@ -3041,7 +3041,7 @@ resource "google_dataproc_cluster" "with_auxiliary_node_groups" {
       node_group {
         roles = ["DRIVER"]
         node_group_config{
-          num_instances=2
+          num_instances=1
           machine_type="n1-standard-2"
           min_cpu_platform = "Intel Haswell"
           disk_config {
@@ -3806,7 +3806,7 @@ resource "google_dataproc_cluster" "tf_test_cluster" {
       machine_type  = "n4-standard-2"
       disk_config {
         boot_disk_type = "hyperdisk-balanced"
-        boot_disk_size_gb = 500
+        boot_disk_size_gb = 100
         boot_disk_provisioned_iops = 10000
         boot_disk_provisioned_throughput = 140
       }
@@ -3817,7 +3817,7 @@ resource "google_dataproc_cluster" "tf_test_cluster" {
       machine_type  = "n4-standard-2"
       disk_config {
         boot_disk_type = "hyperdisk-balanced"
-        boot_disk_size_gb = 500
+        boot_disk_size_gb = 100
         boot_disk_provisioned_iops = 10000
         boot_disk_provisioned_throughput = 140
       }
@@ -3840,7 +3840,7 @@ resource "google_dataproc_cluster" "tf_test_cluster" {
       machine_type  = "n4-standard-2"
       disk_config {
         boot_disk_type = "hyperdisk-balanced"
-        boot_disk_size_gb = 500
+        boot_disk_size_gb = 100
         boot_disk_provisioned_iops = 10000
         boot_disk_provisioned_throughput = 140
       }
@@ -3852,11 +3852,11 @@ resource "google_dataproc_cluster" "tf_test_cluster" {
       node_group {
         roles = ["DRIVER"]
         node_group_config {
-          num_instances = 2
+          num_instances = 1
           machine_type  = "n4-standard-2"
           disk_config {
             boot_disk_type = "hyperdisk-balanced"
-            boot_disk_size_gb = 500
+            boot_disk_size_gb = 100
             boot_disk_provisioned_iops = 10000
             boot_disk_provisioned_throughput = 140
           }
@@ -3887,7 +3887,7 @@ func TestAccDataprocCluster_instanceFlexibilityDiskConfig(t *testing.T) {
 					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.0.disk_config.0.boot_disk_size_gb", "40"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.disk_config.0.boot_disk_size_gb", "100"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.disk_config.0.boot_disk_provisioned_throughput", "140"),
-					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.disk_config.0.attached_disk_config.0.disk_size_gb", "3000"),
+					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.disk_config.0.attached_disk_config.0.disk_size_gb", "2048"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.disk_config.0.attached_disk_config.0.type", "hyperdisk-throughput"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.machine_types.0", "n4-standard-2"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.instance_flexibility_disk_config", "cluster_config.0.worker_config.0.instance_flexibility_policy.0.instance_selection_list.1.disk_config.0.boot_disk_type", "hyperdisk-balanced"),
@@ -3935,7 +3935,7 @@ resource "google_dataproc_cluster" "instance_flexibility_disk_config" {
 						boot_disk_provisioned_iops = 3000
 						boot_disk_provisioned_throughput = 140
 						attached_disk_config {
-							disk_size_gb = 3000
+							disk_size_gb = 2048
 							type = "hyperdisk-throughput"
 						}
 					}
@@ -4107,7 +4107,7 @@ resource "google_dataproc_cluster" "attached_disk_config_secondary" {
 		}
 		
 		preemptible_worker_config {
-			num_instances = "2"
+			num_instances = "1"
 			instance_flexibility_policy {
 				instance_selection_list {
 					machine_types = ["n4-standard-4"]
