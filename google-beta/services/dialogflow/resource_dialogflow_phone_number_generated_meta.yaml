@@ -1,0 +1,35 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_dialogflow_phone_number
+generation_type: mmv1
+source_file: products/dialogflow/PhoneNumber.yaml
+api_service_name: dialogflow.googleapis.com
+api_version: v2beta1
+api_resource_type_kind: PhoneNumber
+fields:
+    - api_field: phoneNumbers.allowedSipTrunks.carrierIds
+      field: allowed_sip_trunks.carrier_ids
+    - api_field: phoneNumbers.allowedSipTrunks.sipTrunks
+      field: allowed_sip_trunks.sip_trunks
+    - api_field: phoneNumbers.conversationProfile
+      field: conversation_profile
+    - api_field: phoneNumbers.description
+      field: description
+    - api_field: phoneNumbers.lifecycleState
+      field: lifecycle_state
+    - field: location
+      provider_only: true
+    - api_field: phoneNumbers.name
+      field: name
+    - api_field: phoneNumbers.orderName
+      field: order_name
+    - api_field: phoneNumbers.phoneNumber
+      field: phone_number
+    - api_field: phoneNumbers.phoneNumberSpec.countryCode
+      field: phone_number_spec.country_code
+    - api_field: phoneNumbers.phoneNumberSpec.preferredAreaCodes
+      field: phone_number_spec.preferred_area_codes
+    - api_field: phoneNumbers.purgeTime
+      field: purge_time
+    - field: deletion_policy
+      provider_only: true
