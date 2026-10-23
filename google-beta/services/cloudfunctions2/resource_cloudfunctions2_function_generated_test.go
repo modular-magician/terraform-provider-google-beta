@@ -383,8 +383,7 @@ resource "google_cloudfunctions2_function" "function" {
   }
  
   service_config {
-    max_instance_count  = 3
-    min_instance_count = 1
+    max_instance_count  = 1
     available_memory    = "256M"
     timeout_seconds     = 60
     environment_variables = {
@@ -532,8 +531,7 @@ resource "google_cloudfunctions2_function" "function" {
   }
  
   service_config {
-    max_instance_count  = 3
-    min_instance_count = 1
+    max_instance_count  = 1
     available_memory    = "256M"
     timeout_seconds     = 60
     environment_variables = {
@@ -1299,12 +1297,9 @@ resource "google_cloudfunctions2_function" "function" {
   }
  
   service_config {
-    max_instance_count  = 3
-    min_instance_count = 1
-    available_memory    = "4Gi"
+    max_instance_count  = 1
+    available_memory    = "256M"
     timeout_seconds     = 60
-    max_instance_request_concurrency = 80
-    available_cpu = "4"
     environment_variables = {
         SERVICE_CONFIG_TEST = "config_test"
     }
@@ -1417,12 +1412,9 @@ resource "google_cloudfunctions2_function" "function" {
   }
  
   service_config {
-    max_instance_count  = 3
-    min_instance_count = 1
-    available_memory    = "4Gi"
+    max_instance_count  = 1
+    available_memory    = "256M"
     timeout_seconds     = 60
-    max_instance_request_concurrency = 80
-    available_cpu = "4"
     environment_variables = {
         SERVICE_CONFIG_TEST = "config_test"
     }
