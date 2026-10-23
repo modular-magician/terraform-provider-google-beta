@@ -200,6 +200,7 @@ resource "google_storage_bucket" "bucket" {
   name                        = "%{bucket_name}"
   location                    = "US"
   uniform_bucket_level_access = true
+  force_destroy               = true
 }
 
 resource "google_storage_bucket_iam_member" "viewer" {
@@ -375,6 +376,7 @@ resource "google_storage_bucket" "bucket" {
   name                        = "tf-test-mongo-gcs-bucket%{random_suffix}"
   location                    = "US"
   uniform_bucket_level_access = true
+  force_destroy               = true
 }
 
 data "google_iam_policy" "datastream_service_agent" {
@@ -419,7 +421,7 @@ resource "google_datastream_stream" "default" {
     source_config {
         source_connection_profile = google_datastream_connection_profile.mongo_source.id
         mongodb_source_config {
-            max_concurrent_backfill_tasks = 14
+            max_concurrent_backfill_tasks = 1
             include_objects {
                 databases {
                     database = "test"
@@ -504,6 +506,7 @@ resource "google_storage_bucket" "bucket" {
     name                        = "tf-test-mongo-gcs-bucket%{random_suffix}"
     location                    = "US"
     uniform_bucket_level_access = true
+    force_destroy               = true
 }
 
 data "google_iam_policy" "datastream_service_agent" {
@@ -548,7 +551,7 @@ resource "google_datastream_stream" "default" {
     source_config {
         source_connection_profile = google_datastream_connection_profile.mongo_source.id
         mongodb_source_config {
-            max_concurrent_backfill_tasks = 25
+            max_concurrent_backfill_tasks = 2
             include_objects {
                 databases {
                     database = "test"

@@ -115,6 +115,7 @@ resource "google_storage_bucket" "bucket" {
   name                        = "my-bucket"
   location                    = "US"
   uniform_bucket_level_access = true
+  force_destroy               = true
 }
 
 resource "google_storage_bucket_iam_member" "viewer" {
@@ -201,7 +202,7 @@ resource "google_datastream_stream" "default" {
                     }
                 }
             }
-            max_concurrent_cdc_tasks = 5
+            max_concurrent_cdc_tasks = 1
         }
     }
     destination_config {
@@ -760,10 +761,11 @@ resource "google_datastream_stream" "default" {
 ```hcl
 
 resource "google_bigquery_dataset" "postgres" {
-  dataset_id    = "postgres_dataset"
-  friendly_name = "postgres"
-  description   = "Database of postgres"
-  location      = "us-central1"
+  dataset_id                 = "postgres_dataset"
+  friendly_name              = "postgres"
+  description                = "Database of postgres"
+  location                   = "us-central1"
+  delete_contents_on_destroy = true
 }
 
 resource "google_datastream_stream" "default" {
