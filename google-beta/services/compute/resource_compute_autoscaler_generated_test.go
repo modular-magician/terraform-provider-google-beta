@@ -103,7 +103,7 @@ resource "google_compute_autoscaler" "default" {
   target = google_compute_instance_group_manager.default.id
 
   autoscaling_policy {
-    max_replicas    = 5
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     stabilization_period = 300
@@ -120,7 +120,7 @@ resource "google_compute_instance_template" "default" {
   provider = %{provider_name}
 
   name           = "%{instance_template_name}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
 
   tags = ["foo", "bar"]
@@ -223,7 +223,7 @@ resource "google_compute_autoscaler" "foobar" {
   target = google_compute_instance_group_manager.foobar.id
 
   autoscaling_policy {
-    max_replicas    = 5
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     stabilization_period = 300
@@ -236,7 +236,7 @@ resource "google_compute_autoscaler" "foobar" {
 
 resource "google_compute_instance_template" "foobar" {
   name           = "%{instance_template_name}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
 
   tags = ["foo", "bar"]

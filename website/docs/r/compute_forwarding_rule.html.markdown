@@ -122,7 +122,7 @@ resource "google_compute_region_backend_service" "default" {
 resource "google_compute_instance_template" "instance_template" {
   name         = "l7-ilb-mig-template"
   provider     = google-beta
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["http-server"]
 
   network_interface {
@@ -186,7 +186,7 @@ resource "google_compute_region_instance_group_manager" "mig" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # allow all access from IAP and health check ranges
@@ -220,7 +220,7 @@ resource "google_compute_instance" "vm-test" {
   name         = "l7-ilb-test-vm"
   provider     = google-beta
   zone         = "europe-west1-b"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   network_interface {
     network    = google_compute_network.ilb_network.id
     subnetwork = google_compute_subnetwork.ilb_subnet.id
@@ -292,7 +292,7 @@ resource "google_compute_region_backend_service" "default" {
 resource "google_compute_instance_template" "instance_template" {
   name         = "l4-ilb-mig-template"
   provider     = google-beta
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["allow-ssh","allow-health-check"]
 
   network_interface {
@@ -356,7 +356,7 @@ resource "google_compute_region_instance_group_manager" "mig" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # allow all access from health check ranges
@@ -409,7 +409,7 @@ resource "google_compute_instance" "vm_test" {
   name         = "l4-ilb-test-vm"
   provider     = google-beta
   zone         = "europe-west1-b"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   network_interface {
     network    = google_compute_network.ilb_network.id
     subnetwork = google_compute_subnetwork.ilb_subnet.id
@@ -736,7 +736,7 @@ resource "google_compute_region_instance_group_manager" "rigm" {
 resource "google_compute_instance_template" "instance_template" {
   provider     = google-beta
   name         = "website-backend-template"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   network_interface {
     network = google_compute_network.default.id
@@ -936,7 +936,7 @@ resource "google_compute_region_instance_group_manager" "rigm" {
 resource "google_compute_instance_template" "instance_template" {
   provider     = google-beta
   name         = "website-backend-template"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   network_interface {
     network = google_compute_network.default.id

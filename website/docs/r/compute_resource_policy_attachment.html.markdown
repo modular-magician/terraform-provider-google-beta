@@ -42,7 +42,7 @@ permissions.
 ```hcl
 resource "google_compute_instance" "instance" {
   name         = "my-instance"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
 
   boot_disk {

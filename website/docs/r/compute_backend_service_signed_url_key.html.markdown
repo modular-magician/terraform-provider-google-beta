@@ -79,7 +79,7 @@ resource "google_compute_instance_group_manager" "webservers" {
 
 resource "google_compute_instance_template" "webserver" {
   name         = "standard-webserver"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"

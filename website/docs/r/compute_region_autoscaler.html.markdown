@@ -50,7 +50,7 @@ resource "google_compute_region_autoscaler" "foobar" {
   target = google_compute_region_instance_group_manager.foobar.id
 
   autoscaling_policy {
-    max_replicas    = 5
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     stabilization_period = 300
@@ -63,11 +63,11 @@ resource "google_compute_region_autoscaler" "foobar" {
 
 resource "google_compute_instance_template" "foobar" {
   name         = "my-instance-template"
-  machine_type = "e2-standard-4"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
-    disk_size_gb = 250
+    disk_size_gb = 10
   }
 
   network_interface {

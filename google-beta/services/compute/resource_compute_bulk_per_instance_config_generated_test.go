@@ -98,7 +98,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "bulk-igm" {
   name         = "%{template_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link

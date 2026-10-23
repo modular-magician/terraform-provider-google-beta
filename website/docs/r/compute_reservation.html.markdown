@@ -104,7 +104,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "foobar" {
   name           = "instance-template"
-  machine_type   = "n2-standard-2"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -198,7 +198,7 @@ resource "google_compute_reservation" "gce_reservation_sharing_policy" {
   zone = "us-central1-b"
 
   specific_reservation {
-    count = 2
+    count = 1
     source_instance_template = google_compute_instance_template.foobar.self_link
   }
 

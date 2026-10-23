@@ -51,7 +51,7 @@ values will be stored in the raw state as plain text: `machine_image_encryption_
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "my-vm"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -83,7 +83,7 @@ resource "google_compute_machine_image" "image" {
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "my-vm"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -146,7 +146,7 @@ resource "google_tags_tag_value" "tag_value1" {
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "my-vm"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {

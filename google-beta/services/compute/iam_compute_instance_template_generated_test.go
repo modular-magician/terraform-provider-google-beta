@@ -375,7 +375,7 @@ func testAccComputeInstanceTemplateIamMember_basicGenerated(context map[string]i
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -399,7 +399,7 @@ func testAccComputeInstanceTemplateIamPolicy_basicGenerated(context map[string]i
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -437,7 +437,7 @@ func testAccComputeInstanceTemplateIamPolicy_emptyBinding(context map[string]int
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -463,7 +463,7 @@ func testAccComputeInstanceTemplateIamBinding_basicGenerated(context map[string]
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -487,7 +487,7 @@ func testAccComputeInstanceTemplateIamBinding_updateGenerated(context map[string
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -511,7 +511,7 @@ func testAccComputeInstanceTemplateIamBinding_withConditionGenerated(context map
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -540,7 +540,7 @@ func testAccComputeInstanceTemplateIamBinding_withAndWithoutConditionGenerated(c
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -589,7 +589,7 @@ func testAccComputeInstanceTemplateIamMember_withConditionGenerated(context map[
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -618,7 +618,7 @@ func testAccComputeInstanceTemplateIamMember_withAndWithoutConditionGenerated(co
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"
@@ -667,7 +667,7 @@ func testAccComputeInstanceTemplateIamPolicy_withConditionGenerated(context map[
 	return acctest.Nprintf(`
 resource "google_compute_instance_template" "default" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = "debian-cloud/debian-13"

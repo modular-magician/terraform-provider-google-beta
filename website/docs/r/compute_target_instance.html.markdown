@@ -58,7 +58,7 @@ data "google_compute_image" "vmimage" {
 
 resource "google_compute_instance" "target-vm" {
   name         = "target-vm"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
 
   boot_disk {
@@ -103,7 +103,7 @@ data "google_compute_image" "vmimage" {
 resource "google_compute_instance" "target-vm" {
   provider = google-beta
   name         = "custom-network-target-vm"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
 
   boot_disk {
@@ -154,7 +154,7 @@ data "google_compute_image" "vmimage" {
 resource "google_compute_instance" "target-vm" {
   provider     = google-beta
   name         = "target-vm"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "southamerica-west1-a"
 
   boot_disk {

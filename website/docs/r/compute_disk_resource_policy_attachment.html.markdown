@@ -47,7 +47,7 @@ resource "google_compute_disk_resource_policy_attachment" "attachment" {
 resource "google_compute_disk" "ssd" {
   name  = "my-disk"
   image = data.google_compute_image.my_image.self_link
-  size  = 50
+  size  = 10
   type  = "pd-ssd"
   zone  = "us-central1-a"
 }

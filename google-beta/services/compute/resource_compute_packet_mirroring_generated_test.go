@@ -97,7 +97,7 @@ func testAccComputePacketMirroring_computePacketMirroringFullExample(context map
 	return acctest.Nprintf(`
 resource "google_compute_instance" "mirror" {
   name = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {

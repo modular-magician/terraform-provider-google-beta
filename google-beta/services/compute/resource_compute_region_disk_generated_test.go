@@ -105,7 +105,7 @@ resource "google_compute_region_disk" "regiondisk" {
 resource "google_compute_disk" "disk" {
   name  = "%{disk_name}"
   image = "debian-cloud/debian-13"
-  size  = 50
+  size  = 10
   type  = "pd-ssd"
   zone  = "us-central1-a"
 }
@@ -173,7 +173,7 @@ resource "google_compute_region_disk" "regiondisk" {
 resource "google_compute_disk" "disk" {
   name  = "%{disk_name}"
   image = "debian-cloud/debian-13"
-  size  = 50
+  size  = 10
   type  = "pd-ssd"
   zone  = "us-central1-a"
 }
@@ -241,7 +241,7 @@ resource "google_compute_region_disk" "regiondisk" {
 resource "google_compute_disk" "disk" {
   name  = "%{disk_name}"
   image = "debian-cloud/debian-13"
-  size  = 50
+  size  = 10
   type  = "pd-ssd"
   zone  = "us-central1-a"
 }

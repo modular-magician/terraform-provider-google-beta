@@ -146,7 +146,7 @@ resource "google_compute_health_check" "default" {
 resource "google_compute_instance_template" "default" {
   name         = "ssl-proxy-xlb-mig-template"
   provider     = google
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["allow-health-check"]
 
   network_interface {
@@ -205,7 +205,7 @@ resource "google_compute_instance_group_manager" "default" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # allow access from health check ranges
@@ -304,7 +304,7 @@ resource "google_compute_health_check" "default" {
 resource "google_compute_instance_template" "default" {
   name         = "tcp-proxy-xlb-mig-template"
   provider     = google-beta
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["allow-health-check"]
 
   network_interface {
@@ -359,7 +359,7 @@ resource "google_compute_instance_group_manager" "default" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # allow access from health check ranges
@@ -458,7 +458,7 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_instance_template" "default" {
   name         = "l7-xlb-mig-template"
   provider     = google-beta
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["allow-health-check"]
 
   network_interface {
@@ -525,7 +525,7 @@ resource "google_compute_instance_group_manager" "default" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # allow access from health check ranges
@@ -697,7 +697,7 @@ resource "google_compute_instance_group_manager" "igm" {
 resource "google_compute_instance_template" "instance_template" {
   provider     = google-beta
   name         = "backend-template"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1000,7 +1000,7 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_instance_template" "instance_template" {
   name         = "l7-gilb-mig-template"
   provider     = google-beta
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["http-server"]
 
   network_interface {
@@ -1063,7 +1063,7 @@ resource "google_compute_instance_group_manager" "mig" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # allow all access from IAP and health check ranges
@@ -1097,7 +1097,7 @@ resource "google_compute_instance" "vm-test" {
   name         = "l7-gilb-test-vm"
   provider     = google-beta
   zone         = "europe-west1-b"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   network_interface {
     network    = google_compute_network.gilb_network.id
     subnetwork = google_compute_subnetwork.gilb_subnet.id

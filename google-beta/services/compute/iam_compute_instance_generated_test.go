@@ -376,7 +376,7 @@ func testAccComputeInstanceIamMember_basicGenerated(context map[string]interface
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -404,7 +404,7 @@ func testAccComputeInstanceIamPolicy_basicGenerated(context map[string]interface
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -447,7 +447,7 @@ func testAccComputeInstanceIamPolicy_emptyBinding(context map[string]interface{}
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -477,7 +477,7 @@ func testAccComputeInstanceIamBinding_basicGenerated(context map[string]interfac
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -505,7 +505,7 @@ func testAccComputeInstanceIamBinding_updateGenerated(context map[string]interfa
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -533,7 +533,7 @@ func testAccComputeInstanceIamBinding_withConditionGenerated(context map[string]
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -566,7 +566,7 @@ func testAccComputeInstanceIamBinding_withAndWithoutConditionGenerated(context m
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -621,7 +621,7 @@ func testAccComputeInstanceIamMember_withConditionGenerated(context map[string]i
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -654,7 +654,7 @@ func testAccComputeInstanceIamMember_withAndWithoutConditionGenerated(context ma
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -709,7 +709,7 @@ func testAccComputeInstanceIamPolicy_withConditionGenerated(context map[string]i
 resource "google_compute_instance" "default" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {

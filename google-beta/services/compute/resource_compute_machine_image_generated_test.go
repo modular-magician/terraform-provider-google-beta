@@ -97,7 +97,7 @@ func testAccComputeMachineImage_machineImageBasicExample(context map[string]inte
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -166,7 +166,7 @@ func testAccComputeMachineImage_computeMachineImageKmsExample(context map[string
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -260,7 +260,7 @@ resource "google_tags_tag_value" "tag_value1" {
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {

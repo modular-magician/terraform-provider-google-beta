@@ -773,7 +773,7 @@ resource "google_compute_region_backend_service" "default" {
 # Instance template
 resource "google_compute_instance_template" "default" {
   name         = "l7-ilb-mig-template"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["http-server"]
   network_interface {
     network    = google_compute_network.default.id
@@ -838,7 +838,7 @@ resource "google_compute_region_instance_group_manager" "default" {
     port = 80
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 
 # Allow all access to health check ranges
@@ -869,7 +869,7 @@ resource "google_compute_firewall" "backends" {
 resource "google_compute_instance" "default" {
   name         = "l7-ilb-test-vm"
   zone         = "europe-west1-b"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   network_interface {
     network    = google_compute_network.default.id
     subnetwork = google_compute_subnetwork.default.id

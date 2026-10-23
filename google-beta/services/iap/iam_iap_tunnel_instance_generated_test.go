@@ -376,7 +376,7 @@ func testAccIapTunnelInstanceIamMember_basicGenerated(context map[string]interfa
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -404,7 +404,7 @@ func testAccIapTunnelInstanceIamPolicy_basicGenerated(context map[string]interfa
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -447,7 +447,7 @@ func testAccIapTunnelInstanceIamPolicy_emptyBinding(context map[string]interface
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -477,7 +477,7 @@ func testAccIapTunnelInstanceIamBinding_basicGenerated(context map[string]interf
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -505,7 +505,7 @@ func testAccIapTunnelInstanceIamBinding_updateGenerated(context map[string]inter
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -533,7 +533,7 @@ func testAccIapTunnelInstanceIamBinding_withConditionGenerated(context map[strin
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -566,7 +566,7 @@ func testAccIapTunnelInstanceIamBinding_withAndWithoutConditionGenerated(context
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -621,7 +621,7 @@ func testAccIapTunnelInstanceIamMember_withConditionGenerated(context map[string
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -654,7 +654,7 @@ func testAccIapTunnelInstanceIamMember_withAndWithoutConditionGenerated(context 
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -709,7 +709,7 @@ func testAccIapTunnelInstanceIamPolicy_withConditionGenerated(context map[string
 resource "google_compute_instance" "tunnelvm" {
   name         = "%{instance_name}"
   zone         = "us-central1-a"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {

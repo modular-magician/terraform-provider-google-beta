@@ -43,7 +43,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "my-template"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -73,7 +73,7 @@ resource "google_compute_instance_group_manager" "igm-no-tp" {
 
   base_instance_name = "igm-no-tp"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 }
 
 resource "google_compute_disk" "default" {

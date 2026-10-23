@@ -384,7 +384,7 @@ func testAccComputeMachineImageIamMember_basicGenerated(context map[string]inter
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -418,7 +418,7 @@ func testAccComputeMachineImageIamPolicy_basicGenerated(context map[string]inter
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -468,7 +468,7 @@ func testAccComputeMachineImageIamPolicy_emptyBinding(context map[string]interfa
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -505,7 +505,7 @@ func testAccComputeMachineImageIamBinding_basicGenerated(context map[string]inte
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -539,7 +539,7 @@ func testAccComputeMachineImageIamBinding_updateGenerated(context map[string]int
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -573,7 +573,7 @@ func testAccComputeMachineImageIamBinding_withConditionGenerated(context map[str
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -612,7 +612,7 @@ func testAccComputeMachineImageIamBinding_withAndWithoutConditionGenerated(conte
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -673,7 +673,7 @@ func testAccComputeMachineImageIamMember_withConditionGenerated(context map[stri
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -712,7 +712,7 @@ func testAccComputeMachineImageIamMember_withAndWithoutConditionGenerated(contex
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -773,7 +773,7 @@ func testAccComputeMachineImageIamPolicy_withConditionGenerated(context map[stri
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "%{vm_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
