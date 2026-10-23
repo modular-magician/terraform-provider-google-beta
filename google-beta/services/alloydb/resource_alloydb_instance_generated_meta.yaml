@@ -47,6 +47,16 @@ fields:
     - api_field: observabilityConfig.trackClientAddress
     - api_field: observabilityConfig.trackWaitEventTypes
     - api_field: observabilityConfig.trackWaitEvents
+    - api_field: observabilityInstanceInfo.assistiveExperiencesEnabled
+    - api_field: observabilityInstanceInfo.enabled
+    - api_field: observabilityInstanceInfo.maxQueryStringLength
+    - api_field: observabilityInstanceInfo.preserveComments
+    - api_field: observabilityInstanceInfo.queryPlansPerMinute
+    - api_field: observabilityInstanceInfo.recordApplicationTags
+    - api_field: observabilityInstanceInfo.trackActiveQueries
+    - api_field: observabilityInstanceInfo.trackClientAddress
+    - api_field: observabilityInstanceInfo.trackWaitEventTypes
+    - api_field: observabilityInstanceInfo.trackWaitEvents
     - api_field: outboundPublicIpAddresses
     - api_field: pscInstanceConfig.allowedConsumerProjects
     - api_field: pscInstanceConfig.pscAutoConnections.consumerNetwork
@@ -62,6 +72,11 @@ fields:
     - api_field: queryInsightsConfig.queryStringLength
     - api_field: queryInsightsConfig.recordApplicationTags
     - api_field: queryInsightsConfig.recordClientAddress
+    - api_field: queryInsightsInfo.enabled
+    - api_field: queryInsightsInfo.queryPlansPerMinute
+    - api_field: queryInsightsInfo.queryStringLength
+    - api_field: queryInsightsInfo.recordApplicationTags
+    - api_field: queryInsightsInfo.recordClientAddress
     - api_field: readPoolConfig.nodeCount
     - api_field: reconciling
     - api_field: state

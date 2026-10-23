@@ -252,7 +252,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_query_insights_config).
 
 * `observability_config` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Configuration for enhanced query insights.
   Structure is [documented below](#nested_observability_config).
 
@@ -347,11 +347,11 @@ The following arguments are supported:
   Track actively running queries. If not set, default value is "off".
 
 * `track_client_address` -
-  (Optional)
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
   Track client address for an instance. If not set, default value is "off".
 
 * `assistive_experiences_enabled` -
-  (Optional)
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
   Whether assistive experiences are enabled for this AlloyDB instance.
 
 <a name="nested_read_pool_config"></a>The `read_pool_config` block supports:
@@ -540,6 +540,14 @@ In addition to the arguments listed above, the following computed attributes are
 * `ip_address` -
   The IP address for the Instance. This is the connection endpoint for an end-user application.
 
+* `query_insights_info` -
+  Instance level Query Insights information, which is read-only and available in the output only. Contains the effective query insights settings for this instance, by merging customer's provided QueryInsightsInstanceConfig with the Query Insights defaults.
+  Structure is [documented below](#nested_query_insights_info).
+
+* `observability_instance_info` -
+  Instance level observability information, contains the effective values of observability settings for this instance, by merging customer's provided ObservabilityInstanceConfig with the Observability defaults.
+  Structure is [documented below](#nested_observability_instance_info).
+
 * `public_ip_address` -
   The public IP addresses for the Instance. This is available ONLY when
   networkConfig.enablePublicIp is set to true. This is the connection
@@ -560,6 +568,70 @@ In addition to the arguments listed above, the following computed attributes are
 * `effective_annotations` -
   All of annotations (key/value pairs) present on the resource in GCP, including the annotations configured through Terraform, other clients and services.
 
+
+<a name="nested_query_insights_info"></a>The `query_insights_info` block contains:
+
+* `enabled` -
+  (Output)
+  Output only. Whether Query Insights is enabled.
+
+* `query_plans_per_minute` -
+  (Output)
+  Output only. Number of query execution plans captured per minute.
+
+* `query_string_length` -
+  (Output)
+  Output only. Maximum query string length.
+
+* `record_application_tags` -
+  (Output)
+  Output only. Whether to record application tags.
+
+* `record_client_address` -
+  (Output)
+  Output only. Whether to record client address.
+
+<a name="nested_observability_instance_info"></a>The `observability_instance_info` block contains:
+
+* `enabled` -
+  (Output)
+  Output only. Observability feature status for an instance.
+
+* `max_query_string_length` -
+  (Output)
+  Output only. Query string length. The default value is 10k.
+
+* `preserve_comments` -
+  (Output)
+  Output only. Preserve comments in query string for an instance.
+
+* `query_plans_per_minute` -
+  (Output)
+  Output only. Number of query execution plans captured by Insights per minute for all queries combined.
+
+* `record_application_tags` -
+  (Output)
+  Output only. Record application tags for an instance.
+
+* `track_active_queries` -
+  (Output)
+  Output only. Track actively running queries on the instance.
+
+* `track_wait_event_types` -
+  (Output)
+  Output only. Track wait event types during query execution for an instance.
+
+* `track_wait_events` -
+  (Output)
+  Output only. Track wait events during query execution for an instance.
+
+* `track_client_address` -
+  (Output, [Beta](../guides/provider_versions.html.markdown))
+  Output only. Track client address for an instance.
+
+* `assistive_experiences_enabled` -
+  (Output, [Beta](../guides/provider_versions.html.markdown))
+  Output only. Whether assistive experiences are enabled for this AlloyDB instance.
 
 ## Timeouts
 

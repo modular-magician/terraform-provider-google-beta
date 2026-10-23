@@ -611,6 +611,65 @@ The name of the resource will be in the format of
 				Computed:    true,
 				Description: `The name of the instance resource.`,
 			},
+			"observability_instance_info": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Instance level observability information, contains the effective values of observability settings for this instance, by merging customer's provided ObservabilityInstanceConfig with the Observability defaults.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"assistive_experiences_enabled": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Whether assistive experiences are enabled for this AlloyDB instance.`,
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Observability feature status for an instance.`,
+						},
+						"max_query_string_length": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: `Output only. Query string length. The default value is 10k.`,
+						},
+						"preserve_comments": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Preserve comments in query string for an instance.`,
+						},
+						"query_plans_per_minute": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: `Output only. Number of query execution plans captured by Insights per minute for all queries combined.`,
+						},
+						"record_application_tags": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Record application tags for an instance.`,
+						},
+						"track_active_queries": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Track actively running queries on the instance.`,
+						},
+						"track_client_address": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Track client address for an instance.`,
+						},
+						"track_wait_event_types": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Track wait event types during query execution for an instance.`,
+						},
+						"track_wait_events": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Track wait events during query execution for an instance.`,
+						},
+					},
+				},
+			},
 			"outbound_public_ip_addresses": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -627,6 +686,40 @@ for outbound connections.`,
 				Description: `The public IP addresses for the Instance. This is available ONLY when
 networkConfig.enablePublicIp is set to true. This is the connection
 endpoint for an end-user application.`,
+			},
+			"query_insights_info": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Instance level Query Insights information, which is read-only and available in the output only. Contains the effective query insights settings for this instance, by merging customer's provided QueryInsightsInstanceConfig with the Query Insights defaults.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Whether Query Insights is enabled.`,
+						},
+						"query_plans_per_minute": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: `Output only. Number of query execution plans captured per minute.`,
+						},
+						"query_string_length": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: `Output only. Maximum query string length.`,
+						},
+						"record_application_tags": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Whether to record application tags.`,
+						},
+						"record_client_address": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Whether to record client address.`,
+						},
+					},
+				},
 			},
 			"reconciling": {
 				Type:        schema.TypeBool,
@@ -1366,6 +1459,73 @@ func flattenAlloydbInstanceQueryInsightsConfigQueryPlansPerMinute(v interface{},
 	return v // let terraform core handle it otherwise
 }
 
+func flattenAlloydbInstanceQueryInsightsInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenAlloydbInstanceQueryInsightsInfoEnabled(original["enabled"], d, config)
+	transformed["query_plans_per_minute"] =
+		flattenAlloydbInstanceQueryInsightsInfoQueryPlansPerMinute(original["queryPlansPerMinute"], d, config)
+	transformed["query_string_length"] =
+		flattenAlloydbInstanceQueryInsightsInfoQueryStringLength(original["queryStringLength"], d, config)
+	transformed["record_application_tags"] =
+		flattenAlloydbInstanceQueryInsightsInfoRecordApplicationTags(original["recordApplicationTags"], d, config)
+	transformed["record_client_address"] =
+		flattenAlloydbInstanceQueryInsightsInfoRecordClientAddress(original["recordClientAddress"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceQueryInsightsInfoEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceQueryInsightsInfoQueryPlansPerMinute(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceQueryInsightsInfoQueryStringLength(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceQueryInsightsInfoRecordApplicationTags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceQueryInsightsInfoRecordClientAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenAlloydbInstanceObservabilityConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1460,6 +1620,103 @@ func flattenAlloydbInstanceObservabilityConfigTrackClientAddress(v interface{}, 
 }
 
 func flattenAlloydbInstanceObservabilityConfigAssistiveExperiencesEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoEnabled(original["enabled"], d, config)
+	transformed["max_query_string_length"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoMaxQueryStringLength(original["maxQueryStringLength"], d, config)
+	transformed["preserve_comments"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoPreserveComments(original["preserveComments"], d, config)
+	transformed["query_plans_per_minute"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoQueryPlansPerMinute(original["queryPlansPerMinute"], d, config)
+	transformed["record_application_tags"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoRecordApplicationTags(original["recordApplicationTags"], d, config)
+	transformed["track_active_queries"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoTrackActiveQueries(original["trackActiveQueries"], d, config)
+	transformed["track_wait_event_types"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoTrackWaitEventTypes(original["trackWaitEventTypes"], d, config)
+	transformed["track_wait_events"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoTrackWaitEvents(original["trackWaitEvents"], d, config)
+	transformed["track_client_address"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoTrackClientAddress(original["trackClientAddress"], d, config)
+	transformed["assistive_experiences_enabled"] =
+		flattenAlloydbInstanceObservabilityInstanceInfoAssistiveExperiencesEnabled(original["assistiveExperiencesEnabled"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceObservabilityInstanceInfoEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoMaxQueryStringLength(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoPreserveComments(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoQueryPlansPerMinute(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoRecordApplicationTags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoTrackActiveQueries(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoTrackWaitEventTypes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoTrackWaitEvents(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoTrackClientAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityInstanceInfoAssistiveExperiencesEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1952,7 +2209,6 @@ func expandAlloydbInstanceObservabilityConfig(v interface{}, d tpgresource.Terra
 	} else if transformedTrackActiveQueries != nil {
 		transformed["trackActiveQueries"] = transformedTrackActiveQueries
 	}
-
 	transformedTrackClientAddress, err := expandAlloydbInstanceObservabilityConfigTrackClientAddress(original["track_client_address"], d, config)
 	if err != nil {
 		return nil, err
@@ -2001,7 +2257,6 @@ func expandAlloydbInstanceObservabilityConfigQueryPlansPerMinute(v interface{}, 
 func expandAlloydbInstanceObservabilityConfigTrackActiveQueries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
-
 func expandAlloydbInstanceObservabilityConfigTrackClientAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2526,7 +2781,13 @@ func ResourceAlloydbInstanceFlatten(d *schema.ResourceData, meta interface{}, re
 	if err = d.Set("query_insights_config", flattenAlloydbInstanceQueryInsightsConfig(res["queryInsightsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err = d.Set("query_insights_info", flattenAlloydbInstanceQueryInsightsInfo(res["queryInsightsInfo"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err = d.Set("observability_config", flattenAlloydbInstanceObservabilityConfig(res["observabilityConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err = d.Set("observability_instance_info", flattenAlloydbInstanceObservabilityInstanceInfo(res["observabilityInstanceInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err = d.Set("read_pool_config", flattenAlloydbInstanceReadPoolConfig(res["readPoolConfig"], d, config)); err != nil {
