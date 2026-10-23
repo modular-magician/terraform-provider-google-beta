@@ -181,8 +181,8 @@ resource "google_dataplex_task" "example" {
 
     trigger_spec  {
         type = "RECURRING"
-        disabled = false
-        max_retries = 3
+        disabled = true
+        max_retries = 0
         start_time = "2023-10-02T15:01:23Z"
         schedule = "1 * * * *"
     }
@@ -241,8 +241,8 @@ resource "google_dataplex_task" "example" {
 
     trigger_spec  {
         type = "RECURRING"
-        disabled = false
-        max_retries = 3
+        disabled = true
+        max_retries = 0
         start_time = "2023-10-02T15:01:23Z"
         schedule = "1 * * * *"
     }
@@ -317,8 +317,8 @@ resource "google_dataplex_task" "example" {
 
     trigger_spec  {
         type = "RECURRING"
-        disabled = false
-        max_retries = 3
+        disabled = true
+        max_retries = 0
         start_time = "2023-10-02T15:01:23Z"
         schedule = "1 * * * *"
     }
@@ -379,8 +379,8 @@ resource "google_dataplex_task" "example" {
 
     trigger_spec  {
         type = "RECURRING"
-        disabled = false
-        max_retries = 3
+        disabled = true
+        max_retries = 0
         start_time = "2023-10-02T15:01:23Z"
         schedule = "1 * * * *"
     }
@@ -439,8 +439,8 @@ resource "google_dataplex_task" "example" {
 
     trigger_spec  {
         type = "RECURRING"
-        disabled = false
-        max_retries = 3
+        disabled = true
+        max_retries = 0
         start_time = "2023-10-02T15:01:23Z"
         schedule = "1 * * * *"
     }
