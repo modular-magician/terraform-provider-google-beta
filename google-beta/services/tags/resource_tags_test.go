@@ -1246,7 +1246,7 @@ data "google_project" "project" {
 
 resource "google_compute_instance" "vm" {
   name         = "tf-test-tagbinding-repro%{random_suffix}"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   zone         = "us-east4-a"
   boot_disk {
     initialize_params {
@@ -1457,7 +1457,7 @@ resource "google_tags_tag_value" "value" {
 }
 resource "google_compute_instance" "default" {
 	name         = "tf-test-%{random_suffix}"
-	machine_type = "e2-medium"
+	machine_type = "e2-micro"
 	zone         = "us-central1-a"
   boot_disk {
     initialize_params {
@@ -1516,7 +1516,7 @@ resource "google_tags_tag_key" "key" {
 
 resource "google_compute_instance" "default" {
 	name         = "tf-test-%{random_suffix}"
-	machine_type = "e2-medium"
+	machine_type = "e2-micro"
 	zone         = "us-central1-a"
   boot_disk {
     initialize_params {
@@ -1581,7 +1581,7 @@ resource "google_tags_tag_value" "value" {
 
 resource "google_compute_instance" "default" {
 	name         = "tf-test-%{random_suffix}"
-	machine_type = "e2-medium"
+	machine_type = "e2-micro"
 	zone         = "us-central1-a"
   boot_disk {
     initialize_params {
