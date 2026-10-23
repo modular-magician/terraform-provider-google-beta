@@ -66,7 +66,6 @@ func TestAccRedisInstance_redisInstanceBasicExample(t *testing.T) {
 		"prevent_destroy": false,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -117,7 +116,6 @@ func TestAccRedisInstance_redisInstanceFullExample(t *testing.T) {
 		"prevent_destroy": false,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -206,7 +204,6 @@ func TestAccRedisInstance_redisInstanceFullWithPersistenceConfigExample(t *testi
 		"prevent_destroy": false,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -264,7 +261,6 @@ func TestAccRedisInstance_redisInstancePrivateServiceTestExample(t *testing.T) {
 		"prevent_destroy": false,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -336,7 +332,6 @@ func TestAccRedisInstance_redisInstanceMrrExample(t *testing.T) {
 		"prevent_destroy": false,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

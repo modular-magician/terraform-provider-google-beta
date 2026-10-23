@@ -67,7 +67,6 @@ func TestAccVmwareengineNetworkPeering_vmwareEngineNetworkPeeringVenExample(t *t
 		"peer_network_name": "tf-test-peer-np-nw" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -130,7 +129,6 @@ func TestAccVmwareengineNetworkPeering_vmwareEngineNetworkPeeringStandardExample
 		"vpc_name":      "tf-test-default-vpc" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

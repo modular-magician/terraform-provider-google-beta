@@ -67,7 +67,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingBasicExample(
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -133,7 +132,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingRestrictedExa
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -204,7 +202,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingDcrExample(t 
 		"listing_id":       "tf_test_dcr_listing" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -306,7 +303,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingLogLinkedData
 		"listing_id":       "tf_test_tf_test_log_email_listing" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -374,7 +370,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingPubsubExample
 		"pubsub_topic_name": "tf_test_test_pubsub" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -443,7 +438,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingDcrRoutineExa
 		"routine_id":       "tf_test_tf_test_routine" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -538,7 +532,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubPublicListingExample
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -607,7 +600,6 @@ func TestAccBigqueryAnalyticsHubListing_bigqueryAnalyticshubListingMarketplaceEx
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

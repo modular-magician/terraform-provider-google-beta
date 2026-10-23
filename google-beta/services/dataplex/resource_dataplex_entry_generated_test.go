@@ -68,7 +68,6 @@ func TestAccDataplexEntry_dataplexEntryBasicExample(t *testing.T) {
 		"entry_type_name":  "tf-test-entry-type-basic" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -130,7 +129,6 @@ func TestAccDataplexEntry_dataplexEntryFullExample(t *testing.T) {
 		"entry_type_name":  "tf-test-entry-type-full" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -306,7 +304,6 @@ func TestAccDataplexEntry_dataplexEntryBigqueryTableExample(t *testing.T) {
 		"table_id":         "tf-test-table-basic" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -474,7 +471,6 @@ func TestAccDataplexEntry_dataplexEntryGlossaryTermExample(t *testing.T) {
 		"glossary_term_id": "tf-test-glossary-term" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

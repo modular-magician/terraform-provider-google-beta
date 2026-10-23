@@ -66,7 +66,6 @@ func TestAccBackupDRAutoProtectionPolicy_backupDrAutoProtectionPolicyBasicExampl
 		"backup_vault_id":           "tf-test-bv-app" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -166,7 +165,6 @@ func TestAccBackupDRAutoProtectionPolicy_backupDrAutoProtectionPolicyUpdateExamp
 		"instance_backup_plan_id":   "tf-test-bp-app-update-vm" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

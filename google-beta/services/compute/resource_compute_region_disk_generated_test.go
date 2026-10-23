@@ -65,7 +65,6 @@ func TestAccComputeRegionDisk_regionDiskBasicExample(t *testing.T) {
 		"snapshot_name":    "tf-test-my-snapshot" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -129,7 +128,6 @@ func TestAccComputeRegionDisk_regionDiskDiskEncryptionKeyWoExample(t *testing.T)
 		"snapshot_name":    "tf-test-my-snapshot" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -197,7 +195,6 @@ func TestAccComputeRegionDisk_regionDiskRsaEncryptedKeyWoExample(t *testing.T) {
 		"snapshot_name":    "tf-test-my-snapshot" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -264,7 +261,6 @@ func TestAccComputeRegionDisk_regionDiskAsyncExample(t *testing.T) {
 		"secondary_region_disk_name": "tf-test-secondary-region-disk" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -324,7 +320,6 @@ func TestAccComputeRegionDisk_regionDiskFeaturesExample(t *testing.T) {
 		"region_disk_name": "tf-test-my-region-features-disk" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -385,7 +380,6 @@ func TestAccComputeRegionDisk_regionDiskHyperdiskBalancedHaWriteManyExample(t *t
 		"region_disk_name": "tf-test-my-region-hyperdisk" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -63,7 +63,6 @@ func TestAccComputeNodeTemplate_nodeTemplateBasicExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-tmpl" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccComputeNodeTemplate_nodeTemplateServerBindingExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-with-licenses" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -163,7 +161,6 @@ func TestAccComputeNodeTemplate_nodeTemplateAcceleratorsExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-with-accelerators" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -216,7 +213,6 @@ func TestAccComputeNodeTemplate_nodeTemplateDisksExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-with-disks" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

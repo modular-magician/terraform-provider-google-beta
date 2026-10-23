@@ -66,7 +66,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapBasicExample(t *testing.T) {
 		"region_url_map_name":               "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -176,7 +175,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapDefaultRouteActionExample(t *testing
 		"region_url_map_name":               "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -386,7 +384,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapL7IlbPathExample(t *testing.T) {
 		"region_url_map_name":              "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -528,7 +525,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapL7IlbPathPartialExample(t *testing.T
 		"region_url_map_name":              "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -638,7 +634,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapL7IlbRouteExample(t *testing.T) {
 		"region_url_map_name":              "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -761,7 +756,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapL7IlbRoutePartialExample(t *testing.
 		"region_url_map_name":              "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -861,7 +855,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapPathTemplateMatchExample(t *testing.
 		"user_backend_service_name": "tf-test-user-service" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -990,7 +983,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapPathMatcherDefaultRouteActionExample
 		"region_url_map_name":               "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1210,7 +1202,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapDefaultMirrorPercentExample(t *testi
 		"region_url_map_name":         "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1306,7 +1297,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapPathMatcherDefaultMirrorPercentExamp
 		"region_url_map_name":         "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1402,7 +1392,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapPathRuleMirrorPercentExample(t *test
 		"region_url_map_name":         "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1498,7 +1487,6 @@ func TestAccComputeRegionUrlMap_regionUrlMapRouteRuleMirrorPercentExample(t *tes
 		"region_url_map_name":         "tf-test-regionurlmap" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

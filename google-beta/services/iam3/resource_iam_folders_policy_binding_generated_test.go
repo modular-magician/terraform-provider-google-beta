@@ -69,7 +69,6 @@ func TestAccIAM3FoldersPolicyBinding_iamFoldersPolicyBindingExample(t *testing.T
 		"pab_policy_id":     "tf-test-my-pab-policy" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -145,7 +144,6 @@ func TestAccIAM3FoldersPolicyBinding_iamFoldersPolicyBindingAccessPolicyExample(
 		"folder_name":       "tf-test-ap-folder-" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

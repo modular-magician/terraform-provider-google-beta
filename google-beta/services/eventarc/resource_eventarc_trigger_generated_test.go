@@ -72,7 +72,6 @@ func TestAccEventarcTrigger_eventarcTriggerWithCloudRunDestinationExample(t *tes
 		"trigger_name":  "tf-test-some-trigger" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -160,7 +159,6 @@ func TestAccEventarcTrigger_eventarcTriggerWithHttpDestinationExample(t *testing
 		"trigger_name":            "tf-test-some-trigger" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -221,7 +219,6 @@ func TestAccEventarcTrigger_eventarcTriggerWithChannelCmekExample(t *testing.T) 
 		"trigger_name":    "tf-test-some-trigger" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -302,7 +299,6 @@ func TestAccEventarcTrigger_eventarcTriggerWithWorkflowDestinationExample(t *tes
 		"workflow_name":   "tf-test-some-workflow" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -382,7 +378,6 @@ func TestAccEventarcTrigger_eventarcTriggerWithPathPatternFilterExample(t *testi
 		"trigger_name":       "tf-test-some-trigger" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -477,7 +472,6 @@ func TestAccEventarcTrigger_eventarcTriggerWithFirestoreSourceExample(t *testing
 		"trigger_name":       "tf-test-some-trigger" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

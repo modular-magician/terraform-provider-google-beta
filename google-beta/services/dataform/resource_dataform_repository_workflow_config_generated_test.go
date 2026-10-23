@@ -72,7 +72,6 @@ func TestAccDataformRepositoryWorkflowConfig_dataformRepositoryWorkflowConfigExa
 		"workflow_name":            "tf_test_my_workflow" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -218,7 +217,6 @@ func TestAccDataformRepositoryWorkflowConfig_dataformRepositoryWorkflowConfigWit
 		"workflow_name":            "tf_test_my_workflow" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

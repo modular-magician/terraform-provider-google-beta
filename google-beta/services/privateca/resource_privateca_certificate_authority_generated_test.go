@@ -66,7 +66,6 @@ func TestAccPrivatecaCertificateAuthority_privatecaCertificateAuthorityBasicExam
 		"pool_name":                BootstrapSharedCaPoolInLocation(t, "us-central1"),
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -144,7 +143,6 @@ func TestAccPrivatecaCertificateAuthority_privatecaCertificateAuthorityBasicNoOr
 		"pool_name":                BootstrapSharedCaPoolInLocation(t, "us-central1"),
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -222,7 +220,6 @@ func TestAccPrivatecaCertificateAuthority_privatecaCertificateAuthoritySubordina
 		"pool_name":                BootstrapSharedCaPoolInLocation(t, "us-central1"),
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -344,7 +341,6 @@ func TestAccPrivatecaCertificateAuthority_privatecaCertificateAuthorityBasicWith
 		"pool_name":                BootstrapSharedCaPoolInLocation(t, "us-central1"),
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

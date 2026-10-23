@@ -69,7 +69,6 @@ func TestAccComputeZoneVmExtensionPolicy_computeZoneVmExtensionPolicyBasicExampl
 		"policy_name":   "tf-test-zonal-ops-agent-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

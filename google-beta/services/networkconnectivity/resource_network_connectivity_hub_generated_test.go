@@ -64,7 +64,6 @@ func TestAccNetworkConnectivityHub_networkConnectivityHubBasicExample(t *testing
 		"resource_name": "tf-test-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -104,7 +103,6 @@ func TestAccNetworkConnectivityHub_networkConnectivityHubWithExportPscExample(t 
 		"resource_name": "tf-test-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -147,7 +145,6 @@ func TestAccNetworkConnectivityHub_networkConnectivityHubWithExportPscConfigExam
 		"resource_name": "tf-test-psc-config" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -219,7 +216,6 @@ func TestAccNetworkConnectivityHub_networkConnectivityHubMeshTopologyExample(t *
 		"resource_name": "tf-test-mesh" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -259,7 +255,6 @@ func TestAccNetworkConnectivityHub_networkConnectivityHubStarTopologyExample(t *
 		"resource_name": "tf-test-star" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -301,7 +296,6 @@ func TestAccNetworkConnectivityHub_networkConnectivityHubPolicyModeExample(t *te
 		"resource_name": "tf-test-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

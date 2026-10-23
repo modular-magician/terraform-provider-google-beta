@@ -66,7 +66,6 @@ func TestAccBiglakeIcebergIcebergTable_biglakeIcebergTableBasicExample(t *testin
 		"table_name":    "tf_test_my_table" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -154,7 +153,6 @@ func TestAccBiglakeIcebergIcebergTable_biglakeIcebergTableSortOrderExample(t *te
 		"table_name":    "tf_test_my_table" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -235,7 +233,6 @@ func TestAccBiglakeIcebergIcebergTable_biglakeIcebergTableUpdateExample(t *testi
 		"table_name":    "tf_test_my_table" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

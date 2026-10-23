@@ -64,7 +64,6 @@ func TestAccLoggingSavedQuery_loggingSavedQueryBasicExample(t *testing.T) {
 		"logging_saved_query_name": "tf-test-my-saved-query" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -115,7 +114,6 @@ func TestAccLoggingSavedQuery_loggingSavedQueryNoDescriptionExample(t *testing.T
 		"logging_saved_query_name": "tf-test-my-saved-query-no-description" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -165,7 +163,6 @@ func TestAccLoggingSavedQuery_loggingSavedQueryPrivateExample(t *testing.T) {
 		"logging_saved_query_name": "tf-test-my-saved-query-private" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -216,7 +213,6 @@ func TestAccLoggingSavedQuery_loggingSavedQuerySummaryFieldsExample(t *testing.T
 		"logging_saved_query_name": "tf-test-my-saved-query-summary-fields" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -274,7 +270,6 @@ func TestAccLoggingSavedQuery_loggingSavedQuerySqlBasicExample(t *testing.T) {
 		"logging_saved_query_name": "tf-test-my-saved-query-sql" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

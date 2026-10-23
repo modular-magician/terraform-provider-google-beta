@@ -63,7 +63,6 @@ func TestAccComputeHealthCheck_healthCheckTcpExample(t *testing.T) {
 		"health_check_name": "tf-test-tcp-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -111,7 +110,6 @@ func TestAccComputeHealthCheck_healthCheckTcpFullExample(t *testing.T) {
 		"health_check_name": "tf-test-tcp-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -166,7 +164,6 @@ func TestAccComputeHealthCheck_healthCheckSslExample(t *testing.T) {
 		"health_check_name": "tf-test-ssl-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -214,7 +211,6 @@ func TestAccComputeHealthCheck_healthCheckSslFullExample(t *testing.T) {
 		"health_check_name": "tf-test-ssl-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -269,7 +265,6 @@ func TestAccComputeHealthCheck_healthCheckHttpExample(t *testing.T) {
 		"health_check_name": "tf-test-http-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -317,7 +312,6 @@ func TestAccComputeHealthCheck_healthCheckHttpFullExample(t *testing.T) {
 		"health_check_name": "tf-test-http-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -373,7 +367,6 @@ func TestAccComputeHealthCheck_healthCheckHttpsExample(t *testing.T) {
 		"health_check_name": "tf-test-https-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -421,7 +414,6 @@ func TestAccComputeHealthCheck_healthCheckHttpsFullExample(t *testing.T) {
 		"health_check_name": "tf-test-https-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -477,7 +469,6 @@ func TestAccComputeHealthCheck_healthCheckHttp2Example(t *testing.T) {
 		"health_check_name": "tf-test-http2-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -525,7 +516,6 @@ func TestAccComputeHealthCheck_healthCheckHttp2FullExample(t *testing.T) {
 		"health_check_name": "tf-test-http2-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -581,7 +571,6 @@ func TestAccComputeHealthCheck_healthCheckGrpcExample(t *testing.T) {
 		"health_check_name": "tf-test-grpc-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -629,7 +618,6 @@ func TestAccComputeHealthCheck_healthCheckGrpcFullExample(t *testing.T) {
 		"health_check_name": "tf-test-grpc-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -679,7 +667,6 @@ func TestAccComputeHealthCheck_healthCheckGrpcWithTlsExample(t *testing.T) {
 		"health_check_name": "tf-test-grpc-with-tls-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -727,7 +714,6 @@ func TestAccComputeHealthCheck_healthCheckGrpcWithTlsFullExample(t *testing.T) {
 		"health_check_name": "tf-test-grpc-with-tls-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -780,7 +766,6 @@ func TestAccComputeHealthCheck_healthCheckWithLoggingExample(t *testing.T) {
 		"health_check_name": "tf-test-tcp-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -834,7 +819,6 @@ func TestAccComputeHealthCheck_computeHealthCheckHttpSourceRegionsExample(t *tes
 		"health_check_name": "tf-test-http-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -883,7 +867,6 @@ func TestAccComputeHealthCheck_computeHealthCheckHttpsSourceRegionsExample(t *te
 		"health_check_name": "tf-test-https-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -932,7 +915,6 @@ func TestAccComputeHealthCheck_computeHealthCheckTcpSourceRegionsExample(t *test
 		"health_check_name": "tf-test-tcp-health-check" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

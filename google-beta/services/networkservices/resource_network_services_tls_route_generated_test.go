@@ -66,7 +66,6 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteBasicExample(t *testi
 		"resource_name":        "tf-test-my-tls-route" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -137,7 +136,6 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteRegionalBasicExample(
 		"resource_name":        "tf-test-my-tls-route" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -212,7 +210,6 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteMeshBasicExample(t *t
 		"resource_name":        "tf-test-my-tls-route" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -295,7 +292,6 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteGatewayBasicExample(t
 		"resource_name":        "tf-test-my-tls-route" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -381,7 +377,6 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteTargetTcpProxyBasicEx
 		"target_tcp_proxy_name": "tf-test-my-target-tcp-proxy" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -461,7 +456,6 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteRegionTargetTcpProxyB
 		"target_tcp_proxy_name": "tf-test-my-target-tcp-proxy" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

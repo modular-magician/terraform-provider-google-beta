@@ -64,7 +64,6 @@ func TestAccCloudTasksQueue_queueBasicExample(t *testing.T) {
 		"name":          "tf-test-cloud-tasks-queue-test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccCloudTasksQueue_cloudTasksQueueAdvancedExample(t *testing.T) {
 		"name":          "tf-test-instance-name" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -173,7 +171,6 @@ func TestAccCloudTasksQueue_cloudTasksQueueHttpTargetOidcExample(t *testing.T) {
 		"name":          "tf-test-cloud-tasks-queue-http-target-oidc" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -253,7 +250,6 @@ func TestAccCloudTasksQueue_cloudTasksQueueHttpTargetOauthExample(t *testing.T) 
 		"name":          "tf-test-cloud-tasks-queue-http-target-oauth" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

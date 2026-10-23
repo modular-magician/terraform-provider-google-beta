@@ -73,7 +73,6 @@ func TestAccDocumentAISchemaVersion_documentaiSchemaVersionExample(t *testing.T)
 		"schema_display_name": "tf-test-my-schema" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

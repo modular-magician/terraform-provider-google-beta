@@ -69,7 +69,6 @@ func TestAccDataformRepositoryReleaseConfig_dataformRepositoryReleaseConfigExamp
 		"secret_name":              "tf_test_my_secret" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -176,7 +175,6 @@ func TestAccDataformRepositoryReleaseConfig_dataformRepositoryReleaseConfigDisab
 		"secret_name":              "tf_test_my_secret" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

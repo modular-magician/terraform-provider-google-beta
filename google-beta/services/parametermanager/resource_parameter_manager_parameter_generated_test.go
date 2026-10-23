@@ -65,7 +65,6 @@ func TestAccParameterManagerParameter_parameterConfigBasicExample(t *testing.T) 
 		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccParameterManagerParameter_parameterWithFormatExample(t *testing.T) {
 		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -150,7 +148,6 @@ func TestAccParameterManagerParameter_parameterWithLabelsExample(t *testing.T) {
 		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -207,7 +204,6 @@ func TestAccParameterManagerParameter_parameterWithKmsKeyExample(t *testing.T) {
 		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

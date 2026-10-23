@@ -64,7 +64,6 @@ func TestAccVectorSearchIndex_vectorsearchIndexBasicExample(t *testing.T) {
 		"index_id":      "tf-test-example-index" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -161,7 +160,6 @@ func TestAccVectorSearchIndex_vectorsearchIndexDedicatedExample(t *testing.T) {
 		"index_id":      "tf-test-example-dedicated-index" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -268,7 +266,6 @@ func TestAccVectorSearchIndex_vectorsearchIndexSkipWaitExample(t *testing.T) {
 		"index_id":      "tf-test-example-skip-wait-index" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

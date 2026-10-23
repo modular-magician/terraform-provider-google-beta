@@ -63,7 +63,6 @@ func TestAccComputeGlobalAddress_globalAddressBasicExample(t *testing.T) {
 		"global_address_name": "tf-test-global-appserver-ip" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -106,7 +105,6 @@ func TestAccComputeGlobalAddress_globalAddressPrivateServicesConnectExample(t *t
 		"network_name":        "tf-test-my-network-name" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

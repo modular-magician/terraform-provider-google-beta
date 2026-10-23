@@ -63,7 +63,6 @@ func TestAccMonitoringGenericService_monitoringServiceExampleExample(t *testing.
 		"service_id":    "tf-test-my-service" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

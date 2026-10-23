@@ -65,7 +65,6 @@ func TestAccSecretManagerSecret_secretConfigBasicExample(t *testing.T) {
 		"secret_id":     "secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -123,7 +122,6 @@ func TestAccSecretManagerSecret_secretWithAnnotationsExample(t *testing.T) {
 		"secret_id":     "secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -183,7 +181,6 @@ func TestAccSecretManagerSecret_secretWithVersionDestroyTtlExample(t *testing.T)
 		"secret_id":     "secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -232,7 +229,6 @@ func TestAccSecretManagerSecret_secretWithAutomaticCmekExample(t *testing.T) {
 		"secret_id":     "secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

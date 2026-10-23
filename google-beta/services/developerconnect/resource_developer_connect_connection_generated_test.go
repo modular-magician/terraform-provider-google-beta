@@ -64,7 +64,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionExistingCredent
 		"secret_name":     "projects/devconnect-terraform-creds/secrets/tf-test-do-not-change-github-oauthtoken-e0b9e7/versions/1",
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -120,7 +119,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionGithubExample(t
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -171,7 +169,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionGithubEnterpris
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -222,7 +219,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionGitlabExample(t
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -277,7 +273,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionGitlabEnterpris
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -334,7 +329,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionBbcExample(t *t
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -390,7 +384,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionBbdcExample(t *
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -447,7 +440,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionHttpConnBasicEx
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -498,7 +490,6 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionHttpConnBearerE
 		"connection_name": "tf-test-tf-test-connection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

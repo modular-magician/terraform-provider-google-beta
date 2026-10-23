@@ -71,7 +71,6 @@ func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewayFullExample(t
 		"subnetwork_name":         "tf-test-my-gateway-subnetwork" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -199,7 +198,6 @@ func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewayDnsPeeringExa
 		"subnetwork_name":         "tf-test-my-dns-gateway-subnetwork" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -312,7 +310,6 @@ func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewayClientToAgent
 		"name":          "tf-test-my-client-to-agent-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -372,7 +369,6 @@ func TestAccNetworkServicesAgentGateway_networkServicesAgentGatewaySelfManagedEx
 		"name":          "tf-test-my-self-managed-agent-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -66,7 +66,6 @@ func TestAccMonitoringSnooze_monitoringSnoozeBasicExample(t *testing.T) {
 		"snooze_start_time":         time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.UTC).AddDate(0, 0, 1).Format(time.RFC3339),
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -137,7 +136,6 @@ func TestAccMonitoringSnooze_monitoringSnoozeFilterExample(t *testing.T) {
 		"snooze_start_time":         time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.UTC).AddDate(0, 0, 1).Format(time.RFC3339),
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

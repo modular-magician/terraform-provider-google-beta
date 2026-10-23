@@ -82,7 +82,6 @@ func TestAccNetworkSecurityAuthzPolicy_networkSecurityAuthzPolicyAdvancedExample
 		"url_name":                     "tf-test-l7-ilb-map" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -355,7 +354,6 @@ func TestAccNetworkSecurityAuthzPolicy_networkSecurityAuthzPolicyMcpExample(t *t
 		"policy_name":   "tf-test-my-mcp-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -487,7 +485,6 @@ func TestAccNetworkSecurityAuthzPolicy_networkSecurityAuthzPolicyNetworkRulesExa
 		"swp_policy":        "tf-test-swp-policy" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

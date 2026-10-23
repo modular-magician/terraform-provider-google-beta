@@ -66,7 +66,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileBasicEx
 		"resource_name": "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -116,7 +115,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileOverrid
 		"resource_name": "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -187,7 +185,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileMirrori
 		"resource_name":       "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -257,7 +254,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileInterce
 		"resource_name":       "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -328,7 +324,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileUrlFilt
 		"resource_name": "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -394,7 +389,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileBrokerE
 		"resource_name":       "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -481,7 +475,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileWildfir
 		"resource_name": "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -731,7 +724,6 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileWildfir
 		"resource_name": "tf-test-my-security-profile" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

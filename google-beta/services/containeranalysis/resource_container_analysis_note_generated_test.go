@@ -63,7 +63,6 @@ func TestAccContainerAnalysisNote_containerAnalysisNoteBasicExample(t *testing.T
 		"note_name":     "tf-test-attestor-note" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -109,7 +108,6 @@ func TestAccContainerAnalysisNote_containerAnalysisNoteAttestationFullExample(t 
 		"note_name":     "tf-test-attestor-note" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

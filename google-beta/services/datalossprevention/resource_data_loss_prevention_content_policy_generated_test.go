@@ -67,7 +67,6 @@ func TestAccDataLossPreventionContentPolicy_dlpContentPolicyBasicExample(t *test
 		"project":       envvar.GetTestProjectFromEnv(),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -148,7 +147,6 @@ func TestAccDataLossPreventionContentPolicy_dlpContentPolicyFullExample(t *testi
 		"table_id":      "tf_test_dlp_tbl" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

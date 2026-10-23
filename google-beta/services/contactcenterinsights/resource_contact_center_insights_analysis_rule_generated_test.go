@@ -62,7 +62,6 @@ func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleB
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -105,7 +104,6 @@ func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleF
 		"project_number": envvar.GetTestProjectNumberFromEnv(),
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -172,7 +170,6 @@ func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleP
 		"project_number": envvar.GetTestProjectNumberFromEnv(),
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

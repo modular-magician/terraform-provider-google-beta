@@ -67,7 +67,6 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionRedirectExample(t *test
 		"site_id":       "tf-test-site-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -130,7 +129,6 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionHeadersExample(t *testi
 		"site_id":       "tf-test-site-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -195,7 +193,6 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionHeadersRegexExample(t *
 		"site_id":       "tf-test-site-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -260,7 +257,6 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionPathExample(t *testing.
 		"site_id":       "tf-test-site-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -324,7 +320,6 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionCloudRunExample(t *test
 		"site_id":              "tf-test-site-id" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -409,7 +404,6 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionCloudFunctionsExample(t
 		"zip_path":          "./test-fixtures/function-source.zip",
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

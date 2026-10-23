@@ -63,7 +63,6 @@ func TestAccComputeDisk_diskBasicExample(t *testing.T) {
 		"disk_name":     "tf-test-test-disk" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -112,7 +111,6 @@ func TestAccComputeDisk_diskBasicWoExample(t *testing.T) {
 		"disk_name":     "tf-test-test-disk" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -165,7 +163,6 @@ func TestAccComputeDisk_diskRsaEncryptedKeyWoExample(t *testing.T) {
 		"disk_name":     "tf-test-test-disk" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -215,7 +212,6 @@ func TestAccComputeDisk_diskAsyncExample(t *testing.T) {
 		"secondary_disk_name": "tf-test-async-secondary-test-disk" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -273,7 +269,6 @@ func TestAccComputeDisk_diskFeaturesExample(t *testing.T) {
 		"disk_name":     "tf-test-test-disk-features" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

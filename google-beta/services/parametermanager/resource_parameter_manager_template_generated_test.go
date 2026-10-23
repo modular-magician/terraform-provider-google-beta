@@ -64,7 +64,6 @@ func TestAccParameterManagerTemplate_templateConfigBasicExample(t *testing.T) {
 		"template_id":   "tf-test-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -107,7 +106,6 @@ func TestAccParameterManagerTemplate_templateWithFormatExample(t *testing.T) {
 		"template_id":   "tf-test-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -156,7 +154,6 @@ func TestAccParameterManagerTemplate_templateWithLabelsExample(t *testing.T) {
 		"template_id":   "tf-test-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

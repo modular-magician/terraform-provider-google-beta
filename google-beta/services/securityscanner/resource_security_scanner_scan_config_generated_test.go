@@ -65,7 +65,6 @@ func TestAccSecurityScannerScanConfig_scanConfigBasicExample(t *testing.T) {
 		"scan_config_name": "tf-test-terraform-scan-config" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -115,7 +114,6 @@ func TestAccSecurityScannerScanConfig_scanConfigIgnoreHttpStatusErrorsExample(t 
 		"scan_config_name": "tf-test-terraform-scan-config" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -175,7 +173,6 @@ func TestAccSecurityScannerScanConfig_scanConfigStaticIpExample(t *testing.T) {
 		"scan_config_name": "tf-test-terraform-scan-config" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

@@ -64,7 +64,6 @@ func TestAccNetworkManagementOrganizationVpcFlowLogsConfig_networkManagementOrgV
 		"vpc_flow_logs_config_id": "tf-test-basic-org-test-id" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

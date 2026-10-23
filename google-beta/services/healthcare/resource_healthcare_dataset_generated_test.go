@@ -65,7 +65,6 @@ func TestAccHealthcareDataset_healthcareDatasetBasicExample(t *testing.T) {
 		"time_zone":     "tf_test_America/New_York" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

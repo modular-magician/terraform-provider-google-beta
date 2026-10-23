@@ -65,7 +65,6 @@ func TestAccClouddeployAutomation_clouddeployAutomationBasicExample(t *testing.T
 		"delivery_pipeline": "tf-test-cd-pipeline" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -159,7 +158,6 @@ func TestAccClouddeployAutomation_clouddeployAutomationFullExample(t *testing.T)
 		"delivery_pipeline": "tf-test-cd-pipeline" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

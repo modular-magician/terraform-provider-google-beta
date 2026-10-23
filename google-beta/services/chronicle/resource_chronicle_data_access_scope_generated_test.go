@@ -65,7 +65,6 @@ func TestAccChronicleDataAccessScope_chronicleDataaccessscopeWithLogtypeExample(
 		"description":          "tf-test-scope-description" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccChronicleDataAccessScope_chronicleDataaccessscopeWithDataaccesslabel
 		"description":          "tf-test-scope-description" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -176,7 +174,6 @@ func TestAccChronicleDataAccessScope_chronicleDataaccessscopeWithAssetNamespaceE
 		"description":          "tf-test-scope-description" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -226,7 +223,6 @@ func TestAccChronicleDataAccessScope_chronicleDataaccessscopeWithIngestionLabelE
 		"description":          "tf-test-scope-description" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -280,7 +276,6 @@ func TestAccChronicleDataAccessScope_chronicleDataaccessscopeWithDeniedLabelsExa
 		"description":          "tf-test-scope-description" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

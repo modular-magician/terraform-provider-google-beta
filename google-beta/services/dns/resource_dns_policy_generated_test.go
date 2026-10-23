@@ -67,7 +67,6 @@ func TestAccDNSPolicy_dnsPolicyBasicExample(t *testing.T) {
 		"policy_name":    "tf-test-example-policy" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -144,7 +143,6 @@ func TestAccDNSPolicy_dnsPolicyMultiprojectExample(t *testing.T) {
 		"project_2_name":  "tf-test-project-2" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

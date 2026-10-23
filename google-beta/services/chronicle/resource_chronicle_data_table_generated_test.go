@@ -64,7 +64,6 @@ func TestAccChronicleDataTable_chronicleDataTableBasicExample(t *testing.T) {
 		"data_table_id": "tf_test_terraform_test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -146,7 +145,6 @@ func TestAccChronicleDataTable_chronicleDataTableWithOptionalFieldsExample(t *te
 		"data_table_id":        "tf_test_tf_test_full" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

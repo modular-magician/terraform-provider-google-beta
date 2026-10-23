@@ -69,7 +69,6 @@ func TestAccDataformConfig_dataformConfigWithKmsKeyExample(t *testing.T) {
 		"project_name":    "tf-test-project-1" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -194,7 +193,6 @@ func TestAccDataformConfig_dataformConfigWithoutKmsKeyExample(t *testing.T) {
 		"project_name":    "tf-test-project-1" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

@@ -71,7 +71,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudResourceExample(
 		"connection_id": "tf-test-my-connection" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionBasicExample(t *testi
 		"username":               "tf-test-user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -212,7 +210,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionFullExample(t *testin
 		"username":               "user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -298,7 +295,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionAwsExample(t *testing
 		"iam_role_id":   "arn:aws:iam::999999999999:role/omnirole" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -354,7 +350,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionAzureExample(t *testi
 		"federated_application_client_id": "tf-test-b43eeeee-eeee-eeee-eeee-a480155501ce" + randomSuffix,
 		"random_suffix":                   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -409,7 +404,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudspannerExample(t
 		"database_role": "tf_test_database_role" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -463,7 +457,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudspannerDataboost
 		"database":      "projects/project/instances/instance/databases/database" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -518,7 +511,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionSparkExample(t *testi
 		"connection_id": "tf-test-my-connection" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -607,7 +599,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionSalesforceDataCloudEx
 		"tenant_id":     "updated-tenant-id",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -722,7 +713,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionSqlWithCmekExample(t 
 		"username":               "user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -808,7 +798,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionSqlWithCmekPasswordWo
 		"username":               "user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -890,7 +879,6 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionConnectorConfiguratio
 		"username":      "user" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

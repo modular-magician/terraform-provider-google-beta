@@ -65,7 +65,6 @@ func TestAccChronicleFindingsRefinement_chronicleFindingsRefinementBasicExample(
 		"display_name":  "tf_test_findings_refinement_display_name" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -130,7 +129,6 @@ func TestAccChronicleFindingsRefinement_chronicleFindingsRefinementUpdateExample
 		"query":                   "network.dns.response = true",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

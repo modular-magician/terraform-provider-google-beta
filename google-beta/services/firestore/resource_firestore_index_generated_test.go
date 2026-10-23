@@ -64,7 +64,6 @@ func TestAccFirestoreIndex_firestoreIndexBasicExample(t *testing.T) {
 		"database_id":   "tf-test-database-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -133,7 +132,6 @@ func TestAccFirestoreIndex_firestoreIndexDatastoreModeExample(t *testing.T) {
 		"database_id":   "tf-test-database-id-dm" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -202,7 +200,6 @@ func TestAccFirestoreIndex_firestoreIndexVectorExample(t *testing.T) {
 		"database_id":   "tf-test-database-id-vector" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -275,7 +272,6 @@ func TestAccFirestoreIndex_firestoreIndexNameDescendingExample(t *testing.T) {
 		"database_id":   "tf-test-database-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -335,7 +331,6 @@ func TestAccFirestoreIndex_firestoreIndexMongodbCompatibleScopeExample(t *testin
 		"database_id":   "tf-test-database-id-mongodb-compatible" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -406,7 +401,6 @@ func TestAccFirestoreIndex_firestoreIndexSparseAnyExample(t *testing.T) {
 		"database_id":   "tf-test-database-id-sparse-any" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -477,7 +471,6 @@ func TestAccFirestoreIndex_firestoreIndexUniqueExample(t *testing.T) {
 		"database_id":   "tf-test-database-id-unique" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -549,7 +542,6 @@ func TestAccFirestoreIndex_firestoreIndexSkipWaitExample(t *testing.T) {
 		"database_id":   "tf-test-database-id-skip-wait" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -617,7 +609,6 @@ func TestAccFirestoreIndex_firestoreIndexDeletionPolicyExample(t *testing.T) {
 		"deletion_policy": "DELETE",
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -683,7 +674,6 @@ func TestAccFirestoreIndex_firestoreIndexTextSearchExample(t *testing.T) {
 		"database_id":   "tf-test-text-search-database-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -755,7 +745,6 @@ func TestAccFirestoreIndex_firestoreIndexSuppressGeojsonIndexingExample(t *testi
 		"database_id":   "tf-test-suppress-geojson-indexing-database-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -824,7 +813,6 @@ func TestAccFirestoreIndex_firestoreIndexGeoSearchExample(t *testing.T) {
 		"database_id":   "tf-test-geo-search-database-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

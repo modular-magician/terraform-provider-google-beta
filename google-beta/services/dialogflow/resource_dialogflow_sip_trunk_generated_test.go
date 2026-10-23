@@ -63,7 +63,6 @@ func TestAccDialogflowSipTrunk_dialogflowSipTrunkBasicExample(t *testing.T) {
 		"trunk_name":    "tf-test-basic-trunk" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

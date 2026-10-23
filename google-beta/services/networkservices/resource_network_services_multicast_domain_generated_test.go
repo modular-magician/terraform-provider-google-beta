@@ -65,7 +65,6 @@ func TestAccNetworkServicesMulticastDomain_networkServicesMulticastDomainBasicEx
 		"network_name":  "tf-test-test-md-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

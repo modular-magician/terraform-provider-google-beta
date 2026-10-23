@@ -66,7 +66,6 @@ func TestAccIAMWorkforcePoolWorkforcePoolProviderKey_iamWorkforcePoolProviderSam
 		"workforce_pool_id": "tf-test-example-pool" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

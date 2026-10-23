@@ -66,7 +66,6 @@ func TestAccWorkstationsWorkstation_workstationBasicExample(t *testing.T) {
 		"workstation_name":         "tf-test-work-station" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

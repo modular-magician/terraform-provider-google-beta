@@ -68,7 +68,6 @@ func TestAccNetworkSecurityMirroringEndpointGroupAssociation_networkSecurityMirr
 		"producer_network_name":         "tf-test-example-prod-network" + randomSuffix,
 		"random_suffix":                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

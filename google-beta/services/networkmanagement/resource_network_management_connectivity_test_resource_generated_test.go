@@ -67,7 +67,6 @@ func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestI
 		"source_instance":       "tf-test-source-vm" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -167,7 +166,6 @@ func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestA
 		"source_addr":           "tf-test-src-addr" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -250,7 +248,6 @@ func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestE
 		"primary_resource_name": "tf-test-conn-test-endpoints" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -317,7 +314,6 @@ func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestG
 		"primary_resource_name": "tf-test-conn-test-pod" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

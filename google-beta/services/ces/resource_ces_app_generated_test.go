@@ -67,7 +67,6 @@ func TestAccCESApp_cesAppBasicExample(t *testing.T) {
 		"secret_id":     "tf-test-fake-pk-secret-app-tf" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -324,7 +323,6 @@ func TestAccCESApp_cesAppAmbientSoundGcsUriExample(t *testing.T) {
 		"display_name":  "tf-test-my-app-ambient-sound-gcs-uri" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

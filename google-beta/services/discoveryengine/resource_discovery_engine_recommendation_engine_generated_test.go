@@ -64,7 +64,6 @@ func TestAccDiscoveryEngineRecommendationEngine_discoveryengineRecommendationeng
 		"engine_id":     "tf-test-recommendation-engine-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccDiscoveryEngineRecommendationEngine_discoveryengineRecommendationeng
 		"engine_id":     "tf-test-recommendation-engine-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

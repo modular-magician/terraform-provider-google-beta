@@ -65,7 +65,6 @@ func TestAccFirestoreField_firestoreFieldBasicExample(t *testing.T) {
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -132,7 +131,6 @@ func TestAccFirestoreField_firestoreFieldTimestampEnterpriseExample(t *testing.T
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -197,7 +195,6 @@ func TestAccFirestoreField_firestoreFieldTimestampWithTtlOffsetEnterpriseExample
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -265,7 +262,6 @@ func TestAccFirestoreField_firestoreFieldTimestampExample(t *testing.T) {
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -332,7 +328,6 @@ func TestAccFirestoreField_firestoreFieldTimestampWithTtlOffsetExample(t *testin
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -402,7 +397,6 @@ func TestAccFirestoreField_firestoreFieldMatchOverrideExample(t *testing.T) {
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -471,7 +465,6 @@ func TestAccFirestoreField_firestoreFieldWildcardExample(t *testing.T) {
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -538,7 +531,6 @@ func TestAccFirestoreField_firestoreFieldSkipWaitExample(t *testing.T) {
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -64,7 +64,6 @@ func TestAccGKEHub2Scope_gkehubScopeBasicExample(t *testing.T) {
 		"resource_name": "tf-test-my-scope" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

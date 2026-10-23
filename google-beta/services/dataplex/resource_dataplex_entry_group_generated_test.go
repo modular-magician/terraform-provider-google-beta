@@ -64,7 +64,6 @@ func TestAccDataplexEntryGroup_dataplexEntryGroupBasicExample(t *testing.T) {
 		"entry_group_name": "tf-test-entry-group-basic" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -109,7 +108,6 @@ func TestAccDataplexEntryGroup_dataplexEntryGroupFullExample(t *testing.T) {
 		"entry_group_name": "tf-test-entry-group-full" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

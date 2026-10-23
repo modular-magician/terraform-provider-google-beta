@@ -65,7 +65,6 @@ func TestAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizatio
 		"zone_name":     "tf-test-my-zone" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizatio
 		"zone_name":     "tf-test-my-zone" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

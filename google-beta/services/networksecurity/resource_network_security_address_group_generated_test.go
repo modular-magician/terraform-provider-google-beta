@@ -64,7 +64,6 @@ func TestAccNetworkSecurityAddressGroup_networkSecurityAddressGroupsBasicExample
 		"resource_name": "tf-test-my-address-groups" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -112,7 +111,6 @@ func TestAccNetworkSecurityAddressGroup_networkSecurityAddressGroupsOrganization
 		"resource_name": "tf-test-my-address-groups" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -160,7 +158,6 @@ func TestAccNetworkSecurityAddressGroup_networkSecurityAddressGroupsAdvancedExam
 		"resource_name": "tf-test-my-address-groups" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -209,7 +206,6 @@ func TestAccNetworkSecurityAddressGroup_networkSecurityAddressGroupsCloudArmorEx
 		"resource_name": "tf-test-my-address-groups" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

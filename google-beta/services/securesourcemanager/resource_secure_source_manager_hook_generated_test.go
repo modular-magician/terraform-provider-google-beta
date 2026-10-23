@@ -68,7 +68,6 @@ func TestAccSecureSourceManagerHook_secureSourceManagerHookBasicExample(t *testi
 		"repository_id":   "tf-test-my-basic-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -136,7 +135,6 @@ func TestAccSecureSourceManagerHook_secureSourceManagerHookWithFieldsExample(t *
 		"repository_id":   "tf-test-my-initial-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -209,7 +207,6 @@ func TestAccSecureSourceManagerHook_secureSourceManagerHookServiceAccountAuthExa
 		"sa_id":           "tf-test-my-sa" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

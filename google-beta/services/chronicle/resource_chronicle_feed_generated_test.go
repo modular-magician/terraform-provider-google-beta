@@ -67,7 +67,6 @@ func TestAccChronicleFeed_chronicleFeedBasicExample(t *testing.T) {
 		"resource_name": "tf-test-test-feeds" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -125,7 +124,6 @@ func TestAccChronicleFeed_chronicleFeedGcsExample(t *testing.T) {
 		"resource_name":  "tf-test-test-feeds" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -242,7 +240,6 @@ func TestAccChronicleFeed_chronicleFeedHttpsPushExample(t *testing.T) {
 		"resource_name": "tf-test-test-feeds" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

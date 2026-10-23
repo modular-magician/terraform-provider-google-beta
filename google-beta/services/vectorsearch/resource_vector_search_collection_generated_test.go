@@ -65,7 +65,6 @@ func TestAccVectorSearchCollection_vectorsearchCollectionBasicExample(t *testing
 		"collection_id": "tf-test-example-collection" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -142,7 +141,6 @@ func TestAccVectorSearchCollection_vectorsearchCollectionCmekExample(t *testing.
 		"collection_id": "tf-test-example-cmek-collection" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

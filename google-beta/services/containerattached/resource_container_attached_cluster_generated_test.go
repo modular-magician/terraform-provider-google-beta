@@ -64,7 +64,6 @@ func TestAccContainerAttachedCluster_containerAttachedClusterBasicExample(t *tes
 		"name":          "basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -125,7 +124,6 @@ func TestAccContainerAttachedCluster_containerAttachedClusterFullExample(t *test
 		"name":          "basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -213,7 +211,6 @@ func TestAccContainerAttachedCluster_containerAttachedClusterIgnoreErrorsExample
 		"name":          "basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

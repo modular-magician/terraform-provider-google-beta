@@ -65,7 +65,6 @@ func TestAccDataprocGdcSparkApplication_dataprocgdcSparkapplicationBasicExample(
 		"spark_application_id": "tf-test-tf-e2e-spark-app-basic" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccDataprocGdcSparkApplication_dataprocgdcSparkapplicationExample(t *te
 		"spark_application_id":       "tf-test-tf-e2e-spark-app" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -192,7 +190,6 @@ func TestAccDataprocGdcSparkApplication_dataprocgdcSparkapplicationPysparkExampl
 		"spark_application_id": "tf-test-tf-e2e-pyspark-app" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -250,7 +247,6 @@ func TestAccDataprocGdcSparkApplication_dataprocgdcSparkapplicationSparkrExample
 		"spark_application_id": "tf-test-tf-e2e-sparkr-app" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -305,7 +301,6 @@ func TestAccDataprocGdcSparkApplication_dataprocgdcSparkapplicationSparksqlExamp
 		"spark_application_id": "tf-test-tf-e2e-sparksql-app" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -363,7 +358,6 @@ func TestAccDataprocGdcSparkApplication_dataprocgdcSparkapplicationSparksqlQuery
 		"spark_application_id": "tf-test-tf-e2e-sparksql-app" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -63,7 +63,6 @@ func TestAccMigrationCenterPreferenceSet_preferenceSetBasicExample(t *testing.T)
 		"set_name":      "tf-test-preference-set-test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -115,7 +114,6 @@ func TestAccMigrationCenterPreferenceSet_preferenceSetFullExample(t *testing.T) 
 		"set_name":      "tf-test-preference-set-test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -189,7 +187,6 @@ func TestAccMigrationCenterPreferenceSet_preferenceSetComputeEnginePreferencesDi
 		"set_name":      "tf-test-preference-set-test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

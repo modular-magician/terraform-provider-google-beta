@@ -75,7 +75,6 @@ func TestAccChronicleDataExport_chronicleDataExportBasicExample(t *testing.T) {
 		"start_time":    "2025-01-01T00:00:00Z",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -141,7 +140,6 @@ func TestAccChronicleDataExport_chronicleDataExportFullExample(t *testing.T) {
 		"start_time":    "2025-01-01T00:00:00Z",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

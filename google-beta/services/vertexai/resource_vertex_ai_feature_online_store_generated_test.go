@@ -65,7 +65,6 @@ func TestAccVertexAIFeatureOnlineStore_vertexAiFeatureOnlineStoreExample(t *test
 		"region":        "us-central1",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -118,7 +117,6 @@ func TestAccVertexAIFeatureOnlineStore_vertexAiFeatureonlinestoreWithOptimizedEx
 		"name":          "tf_test_example_feature_online_store_optimized" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -178,7 +176,6 @@ func TestAccVertexAIFeatureOnlineStore_vertexAiFeatureonlinestoreWithBetaFieldsB
 		"name":          "tf_test_example_feature_online_store_beta_bigtable" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

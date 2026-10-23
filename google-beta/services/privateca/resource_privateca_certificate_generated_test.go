@@ -65,7 +65,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateConfigExample(t *testing.T)
 		"certificate_name": "tf-test-my-certificate" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -207,7 +206,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateWithTemplateExample(t *test
 		"certificate_template_name": "tf-test-my-certificate-template" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -380,7 +378,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateCsrExample(t *testing.T) {
 		"certificate_name": "tf-test-my-certificate" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -477,7 +474,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateNoAuthorityExample(t *testi
 		"certificate_name": "tf-test-my-certificate" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -606,7 +602,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateCustomSkiExample(t *testing
 		"certificate_name": "tf-test-my-certificate" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -738,7 +733,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateSubjectConfigOrgOptionalExa
 		"certificate_name": "tf-test-my-certificate" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -859,7 +853,6 @@ func TestAccPrivatecaCertificate_privatecaCertificateWithRequestedNotBeforeTimeE
 		"certificate_name": "tf-test-my-certificate" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -64,7 +64,6 @@ func TestAccComputeRegionNetworkEndpoint_regionNetworkEndpointInternetIpPortExam
 		"network_name":  "tf-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -125,7 +124,6 @@ func TestAccComputeRegionNetworkEndpoint_regionNetworkEndpointInternetFqdnPortEx
 		"network_name":  "tf-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

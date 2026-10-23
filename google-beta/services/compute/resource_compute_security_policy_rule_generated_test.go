@@ -63,7 +63,6 @@ func TestAccComputeSecurityPolicyRule_securityPolicyRuleBasicExample(t *testing.
 		"sec_policy_name": "tf-test-policyruletest" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -121,7 +120,6 @@ func TestAccComputeSecurityPolicyRule_securityPolicyRuleDefaultRuleExample(t *te
 		"sec_policy_name": "tf-test-policyruletest" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -192,7 +190,6 @@ func TestAccComputeSecurityPolicyRule_securityPolicyRuleMultipleRulesExample(t *
 		"sec_policy_name": "tf-test-policywithmultiplerules" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -264,7 +261,6 @@ func TestAccComputeSecurityPolicyRule_securityPolicyRuleAdvancedFeaturesExample(
 		"sec_policy_name": "tf-test-policyruletest" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -343,7 +339,6 @@ func TestAccComputeSecurityPolicyRule_securityPolicyRuleWithBodyExcludeExample(t
 		"subnetwork_name":   "tf-test-test-subnet" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -485,7 +480,6 @@ func TestAccComputeSecurityPolicyRule_securityPolicyRuleRequestBodyExpressionExa
 		"sec_policy_name": "tf-test-policyruletest" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

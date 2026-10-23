@@ -65,7 +65,6 @@ func TestAccParameterManagerRegionalRegionalParameter_regionalParameterBasicExam
 		"parameter_id":  "tf_test_regional_parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -108,7 +107,6 @@ func TestAccParameterManagerRegionalRegionalParameter_regionalParameterWithForma
 		"parameter_id":  "tf_test_regional_parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -152,7 +150,6 @@ func TestAccParameterManagerRegionalRegionalParameter_regionalParameterWithLabel
 		"parameter_id":  "tf_test_regional_parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -210,7 +207,6 @@ func TestAccParameterManagerRegionalRegionalParameter_regionalParameterWithKmsKe
 		"parameter_id":  "tf_test_regional_parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

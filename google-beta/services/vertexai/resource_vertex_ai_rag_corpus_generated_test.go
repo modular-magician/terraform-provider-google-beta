@@ -66,7 +66,6 @@ func TestAccVertexAIRagCorpus_vertexAiRagCorpusBasicExample(t *testing.T) {
 		"display_name":  "tf-test-rag-corpus" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -132,7 +131,6 @@ func TestAccVertexAIRagCorpus_vertexAiRagCorpusFullExample(t *testing.T) {
 		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "europe-west4").CryptoKey.Name,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -198,7 +196,6 @@ func TestAccVertexAIRagCorpus_vertexAiRagCorpusSearchExample(t *testing.T) {
 		"display_name":  "tf-test-rag-corpus-search" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -249,7 +246,6 @@ func TestAccVertexAIRagCorpus_vertexAiRagCorpusPineconeExample(t *testing.T) {
 		"display_name":  "tf-test-rag-corpus-pinecone" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -317,7 +313,6 @@ func TestAccVertexAIRagCorpus_vertexAiRagCorpusVertexVectorSearchExample(t *test
 		"index_display_name":    "tf-test-index-test" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -416,7 +411,6 @@ func TestAccVertexAIRagCorpus_vertexAiRagCorpusSecretManagerExample(t *testing.T
 		"secret_id":     "tf-test-secret-key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

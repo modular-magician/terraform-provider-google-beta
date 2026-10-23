@@ -66,7 +66,6 @@ func TestAccFirebaseAppHostingBackend_firebaseAppHostingBackendMinimalExample(t 
 		"service_act_id": "tf-test-fah-minimal",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -145,7 +144,6 @@ func TestAccFirebaseAppHostingBackend_firebaseAppHostingBackendFullExample(t *te
 		"service_act_id": "tf-test-fah-full",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

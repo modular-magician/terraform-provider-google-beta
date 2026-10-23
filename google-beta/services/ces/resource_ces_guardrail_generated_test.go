@@ -66,7 +66,6 @@ func TestAccCESGuardrail_cesGuardrailBasicExample(t *testing.T) {
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -147,7 +146,6 @@ func TestAccCESGuardrail_cesGuardrailTransferAgentContentFilterExample(t *testin
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -226,7 +224,6 @@ func TestAccCESGuardrail_cesGuardrailGenerativeAnswerLlmPromptSecurityExample(t 
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -312,7 +309,6 @@ func TestAccCESGuardrail_cesGuardrailLlmPromptSecurityFailOpenExample(t *testing
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -387,7 +383,6 @@ func TestAccCESGuardrail_cesGuardrailLlmPromptSecurityDefaultSettingsExample(t *
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -462,7 +457,6 @@ func TestAccCESGuardrail_cesGuardrailCodeCallbackExample(t *testing.T) {
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -557,7 +551,6 @@ func TestAccCESGuardrail_cesGuardrailLlmPolicyExample(t *testing.T) {
 		"guardrail_id":           "tf-test-guardrail-id" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

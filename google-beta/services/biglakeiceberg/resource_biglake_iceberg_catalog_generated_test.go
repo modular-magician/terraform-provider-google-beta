@@ -64,7 +64,6 @@ func TestAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogExample(t *testing
 		"name":          "tf_test_my_iceberg_catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -127,7 +126,6 @@ func TestAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogPrimaryLocationExa
 		"name":          "tf_test_my_iceberg_catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -182,7 +180,6 @@ func TestAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogBiglakeExample(t *
 		"name":          "tf_test_my_iceberg_catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -247,7 +244,6 @@ func TestAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogFederatedUnityExam
 		"name":          "tf_test_my_iceberg_catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -304,7 +300,6 @@ func TestAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogFederatedGlueExamp
 		"name":          "tf_test_my_iceberg_catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

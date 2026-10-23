@@ -65,7 +65,6 @@ func TestAccApphubApplication_apphubApplicationBasicExample(t *testing.T) {
 		"scope_type":     "REGIONAL",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -113,7 +112,6 @@ func TestAccApphubApplication_apphubApplicationGlobalBasicExample(t *testing.T) 
 		"scope_type":     "GLOBAL",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -167,7 +165,6 @@ func TestAccApphubApplication_apphubApplicationFullExample(t *testing.T) {
 		"operator_name":   "Charlie" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

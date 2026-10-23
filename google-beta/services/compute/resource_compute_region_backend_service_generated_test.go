@@ -66,7 +66,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceBasicExample(t *test
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -122,7 +121,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceExternalIapExample(t
 		"region_backend_service_name": "tf-test-tf-test-region-service-external" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -173,7 +171,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceIlbRoundRobinExample
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -228,7 +225,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceExternalExample(t *t
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -286,7 +282,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceExternalWeightedExam
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -343,7 +338,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceIlbRingHashExample(t
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -414,7 +408,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceIlbStatefulSessionAf
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -483,7 +476,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceBalancingModeExample
 		"rigm_name":                   "tf-test-rbs-rigm" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -598,7 +590,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceInFlightExample(t *t
 		"subnetwork_name":             "tf-test-custom-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -721,7 +712,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceConnectionTrackingEx
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -785,7 +775,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceIpAddressSelectionPo
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -845,7 +834,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceIlbCustomMetricsExam
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -930,7 +918,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceDynamicForwardingExa
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -980,7 +967,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceDynamicForwardingFor
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1032,7 +1018,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceDynamicForwardingFor
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1085,7 +1070,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceHaPolicyExample(t *t
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1144,7 +1128,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceHaPolicyManualLeader
 		"subnetwork_name":             "tf-test-rbs-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1256,7 +1239,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceTlsSettingsExample(t
 		"region_backend_service_name": "tf-test-region-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1335,7 +1317,6 @@ func TestAccComputeRegionBackendService_regionBackendServiceIdentityExample(t *t
 		"region_backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

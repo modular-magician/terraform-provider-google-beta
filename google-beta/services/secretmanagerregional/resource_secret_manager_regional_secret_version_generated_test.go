@@ -64,7 +64,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionBasi
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionBasi
 		"secret_id":     "tf-test-regional-secret-version-write-only" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -155,7 +153,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionWith
 		"secret_id":     "tf-test-regional-secret-version-base64-write-only" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -201,7 +198,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionWith
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -245,7 +241,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionDisa
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -289,7 +284,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionDele
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -333,7 +327,6 @@ func TestAccSecretManagerRegionalRegionalSecretVersion_regionalSecretVersionDele
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

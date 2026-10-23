@@ -65,7 +65,6 @@ func TestAccDataplexDataProduct_dataplexDataProductBasicExample(t *testing.T) {
 		"data_product_id": fmt.Sprintf("tf-test-dp%s", acctest.RandString(t, 10)),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -123,7 +122,6 @@ func TestAccDataplexDataProduct_dataplexDataProductFullExample(t *testing.T) {
 		"data_product_id": fmt.Sprintf("tf-test-dp%s", acctest.RandString(t, 10)),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

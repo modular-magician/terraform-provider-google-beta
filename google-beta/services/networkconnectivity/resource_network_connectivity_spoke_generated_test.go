@@ -67,7 +67,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkBas
 		"spoke_name":    "tf-test-spoke1" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -141,7 +140,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkGro
 		"spoke_name":    "tf-test-group-spoke1" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -224,7 +222,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeRouterApplianceBasi
 		"subnetwork_name": "tf-test-basic-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -335,7 +332,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeVpnTunnelBasicExamp
 		"vpn_tunnel_2_spoke_name": "tf-test-vpn-tunnel-2-spoke" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -509,7 +505,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeInterconnectAttachm
 		"router_name":                        "tf-test-external-vpn-gateway" + randomSuffix,
 		"random_suffix":                      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -597,7 +592,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedProducerVpcNe
 		"spoke_name":          "tf-test-vpc-spoke" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -690,7 +684,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeCenterGroupExample(
 		"spoke_name":                 "tf-test-vpc-spoke" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -766,7 +759,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkIpv
 		"spoke_name":    "tf-test-spoke1-ipv6" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -836,7 +828,6 @@ func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeGatewayExample(t *t
 		"spoke_name":    "tf-test-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

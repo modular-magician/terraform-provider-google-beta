@@ -65,7 +65,6 @@ func TestAccComputeSubnetwork_subnetworkBasicExample(t *testing.T) {
 		"subnetwork_name": "tf-test-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -120,7 +119,6 @@ func TestAccComputeSubnetwork_subnetworkLoggingConfigExample(t *testing.T) {
 		"subnetwork_name": "tf-test-log-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -177,7 +175,6 @@ func TestAccComputeSubnetwork_subnetworkInternalL7lbExample(t *testing.T) {
 		"subnetwork_name": "tf-test-l7lb-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -234,7 +231,6 @@ func TestAccComputeSubnetwork_subnetworkIpv6Example(t *testing.T) {
 		"subnetwork_name": "tf-test-ipv6-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -290,7 +286,6 @@ func TestAccComputeSubnetwork_subnetworkInternalIpv6Example(t *testing.T) {
 		"subnetwork_name": "tf-test-internal-ipv6-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -347,7 +342,6 @@ func TestAccComputeSubnetwork_subnetworkPurposePrivateNatExample(t *testing.T) {
 		"subnetwork_name": "tf-test-subnet-purpose-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -403,7 +397,6 @@ func TestAccComputeSubnetwork_subnetworkResolveSubnetMaskExample(t *testing.T) {
 		"subnetwork_name": "tf-test-subnet-resolve-subnet-mask-test-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -458,7 +451,6 @@ func TestAccComputeSubnetwork_subnetworkCidrOverlapExample(t *testing.T) {
 		"subnetwork_name": "tf-test-subnet-cidr-overlap" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -513,7 +505,6 @@ func TestAccComputeSubnetwork_subnetworkReservedInternalRangeExample(t *testing.
 		"subnetwork_name":     "tf-test-subnetwork-reserved-internal-range" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -580,7 +571,6 @@ func TestAccComputeSubnetwork_subnetworkReservedSecondaryRangeExample(t *testing
 		"subnetwork_name":      "tf-test-subnetwork-reserved-secondary-range" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -662,7 +652,6 @@ func TestAccComputeSubnetwork_subnetworkIpv6OnlyInternalExample(t *testing.T) {
 		"subnetwork_name": "tf-test-subnet-ipv6-only" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -716,7 +705,6 @@ func TestAccComputeSubnetwork_subnetworkWithSubnetModePdpExample(t *testing.T) {
 		"subnetwork_name":   "tf-test-subnet-mode-pdp-subnet" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -770,7 +758,6 @@ func TestAccComputeSubnetwork_subnetworkWithInternalSubnetModePdpExample(t *test
 		"subnetwork_name":   "tf-test-internal-subnet-mode-pdp-subnet" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -825,7 +812,6 @@ func TestAccComputeSubnetwork_subnetworkWithInternalSubnetModePdpExplicitIpPrefi
 		"subnetwork_name":      "tf-test-subnet-mode-pdp-subnet-internal-prefix" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -879,7 +865,6 @@ func TestAccComputeSubnetwork_subnetworkIpv6OnlyExternalExample(t *testing.T) {
 		"subnetwork_name": "tf-test-subnet-ipv6-only" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -933,7 +918,6 @@ func TestAccComputeSubnetwork_subnetworkWithSecondaryIpv6RangeExample(t *testing
 		"subnetwork_name":     "tf-test-subnet-with-secondary-ranges" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

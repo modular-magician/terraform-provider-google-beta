@@ -72,7 +72,6 @@ func TestAccNetworkServicesMulticastGroupProducerActivation_networkServicesMulti
 		"producer_association_name":      "tf-test-test-producer-association-mgpa" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -69,7 +69,6 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 		"dns_auth_subdomain2": "subdomain2" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -142,7 +141,6 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 		"pool_name":            "tf-test-ca-pool" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -259,7 +257,6 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 		"cert_name":     "tf-test-self-managed-cert" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -342,7 +339,6 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 		"cert_name":     "tf-test-self-managed-cert" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -391,7 +387,6 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 		"cert_name":     "tf-test-self-managed-cert" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -442,7 +437,6 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 		"pool_name":            "tf-test-ca-pool" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -558,7 +552,6 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 		"dns_auth_subdomain2": "subdomain2" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -627,7 +620,6 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedRegiona
 		"dns_auth_subdomain": "subdomain" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -685,7 +677,6 @@ func TestAccCertificateManagerCertificate_certificateManagerClientAuthCertificat
 		"cert_name":     "tf-test-client-auth-cert" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

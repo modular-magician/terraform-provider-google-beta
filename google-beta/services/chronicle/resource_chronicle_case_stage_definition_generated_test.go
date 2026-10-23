@@ -64,7 +64,6 @@ func TestAccChronicleCaseStageDefinition_chronicleCasestagedefinitionBasicExampl
 		"display_name":  "tf_test_my_stage" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

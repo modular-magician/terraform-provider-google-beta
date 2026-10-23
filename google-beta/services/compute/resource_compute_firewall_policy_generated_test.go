@@ -64,7 +64,6 @@ func TestAccComputeFirewallPolicy_firewallPolicyExample(t *testing.T) {
 		"policy_name":   "tf-test-my-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

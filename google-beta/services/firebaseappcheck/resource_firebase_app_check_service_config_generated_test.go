@@ -65,7 +65,6 @@ func TestAccFirebaseAppCheckServiceConfig_firebaseAppCheckServiceConfigOffExampl
 		"service_id":    "firestore.googleapis.com",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -116,7 +115,6 @@ func TestAccFirebaseAppCheckServiceConfig_firebaseAppCheckServiceConfigEnforcedE
 		"service_id":    "firebasestorage.googleapis.com",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -168,7 +166,6 @@ func TestAccFirebaseAppCheckServiceConfig_firebaseAppCheckServiceConfigUnenforce
 		"service_id":    "identitytoolkit.googleapis.com",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

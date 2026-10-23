@@ -64,7 +64,6 @@ func TestAccChronicleDashboardChart_chronicleDashboardchartBasicExample(t *testi
 		"chart_display_name": "tf_test_testchart_1" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -188,7 +187,6 @@ func TestAccChronicleDashboardChart_chronicleDashboardchartFullExample(t *testin
 		"dashboard_name":        "tf_test_dashboard_1" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

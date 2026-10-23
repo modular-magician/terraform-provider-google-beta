@@ -66,7 +66,6 @@ func TestAccVPCAccessConnector_vpcAccessConnectorExample(t *testing.T) {
 		"network_name":  servicenetworking.BootstrapSharedServiceNetworkingConnection(t, "vpc-access-connector"),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -113,7 +112,6 @@ func TestAccVPCAccessConnector_vpcAccessConnectorSharedVpcExample(t *testing.T) 
 		"network_name":  servicenetworking.BootstrapSharedServiceNetworkingConnection(t, "vpc-access-connector"),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

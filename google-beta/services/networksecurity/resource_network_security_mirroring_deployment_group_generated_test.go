@@ -66,7 +66,6 @@ func TestAccNetworkSecurityMirroringDeploymentGroup_networkSecurityMirroringDepl
 		"subnetwork_name":     "tf-test-example-subnet" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

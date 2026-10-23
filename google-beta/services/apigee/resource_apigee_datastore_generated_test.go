@@ -69,7 +69,6 @@ func TestAccApigeeDatastore_apigeeDatastoreBasicTestExample(t *testing.T) {
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -205,7 +204,6 @@ func TestAccApigeeDatastore_apigeeDatastoreBigqueryTestExample(t *testing.T) {
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

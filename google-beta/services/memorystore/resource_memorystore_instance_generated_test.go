@@ -72,7 +72,6 @@ func TestAccMemorystoreInstance_memorystoreInstanceBasicExample(t *testing.T) {
 		"subnet_name":     "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -177,7 +176,6 @@ func TestAccMemorystoreInstance_memorystoreInstanceFullExample(t *testing.T) {
 		"subnet_name":     "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -298,7 +296,6 @@ func TestAccMemorystoreInstance_memorystoreInstancePersistenceAofExample(t *test
 		"subnet_name":     "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -397,7 +394,6 @@ func TestAccMemorystoreInstance_memorystoreInstanceSecondaryInstanceExample(t *t
 		"secondary_network_name":                         "tf-test-my-network-secondary-instance" + randomSuffix,
 		"random_suffix":                                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -579,7 +575,6 @@ func TestAccMemorystoreInstance_memorystoreInstanceFlexibleCaExample(t *testing.
 		"subnet_name":                 "tf-test-ca-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

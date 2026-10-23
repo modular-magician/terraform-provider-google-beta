@@ -63,7 +63,6 @@ func TestAccLicenseManagerConfiguration_licensemanagerConfigurationBasicExample(
 		"configuration_id": "tf-test-example-configuration" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

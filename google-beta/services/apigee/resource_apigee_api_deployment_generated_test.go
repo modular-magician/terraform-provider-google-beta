@@ -67,7 +67,6 @@ func TestAccApigeeApiDeployment_apigeeApiDeploymentBasicTestExample(t *testing.T
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -192,7 +191,6 @@ func TestAccApigeeApiDeployment_apigeeApiDeploymentServiceAccountTestExample(t *
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

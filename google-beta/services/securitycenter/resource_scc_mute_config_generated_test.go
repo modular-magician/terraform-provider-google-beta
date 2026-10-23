@@ -64,7 +64,6 @@ func TestAccSecurityCenterMuteConfig_sccMuteConfigExample(t *testing.T) {
 		"mute_config_id": "tf-test-my-config" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

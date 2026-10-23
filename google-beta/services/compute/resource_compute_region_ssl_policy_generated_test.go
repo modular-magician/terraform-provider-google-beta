@@ -63,7 +63,6 @@ func TestAccComputeRegionSslPolicy_regionSslPolicyBasicExample(t *testing.T) {
 		"region_ssl_policy_name": "tf-test-region-ssl-policy" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccComputeRegionSslPolicy_regionSslPolicyPostQuantumExample(t *testing.
 		"post_quantum_region_ssl_policy_name": "tf-test-post-quantum-region-ssl-policy" + randomSuffix,
 		"random_suffix":                       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

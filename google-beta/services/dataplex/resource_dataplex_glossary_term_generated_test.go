@@ -63,7 +63,6 @@ func TestAccDataplexGlossaryTerm_dataplexGlossaryTermBasicExample(t *testing.T) 
 		"term_name":     "tf-test-term-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -113,7 +112,6 @@ func TestAccDataplexGlossaryTerm_dataplexGlossaryTermFullExample(t *testing.T) {
 		"term_name":     "tf-test-term-full" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

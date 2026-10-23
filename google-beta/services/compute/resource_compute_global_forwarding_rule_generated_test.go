@@ -72,7 +72,6 @@ func TestAccComputeGlobalForwardingRule_externalTcpProxyLbMigBackendExample(t *t
 		"test_proxy_health_check":       "tf-test-test-proxy-health-check" + randomSuffix,
 		"random_suffix":                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -264,7 +263,6 @@ func TestAccComputeGlobalForwardingRule_externalHttpLbMigBackendCustomHeaderExam
 		"xlb_network_name":       "tf-test-l7-xlb-network" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -460,7 +458,6 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleHttpExample(t *testi
 		"http_proxy_name":      "tf-test-target-proxy" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -553,7 +550,6 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(t *t
 		"igm_name":             "tf-test-igm-internal" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -701,7 +697,6 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleExternalManagedExamp
 		"http_proxy_name":      "tf-test-target-proxy" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -793,7 +788,6 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleHybridExample(t *tes
 		"subnetwork_name":               "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -974,7 +968,6 @@ func TestAccComputeGlobalForwardingRule_globalInternalHttpLbWithMigBackendExampl
 		"vm_test_name":                   "tf-test-l7-gilb-test-vm" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1200,7 +1193,6 @@ func TestAccComputeGlobalForwardingRule_privateServiceConnectGoogleApisExample(t
 		"subnetwork_name":      "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1283,7 +1275,6 @@ func TestAccComputeGlobalForwardingRule_privateServiceConnectGoogleApisNoAutomat
 		"subnetwork_name":      "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

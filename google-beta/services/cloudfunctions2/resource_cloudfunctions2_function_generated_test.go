@@ -74,7 +74,6 @@ func TestAccCloudfunctions2function_cloudfunctions2BasicExample(t *testing.T) {
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -158,7 +157,6 @@ func TestAccCloudfunctions2function_cloudfunctions2FullExample(t *testing.T) {
 		"zip_path":            "./test-fixtures/function-source-pubsub.zip",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -276,7 +274,6 @@ func TestAccCloudfunctions2function_cloudfunctions2BasicGcsExample(t *testing.T)
 		"zip_path":            "./test-fixtures/function-source-eventarc-gcs.zip",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -429,7 +426,6 @@ func TestAccCloudfunctions2function_cloudfunctions2BasicAuditlogsExample(t *test
 		"zip_path":              "./test-fixtures/function-source-eventarc-gcs.zip",
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -581,7 +577,6 @@ func TestAccCloudfunctions2function_cloudfunctions2BasicBuilderExample(t *testin
 		"zip_path":        "./test-fixtures/function-source.zip",
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -710,7 +705,6 @@ func TestAccCloudfunctions2function_cloudfunctions2SecretEnvExample(t *testing.T
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -825,7 +819,6 @@ func TestAccCloudfunctions2function_cloudfunctions2SecretVolumeExample(t *testin
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -933,7 +926,6 @@ func TestAccCloudfunctions2function_cloudfunctions2PrivateWorkerpoolExample(t *t
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1030,7 +1022,6 @@ func TestAccCloudfunctions2function_cloudfunctions2CmekExample(t *testing.T) {
 		"zip_path":          "./test-fixtures/function-source.zip",
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1221,7 +1212,6 @@ func TestAccCloudfunctions2function_cloudfunctions2AutomaticBaseImageUpdateExamp
 		"zip_path":            "./test-fixtures/function-source-pubsub.zip",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1339,7 +1329,6 @@ func TestAccCloudfunctions2function_cloudfunctions2OnDeployBaseImageUpdateExampl
 		"zip_path":            "./test-fixtures/function-source-pubsub.zip",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1454,7 +1443,6 @@ func TestAccCloudfunctions2function_cloudfunctions2DirectvpcExample(t *testing.T
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -92,7 +92,6 @@ func TestAccBiglakeHiveHiveTable_biglakeHiveTableExample(t *testing.T) {
 		"stored_as_sub_dirs": true,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

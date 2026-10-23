@@ -65,7 +65,6 @@ func TestAccContactCenterInsightsAssessmentRule_contactCenterInsightsAssessmentR
 		"resource_name":      "assessmentrulebasic" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -118,7 +117,6 @@ func TestAccContactCenterInsightsAssessmentRule_contactCenterInsightsAssessmentR
 		"resource_name":      "assessmentrulefull" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

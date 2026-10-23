@@ -67,7 +67,6 @@ func TestAccBillingBudgetsBudget_billingBudgetBasicExample(t *testing.T) {
 		"display_name":  "Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccBillingBudgetsBudget_billingBudgetLastperiodExample(t *testing.T) {
 		"display_name":  "Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -191,7 +189,6 @@ func TestAccBillingBudgetsBudget_billingBudgetFilterExample(t *testing.T) {
 		"display_name":  "Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -266,7 +263,6 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyExample(t *testing.T) {
 		"channel_name":  "Example Notification Channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -352,7 +348,6 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(t *t
 		"budget_name":   "Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -419,7 +414,6 @@ func TestAccBillingBudgetsBudget_billingBudgetCustomperiodExample(t *testing.T) 
 		"display_name":  "Example Billing Budget" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -504,7 +498,6 @@ func TestAccBillingBudgetsBudget_billingBudgetOptionalExample(t *testing.T) {
 		"topic_name":    "tf-test-example-topic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

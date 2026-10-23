@@ -66,7 +66,6 @@ func TestAccApphubServiceProjectAttachment_serviceProjectAttachmentBasicExample(
 		"service_project_attachment_id": "tf-test-project-1" + randomSuffix,
 		"random_suffix":                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -128,7 +127,6 @@ func TestAccApphubServiceProjectAttachment_serviceProjectAttachmentFullExample(t
 		"service_project_attachment_id": "tf-test-project-1" + randomSuffix,
 		"random_suffix":                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

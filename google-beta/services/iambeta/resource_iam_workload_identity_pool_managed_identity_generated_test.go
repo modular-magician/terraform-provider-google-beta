@@ -65,7 +65,6 @@ func TestAccIAMBetaWorkloadIdentityPoolManagedIdentity_iamWorkloadIdentityPoolMa
 		"workload_identity_pool_namespace_id":        "tf-test-example-namespace" + randomSuffix,
 		"random_suffix":                              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -122,7 +121,6 @@ func TestAccIAMBetaWorkloadIdentityPoolManagedIdentity_iamWorkloadIdentityPoolMa
 		"workload_identity_pool_namespace_id":        "tf-test-example-namespace" + randomSuffix,
 		"random_suffix":                              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

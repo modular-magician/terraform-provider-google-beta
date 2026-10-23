@@ -66,7 +66,6 @@ func TestAccComputeTargetTcpProxy_targetTcpProxyBasicExample(t *testing.T) {
 		"target_tcp_proxy_name": "tf-test-test-proxy" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -129,7 +128,6 @@ func TestAccComputeTargetTcpProxy_targetTcpProxyBackendlessExample(t *testing.T)
 		"target_tcp_proxy_name": "tf-test-test-proxy" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -175,7 +173,6 @@ func TestAccComputeTargetTcpProxy_targetTcpProxyTlsRouteExample(t *testing.T) {
 		"tls_route_name":        "tf-test-tls-route-check" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

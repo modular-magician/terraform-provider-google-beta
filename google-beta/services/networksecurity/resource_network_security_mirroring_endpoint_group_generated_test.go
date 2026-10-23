@@ -66,7 +66,6 @@ func TestAccNetworkSecurityMirroringEndpointGroup_networkSecurityMirroringEndpoi
 		"network_name":        "tf-test-example-network" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -127,7 +126,6 @@ func TestAccNetworkSecurityMirroringEndpointGroup_networkSecurityMirroringEndpoi
 		"network_name":        "tf-test-example-network" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

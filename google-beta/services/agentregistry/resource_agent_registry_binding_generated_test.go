@@ -65,7 +65,6 @@ func TestAccAgentRegistryBinding_agentRegistryBindingBasicExample(t *testing.T) 
 		"binding":       "tf-test-ar-binding" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -143,7 +142,6 @@ func TestAccAgentRegistryBinding_agentRegistryBindingTargetOnlyExample(t *testin
 		"binding":       "tf-test-ar-binding" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

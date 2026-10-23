@@ -66,7 +66,6 @@ func TestAccDiscoveryEngineChatEngine_discoveryengineChatEngineBasicExample(t *t
 		"engine_id":       "tf-test-chat-engine-id" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -142,7 +141,6 @@ func TestAccDiscoveryEngineChatEngine_discoveryengineChatEngineExistingDialogflo
 		"engine_id":     "tf-test-chat-engine-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

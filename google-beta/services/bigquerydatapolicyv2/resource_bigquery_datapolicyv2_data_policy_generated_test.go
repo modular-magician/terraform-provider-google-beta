@@ -64,7 +64,6 @@ func TestAccBigqueryDatapolicyv2DataPolicy_bigqueryDatapolicyv2DatapolicyBasicEx
 		"data_policy_id": "tf_test_basic_data_policy" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -108,7 +107,6 @@ func TestAccBigqueryDatapolicyv2DataPolicy_bigqueryDatapolicyv2DatapolicyPredefi
 		"data_policy_id": "tf_test_predefined_masking_data_policy" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -156,7 +154,6 @@ func TestAccBigqueryDatapolicyv2DataPolicy_bigqueryDatapolicyv2DatapolicyRoutine
 		"dataset_id":     "tf_test_dataset_id" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -223,7 +220,6 @@ func TestAccBigqueryDatapolicyv2DataPolicy_bigqueryDatapolicyv2DatapolicyWithgra
 		"data_policy_id": "tf_test_data_policy_with_grantees" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

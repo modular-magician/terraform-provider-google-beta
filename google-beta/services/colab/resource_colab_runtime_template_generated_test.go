@@ -65,7 +65,6 @@ func TestAccColabRuntimeTemplate_colabRuntimeTemplateBasicExample(t *testing.T) 
 		"runtime_template_name": "tf-test-colab-runtime-template" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -116,7 +115,6 @@ func TestAccColabRuntimeTemplate_colabRuntimeTemplateNoNameExample(t *testing.T)
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -160,7 +158,6 @@ func TestAccColabRuntimeTemplate_colabRuntimeTemplateFullExample(t *testing.T) {
 		"runtime_template_name": "tf-test-colab-runtime-template" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

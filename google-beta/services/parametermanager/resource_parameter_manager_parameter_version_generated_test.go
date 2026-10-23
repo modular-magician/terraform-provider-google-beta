@@ -66,7 +66,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionBasicExample(t *tes
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -109,7 +108,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithJsonFormatExamp
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -163,7 +161,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithKmsKeyExample(t
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -209,7 +206,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithYamlFormatExamp
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -257,7 +253,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithJsonFormatWithF
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -302,7 +297,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithYamlFormatWithF
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -346,7 +340,6 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithDataCrc32cExamp
 		"parameter_version_id": "tf_test_parameter_version" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

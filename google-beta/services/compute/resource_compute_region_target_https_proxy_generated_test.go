@@ -70,7 +70,6 @@ func TestAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyBasicExample(t *
 		"region_url_map_name":            "tf-test-url-map" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -167,7 +166,6 @@ func TestAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyHttpKeepAliveTim
 		"region_url_map_name":            "tf-test-url-map" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -269,7 +267,6 @@ func TestAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyMtlsExample(t *t
 		"url_map_name":            "tf-test-url-map" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -412,7 +409,6 @@ func TestAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyCertificateManag
 		"region_url_map_name":                  "tf-test-url-map" + randomSuffix,
 		"random_suffix":                        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

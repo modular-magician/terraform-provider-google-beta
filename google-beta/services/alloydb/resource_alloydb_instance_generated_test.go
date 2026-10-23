@@ -68,7 +68,6 @@ func TestAccAlloydbInstance_alloydbInstanceBasicTestExample(t *testing.T) {
 		"network_name":          servicenetworking.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -133,7 +132,6 @@ func TestAccAlloydbInstance_alloydbSecondaryInstanceBasicTestExample(t *testing.
 		"network_name":                    servicenetworking.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
 		"random_suffix":                   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -225,7 +223,6 @@ func TestAccAlloydbInstance_alloydbInstancePscTestExample(t *testing.T) {
 		"network_name":          "tf-test-alloydb-network" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

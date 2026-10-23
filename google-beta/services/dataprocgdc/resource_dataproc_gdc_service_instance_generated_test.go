@@ -65,7 +65,6 @@ func TestAccDataprocGdcServiceInstance_dataprocgdcServiceinstanceExample(t *test
 		"service_instance_id": "tf-test-tf-e2e-service-instance" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -66,7 +66,6 @@ func TestAccFirebaseAppHostingDefaultDomain_firebaseAppHostingDefaultDomainMinim
 		"service_act_id": "tf-test-dd-mi",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -134,7 +133,6 @@ func TestAccFirebaseAppHostingDefaultDomain_firebaseAppHostingDefaultDomainFullE
 		"service_act_id": "tf-test-dd-full",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -204,7 +202,6 @@ func TestAccFirebaseAppHostingDefaultDomain_firebaseAppHostingDefaultDomainDisab
 		"service_act_id": "tf-test-dd-disabled",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

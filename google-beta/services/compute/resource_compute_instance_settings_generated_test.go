@@ -62,7 +62,6 @@ func TestAccComputeInstanceSettings_instanceSettingsBasicExample(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

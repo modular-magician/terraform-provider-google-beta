@@ -67,7 +67,6 @@ func TestAccNetworkServicesMulticastConsumerAssociation_networkServicesMulticast
 		"network_name":              "tf-test-test-network-mca" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

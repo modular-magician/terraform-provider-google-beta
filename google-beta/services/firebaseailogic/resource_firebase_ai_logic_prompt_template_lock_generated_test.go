@@ -64,7 +64,6 @@ func TestAccFirebaseAILogicPromptTemplateLock_firebaseailogicPromptTemplateLockB
 		"template_id":   "tf-test-lock-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -120,7 +119,6 @@ func TestAccFirebaseAILogicPromptTemplateLock_firebaseailogicPromptTemplateLockG
 		"template_id":   "tf-test-global-only-lock-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

@@ -67,7 +67,6 @@ func TestAccComputeMachineImage_machineImageBasicExample(t *testing.T) {
 		"vm_name":       "tf-test-my-vm" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -136,7 +135,6 @@ func TestAccComputeMachineImage_computeMachineImageKmsExample(t *testing.T) {
 		"vm_name":       "tf-test-my-vm" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -214,7 +212,6 @@ func TestAccComputeMachineImage_machineImageResourceManagerTagsExample(t *testin
 		"vm_name":       "tf-test-my-vm" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

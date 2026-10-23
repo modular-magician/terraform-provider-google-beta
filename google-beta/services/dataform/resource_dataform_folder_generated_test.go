@@ -62,7 +62,6 @@ func TestAccDataformFolder_dataformFolderBasicExample(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -104,7 +103,6 @@ func TestAccDataformFolder_dataformFolderFullExample(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

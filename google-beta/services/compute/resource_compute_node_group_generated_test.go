@@ -65,7 +65,6 @@ func TestAccComputeNodeGroup_nodeGroupBasicExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-tmpl" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccComputeNodeGroup_nodeGroupMaintenanceIntervalExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-tmpl" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -177,7 +175,6 @@ func TestAccComputeNodeGroup_nodeGroupAutoscalingPolicyExample(t *testing.T) {
 		"template_name": "tf-test-soletenant-tmpl" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -242,7 +239,6 @@ func TestAccComputeNodeGroup_nodeGroupShareSettingsExample(t *testing.T) {
 		"template_name":      "tf-test-soletenant-tmpl" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

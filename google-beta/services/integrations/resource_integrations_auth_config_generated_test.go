@@ -64,7 +64,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigAdvanceExample(t *testi
 		"auth_config_name": "tf-test-test-authconfig" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigUsernameAndPasswordExam
 		"client":           BootstrapIntegrationsClient(t, "us-east4"),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -176,7 +174,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigOauth2AuthorizationCode
 		"client":           BootstrapIntegrationsClient(t, "us-east4"),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -231,7 +228,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigOauth2ClientCredentials
 		"client":           BootstrapIntegrationsClient(t, "us-east4"),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -300,7 +296,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigJwtExample(t *testing.T
 		"client":           BootstrapIntegrationsClient(t, "us-east4"),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -353,7 +348,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigAuthTokenExample(t *tes
 		"client":           BootstrapIntegrationsClient(t, "us-east4"),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -406,7 +400,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigServiceAccountExample(t
 		"service_account_id": "sa" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -464,7 +457,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigOidcTokenExample(t *tes
 		"service_account_id": "sa" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -521,7 +513,6 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigClientCertificateOnlyEx
 		"client":           BootstrapIntegrationsClient(t, "us-east4"),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

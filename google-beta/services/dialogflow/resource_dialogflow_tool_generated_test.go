@@ -66,7 +66,6 @@ func TestAccDialogflowTool_dialogflowToolBasicExample(t *testing.T) {
 		"tool_key":      "tf_test_basic_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -134,7 +133,6 @@ func TestAccDialogflowTool_dialogflowToolConnectorExample(t *testing.T) {
 		"tool_key":        "tf_test_connector_tool_key" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -254,7 +252,6 @@ func TestAccDialogflowTool_dialogflowToolFunctionExample(t *testing.T) {
 		"tool_key":      "tf_test_function_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -315,7 +312,6 @@ func TestAccDialogflowTool_dialogflowToolAuthExample(t *testing.T) {
 		"tool_key":      "tf_test_auth_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -385,7 +381,6 @@ func TestAccDialogflowTool_dialogflowToolBearerExample(t *testing.T) {
 		"tool_key":      "tf_test_bearer_token_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -453,7 +448,6 @@ func TestAccDialogflowTool_dialogflowToolOauthExample(t *testing.T) {
 		"tool_key":      "tf_test_oauth_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -534,7 +528,6 @@ func TestAccDialogflowTool_dialogflowToolServiceAgentExample(t *testing.T) {
 		"tool_key":      "tf_test_service_agent_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

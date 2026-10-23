@@ -68,7 +68,6 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobReconciliationExample(t *
 		"pipeline_name":   "tf_test_example_pipeline_job" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -161,7 +160,6 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobBackfillExample(t *testin
 		"mapping_pipeline_name":  "tf_test_example_mapping_pipeline_job" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -217,7 +215,6 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobWhistleMappingExample(t *
 		"source_fhirstore_name": "tf_test_source_fhir_store" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -326,7 +323,6 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobMappingReconDestExample(t
 		"source_fhirstore_name": "tf_test_source_fhir_store" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -66,7 +66,6 @@ func TestAccChronicleRetrohunt_chronicleRetrohuntBasicExample(t *testing.T) {
 		"start_time":    time.Now().Add(time.Hour * (-12)).Format(time.RFC3339),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

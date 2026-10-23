@@ -66,7 +66,6 @@ func TestAccComputeBackendBucket_backendBucketBasicExample(t *testing.T) {
 		"bucket_name":         "tf-test-image-store-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -117,7 +116,6 @@ func TestAccComputeBackendBucket_backendBucketFullExample(t *testing.T) {
 		"bucket_name":         "tf-test-image-store-bucket-full" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -179,7 +177,6 @@ func TestAccComputeBackendBucket_backendBucketSecurityPolicyExample(t *testing.T
 		"bucket_name":         "tf-test-image-store-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -236,7 +233,6 @@ func TestAccComputeBackendBucket_backendBucketQueryStringWhitelistExample(t *tes
 		"backend_bucket_name": "tf-test-image-backend-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -291,7 +287,6 @@ func TestAccComputeBackendBucket_backendBucketIncludeHttpHeadersExample(t *testi
 		"backend_bucket_name": "tf-test-image-backend-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -354,7 +349,6 @@ func TestAccComputeBackendBucket_externalCdnLbWithBackendBucketExample(t *testin
 		"test_object":             "tf-test-test-object" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -495,7 +489,6 @@ func TestAccComputeBackendBucket_backendBucketBypassCacheExample(t *testing.T) {
 		"bucket_name":         "tf-test-image-store-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -551,7 +544,6 @@ func TestAccComputeBackendBucket_backendBucketCoalescingExample(t *testing.T) {
 		"bucket_name":         "tf-test-image-store-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -608,7 +600,6 @@ func TestAccComputeBackendBucket_backendBucketGlobalIlbExample(t *testing.T) {
 		"bucket_name":         "tf-test-global-ilb-bucket" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

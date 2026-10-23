@@ -63,7 +63,6 @@ func TestAccComputeAddress_addressBasicExample(t *testing.T) {
 		"address_name":  "tf-test-my-address" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccComputeAddress_addressWithSubnetworkExample(t *testing.T) {
 		"subnetwork_name": "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -164,7 +162,6 @@ func TestAccComputeAddress_addressWithGceEndpointExample(t *testing.T) {
 		"address_name":  "tf-test-my-internal-address-" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -208,7 +205,6 @@ func TestAccComputeAddress_addressWithSharedLoadbalancerVipExample(t *testing.T)
 		"address_name":  "tf-test-my-internal-address" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -253,7 +249,6 @@ func TestAccComputeAddress_instanceWithIpExample(t *testing.T) {
 		"instance_name": "tf-test-vm-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -320,7 +315,6 @@ func TestAccComputeAddress_computeAddressIpsecInterconnectExample(t *testing.T) 
 		"network_name":  "tf-test-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -375,7 +369,6 @@ func TestAccComputeAddress_computeAddressEnhancedByoipExample(t *testing.T) {
 		"sub_pdp_name":    "tf-test-test-sub-pdp" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

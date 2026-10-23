@@ -72,7 +72,6 @@ func TestAccDataformRepository_dataformRepositoryWithCloudsourceRepoExample(t *t
 		"secret_name":              "tf-test-my-secret" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -172,7 +171,6 @@ func TestAccDataformRepository_dataformRepositoryWithCloudsourceRepoAndSshExampl
 		"secret_name":              "tf-test-my-secret" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

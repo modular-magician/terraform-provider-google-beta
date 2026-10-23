@@ -64,7 +64,6 @@ func TestAccSecretManagerSecretVersion_secretVersionBasicExample(t *testing.T) {
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -122,7 +121,6 @@ func TestAccSecretManagerSecretVersion_secretVersionBasicWriteOnlyExample(t *tes
 		"secret_id":     "tf-test-secret-version-write-only" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -180,7 +178,6 @@ func TestAccSecretManagerSecretVersion_secretVersionDeletionPolicyAbandonExample
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -238,7 +235,6 @@ func TestAccSecretManagerSecretVersion_secretVersionDeletionPolicyDisableExample
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -296,7 +292,6 @@ func TestAccSecretManagerSecretVersion_secretVersionWithBase64StringSecretDataEx
 		"secret_id":     "tf-test-secret-version" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -354,7 +349,6 @@ func TestAccSecretManagerSecretVersion_secretVersionWithBase64StringSecretDataWr
 		"secret_id":     "tf-test-secret-version-base64-write-only" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

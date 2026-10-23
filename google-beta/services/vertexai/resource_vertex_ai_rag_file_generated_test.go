@@ -67,7 +67,6 @@ func TestAccVertexAIRagFile_vertexAiRagFileGcsExample(t *testing.T) {
 		"corpus_display_name": "tf-test-rag-corpus-file" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -160,7 +159,6 @@ func TestAccVertexAIRagFile_vertexAiRagFileFullExample(t *testing.T) {
 		"corpus_display_name": "tf-test-rag-corpus-file-full" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -273,7 +271,6 @@ func TestAccVertexAIRagFile_vertexAiRagFileLayoutParserExample(t *testing.T) {
 		"processor_display_name": "tf-test-rag-layout-parser" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

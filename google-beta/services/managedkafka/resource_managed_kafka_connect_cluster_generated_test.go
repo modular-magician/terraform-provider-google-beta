@@ -69,7 +69,6 @@ func TestAccManagedKafkaConnectCluster_managedkafkaConnectClusterBasicExample(t 
 		"secondary_subnet_id": "tf-test-my-secondary-subnetwork" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

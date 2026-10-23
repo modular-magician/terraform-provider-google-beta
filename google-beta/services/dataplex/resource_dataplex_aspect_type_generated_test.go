@@ -64,7 +64,6 @@ func TestAccDataplexAspectType_dataplexAspectTypeBasicExample(t *testing.T) {
 		"aspect_type_name": "tf-test-aspect-type-basic" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -137,7 +136,6 @@ func TestAccDataplexAspectType_dataplexAspectTypeFullExample(t *testing.T) {
 		"aspect_type_name": "tf-test-aspect-type-full" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -67,7 +67,6 @@ func TestAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(t *testing.T) {
 		"key_project_name": "tf-test-key-proj" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

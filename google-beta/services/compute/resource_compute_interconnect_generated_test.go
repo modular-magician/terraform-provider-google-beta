@@ -64,7 +64,6 @@ func TestAccComputeInterconnect_computeInterconnectBasicTestExample(t *testing.T
 		"interconnect_name": "tf-test-example-interconnect" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

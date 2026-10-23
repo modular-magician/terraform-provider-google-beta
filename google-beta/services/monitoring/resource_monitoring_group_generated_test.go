@@ -63,7 +63,6 @@ func TestAccMonitoringGroup_monitoringGroupBasicExample(t *testing.T) {
 		"display_name":  "MonitoringGroup" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccMonitoringGroup_monitoringGroupSubgroupExample(t *testing.T) {
 		"display_name2": "MonitoringSubGroup" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

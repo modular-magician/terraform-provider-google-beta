@@ -75,7 +75,6 @@ func TestAccDataplexMetadataFeed_dataplexMetadataFeedBasicExample(t *testing.T) 
 		"metadata_feed_id": "tf-test-tf-test-feed" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -233,7 +232,6 @@ func TestAccDataplexMetadataFeed_dataplexMetadataFeedProjectsExample(t *testing.
 		"metadata_feed_id": "tf-test-tf-test-feed" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

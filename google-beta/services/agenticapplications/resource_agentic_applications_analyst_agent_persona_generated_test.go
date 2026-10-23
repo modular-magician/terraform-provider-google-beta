@@ -87,7 +87,6 @@ func TestAccAgenticApplicationsAnalystAgentPersona_analystAgentPersonaBasicExamp
 		"skill_description":   "Updated skill description for finance analysis",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -194,7 +193,6 @@ func TestAccAgenticApplicationsAnalystAgentPersona_analystAgentPersonaFullExampl
 		"table_id":       "tf-test-table" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -671,7 +669,6 @@ func TestAccAgenticApplicationsAnalystAgentPersona_analystAgentPersonaMethodolog
 		"persona_id":     "tf-test-methodology" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -776,7 +773,6 @@ func TestAccAgenticApplicationsAnalystAgentPersona_analystAgentPersonaAuditTrail
 		"persona_id":     "tf_test_audit_trail" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -66,7 +66,6 @@ func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
 		"vm_name":       "tf-test-test-tpu" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -122,7 +121,6 @@ func TestAccTpuV2Vm_tpuV2VmFullExample(t *testing.T) {
 		"vm_name":       "tf-test-test-tpu" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

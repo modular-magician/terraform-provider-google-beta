@@ -66,7 +66,6 @@ func TestAccBigtableSchemaBundle_bigtableSchemaBundleExample(t *testing.T) {
 		"table_name":         "tf-test-bt-table" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

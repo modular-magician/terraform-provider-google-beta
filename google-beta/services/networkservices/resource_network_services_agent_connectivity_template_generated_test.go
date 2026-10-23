@@ -75,7 +75,6 @@ func TestAccNetworkServicesAgentConnectivityTemplate_networkServicesAgentConnect
 		"agent_connectivity_template_id": "tf-test-my-connectivity-template" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -186,7 +185,6 @@ func TestAccNetworkServicesAgentConnectivityTemplate_networkServicesAgentConnect
 		"trust_config_name":              "tf-test-my-trust-config" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

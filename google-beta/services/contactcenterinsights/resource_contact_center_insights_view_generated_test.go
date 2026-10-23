@@ -62,7 +62,6 @@ func TestAccContactCenterInsightsView_contactCenterInsightsViewBasicExample(t *t
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -105,7 +104,6 @@ func TestAccContactCenterInsightsView_contactCenterInsightsViewFullExample(t *te
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

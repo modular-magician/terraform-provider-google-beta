@@ -66,7 +66,6 @@ func TestAccFirestoreDocument_firestoreDocumentBasicExample(t *testing.T) {
 		"project_id":    "tf-test-project-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -148,7 +147,6 @@ func TestAccFirestoreDocument_firestoreDocumentNestedDocumentExample(t *testing.
 		"project_id":    "tf-test-project-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

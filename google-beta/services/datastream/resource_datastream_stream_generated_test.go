@@ -76,7 +76,6 @@ func TestAccDatastreamStream_datastreamStreamBasicExample(t *testing.T) {
 		"stream_id":                         "tf-test-my-stream" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -254,7 +253,6 @@ func TestAccDatastreamStream_datastreamStreamFullExample(t *testing.T) {
 		"stream_id":                         "tf-test-my-stream" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -501,7 +499,6 @@ func TestAccDatastreamStream_datastreamStreamPostgresqlBigqueryDatasetIdExample(
 		"stream_id":                    "tf-test-postgres-bigquery" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -658,7 +655,6 @@ func TestAccDatastreamStream_datastreamStreamBigqueryExample(t *testing.T) {
 		"stream_id":                               "tf-test-my-stream" + randomSuffix,
 		"random_suffix":                           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -824,7 +820,6 @@ func TestAccDatastreamStream_datastreamStreamBigqueryCrossProjectSourceHierachyE
 		"stream_id":                         "tf-test-my-stream" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1003,7 +998,6 @@ func TestAccDatastreamStream_datastreamStreamBigqueryAppendOnlyExample(t *testin
 		"stream_id":                         "tf-test-my-stream" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

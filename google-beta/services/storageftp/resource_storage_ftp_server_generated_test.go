@@ -64,7 +64,6 @@ func TestAccStorageFtpServer_storageFtpServerInternalExample(t *testing.T) {
 		"server_id":     "tf-test-sftp-int" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -125,7 +124,6 @@ func TestAccStorageFtpServer_storageFtpServerExternalExample(t *testing.T) {
 		"server_id":     "tf-test-sftp-ext" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -66,7 +66,6 @@ func TestAccCloudSchedulerJob_schedulerJobPubsubExample(t *testing.T) {
 		"topic_name":    "tf-test-job-topic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -120,7 +119,6 @@ func TestAccCloudSchedulerJob_schedulerJobHttpExample(t *testing.T) {
 		"job_name":      "tf-test-test-job" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -179,7 +177,6 @@ func TestAccCloudSchedulerJob_schedulerJobPausedExample(t *testing.T) {
 		"job_name":      "tf-test-test-job" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -239,7 +236,6 @@ func TestAccCloudSchedulerJob_schedulerJobAppEngineExample(t *testing.T) {
 		"job_name":      "tf-test-test-job" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -306,7 +302,6 @@ func TestAccCloudSchedulerJob_schedulerJobOauthExample(t *testing.T) {
 		"job_name":      "tf-test-test-job" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -364,7 +359,6 @@ func TestAccCloudSchedulerJob_schedulerJobOidcExample(t *testing.T) {
 		"job_name":      "tf-test-test-job" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

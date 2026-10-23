@@ -63,7 +63,6 @@ func TestAccChronicleParserExtension_chronicleParserextensionBasicExample(t *tes
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -109,7 +108,6 @@ func TestAccChronicleParserExtension_chronicleParserextensionFullExample(t *test
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -179,7 +177,6 @@ func TestAccChronicleParserExtension_chronicleParserextensionDynamicExample(t *t
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

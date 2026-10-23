@@ -65,7 +65,6 @@ func TestAccBigQueryRoutine_bigqueryRoutineBasicExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -110,7 +109,6 @@ func TestAccBigQueryRoutine_bigqueryRoutineJsonExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -164,7 +162,6 @@ func TestAccBigQueryRoutine_bigqueryRoutineTvfExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -218,7 +215,6 @@ func TestAccBigQueryRoutine_bigqueryRoutineTableTypeExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -275,7 +271,6 @@ func TestAccBigQueryRoutine_bigqueryRoutinePysparkExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -350,7 +345,6 @@ func TestAccBigQueryRoutine_bigqueryRoutinePysparkMainfileExample(t *testing.T) 
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -409,7 +403,6 @@ func TestAccBigQueryRoutine_bigqueryRoutineSparkJarExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -470,7 +463,6 @@ func TestAccBigQueryRoutine_bigqueryRoutineDataGovernanceTypeExample(t *testing.
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -521,7 +513,6 @@ func TestAccBigQueryRoutine_bigqueryRoutinePythonFunctionExample(t *testing.T) {
 		"routine_id":    "tf_test_routine_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

@@ -64,7 +64,6 @@ func TestAccSpannerInstancePartition_spannerInstancePartitionBasicExample(t *tes
 		"partition_name": "tf-test-test-partition" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccSpannerInstancePartition_spannerInstancePartitionAutoscalingExample(
 		"partition_name": "tf-test-test-partition" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

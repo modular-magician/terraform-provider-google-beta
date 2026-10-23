@@ -84,7 +84,6 @@ func TestAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterBasic
 		"subnetwork_name":              "tf-test-mdc-subnet" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

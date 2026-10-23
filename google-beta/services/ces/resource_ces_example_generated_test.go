@@ -69,7 +69,6 @@ func TestAccCESExample_cesExampleBasicExample(t *testing.T) {
 		"toolset_id":           "tf-test-toolset-id" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

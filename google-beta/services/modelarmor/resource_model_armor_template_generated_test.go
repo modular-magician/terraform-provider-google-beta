@@ -64,7 +64,6 @@ func TestAccModelArmorTemplate_modelarmorTemplateBasicExample(t *testing.T) {
 		"templateId":    "modelarmor1",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccModelArmorTemplate_modelarmorTemplateFilterConfigExample(t *testing.
 		"template_metadata_multi_language_detection_enable_multi_language_detection": false,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -206,7 +204,6 @@ func TestAccModelArmorTemplate_modelarmorTemplateTemplateMetadataExample(t *test
 		"template_metadata_multi_language_detection_enable_multi_language_detection": true,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -279,7 +276,6 @@ func TestAccModelArmorTemplate_modelarmorTemplateFilterVersionSelectorExample(t 
 		"template_metadata_filter_version_selector_version": "v1",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -345,7 +341,6 @@ func TestAccModelArmorTemplate_modelarmorTemplateLabelExample(t *testing.T) {
 		"template_metadata_multi_language_detection_enable_multi_language_detection": false,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

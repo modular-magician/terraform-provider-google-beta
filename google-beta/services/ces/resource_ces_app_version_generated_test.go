@@ -66,7 +66,6 @@ func TestAccCESAppVersion_cesAppVersionBasicExample(t *testing.T) {
 		"app_version_id":           "tf-test-app-version-id" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

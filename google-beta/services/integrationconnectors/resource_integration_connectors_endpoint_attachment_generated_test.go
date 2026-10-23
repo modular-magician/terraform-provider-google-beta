@@ -63,7 +63,6 @@ func TestAccIntegrationConnectorsEndpointAttachment_integrationConnectorsEndpoin
 		"endpoint_attachment_name": "tf-test-test-endpoint-attachment" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

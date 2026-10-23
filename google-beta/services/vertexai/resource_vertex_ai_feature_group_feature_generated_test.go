@@ -66,7 +66,6 @@ func TestAccVertexAIFeatureGroupFeature_vertexAiFeatureGroupFeatureExample(t *te
 		"name":               "tf_test_example_feature" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -166,7 +165,6 @@ func TestAccVertexAIFeatureGroupFeature_vertexAiFeatureGroupFeatureWithVersionCo
 		"name":               "tf_test_example_feature" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -65,7 +65,6 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfileBasicExample(
 		"connection_profile_id": "tf-test-my-profile" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -123,7 +122,6 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresqlPri
 		"subnetwork_name":        "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -297,7 +295,6 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfileFullExample(t
 		"connection_profile_id": "tf-test-my-profile" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -352,7 +349,6 @@ func TestAccDatastreamConnectionProfile_datastreamStreamPostgresqlSslconfigServe
 		"deletion_protection":    false,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -463,7 +459,6 @@ func TestAccDatastreamConnectionProfile_datastreamConnectionProfilePostgresSecre
 		"source_connection_profile_id": "tf-test-source-profile" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -63,7 +63,6 @@ func TestAccPrivatecaCertificateTemplate_privatecaTemplateBasicExample(t *testin
 		"name":          "tf-test-my-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -174,7 +173,6 @@ func TestAccPrivatecaCertificateTemplate_privatecaTemplateZeroMaxIssuerPathLengt
 		"name":          "tf-test-my-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

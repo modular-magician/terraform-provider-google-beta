@@ -79,7 +79,6 @@ func TestAccObservabilityLink_observabilityLinkBasicExample(t *testing.T) {
 		"link_id":         "tf_test_link_test" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

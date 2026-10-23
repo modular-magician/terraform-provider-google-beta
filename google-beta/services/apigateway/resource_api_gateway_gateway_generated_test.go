@@ -65,7 +65,6 @@ func TestAccApiGatewayGateway_apigatewayGatewayBasicExample(t *testing.T) {
 		"gateway_id":    "tf-test-my-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -132,7 +131,6 @@ func TestAccApiGatewayGateway_apigatewayGatewayFullExample(t *testing.T) {
 		"gateway_id":    "tf-test-my-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

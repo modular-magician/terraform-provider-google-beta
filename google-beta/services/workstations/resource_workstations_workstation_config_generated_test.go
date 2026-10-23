@@ -72,7 +72,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigBasicExample(t *testi
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -180,7 +179,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigContainerExample(t *t
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -269,7 +267,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigHyperdiskExample(t *t
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -352,7 +349,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigHyperdiskSourceSnapsh
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -459,7 +455,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigPersistentDirectories
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -553,7 +548,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigSourceSnapshotExample
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -639,7 +633,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigShieldedInstanceConfi
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -723,7 +716,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigAcceleratorsExample(t
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -821,7 +813,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigBoostExample(t *testi
 		"workstation_config_name":   "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1018,7 +1009,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigEncryptionKeyExample(
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1129,7 +1119,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigAllowedPortsExample(t
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1227,7 +1216,6 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigIdleActionExample(t *
 		"workstation_config_name":  "tf-test-workstation-config" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

@@ -81,7 +81,6 @@ func TestAccResourceManagerV3Boundary_resourceManagerBoundaryBasicExample(t *tes
 		"tag_value_short_name": "tf-test-bndval" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

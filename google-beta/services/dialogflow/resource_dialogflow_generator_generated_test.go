@@ -63,7 +63,6 @@ func TestAccDialogflowGenerator_dialogflowGeneratorBasicExample(t *testing.T) {
 		"profile_name":  "tf-test-dialogflow-profile" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -116,7 +115,6 @@ func TestAccDialogflowGenerator_dialogflowGeneratorAgentCoachingExample(t *testi
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -173,7 +171,6 @@ func TestAccDialogflowGenerator_dialogflowGeneratorWithToolsExample(t *testing.T
 		"tool_key":      "tf_test_generator_tool_key" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

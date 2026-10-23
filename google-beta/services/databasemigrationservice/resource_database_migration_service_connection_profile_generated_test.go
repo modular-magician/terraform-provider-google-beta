@@ -73,7 +73,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"to_profile":    "tf-test-my-toprofileid" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -202,7 +201,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"sqldb_user":    "tf-test-my-username" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -293,7 +291,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"sqldb_user":    "tf-test-my-username" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -381,7 +378,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"sqldb_user":    "tf-test-my-username" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -466,7 +462,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"destination_csql": "tf-test-destination-csql" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -531,7 +526,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"destination_csql": "tf-test-destination-csql" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -597,7 +591,6 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 		"network_name":        servicenetworking.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

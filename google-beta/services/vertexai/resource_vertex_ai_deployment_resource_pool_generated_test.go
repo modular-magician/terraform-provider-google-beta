@@ -63,7 +63,6 @@ func TestAccVertexAIDeploymentResourcePool_vertexAiDeploymentResourcePoolExample
 		"deployment_resource_pool_id": "tf-test-example-deployment-resource-pool" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

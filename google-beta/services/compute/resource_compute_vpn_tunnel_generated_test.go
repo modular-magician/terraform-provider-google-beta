@@ -70,7 +70,6 @@ func TestAccComputeVpnTunnel_vpnTunnelBasicExample(t *testing.T) {
 		"vpn_tunnel_name":              "tf-test-tunnel-1" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -178,7 +177,6 @@ func TestAccComputeVpnTunnel_vpnTunnelCipherSuiteExample(t *testing.T) {
 		"vpn_tunnel_name":              "tf-test-tunnel-cipher" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

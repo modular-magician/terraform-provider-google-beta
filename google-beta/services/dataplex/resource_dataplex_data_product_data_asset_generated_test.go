@@ -66,7 +66,6 @@ func TestAccDataplexDataProductDataAsset_dataplexDataProductDataAssetBasicExampl
 		"data_product_id": "tf-test-data-product" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -139,7 +138,6 @@ func TestAccDataplexDataProductDataAsset_dataplexDataProductDataAssetFullExample
 		"data_product_id": "tf-test-data-product" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

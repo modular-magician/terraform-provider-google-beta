@@ -65,7 +65,6 @@ func TestAccFirebaseHostingChannel_firebasehostingChannelBasicExample(t *testing
 		"site_id":       "tf-test-site-with-channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -117,7 +116,6 @@ func TestAccFirebaseHostingChannel_firebasehostingChannelFullExample(t *testing.
 		"site_id":       "tf-test-site-with-channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

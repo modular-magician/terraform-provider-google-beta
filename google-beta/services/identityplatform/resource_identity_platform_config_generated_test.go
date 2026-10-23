@@ -69,7 +69,6 @@ func TestAccIdentityPlatformConfig_identityPlatformConfigBasicExample(t *testing
 		"quota_start_time": time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -177,7 +176,6 @@ func TestAccIdentityPlatformConfig_identityPlatformConfigMinimalExample(t *testi
 		"project_id":    "tf-test-my-project-1" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -267,7 +265,6 @@ func TestAccIdentityPlatformConfig_identityPlatformConfigWithFalseValuesExample(
 		"project_id":    "tf-test-my-project-2" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

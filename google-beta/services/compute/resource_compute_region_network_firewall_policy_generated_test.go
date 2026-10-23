@@ -63,7 +63,6 @@ func TestAccComputeRegionNetworkFirewallPolicy_regionNetworkFirewallPolicyFullEx
 		"policy_name":   "tf-test-tf-test-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -106,7 +105,6 @@ func TestAccComputeRegionNetworkFirewallPolicy_regionNetworkFirewallPolicyRoceEx
 		"policy_name":   "tf-test-rnf-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

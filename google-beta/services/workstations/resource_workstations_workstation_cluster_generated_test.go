@@ -66,7 +66,6 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterBasicExample(t *tes
 		"workstation_cluster_name": "tf-test-workstation-cluster" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -134,7 +133,6 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterPrivateExample(t *t
 		"workstation_cluster_name": "tf-test-workstation-cluster-private" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -206,7 +204,6 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterCustomDomainExample
 		"workstation_cluster_name": "tf-test-workstation-cluster-custom-domain" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -284,7 +281,6 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterTagsExample(t *test
 		"workstation_cluster_name": "tf-test-workstation-cluster-tags" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -359,7 +355,6 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterUrlsExample(t *test
 		"cluster_network_name": "tf-test-workstations-network" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

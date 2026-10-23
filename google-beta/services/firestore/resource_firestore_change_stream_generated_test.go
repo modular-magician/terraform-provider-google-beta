@@ -65,7 +65,6 @@ func TestAccFirestoreChangeStream_firestoreChangeStreamBasicExample(t *testing.T
 		"database_id":      "tf-test-database-id" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -135,7 +134,6 @@ func TestAccFirestoreChangeStream_firestoreChangeStreamFullExample(t *testing.T)
 		"database_id":      "tf-test-database-id" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

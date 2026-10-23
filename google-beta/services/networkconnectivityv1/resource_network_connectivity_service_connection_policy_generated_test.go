@@ -67,7 +67,6 @@ func TestAccNetworkConnectivityv1ServiceConnectionPolicy_networkConnectivityPoli
 		"service_class_name":       "gcp-memorystore-redis",
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

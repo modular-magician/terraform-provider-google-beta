@@ -63,7 +63,6 @@ func TestAccBiglakeCatalog_bigqueryBiglakeCatalogExample(t *testing.T) {
 		"name":          "tf_test_my_catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

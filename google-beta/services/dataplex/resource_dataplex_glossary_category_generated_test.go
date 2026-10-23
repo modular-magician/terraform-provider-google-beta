@@ -63,7 +63,6 @@ func TestAccDataplexGlossaryCategory_dataplexGlossaryCategoryBasicExample(t *tes
 		"category_name": "tf-test-category-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -113,7 +112,6 @@ func TestAccDataplexGlossaryCategory_dataplexGlossaryCategoryFullExample(t *test
 		"category_name": "tf-test-category-full" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

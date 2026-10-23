@@ -66,7 +66,6 @@ func TestAccNetworkServicesGateway_networkServicesGatewayBasicExample(t *testing
 		"resource_name": "tf-test-my-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -111,7 +110,6 @@ func TestAccNetworkServicesGateway_networkServicesGatewayAdvancedExample(t *test
 		"resource_name": "tf-test-my-gateway" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -167,7 +165,6 @@ func TestAccNetworkServicesGateway_networkServicesGatewaySecureWebProxyExample(t
 		"subnetwork_name":            "tf-test-my-subnetwork-name" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -277,7 +274,6 @@ func TestAccNetworkServicesGateway_networkServicesGatewayMultipleSwpSameNetworkE
 		"subnetwork_name":            "tf-test-my-subnetwork-name" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

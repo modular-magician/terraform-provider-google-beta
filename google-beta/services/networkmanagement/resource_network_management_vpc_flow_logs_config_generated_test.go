@@ -68,7 +68,6 @@ func TestAccNetworkManagementVpcFlowLogsConfig_networkManagementVpcFlowLogsConfi
 		"vpc_flow_logs_config_id":      "tf-test-basic-interconnect-test-id" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -144,7 +143,6 @@ func TestAccNetworkManagementVpcFlowLogsConfig_networkManagementVpcFlowLogsConfi
 		"vpn_tunnel_name":              "tf-test-basic-test-tunnel" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -249,7 +247,6 @@ func TestAccNetworkManagementVpcFlowLogsConfig_networkManagementVpcFlowLogsConfi
 		"vpc_flow_logs_config_id": "tf-test-basic-network-test-id" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -302,7 +299,6 @@ func TestAccNetworkManagementVpcFlowLogsConfig_networkManagementVpcFlowLogsConfi
 		"vpc_flow_logs_config_id": "tf-test-basic-subnet-test-id" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

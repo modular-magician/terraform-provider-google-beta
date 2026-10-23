@@ -64,7 +64,6 @@ func TestAccFirebaseHostingRelease_firebasehostingReleaseInSiteExample(t *testin
 		"site_id":       "tf-test-site-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -128,7 +127,6 @@ func TestAccFirebaseHostingRelease_firebasehostingReleaseInChannelExample(t *tes
 		"site_id":       "tf-test-site-with-channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -198,7 +196,6 @@ func TestAccFirebaseHostingRelease_firebasehostingReleaseDisableExample(t *testi
 		"site_id":       "tf-test-site-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

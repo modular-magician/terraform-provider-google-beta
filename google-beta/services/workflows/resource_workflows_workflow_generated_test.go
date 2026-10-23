@@ -66,7 +66,6 @@ func TestAccWorkflowsWorkflow_workflowBasicExample(t *testing.T) {
 		"name":          "workflow" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -143,7 +142,6 @@ func TestAccWorkflowsWorkflow_workflowTagsExample(t *testing.T) {
 		"tag_value":     "tf_test_tag_value" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

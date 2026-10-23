@@ -67,7 +67,6 @@ func TestAccComputeWireGroup_computeWireGroupBasicExample(t *testing.T) {
 		"name":               "tf-test-test-wire-group" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -131,7 +130,6 @@ func TestAccComputeWireGroup_computeWireGroupBasicBetaExample(t *testing.T) {
 		"name":               "tf-test-test-wire-group-beta" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

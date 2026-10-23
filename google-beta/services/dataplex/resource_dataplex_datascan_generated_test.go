@@ -69,7 +69,6 @@ func TestAccDataplexDatascan_dataplexDatascanBasicProfileExample(t *testing.T) {
 		"datascan_name": "tf-test-dataprofile-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -127,7 +126,6 @@ func TestAccDataplexDatascan_dataplexDatascanFullProfileTestExample(t *testing.T
 		"datascan_name": "tf-test-dataprofile-full-test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -247,7 +245,6 @@ func TestAccDataplexDatascan_dataplexDatascanOnetimeProfileExample(t *testing.T)
 		"datascan_name": "tf-test-dataprofile-onetime" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -307,7 +304,6 @@ func TestAccDataplexDatascan_dataplexDatascanBasicQualityExample(t *testing.T) {
 		"datascan_name": "tf-test-dataquality-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -374,7 +370,6 @@ func TestAccDataplexDatascan_dataplexDatascanFullQualityTestExample(t *testing.T
 		"datascan_name": "tf-test-dataquality-full-test" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -626,7 +621,6 @@ func TestAccDataplexDatascan_dataplexDatascanBasicDiscoveryExample(t *testing.T)
 		"datascan_name": "tf-test-datadiscovery-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -691,7 +685,6 @@ func TestAccDataplexDatascan_dataplexDatascanFullDiscoveryExample(t *testing.T) 
 		"datascan_name": "tf-test-datadiscovery-full" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -809,7 +802,6 @@ func TestAccDataplexDatascan_dataplexDatascanDocumentationExample(t *testing.T) 
 		"sql_dialect":   "SPARK_SQL",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -953,7 +945,6 @@ func TestAccDataplexDatascan_dataplexDatascanOnetimeDocumentationExample(t *test
 		"datascan_name": "tf-test-datadocumentation-onetime" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1076,7 +1067,6 @@ func TestAccDataplexDatascan_dataplexDatascanExecutionIdentityUserCredentialExam
 		"datascan_name": "tf-test-dataplex-id-user-cred" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1171,7 +1161,6 @@ func TestAccDataplexDatascan_dataplexDatascanExecutionIdentityServiceAccountExam
 		"datascan_name": "tf-test-dataplex-id-sa" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1310,7 +1299,6 @@ func TestAccDataplexDatascan_dataplexDatascanQualityReusableRulesCatalogBasedExa
 		"datascan_name": "tf-test-dataquality-catalog" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1540,7 +1528,6 @@ func TestAccDataplexDatascan_dataplexDatascanDataQualityTemplateReferenceExample
 		"datascan_name": "tf-test-dataquality-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

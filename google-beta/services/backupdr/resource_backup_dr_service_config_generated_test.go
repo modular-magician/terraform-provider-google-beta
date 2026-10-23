@@ -64,7 +64,6 @@ func TestAccBackupDRServiceConfig_backupDrServiceConfigExample(t *testing.T) {
 		"resource_type": "compute.googleapis.com/Instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

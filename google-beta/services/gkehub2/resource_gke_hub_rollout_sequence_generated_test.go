@@ -77,7 +77,6 @@ func TestAccGKEHub2RolloutSequence_gkeHubRolloutSequenceBasicExample(t *testing.
 		"rollout_sequence_id": "tf-test-rs-basic" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -267,7 +266,6 @@ func TestAccGKEHub2RolloutSequence_gkeHubRolloutSequenceUserTriggeredExample(t *
 		"subnetwork_name":     "tf-test-rs-subnet" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

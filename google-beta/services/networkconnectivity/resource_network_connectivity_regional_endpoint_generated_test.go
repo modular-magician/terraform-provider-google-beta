@@ -66,7 +66,6 @@ func TestAccNetworkConnectivityRegionalEndpoint_networkConnectivityRegionalEndpo
 		"rep_subnetwork": "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -130,7 +129,6 @@ func TestAccNetworkConnectivityRegionalEndpoint_networkConnectivityRegionalEndpo
 		"rep_subnetwork": "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

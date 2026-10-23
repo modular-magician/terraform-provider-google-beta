@@ -64,7 +64,6 @@ func TestAccDeveloperConnectAccountConnector_developerConnectAccountConnectorGit
 		"account_connector_name": "tf-test-my-ac" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -112,7 +111,6 @@ func TestAccDeveloperConnectAccountConnector_developerConnectAccountConnectorGit
 		"account_connector_name": "tf-test-my-ac" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -162,7 +160,6 @@ func TestAccDeveloperConnectAccountConnector_developerConnectAccountConnectorGhe
 		"client_secret_secret_name": "tf-test-ghe-ac-sec" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -249,7 +246,6 @@ func TestAccDeveloperConnectAccountConnector_developerConnectAccountConnectorGle
 		"client_secret_secret_name": "tf-test-gle-ac-sec" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -336,7 +332,6 @@ func TestAccDeveloperConnectAccountConnector_developerConnectAccountConnectorBbd
 		"client_secret_secret_name": "tf-test-bbdc-ac-sec" + randomSuffix,
 		"random_suffix":             randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

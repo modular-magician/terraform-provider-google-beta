@@ -65,7 +65,6 @@ func TestAccNetworkSecurityBackendAuthenticationConfig_networkSecurityBackendAut
 		"resource_name": "tf-test-my-backend-authentication-config" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -114,7 +113,6 @@ func TestAccNetworkSecurityBackendAuthenticationConfig_networkSecurityBackendAut
 		"trust_config_name": "tf-test-my-trust-config" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -198,7 +196,6 @@ func TestAccNetworkSecurityBackendAuthenticationConfig_backendServiceTlsSettings
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

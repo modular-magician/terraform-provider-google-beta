@@ -65,7 +65,6 @@ func TestAccChronicleReferenceList_chronicleReferencelistBasicExample(t *testing
 		"reference_list_id":    "tf_test_reference_list_id" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

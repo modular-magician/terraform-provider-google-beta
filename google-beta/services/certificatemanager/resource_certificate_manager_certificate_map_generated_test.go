@@ -63,7 +63,6 @@ func TestAccCertificateManagerCertificateMap_certificateManagerCertificateMapBas
 		"cert_map_name": "tf-test-cert-map" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

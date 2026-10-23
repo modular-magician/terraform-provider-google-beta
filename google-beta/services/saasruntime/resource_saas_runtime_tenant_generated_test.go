@@ -72,7 +72,6 @@ func TestAccSaasRuntimeTenant_saasRuntimeTenantBasicExample(t *testing.T) {
 		"tenant_name":   "tf-test-example-tenant" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

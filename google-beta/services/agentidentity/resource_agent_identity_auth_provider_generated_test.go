@@ -63,7 +63,6 @@ func TestAccAgentIdentityAuthProvider_agentIdentityAuthProviderBasicExample(t *t
 		"auth_provider_id": "tf-test-example-provider" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

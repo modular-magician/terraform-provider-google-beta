@@ -66,7 +66,6 @@ func TestAccIapSettings_iapSettingsBasicExample(t *testing.T) {
 		"health_check_name":    "tf-test-iap-bs-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -174,7 +173,6 @@ func TestAccIapSettings_iapSettingsOauthStorageExample(t *testing.T) {
 		"health_check_name":    "tf-test-iap-bs-health-check-oauth" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

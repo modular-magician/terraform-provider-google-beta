@@ -65,7 +65,6 @@ func TestAccBigQueryRowAccessPolicy_bigqueryRowAccessPolicyBasicExample(t *testi
 		"table_id":      "tf_test_table_id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

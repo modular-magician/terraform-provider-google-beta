@@ -64,7 +64,6 @@ func TestAccDataplexEntryType_dataplexEntryTypeBasicExample(t *testing.T) {
 		"entry_type_name": "tf-test-entry-type-basic" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -109,7 +108,6 @@ func TestAccDataplexEntryType_dataplexEntryTypeFullExample(t *testing.T) {
 		"entry_type_name": "tf-test-entry-type-full" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

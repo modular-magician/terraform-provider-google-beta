@@ -80,7 +80,6 @@ func TestAccComputeGlobalVmExtensionPolicy_computeGlobalVmExtensionPolicyBasicEx
 		"string_config":           "logging:\\n  receivers:\\n    syslog:\\n      type: files\\n      include_paths:\\n      - /var/log/messages\\n",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -181,7 +180,6 @@ func TestAccComputeGlobalVmExtensionPolicy_computeGlobalVmExtensionPolicyRollout
 		"string_config":           nil,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -236,7 +234,6 @@ func TestAccComputeGlobalVmExtensionPolicy_computeGlobalVmExtensionPolicyCustomR
 		"rollout_plan_name": "tf-test-custom-rollout-plan" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

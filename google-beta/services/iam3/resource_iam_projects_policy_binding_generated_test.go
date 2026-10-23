@@ -68,7 +68,6 @@ func TestAccIAM3ProjectsPolicyBinding_iamProjectsPolicyBindingExample(t *testing
 		"project_binding_id": "tf-test-binding-for-all-project-principals" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -143,7 +142,6 @@ func TestAccIAM3ProjectsPolicyBinding_iamProjectsPolicyBindingAccessPolicyExampl
 		"project_id":         "tf-test-ap-proj-" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

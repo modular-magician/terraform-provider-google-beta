@@ -67,7 +67,6 @@ func TestAccCESDeployment_cesDeploymentBasicExample(t *testing.T) {
 		"deployment_display_name":  "tf-test-my-deployment" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -145,7 +144,6 @@ func TestAccCESDeployment_cesDeploymentFullExample(t *testing.T) {
 		"deployment_display_name":  "tf-test-my-deployment" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -229,7 +227,6 @@ func TestAccCESDeployment_cesDeploymentWhatsappExample(t *testing.T) {
 		"deployment_display_name":  "tf-test-my-deployment" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -64,7 +64,6 @@ func TestAccChronicleRuleDeployment_chronicleRuledeploymentBasicExample(t *testi
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccChronicleRuleDeployment_chronicleRuledeploymentDisabledExample(t *te
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -172,7 +170,6 @@ func TestAccChronicleRuleDeployment_chronicleRuledeploymentRunFrequencyMissingEx
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -241,7 +238,6 @@ func TestAccChronicleRuleDeployment_chronicleRuledeploymentScheduleCustomization
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -490,7 +486,6 @@ func TestAccChronicleRuleDeployment_chronicleRuledeploymentLegacyRunFrequencyDif
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -557,7 +552,6 @@ func TestAccChronicleRuleDeployment_chronicleRuledeploymentSingleEventDiffSuppre
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

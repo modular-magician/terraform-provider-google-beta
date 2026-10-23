@@ -63,7 +63,6 @@ func TestAccCertificateManagerTrustConfig_certificateManagerTrustConfigExample(t
 		"trust_config_name": "tf-test-trust-config" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -120,7 +119,6 @@ func TestAccCertificateManagerTrustConfig_certificateManagerTrustConfigAllowlist
 		"trust_config_name": "tf-test-trust-config" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

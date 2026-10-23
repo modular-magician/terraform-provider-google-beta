@@ -63,7 +63,6 @@ func TestAccStorageInsightsDatasetConfig_storageInsightsDatasetConfigIncludesExa
 		"dataset_config_id": "tf_test_my_config_includes" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -127,7 +126,6 @@ func TestAccStorageInsightsDatasetConfig_storageInsightsDatasetConfigExcludesExa
 		"dataset_config_id": "tf_test_my_config_excludes" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

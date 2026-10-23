@@ -66,7 +66,6 @@ func TestAccComputeBackendService_backendServiceBasicExample(t *testing.T) {
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccComputeBackendService_backendServiceExternalIapExample(t *testing.T)
 		"backend_service_name": "tf-test-tf-test-backend-service-external" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -169,7 +167,6 @@ func TestAccComputeBackendService_backendServiceCacheSimpleExample(t *testing.T)
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -226,7 +223,6 @@ func TestAccComputeBackendService_backendServiceCacheIncludeHttpHeadersExample(t
 		"backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -278,7 +274,6 @@ func TestAccComputeBackendService_backendServiceCacheIncludeNamedCookiesExample(
 		"backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -334,7 +329,6 @@ func TestAccComputeBackendService_backendServiceCacheExample(t *testing.T) {
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -397,7 +391,6 @@ func TestAccComputeBackendService_backendServiceCacheBypassCacheOnRequestHeaders
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -468,7 +461,6 @@ func TestAccComputeBackendService_backendServiceTrafficDirectorRoundRobinExample
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -525,7 +517,6 @@ func TestAccComputeBackendService_backendServiceTrafficDirectorRingHashExample(t
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -606,7 +597,6 @@ func TestAccComputeBackendService_backendServiceStatefulSessionAffinityExample(t
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -672,7 +662,6 @@ func TestAccComputeBackendService_backendServiceNetworkEndpointExample(t *testin
 		"neg_name":             "tf-test-network-endpoint" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -744,7 +733,6 @@ func TestAccComputeBackendService_backendServiceInFlightExample(t *testing.T) {
 		"subnetwork_name":        "tf-test-custom-subnet" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -864,7 +852,6 @@ func TestAccComputeBackendService_backendServiceExternalManagedExample(t *testin
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -916,7 +903,6 @@ func TestAccComputeBackendService_backendServiceIpAddressSelectionPolicyExample(
 		"backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -963,7 +949,6 @@ func TestAccComputeBackendService_backendServiceCustomMetricsExample(t *testing.
 		"network_name":         "tf-test-network" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1059,7 +1044,6 @@ func TestAccComputeBackendService_backendServiceTlsSettingsExample(t *testing.T)
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1135,7 +1119,6 @@ func TestAccComputeBackendService_backendServiceIdentityExample(t *testing.T) {
 		"health_check_name":    "tf-test-health-check" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1211,7 +1194,6 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingExample(t *test
 		"backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1260,7 +1242,6 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingForwardProxyClo
 		"backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -1311,7 +1292,6 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingForwardProxyDir
 		"backend_service_name": "tf-test-backend-service" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

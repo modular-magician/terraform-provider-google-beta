@@ -69,7 +69,6 @@ func TestAccVertexAIPipelineJob_vertexAiPipelineJobBasicExample(t *testing.T) {
 		"storage_bucket":  "tf-test-example-pipeline-bucket" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -225,7 +224,6 @@ func TestAccVertexAIPipelineJob_vertexAiPipelineJobFullExample(t *testing.T) {
 		"subnetwork_name":         "tf-test-psc-pipeline-subnetwork" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -434,7 +432,6 @@ func TestAccVertexAIPipelineJob_vertexAiPipelineJobPersistentResourceExample(t *
 		"storage_bucket":         "tf-test-example-pipeline-bucket-pr" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

@@ -69,7 +69,6 @@ func TestAccGeminiGibqObservabilitySetting_geminiGibqObservabilitySettingBasicEx
 		"gibq_observability_setting_id": "tf-test-ls-tf1" + randomSuffix,
 		"random_suffix":                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

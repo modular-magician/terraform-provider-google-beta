@@ -65,7 +65,6 @@ func TestAccHealthcareWorkspace_healthcareWorkspaceBasicExample(t *testing.T) {
 		"workspace_name":    "tf-test-example-dm-workspace" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

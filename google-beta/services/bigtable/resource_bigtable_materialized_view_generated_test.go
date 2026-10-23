@@ -67,7 +67,6 @@ func TestAccBigtableMaterializedView_bigtableMaterializedViewExample(t *testing.
 		"table_name":             "tf-test-bt-table" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -65,7 +65,6 @@ func TestAccCloudSecurityComplianceFramework_cloudsecuritycomplianceFrameworkOrg
 		"framework_name": "tf-test-example-framework" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -165,7 +164,6 @@ func TestAccCloudSecurityComplianceFramework_cloudsecuritycomplianceFrameworkPro
 		"framework_name": "tf-test-example-framework" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -266,7 +264,6 @@ func TestAccCloudSecurityComplianceFramework_cloudsecuritycomplianceFrameworkOrg
 		"framework_name": "tf-test-example-framework" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

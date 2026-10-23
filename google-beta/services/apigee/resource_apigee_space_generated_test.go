@@ -69,7 +69,6 @@ func TestAccApigeeSpace_apigeeSpaceBasicTestExample(t *testing.T) {
 		"space_id":        "tf-test-tf-test-space" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

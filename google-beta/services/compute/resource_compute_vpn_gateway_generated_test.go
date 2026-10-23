@@ -72,7 +72,6 @@ func TestAccComputeVpnGateway_targetVpnGatewayBasicExample(t *testing.T) {
 		"vpn_tunnel_name":              "tf-test-tunnel1" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -179,7 +178,6 @@ func TestAccComputeVpnGateway_targetVpnGatewayTagsExample(t *testing.T) {
 		"vpn_tunnel_name":              "tf-test-tunnel1" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

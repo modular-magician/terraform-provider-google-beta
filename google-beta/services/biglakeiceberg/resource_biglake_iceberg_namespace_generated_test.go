@@ -65,7 +65,6 @@ func TestAccBiglakeIcebergIcebergNamespace_biglakeIcebergNamespaceExample(t *tes
 		"bucket_name":            "tf-test-example-bucket" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

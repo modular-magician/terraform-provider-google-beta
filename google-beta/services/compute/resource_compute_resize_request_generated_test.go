@@ -63,7 +63,6 @@ func TestAccComputeResizeRequest_computeMigResizeRequestExample(t *testing.T) {
 		"resize_request_name": "tf-test-a3-dws" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

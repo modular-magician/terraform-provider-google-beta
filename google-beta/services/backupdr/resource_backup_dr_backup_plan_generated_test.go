@@ -64,7 +64,6 @@ func TestAccBackupDRBackupPlan_backupDrBackupPlanSimpleExample(t *testing.T) {
 		"backup_vault_id": "tf-test-backup-vault-simple-test" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -133,7 +132,6 @@ func TestAccBackupDRBackupPlan_backupDrBackupPlanForDiskResourceExample(t *testi
 		"backup_vault_id": "tf-test-backup-vault-disk-test" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -205,7 +203,6 @@ func TestAccBackupDRBackupPlan_backupDrBackupPlanForCsqlResourceExample(t *testi
 		"backup_vault_id": "tf-test-backup-vault-csql-test" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -275,7 +272,6 @@ func TestAccBackupDRBackupPlan_backupDrBackupPlanForFilestoreResourceExample(t *
 		"backup_vault_id": "tf-test-backup-vault-filestore-test" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

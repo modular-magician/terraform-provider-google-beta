@@ -63,7 +63,6 @@ func TestAccSpannerInstanceConfig_spannerInstanceConfigBasicExample(t *testing.T
 		"instance_config_name": "custom-tf-test-nam11-config",
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

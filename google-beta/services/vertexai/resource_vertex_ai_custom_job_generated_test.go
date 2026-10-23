@@ -69,7 +69,6 @@ func TestAccVertexAICustomJob_vertexAiCustomJobBasicExample(t *testing.T) {
 		"display_name":  "tf-test-example-custom-job" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -169,7 +168,6 @@ func TestAccVertexAICustomJob_vertexAiCustomJobPythonPackageExample(t *testing.T
 		"tensorboard_name":   "tf-test-example-tensorboard" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -322,7 +320,6 @@ func TestAccVertexAICustomJob_vertexAiCustomJobTpuNetworkExample(t *testing.T) {
 		"network_name":  "tf-test-custom-job-vpc-net" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

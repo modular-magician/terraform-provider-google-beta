@@ -67,7 +67,6 @@ func TestAccCertificateManagerCertificateMapEntry_certificateManagerCertificateM
 		"dns_auth_subdomain2": "subdomain2" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

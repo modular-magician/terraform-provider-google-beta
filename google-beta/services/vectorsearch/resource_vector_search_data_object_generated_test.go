@@ -65,7 +65,6 @@ func TestAccVectorSearchDataObject_vectorsearchDataObjectBasicExample(t *testing
 		"data_object_id": "tf-test-example-data-object" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -170,7 +169,6 @@ func TestAccVectorSearchDataObject_vectorsearchDataObjectWithVectorsExample(t *t
 		"data_object_id": "tf-test-example-vectors-data-object" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

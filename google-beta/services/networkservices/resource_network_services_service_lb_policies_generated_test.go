@@ -64,7 +64,6 @@ func TestAccNetworkServicesServiceLbPolicies_networkServicesServiceLbPoliciesBas
 		"resource_name": "tf-test-my-lb-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -108,7 +107,6 @@ func TestAccNetworkServicesServiceLbPolicies_networkServicesServiceLbPoliciesAdv
 		"resource_name": "tf-test-my-lb-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -174,7 +172,6 @@ func TestAccNetworkServicesServiceLbPolicies_networkServicesServiceLbPoliciesBet
 		"resource_name": "tf-test-my-lb-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -249,7 +246,6 @@ func TestAccNetworkServicesServiceLbPolicies_networkServicesServiceLbPoliciesReg
 		"resource_name": "tf-test-my-regional-lb-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

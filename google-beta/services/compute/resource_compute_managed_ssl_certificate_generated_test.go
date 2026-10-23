@@ -69,7 +69,6 @@ func TestAccComputeManagedSslCertificate_managedSslCertificateBasicExample(t *te
 		"url_map_name":           "tf-test-url-map" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -170,7 +169,6 @@ func TestAccComputeManagedSslCertificate_managedSslCertificateRecreationExample(
 		"url_map_name":           "tf-test-url-map" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

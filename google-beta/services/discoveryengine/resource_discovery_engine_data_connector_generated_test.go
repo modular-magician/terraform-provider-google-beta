@@ -63,7 +63,6 @@ func TestAccDiscoveryEngineDataConnector_discoveryengineDataconnectorServicenowB
 		"collection_id": "tf-test-collection-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -151,7 +150,6 @@ func TestAccDiscoveryEngineDataConnector_discoveryengineDataconnectorJiraWithAct
 		"collection_id": "tf-test-collection-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -66,7 +66,6 @@ func TestAccComputeInterconnectAttachment_interconnectAttachmentBasicExample(t *
 		"router_name":                  "tf-test-router-1" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -129,7 +128,6 @@ func TestAccComputeInterconnectAttachment_interconnectAttachmentDedicatedExample
 		"router_name":                  "tf-test-router-1" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -208,7 +206,6 @@ func TestAccComputeInterconnectAttachment_computeInterconnectAttachmentIpsecEncr
 		"router_name":                  "tf-test-test-router" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -282,7 +279,6 @@ func TestAccComputeInterconnectAttachment_computeInterconnectAttachmentCustomRan
 		"router_name":                  "tf-test-test-router" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

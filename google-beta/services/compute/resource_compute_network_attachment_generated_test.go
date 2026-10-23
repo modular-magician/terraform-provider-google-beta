@@ -70,7 +70,6 @@ func TestAccComputeNetworkAttachment_networkAttachmentBasicExample(t *testing.T)
 		"subnetwork_name":                "tf-test-basic-subnetwork" + randomSuffix,
 		"random_suffix":                  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -153,7 +152,6 @@ func TestAccComputeNetworkAttachment_networkAttachmentInstanceUsageExample(t *te
 		"subnetwork_name": "tf-test-basic-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

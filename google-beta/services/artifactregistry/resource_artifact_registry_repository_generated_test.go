@@ -67,7 +67,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryBasicExample(t 
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -113,7 +112,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryMultiRegionExam
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -159,7 +157,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryDockerExample(t
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -209,7 +206,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryCmekExample(t *
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -270,7 +266,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryVirtualExample(
 		"upstream_repository_id": "tf-test-my-repository-upstream" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -344,7 +339,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteExample(t
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -401,7 +395,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryConnectorExampl
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -484,7 +477,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteAptExampl
 		"repository_id": "tf-test-debian-stable" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -540,7 +532,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteYumExampl
 		"repository_id": "tf-test-rocky-9" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -596,7 +587,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryCleanupExample(
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -688,7 +678,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerhub
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -772,7 +761,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerCus
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -858,7 +846,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteMavenCust
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -944,7 +931,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteNpmCustom
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1030,7 +1016,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemotePythonCus
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1114,7 +1099,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCommonRep
 		"upstream_repository_id":   "tf-test-example-upstream-repo" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1176,7 +1160,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCommonRep
 		"upstream_repository_id":   "tf-test-example-upstream-repo" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1243,7 +1226,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCommonRep
 		"username":           "tf-test-remote-username" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -1323,7 +1305,6 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryVulnerabilitySc
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

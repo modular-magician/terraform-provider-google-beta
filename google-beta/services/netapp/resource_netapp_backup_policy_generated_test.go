@@ -63,7 +63,6 @@ func TestAccNetappBackupPolicy_netappBackupPolicyFullExample(t *testing.T) {
 		"backup_policy_full_name": "tf-test-test-backup-policy-full" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

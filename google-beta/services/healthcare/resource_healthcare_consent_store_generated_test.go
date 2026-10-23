@@ -65,7 +65,6 @@ func TestAccHealthcareConsentStore_healthcareConsentStoreBasicExample(t *testing
 		"dataset_id":    "tf-test-my-dataset" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -114,7 +113,6 @@ func TestAccHealthcareConsentStore_healthcareConsentStoreFullExample(t *testing.
 		"dataset_id":    "tf-test-my-dataset" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -172,7 +170,6 @@ func TestAccHealthcareConsentStore_healthcareConsentStoreIamExample(t *testing.T
 		"dataset_id":    "tf-test-my-dataset" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -63,7 +63,6 @@ func TestAccLoggingMetric_loggingMetricBasicExample(t *testing.T) {
 		"logging_metric_name": "tf-test-my-(custom)/metric" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -133,7 +132,6 @@ func TestAccLoggingMetric_loggingMetricCounterBasicExample(t *testing.T) {
 		"logging_metric_name": "tf-test-my-(custom)/metric" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -179,7 +177,6 @@ func TestAccLoggingMetric_loggingMetricCounterLabelsExample(t *testing.T) {
 		"logging_metric_name": "tf-test-my-(custom)/metric" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -234,7 +231,6 @@ func TestAccLoggingMetric_loggingMetricLoggingBucketExample(t *testing.T) {
 		"logging_metric_name": "tf-test-my-(custom)/metric" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -283,7 +279,6 @@ func TestAccLoggingMetric_loggingMetricDisabledExample(t *testing.T) {
 		"logging_metric_name": "tf-test-my-(custom)/metric" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

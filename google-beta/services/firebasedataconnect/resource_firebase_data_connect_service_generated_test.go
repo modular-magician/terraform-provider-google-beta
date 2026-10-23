@@ -65,7 +65,6 @@ func TestAccFirebaseDataConnectService_firebasedataconnectServiceBasicExample(t 
 		"service_id":    "tf-test-example-service" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -129,7 +128,6 @@ func TestAccFirebaseDataConnectService_firebasedataconnectServiceWithForceDeleti
 		"service_id":    "tf-test-example-service" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

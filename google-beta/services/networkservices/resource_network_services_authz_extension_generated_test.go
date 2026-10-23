@@ -66,7 +66,6 @@ func TestAccNetworkServicesAuthzExtension_networkServicesAuthzExtensionBasicExam
 		"resource_name": "tf-test-my-authz-ext" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -130,7 +129,6 @@ func TestAccNetworkServicesAuthzExtension_networkServicesAuthzExtensionBasicWith
 		"resource_name": "tf-test-my-authz-ext-with-grpc" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -195,7 +193,6 @@ func TestAccNetworkServicesAuthzExtension_networkServicesAuthzExtensionIapExampl
 		"resource_name": "tf-test-my-authz-ext" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

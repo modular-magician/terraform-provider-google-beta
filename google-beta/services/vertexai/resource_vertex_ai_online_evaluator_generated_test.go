@@ -65,7 +65,6 @@ func TestAccVertexAIOnlineEvaluator_vertexAiOnlineEvaluatorBasicExample(t *testi
 		"evaluator_name": "tf-test-online-evaluator" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -156,7 +155,6 @@ func TestAccVertexAIOnlineEvaluator_vertexAiOnlineEvaluatorFullExample(t *testin
 		"metric_name":    "tf-test-eval-metric" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

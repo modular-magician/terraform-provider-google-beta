@@ -65,7 +65,6 @@ func TestAccDatastreamPrivateConnection_datastreamPrivateConnectionFullExample(t
 		"private_connection_id": "tf-test-my-connection" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -123,7 +122,6 @@ func TestAccDatastreamPrivateConnection_datastreamPrivateConnectionForceDeleteEx
 		"private_connection_id": "tf-test-my-connection" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -188,7 +186,6 @@ func TestAccDatastreamPrivateConnection_datastreamPrivateConnectionPscInterfaceE
 		"subnetwork_name":         "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

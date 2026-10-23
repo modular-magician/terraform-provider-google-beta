@@ -69,7 +69,6 @@ func TestAccChronicleSoarDomain_chronicleSoardomainUpdateExample(t *testing.T) {
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

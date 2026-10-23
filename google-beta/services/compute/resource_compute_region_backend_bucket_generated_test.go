@@ -66,7 +66,6 @@ func TestAccComputeRegionBackendBucket_regionBackendBucketBasicExample(t *testin
 		"region":              "us-central1",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -125,7 +124,6 @@ func TestAccComputeRegionBackendBucket_regionBackendBucketInternalLbExample(t *t
 		"region":              "us-central1",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -197,7 +195,6 @@ func TestAccComputeRegionBackendBucket_regionBackendBucketExternalLbExample(t *t
 		"region":              "us-east1",
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

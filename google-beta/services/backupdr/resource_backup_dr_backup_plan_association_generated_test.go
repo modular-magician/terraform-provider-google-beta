@@ -71,7 +71,6 @@ func TestAccBackupDRBackupPlanAssociation_backupDrBpaExample(t *testing.T) {
 		"compute-name":               "tf-test-test-instance" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -183,7 +182,6 @@ func TestAccBackupDRBackupPlanAssociation_backupDrBpaFilestoreExample(t *testing
 		"filestore_instance_id":      "tf-test-test-instance-bpa" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

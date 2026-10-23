@@ -66,7 +66,6 @@ func TestAccBigtableAppProfile_bigtableAppProfileAnyclusterExample(t *testing.T)
 		"instance_name":       "tf-test-bt-instance" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -141,7 +140,6 @@ func TestAccBigtableAppProfile_bigtableAppProfileSingleclusterExample(t *testing
 		"instance_name":       "tf-test-bt-instance" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -207,7 +205,6 @@ func TestAccBigtableAppProfile_bigtableAppProfileMulticlusterExample(t *testing.
 		"instance_name":       "tf-test-bt-instance" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -283,7 +280,6 @@ func TestAccBigtableAppProfile_bigtableAppProfilePriorityExample(t *testing.T) {
 		"instance_name":       "tf-test-bt-instance" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

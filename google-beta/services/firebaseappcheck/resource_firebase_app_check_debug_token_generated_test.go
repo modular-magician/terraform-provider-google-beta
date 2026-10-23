@@ -66,7 +66,6 @@ func TestAccFirebaseAppCheckDebugToken_firebaseAppCheckDebugTokenBasicExample(t 
 		"token":         "5E728315-E121-467F-BCA1-1FE71130BB98",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

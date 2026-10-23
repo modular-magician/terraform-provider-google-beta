@@ -65,7 +65,6 @@ func TestAccDataprocGdcApplicationEnvironment_dataprocgdcApplicationenvironmentB
 		"project":                    "gdce-cluster-monitoring",
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -113,7 +112,6 @@ func TestAccDataprocGdcApplicationEnvironment_dataprocgdcApplicationenvironmentE
 		"project":                    "gdce-cluster-monitoring",
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

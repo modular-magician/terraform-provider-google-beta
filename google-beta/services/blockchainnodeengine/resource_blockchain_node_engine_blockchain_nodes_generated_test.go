@@ -64,7 +64,6 @@ func TestAccBlockchainNodeEngineBlockchainNodes_blockchainNodesBasicExample(t *t
 		"blockchain_node_id": "tf_test_blockchain_basic_node" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccBlockchainNodeEngineBlockchainNodes_blockchainNodesGethDetailsExampl
 		"blockchain_node_id": "tf_test_blockchain_geth_node" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -187,7 +185,6 @@ func TestAccBlockchainNodeEngineBlockchainNodes_blockchainNodesBeaconFeeRecipien
 		"blockchain_node_id": "tf_test_beacon_fee_node" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

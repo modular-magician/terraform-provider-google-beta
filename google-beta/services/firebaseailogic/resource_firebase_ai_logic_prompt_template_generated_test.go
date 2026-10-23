@@ -63,7 +63,6 @@ func TestAccFirebaseAILogicPromptTemplate_firebaseailogicPromptTemplateFileExamp
 		"template_id":   "tf-test-file-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -108,7 +107,6 @@ func TestAccFirebaseAILogicPromptTemplate_firebaseailogicPromptTemplateGlobalOnl
 		"template_id":   "tf-test-global-only-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -154,7 +152,6 @@ func TestAccFirebaseAILogicPromptTemplate_firebaseailogicPromptTemplateBasicExam
 		"template_id":   "tf-test-basic-template" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

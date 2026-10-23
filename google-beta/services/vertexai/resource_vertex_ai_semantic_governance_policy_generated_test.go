@@ -98,7 +98,6 @@ func TestAccVertexAISemanticGovernancePolicy_vertexAiSemanticGovernancePolicyUpd
 		"semantic_governance_policy_id":   "tf-test-sgp" + randomSuffix,
 		"random_suffix":                   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

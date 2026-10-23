@@ -69,7 +69,6 @@ func TestAccDataFusionInstance_dataFusionInstanceBasicExample(t *testing.T) {
 		"prober_test_run": `options = { prober_test_run = "true" }`,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -117,7 +116,6 @@ func TestAccDataFusionInstance_dataFusionInstanceFullExample(t *testing.T) {
 		"prober_test_run": `options = { prober_test_run = "true" }`,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -201,7 +199,6 @@ func TestAccDataFusionInstance_dataFusionInstancePscExample(t *testing.T) {
 		"subnet_name":     "tf-test-datafusion-psc-subnet" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -279,7 +276,6 @@ func TestAccDataFusionInstance_dataFusionInstanceCmekExample(t *testing.T) {
 		"instance_name": "tf-test-my-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -358,7 +354,6 @@ func TestAccDataFusionInstance_dataFusionInstanceEnterpriseExample(t *testing.T)
 		"prober_test_run": `options = { prober_test_run = "true" }`,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -404,7 +399,6 @@ func TestAccDataFusionInstance_dataFusionInstanceEventExample(t *testing.T) {
 		"instance_name": "tf-test-my-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -457,7 +451,6 @@ func TestAccDataFusionInstance_dataFusionInstanceZoneExample(t *testing.T) {
 		"instance_name": "tf-test-my-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -502,7 +495,6 @@ func TestAccDataFusionInstance_dataFusionInstancePatchRevisionExample(t *testing
 		"instance_name": "tf-test-my-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

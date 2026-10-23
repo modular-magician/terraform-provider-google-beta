@@ -65,7 +65,6 @@ func TestAccDialogflowCXSecuritySettings_dialogflowcxSecuritySettingsBasicExampl
 		"settings_name": "tf-test-dialogflowcx-security-settings" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -114,7 +113,6 @@ func TestAccDialogflowCXSecuritySettings_dialogflowcxSecuritySettingsFullExample
 		"settings_name":   "tf-test-dialogflowcx-security-settings" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

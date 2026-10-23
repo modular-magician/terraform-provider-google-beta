@@ -63,7 +63,6 @@ func TestAccClouddeployCustomTargetType_clouddeployCustomTargetTypeBasicExample(
 		"custom_target_type_name": "tf-test-my-custom-target-type" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -119,7 +118,6 @@ func TestAccClouddeployCustomTargetType_clouddeployCustomTargetTypeGitSkaffoldMo
 		"custom_target_type_name": "tf-test-my-custom-target-type" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -175,7 +173,6 @@ func TestAccClouddeployCustomTargetType_clouddeployCustomTargetTypeGcsSkaffoldMo
 		"custom_target_type_name": "tf-test-my-custom-target-type" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -230,7 +227,6 @@ func TestAccClouddeployCustomTargetType_clouddeployCustomTargetTypeGcbRepoSkaffo
 		"custom_target_type_name": "tf-test-my-custom-target-type" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -286,7 +282,6 @@ func TestAccClouddeployCustomTargetType_clouddeployCustomTargetTypeTasksExample(
 		"custom_target_type_name": "tf-test-my-custom-target-type" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

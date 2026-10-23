@@ -69,7 +69,6 @@ func TestAccOSConfigV2PolicyOrchestratorForFolder_osconfigv2PolicyOrchestratorFo
 		"policy_orchestrator_id":   "tf-test-po-folder" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

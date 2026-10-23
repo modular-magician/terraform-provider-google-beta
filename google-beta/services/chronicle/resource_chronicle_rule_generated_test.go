@@ -63,7 +63,6 @@ func TestAccChronicleRule_chronicleRuleBasicExample(t *testing.T) {
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -98,7 +97,6 @@ func TestAccChronicleRule_chronicleRuleWithForceDeletionExample(t *testing.T) {
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -134,7 +132,6 @@ func TestAccChronicleRule_chronicleRuleWithDataAccessScopeExample(t *testing.T) 
 		"data_access_scope_id": "tf-test-scope-name" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

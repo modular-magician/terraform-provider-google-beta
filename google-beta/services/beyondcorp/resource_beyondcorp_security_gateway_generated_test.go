@@ -63,7 +63,6 @@ func TestAccBeyondcorpSecurityGateway_beyondcorpSecurityGatewayBasicExample(t *t
 		"security_gateway_name": "default" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -107,7 +106,6 @@ func TestAccBeyondcorpSecurityGateway_beyondcorpSecurityGatewayLoggingExample(t 
 		"security_gateway_name": "tf-test-default-logging" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -152,7 +150,6 @@ func TestAccBeyondcorpSecurityGateway_beyondcorpSecurityGatewaySpaExample(t *tes
 		"security_gateway_name": "tf-test-default-spa" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

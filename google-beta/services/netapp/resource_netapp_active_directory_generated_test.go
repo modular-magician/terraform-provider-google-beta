@@ -63,7 +63,6 @@ func TestAccNetappActiveDirectory_netappActiveDirectoryFullExample(t *testing.T)
 		"active_directory_full_name": "tf-test-test-active-directory-full" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

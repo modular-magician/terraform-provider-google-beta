@@ -73,7 +73,6 @@ func TestAccVertexAIPersistentResource_vertexAiPersistentResourceExample(t *test
 		"persistent_resource_id": "tf-test-example-persistent-resource" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -175,7 +174,6 @@ func TestAccVertexAIPersistentResource_vertexAiPersistentResourceAutoscalingExam
 		"persistent_resource_id": "tf-test-example-persistent-resource" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -252,7 +250,6 @@ func TestAccVertexAIPersistentResource_vertexAiPersistentResourceNetworkExample(
 		"subnetwork_name":         "tf-test-psc-subnetwork" + randomSuffix,
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

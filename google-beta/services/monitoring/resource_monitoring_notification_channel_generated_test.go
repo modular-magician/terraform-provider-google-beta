@@ -63,7 +63,6 @@ func TestAccMonitoringNotificationChannel_notificationChannelBasicExample(t *tes
 		"display_name":  "Test Notification Channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

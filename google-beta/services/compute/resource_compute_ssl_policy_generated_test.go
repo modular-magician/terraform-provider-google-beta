@@ -65,7 +65,6 @@ func TestAccComputeSslPolicy_sslPolicyBasicExample(t *testing.T) {
 		"production_ssl_policy_name": "tf-test-production-ssl-policy" + randomSuffix,
 		"random_suffix":              randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -120,7 +119,6 @@ func TestAccComputeSslPolicy_sslPolicyPostQuantumExample(t *testing.T) {
 		"post_quantum_ssl_policy_name": "tf-test-post-quantum-ssl-policy" + randomSuffix,
 		"random_suffix":                randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

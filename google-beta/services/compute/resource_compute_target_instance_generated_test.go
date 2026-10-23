@@ -64,7 +64,6 @@ func TestAccComputeTargetInstance_targetInstanceBasicExample(t *testing.T) {
 		"target_name":   "tf-test-target" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -123,7 +122,6 @@ func TestAccComputeTargetInstance_targetInstanceCustomNetworkExample(t *testing.
 		"target_name":   "tf-test-custom-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -194,7 +192,6 @@ func TestAccComputeTargetInstance_targetInstanceWithSecurityPolicyExample(t *tes
 		"target_name":       "tf-test-target-instance" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

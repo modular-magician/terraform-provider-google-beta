@@ -68,7 +68,6 @@ func TestAccLustreInstance_lustreInstanceBasicExample(t *testing.T) {
 		"subnetwork_name": "tf-test-my-subnetwork" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

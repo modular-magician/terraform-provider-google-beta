@@ -63,7 +63,6 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyBasicExample(t *test
 		"sec_policy_name": "tf-test-my-sec-policy-basic" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -101,7 +100,6 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithDdosProtectionCo
 		"sec_policy_name": "tf-test-my-sec-policy-ddos-protection" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -143,7 +141,6 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithUserDefinedField
 		"sec_policy_name": "tf-test-my-sec-policy-user-defined-fields" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -195,7 +192,6 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithRulesExample(t *
 		"sec_policy_name": "tf-test-my-sec-policy-with-rules" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -258,7 +254,6 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithBodyExcludeExamp
 		"sec_policy_name":   "tf-test-policyruletest" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -405,7 +400,6 @@ func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyRequestBodyExpressio
 		"sec_policy_name": "tf-test-policyruletest" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

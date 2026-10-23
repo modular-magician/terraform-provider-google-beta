@@ -81,7 +81,6 @@ func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBas
 		"display_name":         nil,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -170,7 +169,6 @@ func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigFol
 		"management_project_id": "tf-test-capcfg-mgmt" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -245,7 +243,6 @@ func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigPro
 		"project_id":           "tf-test-capcfg-proj" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -67,7 +67,6 @@ func TestAccCESToolset_cesToolsetOpenapiServiceAccountAuthConfigExample(t *testi
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -161,7 +160,6 @@ func TestAccCESToolset_cesToolsetOpenapiOauthConfigExample(t *testing.T) {
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -258,7 +256,6 @@ func TestAccCESToolset_cesToolsetOpenapiServiceAgentIdTokenAuthConfigExample(t *
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -350,7 +347,6 @@ func TestAccCESToolset_cesToolsetOpenapiApiKeyConfigExample(t *testing.T) {
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -447,7 +443,6 @@ func TestAccCESToolset_cesToolsetBearerTokenConfigExample(t *testing.T) {
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -541,7 +536,6 @@ func TestAccCESToolset_cesToolsetMcpServiceAccountAuthConfigExample(t *testing.T
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -625,7 +619,6 @@ func TestAccCESToolset_cesToolsetMcpOauthConfigExample(t *testing.T) {
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -712,7 +705,6 @@ func TestAccCESToolset_cesToolsetMcpServiceAgentIdTokenAuthConfigExample(t *test
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -801,7 +793,6 @@ func TestAccCESToolset_cesToolsetMcpApiKeyConfigExample(t *testing.T) {
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -888,7 +879,6 @@ func TestAccCESToolset_cesToolsetMcpBearerTokenConfigExample(t *testing.T) {
 		"toolset_id":       "tf-test-toolset1" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

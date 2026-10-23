@@ -67,7 +67,6 @@ func TestAccCESTool_cesToolClientFunctionBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic1" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -217,7 +216,6 @@ func TestAccCESTool_cesToolDataStoreToolEngineSourceBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic2" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -355,7 +353,6 @@ func TestAccCESTool_cesToolGoogleSearchToolBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic3" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -418,7 +415,6 @@ func TestAccCESTool_cesToolPythonFunctionBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic4" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -478,7 +474,6 @@ func TestAccCESTool_cesToolAgentBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic5" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -549,7 +544,6 @@ func TestAccCESTool_cesToolFileSearchBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic6" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -612,7 +606,6 @@ func TestAccCESTool_cesToolWidgetBasicExample(t *testing.T) {
 		"tool_id":           "tf_test_ces_tool_basic7" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

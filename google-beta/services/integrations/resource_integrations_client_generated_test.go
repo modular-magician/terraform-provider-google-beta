@@ -64,7 +64,6 @@ func TestAccIntegrationsClient_integrationsClientBasicExample(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -115,7 +114,6 @@ func TestAccIntegrationsClient_integrationsClientFullExample(t *testing.T) {
 		"kms_key":         kms.BootstrapKMSKeyInLocation(t, "us-east1"),
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

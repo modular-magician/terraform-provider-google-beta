@@ -74,7 +74,6 @@ func TestAccSaasRuntimeUnitKind_saasRuntimeUnitKindBasicExample(t *testing.T) {
 		"saas_name":             "tf-test-example-saas" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

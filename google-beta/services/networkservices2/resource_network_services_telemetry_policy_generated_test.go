@@ -65,7 +65,6 @@ func TestAccNetworkServices2TelemetryPolicy_networkServicesTelemetryPolicyBasicE
 		"resource_name": "tf-test-my-telemetry-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -125,7 +124,6 @@ func TestAccNetworkServices2TelemetryPolicy_networkServicesTelemetryPolicyFullEx
 		"resource_name": "tf-test-my-telemetry-policy-full" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -267,7 +265,6 @@ func TestAccNetworkServices2TelemetryPolicy_networkServicesTelemetryPolicyGlobal
 		"resource_name": "tf-test-my-telemetry-policy-global" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

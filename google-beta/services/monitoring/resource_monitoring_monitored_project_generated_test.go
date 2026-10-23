@@ -70,7 +70,6 @@ func TestAccMonitoringMonitoredProject_monitoringMonitoredProjectBasicExample(t 
 		"monitored_project": "tf-test-m-id" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -116,7 +115,6 @@ func TestAccMonitoringMonitoredProject_monitoringMonitoredProjectLongFormExample
 		"monitored_project": "tf-test-m-id" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

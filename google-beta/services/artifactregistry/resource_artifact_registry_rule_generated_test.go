@@ -66,7 +66,6 @@ func TestAccArtifactRegistryRule_artifactRegistryRuleBasicExample(t *testing.T) 
 		"rule_id":       "tf-test-my-repo-rule-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -127,7 +126,6 @@ func TestAccArtifactRegistryRule_artifactRegistryRuleFullExample(t *testing.T) {
 		"rule_id":       "tf-test-my-repo-rule-full-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

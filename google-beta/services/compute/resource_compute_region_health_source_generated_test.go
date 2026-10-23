@@ -65,7 +65,6 @@ func TestAccComputeRegionHealthSource_computeRegionHealthSourceBasicExample(t *t
 		"name":          "tf-test-test-health-source" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -63,7 +63,6 @@ func TestAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceBasic
 		"name":          "tf-test-my-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -112,7 +111,6 @@ func TestAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstancePostg
 		"name":          "tf-test-my-instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

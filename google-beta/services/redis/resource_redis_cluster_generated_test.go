@@ -72,7 +72,6 @@ func TestAccRedisCluster_redisClusterHaWithLabelsExample(t *testing.T) {
 		"subnet_name":                 "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -176,7 +175,6 @@ func TestAccRedisCluster_redisClusterHaExample(t *testing.T) {
 		"subnet_name":                 "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -276,7 +274,6 @@ func TestAccRedisCluster_redisClusterHaSingleZoneExample(t *testing.T) {
 		"subnet_name":                 "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -375,7 +372,6 @@ func TestAccRedisCluster_redisClusterSecondaryExample(t *testing.T) {
 		"secondary_cluster_subnet_name":                 "tf-test-mysubnet-secondary-cluster" + randomSuffix,
 		"random_suffix":                                 randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -569,7 +565,6 @@ func TestAccRedisCluster_redisClusterRdbExample(t *testing.T) {
 		"subnet_name":                 "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -676,7 +671,6 @@ func TestAccRedisCluster_redisClusterAofExample(t *testing.T) {
 		"subnet_name":                 "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -789,7 +783,6 @@ func TestAccRedisCluster_redisClusterCmekExample(t *testing.T) {
 		"subnet_name":                 "tf-test-my-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -881,7 +874,6 @@ func TestAccRedisCluster_redisClusterFlexibleCaExample(t *testing.T) {
 		"subnet_name":                 "tf-test-ca-subnet" + randomSuffix,
 		"random_suffix":               randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

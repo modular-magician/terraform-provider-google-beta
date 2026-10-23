@@ -64,7 +64,6 @@ func TestAccSecurityposturePosture_securityposturePostureBasicExample(t *testing
 		"posture_id":    "tf_test_posture_example" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

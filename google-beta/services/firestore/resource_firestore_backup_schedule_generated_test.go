@@ -65,7 +65,6 @@ func TestAccFirestoreBackupSchedule_firestoreBackupScheduleDailyExample(t *testi
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccFirestoreBackupSchedule_firestoreBackupScheduleWeeklyExample(t *test
 		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
 		"random_suffix":           randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

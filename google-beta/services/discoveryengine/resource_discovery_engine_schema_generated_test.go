@@ -64,7 +64,6 @@ func TestAccDiscoveryEngineSchema_discoveryengineSchemaBasicExample(t *testing.T
 		"schema_id":     "tf-test-schema-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

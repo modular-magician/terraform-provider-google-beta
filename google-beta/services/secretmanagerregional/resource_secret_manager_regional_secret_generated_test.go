@@ -66,7 +66,6 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretConfigBasicExample
 		"secret_id":     "tf-test-tf-reg-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -121,7 +120,6 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithCmekExample(t 
 		"secret_id":     "tf-test-tf-reg-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -180,7 +178,6 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithRotationExampl
 		"topic_id":      "tf-test-tf-topic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -248,7 +245,6 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithTtlExample(t *
 		"secret_id":     "tf-test-tf-reg-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -306,7 +302,6 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithExpireTimeExam
 		"timestamp":     "2122-11-30T00:00:00Z",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -361,7 +356,6 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithVersionDestroy
 		"secret_id":     "tf-test-tf-reg-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -65,7 +65,6 @@ func TestAccHypercomputeclusterCluster_hypercomputeclusterClusterBasicExample(t 
 		"network_id":    fmt.Sprintf("cluster-net1-%s", acctest.RandString(t, 10)),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

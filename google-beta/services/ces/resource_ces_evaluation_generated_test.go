@@ -65,7 +65,6 @@ func TestAccCESEvaluation_cesEvaluationBasicExample(t *testing.T) {
 		"evaluation_id":    "tf-test-eval-basic" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -128,7 +127,6 @@ func TestAccCESEvaluation_cesEvaluationFullExample(t *testing.T) {
 		"tool_id":          "tf-test-tool-id-full" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -424,7 +422,6 @@ func TestAccCESEvaluation_cesEvaluationToolsetExample(t *testing.T) {
 		"evaluation_id":    "tf-test-eval-toolset" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -554,7 +551,6 @@ func TestAccCESEvaluation_cesEvaluationScenarioFullExample(t *testing.T) {
 		"tool_id":          "tf-test-tool-id-scenario" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -710,7 +706,6 @@ func TestAccCESEvaluation_cesEvaluationScenarioToolsetExample(t *testing.T) {
 		"toolset_id":       "tf-test-ts-scen" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

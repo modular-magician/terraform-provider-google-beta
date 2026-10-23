@@ -74,7 +74,6 @@ func TestAccBiglakeHiveHiveDatabase_biglakeHiveDatabaseExample(t *testing.T) {
 		"parameters":    "{key2 = \"value2\"}",
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

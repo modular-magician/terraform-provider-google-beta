@@ -66,7 +66,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"network_name":        "tf-test-internal-ranges" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -123,7 +122,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"network_name":        "tf-test-internal-ranges" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -178,7 +176,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"network_name":        "tf-test-internal-ranges" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -235,7 +232,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"subnetwork_name":     "tf-test-overlapping-subnet" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -304,7 +300,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"source_subnet_name":  "tf-test-source-subnet" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -371,7 +366,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"network_name":        "tf-test-internal-ranges" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -429,7 +423,6 @@ func TestAccNetworkConnectivityv1InternalRange_networkConnectivityInternalRanges
 		"network_name":        "tf-test-internal-ranges" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

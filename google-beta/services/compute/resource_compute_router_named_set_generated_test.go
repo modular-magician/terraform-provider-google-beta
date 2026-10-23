@@ -66,7 +66,6 @@ func TestAccComputeRouterNamedSet_routerNamedSetRoutePolicyExample(t *testing.T)
 		"router_name":       "tf-test-my-router" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -161,7 +160,6 @@ func TestAccComputeRouterNamedSet_routerNamedSetPrefixExample(t *testing.T) {
 		"router_name":    "tf-test-my-router" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -231,7 +229,6 @@ func TestAccComputeRouterNamedSet_routerNamedSetCommunityExample(t *testing.T) {
 		"router_name":    "tf-test-my-router" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

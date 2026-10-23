@@ -67,7 +67,6 @@ func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficTargetExample(t *
 		"service_act_id": "tf-test-traffic-tg",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -172,7 +171,6 @@ func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyExam
 		"service_act_id": "tf-test-traffic-rp",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -261,7 +259,6 @@ func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyDisa
 		"service_act_id": "tf-test-traffic-rpd",
 		"random_suffix":  randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

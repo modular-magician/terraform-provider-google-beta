@@ -63,7 +63,6 @@ func TestAccNetworkConnectivityMulticloudDataTransferConfig_networkConnectivityM
 		"config_name":   "tf_test_basic_config" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

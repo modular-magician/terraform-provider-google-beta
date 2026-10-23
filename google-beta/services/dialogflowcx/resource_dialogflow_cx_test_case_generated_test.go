@@ -63,7 +63,6 @@ func TestAccDialogflowCXTestCase_dialogflowcxTestCaseFullExample(t *testing.T) {
 		"agent_name":    "tf-test-dialogflowcx-agent" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

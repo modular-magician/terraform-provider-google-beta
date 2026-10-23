@@ -69,7 +69,6 @@ func TestAccChronicleCustomList_chronicleCustomlistUpdateExample(t *testing.T) {
 		"chronicle_id":  envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

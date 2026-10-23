@@ -66,7 +66,6 @@ func TestAccMigrationCenterReport_migrationCenterReportBasicExample(t *testing.T
 		"report_id":        "tf-test-report-test" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -65,7 +65,6 @@ func TestAccFirestoreUserCreds_firestoreUserCredsBasicExample(t *testing.T) {
 		"database_id":   "tf-test-database-id-mongodb-compatible" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -121,7 +120,6 @@ func TestAccFirestoreUserCreds_firestoreUserCredsWithSecretManagerExample(t *tes
 		"database_id":   "tf-test-database-id-mongodb-compatible" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

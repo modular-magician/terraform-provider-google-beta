@@ -63,7 +63,6 @@ func TestAccContactCenterInsightsQaScorecard_contactCenterInsightsQaScorecardBas
 		"scorecard_id":  "tf-test-qa-scorecard" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

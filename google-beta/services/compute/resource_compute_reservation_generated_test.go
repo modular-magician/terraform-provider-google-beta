@@ -65,7 +65,6 @@ func TestAccComputeReservation_reservationBasicExample(t *testing.T) {
 		"reservation_name": "tf-test-gce-reservation" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -110,7 +109,6 @@ func TestAccComputeReservation_reservationBasicBetaExample(t *testing.T) {
 		"reservation_name": "tf-test-gce-reservation" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
@@ -160,7 +158,6 @@ func TestAccComputeReservation_reservationSourceInstanceTemplateExample(t *testi
 		"reservation_name":  "tf-test-gce-reservation-source-instance-template" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -242,7 +239,6 @@ func TestAccComputeReservation_reservationSharingPolicyExample(t *testing.T) {
 		"reservation_name":  "tf-test-gce-reservation-sharing-policy" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -328,7 +324,6 @@ func TestAccComputeReservation_sharedReservationBasicExample(t *testing.T) {
 		"reservation_name": "tf-test-gce-shared-reservation" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -425,7 +420,6 @@ func TestAccComputeReservation_sharedReservationBetaExample(t *testing.T) {
 		"reservation_name": "tf-test-gce-shared-reservation-beta" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

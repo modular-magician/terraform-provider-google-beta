@@ -67,7 +67,6 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryBasicExam
 		"repository_id":   "tf-test-my-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -124,7 +123,6 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryInitialCo
 		"repository_id":   "tf-test-my-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -190,7 +188,6 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryServiceAc
 		"sa_id":           "tf-test-my-sa" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -251,7 +248,6 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositorySecretSca
 		"repository_id":   "tf-test-my-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -335,7 +331,6 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositorySecretSca
 		"repository_id":   "tf-test-my-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

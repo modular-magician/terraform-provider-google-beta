@@ -71,7 +71,6 @@ func TestAccComputeRegionNetworkPolicy_regionNetworkPolicyUpdateExample(t *testi
 		"policy_name":       "tf-test-region-np-full" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),

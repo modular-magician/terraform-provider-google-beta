@@ -64,7 +64,6 @@ func TestAccStorageObjectAccessControl_storageObjectAccessControlPublicObjectExa
 		"object_name":   "tf-test-public-object" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

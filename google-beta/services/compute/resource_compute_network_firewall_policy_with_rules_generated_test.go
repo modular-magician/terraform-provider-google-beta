@@ -73,7 +73,6 @@ func TestAccComputeNetworkFirewallPolicyWithRules_computeNetworkFirewallPolicyWi
 		"tag_value":              "tf-test-tag-value" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

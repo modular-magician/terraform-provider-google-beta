@@ -68,7 +68,6 @@ func TestAccCloudSupportSupportEventSubscription_cloudSupportEventSubscriptionBa
 		"topic_name":      "tf-test-test-topic" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -137,7 +136,6 @@ func TestAccCloudSupportSupportEventSubscription_cloudSupportEventSubscriptionUp
 		"topic_name":      "tf-test-test-topic-2" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),

@@ -65,7 +65,6 @@ func TestAccDiscoveryEngineAssistant_discoveryengineAssistantBasicExample(t *tes
 		"template_id":   "tf-test-example-template-id" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
-
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
