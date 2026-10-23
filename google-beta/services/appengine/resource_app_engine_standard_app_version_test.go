@@ -123,19 +123,19 @@ resource "google_app_engine_standard_app_version" "foo" {
     port = "8000"
   }
 
-  instance_class = "F2"
+  instance_class = "F1"
 
   automatic_scaling {
     max_concurrent_requests = 10
     min_idle_instances = 1
-    max_idle_instances = 3
+    max_idle_instances = 2
     min_pending_latency = "1s"
     max_pending_latency = "5s"
     standard_scheduler_settings {
       target_cpu_utilization = 0.5
       target_throughput_utilization = 0.75
-      min_instances = 2
-      max_instances = 10
+      min_instances = 1
+      max_instances = 2
     }
   }
 
@@ -245,19 +245,19 @@ resource "google_app_engine_standard_app_version" "foo" {
     port = "8000"
   }
 
-  instance_class = "F2"
+  instance_class = "F1"
 
   automatic_scaling {
     max_concurrent_requests = 10
     min_idle_instances = 1
-    max_idle_instances = 3
+    max_idle_instances = 2
     min_pending_latency = "1s"
     max_pending_latency = "5s"
     standard_scheduler_settings {
       target_cpu_utilization = 0.5
       target_throughput_utilization = 0.75
-      min_instances = 2
-      max_instances = 10
+      min_instances = 1
+      max_instances = 2
     }
   }
 
@@ -333,10 +333,10 @@ resource "google_app_engine_standard_app_version" "foo" {
     port = "8000"
   }
 
-  instance_class = "B2"
+  instance_class = "B1"
 
   basic_scaling {
-    max_instances = 5
+    max_instances = 1
   }
 
   noop_on_destroy = true
@@ -445,7 +445,7 @@ resource "google_app_engine_standard_app_version" "foo" {
     }
   }
 
-  instance_class = "F2"
+  instance_class = "F1"
   noop_on_destroy = true
 }
 
@@ -513,7 +513,7 @@ resource "google_app_engine_standard_app_version" "foo" {
     }
   }
 
-  instance_class = "F2"
+  instance_class = "F1"
   noop_on_destroy = true
 }
 
