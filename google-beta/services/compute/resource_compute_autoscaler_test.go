@@ -192,7 +192,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "foobar" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -240,7 +240,7 @@ resource "google_compute_autoscaler" "foobar" {
   zone        = "us-central1-a"
   target      = google_compute_instance_group_manager.foobar.self_link
   autoscaling_policy {
-    max_replicas    = 5
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     cpu_utilization {
@@ -259,7 +259,7 @@ resource "google_compute_autoscaler" "foobar" {
   zone        = "us-central1-a"
   target      = google_compute_instance_group_manager.foobar.self_link
   autoscaling_policy {
-    max_replicas    = 10
+    max_replicas    = 3
     min_replicas    = 0
     cooldown_period = 60
     cpu_utilization {
@@ -278,7 +278,7 @@ resource "google_compute_autoscaler" "foobar" {
   zone        = "us-central1-a"
   target      = google_compute_instance_group_manager.foobar.self_link
   autoscaling_policy {
-    max_replicas    = 10
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     cpu_utilization {
@@ -310,7 +310,7 @@ resource "google_compute_autoscaler" "foobar" {
   zone        = "us-central1-a"
   target      = google_compute_instance_group_manager.foobar.self_link
   autoscaling_policy {
-    max_replicas    = 10
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     cpu_utilization {
@@ -336,7 +336,7 @@ resource "google_compute_autoscaler" "foobar" {
   zone        = "us-central1-a"
   target      = google_compute_instance_group_manager.foobar.self_link
   autoscaling_policy {
-    max_replicas    = 10
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     cpu_utilization {
@@ -386,7 +386,7 @@ resource "google_compute_autoscaler" "foobar" {
   zone        = "us-central1-a"
   target      = google_compute_instance_group_manager.foobar.self_link
   autoscaling_policy {
-    max_replicas    = 10
+    max_replicas    = 2
     min_replicas    = 1
     cooldown_period = 60
     cpu_utilization {

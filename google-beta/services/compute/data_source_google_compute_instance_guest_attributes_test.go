@@ -76,7 +76,7 @@ func testAccDataSourceComputeInstanceGuestAttributesInitialConfig(instanceName s
 	return fmt.Sprintf(`
 resource "google_compute_instance" "foo" {
   name           = "%s"
-  machine_type   = "n1-standard-1"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
 
   boot_disk {
@@ -108,7 +108,7 @@ func testAccDataSourceComputeInstanceGuestAttributesConfig_queryPath(instanceNam
 	return fmt.Sprintf(`
 resource "google_compute_instance" "foo" {
   name           = "%s"
-  machine_type   = "n1-standard-1"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
 
   boot_disk {
@@ -146,7 +146,7 @@ func testAccDataSourceComputeInstanceGuestAttributesConfig_queryPath_nonExistent
 	return fmt.Sprintf(`
 resource "google_compute_instance" "foo" {
   name           = "%s"
-  machine_type   = "n1-standard-1"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
 
   boot_disk {
@@ -184,7 +184,7 @@ func testAccDataSourceComputeInstanceGuestAttributesConfig_queryPath_empty(insta
 	return fmt.Sprintf(`
 resource "google_compute_instance" "foo" {
   name           = "%s"
-  machine_type   = "n1-standard-1"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
 
   boot_disk {
@@ -217,7 +217,7 @@ func testAccDataSourceComputeInstanceGuestAttributesConfig_variableKey(instanceN
 	return fmt.Sprintf(`
 resource "google_compute_instance" "foo" {
   name           = "%s"
-  machine_type   = "n1-standard-1"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
 
   boot_disk {

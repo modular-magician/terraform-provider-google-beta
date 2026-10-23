@@ -143,7 +143,7 @@ resource "google_compute_reservation" "reservation" {
   delete_at_time = "%s"
 
   specific_reservation {
-    count = 2
+    count = 1
     instance_properties {
       min_cpu_platform = "Intel Cascade Lake"
       machine_type     = "n2-standard-2"
@@ -163,7 +163,7 @@ resource "google_compute_reservation" "reservation" {
   }
 
   specific_reservation {
-    count = 2
+    count = 1
     instance_properties {
       min_cpu_platform = "Intel Cascade Lake"
       machine_type     = "n2-standard-2"
@@ -184,7 +184,7 @@ resource "google_compute_reservation" "reservation" {
   }
 
   specific_reservation {
-    count = 2
+    count = 1
     instance_properties {
       min_cpu_platform = "Intel Cascade Lake"
       machine_type     = "n2-standard-2"

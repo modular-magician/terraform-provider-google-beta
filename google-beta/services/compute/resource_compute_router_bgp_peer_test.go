@@ -1371,7 +1371,7 @@ resource "google_compute_address" "addr_peer" {
 
 resource "google_compute_instance" "foobar" {
   name           = "%s-vm"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
   can_ip_forward = true
 

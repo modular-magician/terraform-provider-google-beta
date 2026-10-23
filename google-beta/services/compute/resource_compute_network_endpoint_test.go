@@ -180,7 +180,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_compute_instance" "default" {
   name         = "tf-test-neg-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -473,7 +473,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_compute_instance" "default" {
   name         = "tf-test-neg-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
 
   boot_disk {
@@ -495,7 +495,7 @@ resource "google_compute_instance" "default" {
 
 resource "google_compute_instance" "vm2" {
   name         = "tf-test-neg-vm2-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
 
   boot_disk {

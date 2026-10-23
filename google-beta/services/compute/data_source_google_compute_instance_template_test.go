@@ -115,7 +115,7 @@ resource "google_compute_instance_template" "default" {
   name        = "tf-test-template-%{suffix}"
   description = "Example template."
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar"]
 
@@ -146,7 +146,7 @@ resource "google_compute_instance_template" "a" {
   name        = "tf-test-template-a-%{suffix}"
   description = "Example template."
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar", "a"]
 
@@ -164,7 +164,7 @@ resource "google_compute_instance_template" "b" {
   name        = "tf-test-template-b-%{suffix}"
   description = "Example template."
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar", "b"]
 
@@ -182,7 +182,7 @@ resource "google_compute_instance_template" "c" {
   name        = "tf-test-template-c-%{suffix}"
   description = "Example template."
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar", "c"]
 
@@ -212,7 +212,7 @@ resource "google_compute_instance_template" "a" {
   name        = "tf-test-template-%{suffix}-a"
   description = "tf-test-instance-template"
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar", "a"]
 
@@ -230,7 +230,7 @@ resource "google_compute_instance_template" "b" {
   name        = "tf-test-template-%{suffix}-b"
   description = "tf-test-instance-template"
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar", "b"]
 
@@ -253,7 +253,7 @@ resource "google_compute_instance_template" "c" {
   name        = "tf-test-template-%{suffix}-c"
   description = "tf-test-instance-template"
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar", "c"]
 
@@ -288,7 +288,7 @@ resource "google_compute_instance_template" "default" {
   name        = "tf-test-template-%{suffix}"
   description = "Example template."
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   tags = ["foo", "bar"]
 

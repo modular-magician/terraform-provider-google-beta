@@ -94,7 +94,7 @@ resource "google_compute_region_instance_template" "default" {
   name        = "tf-test-template-%{suffix}"
   description = "Example template."
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar"]
   disk {
     source_image = "cos-cloud/cos-stable"
@@ -122,7 +122,7 @@ resource "google_compute_region_instance_template" "a" {
   name        = "tf-test-template-a-%{suffix}"
   description = "Example template."
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar", "a"]
   disk {
     source_image = "cos-cloud/cos-stable"
@@ -137,7 +137,7 @@ resource "google_compute_region_instance_template" "b" {
   name        = "tf-test-template-b-%{suffix}"
   description = "Example template."
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar", "b"]
   disk {
     source_image = "cos-cloud/cos-stable"
@@ -152,7 +152,7 @@ resource "google_compute_region_instance_template" "c" {
   name        = "tf-test-template-c-%{suffix}"
   description = "Example template."
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar", "c"]
   disk {
     source_image = "cos-cloud/cos-stable"
@@ -182,7 +182,7 @@ resource "google_compute_region_instance_template" "a" {
   name        = "tf-test-template-%{suffix}-a"
   description = "tf-test-instance-template"
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar", "a"]
   disk {
     source_image = "cos-cloud/cos-stable"
@@ -197,7 +197,7 @@ resource "google_compute_region_instance_template" "b" {
   name        = "tf-test-template-%{suffix}-b"
   description = "tf-test-instance-template"
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar", "b"]
   disk {
     source_image = "cos-cloud/cos-stable"
@@ -216,7 +216,7 @@ resource "google_compute_region_instance_template" "c" {
   name        = "tf-test-template-%{suffix}-c"
   description = "tf-test-instance-template"
   region = "us-central1"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags = ["foo", "bar", "c"]
   disk {
     source_image = "cos-cloud/cos-stable"

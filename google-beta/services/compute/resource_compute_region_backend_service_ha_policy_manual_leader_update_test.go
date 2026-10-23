@@ -100,7 +100,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance" "endpoint-instance1" {
   name         = "tf-test-rbs-instance1-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -117,7 +117,7 @@ resource "google_compute_instance" "endpoint-instance1" {
 
 resource "google_compute_instance" "endpoint-instance2" {
   name         = "tf-test-rbs-instance2-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -204,7 +204,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance" "endpoint-instance1" {
   name         = "tf-test-rbs-instance1-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
@@ -221,7 +221,7 @@ resource "google_compute_instance" "endpoint-instance1" {
 
 resource "google_compute_instance" "endpoint-instance2" {
   name         = "tf-test-rbs-instance2-%{random_suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
