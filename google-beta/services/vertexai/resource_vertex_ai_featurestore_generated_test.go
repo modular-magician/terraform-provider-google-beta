@@ -103,7 +103,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   }
   region   = "us-central1"
   online_serving_config {
-    fixed_node_count = 2
+    fixed_node_count = 1
   }
   encryption_spec {
     kms_key_name = "%{kms_key_name}"
@@ -161,7 +161,7 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   }
   region   = "us-central1"
   online_serving_config {
-    fixed_node_count = 2
+    fixed_node_count = 1
   }
   encryption_spec {
     kms_key_name = "%{kms_key_name}"
@@ -220,8 +220,8 @@ resource "google_vertex_ai_featurestore" "featurestore" {
   region   = "us-central1"
   online_serving_config {
     scaling {
-      min_node_count = 2
-      max_node_count = 10
+      min_node_count = 1
+      max_node_count = 2
     }
   }
   encryption_spec {

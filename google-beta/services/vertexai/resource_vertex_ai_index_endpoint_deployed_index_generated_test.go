@@ -238,7 +238,7 @@ resource "google_vertex_ai_index_endpoint_deployed_index" "basic_deployed_index"
   }
 
   automatic_resources {
-    max_replica_count = 4
+    max_replica_count = 2
   }
 }
 

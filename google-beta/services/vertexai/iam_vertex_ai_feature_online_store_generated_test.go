@@ -167,7 +167,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   bigtable {
     auto_scaling {
       min_node_count         = 1
-      max_node_count         = 3
+      max_node_count         = 2
       cpu_utilization_target = 50
     }
   }
@@ -193,7 +193,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   bigtable {
     auto_scaling {
       min_node_count         = 1
-      max_node_count         = 3
+      max_node_count         = 2
       cpu_utilization_target = 50
     }
   }
@@ -233,7 +233,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   bigtable {
     auto_scaling {
       min_node_count         = 1
-      max_node_count         = 3
+      max_node_count         = 2
       cpu_utilization_target = 50
     }
   }
@@ -261,7 +261,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   bigtable {
     auto_scaling {
       min_node_count         = 1
-      max_node_count         = 3
+      max_node_count         = 2
       cpu_utilization_target = 50
     }
   }
@@ -287,7 +287,7 @@ resource "google_vertex_ai_feature_online_store" "feature_online_store" {
   bigtable {
     auto_scaling {
       min_node_count         = 1
-      max_node_count         = 3
+      max_node_count         = 2
       cpu_utilization_target = 50
     }
   }

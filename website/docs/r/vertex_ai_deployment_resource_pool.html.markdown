@@ -45,7 +45,7 @@ resource "google_vertex_ai_deployment_resource_pool" "deployment_resource_pool" 
     name = "example-deployment-resource-pool"
     dedicated_resources {
         machine_spec {
-            machine_type = "n1-standard-4"
+            machine_type = "n1-standard-2"
             accelerator_type = "NVIDIA_TESLA_P4"
             accelerator_count = 1
         }

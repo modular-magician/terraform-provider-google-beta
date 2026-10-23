@@ -218,7 +218,7 @@ resource "google_vertex_ai_model_development_cluster" "default" {
 
     scaling_spec {
       min_node_count = 1
-      max_node_count = 2
+      max_node_count = 1
     }
   }
 
