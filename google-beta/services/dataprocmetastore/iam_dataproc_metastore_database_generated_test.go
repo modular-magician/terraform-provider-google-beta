@@ -157,7 +157,8 @@ resource "google_dataproc_metastore_service" "dpms_service" {
   service_id = "tf-test-metastore-srv-%{random_suffix}"
   location   = "us-central1"
 
-  tier       = "DEVELOPER"
+  tier                = "DEVELOPER"
+  deletion_protection = false
 
   hive_metastore_config {
     version = "3.1.2"
@@ -174,10 +175,6 @@ resource "google_dataproc_cluster" "dp_cluster" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
-    }
-
-    endpoint_config {
-      enable_http_port_access = true
     }
 
     master_config {
@@ -231,7 +228,8 @@ resource "google_dataproc_metastore_service" "dpms_service" {
   service_id = "tf-test-metastore-srv-%{random_suffix}"
   location   = "us-central1"
 
-  tier       = "DEVELOPER"
+  tier                = "DEVELOPER"
+  deletion_protection = false
 
   hive_metastore_config {
     version = "3.1.2"
@@ -248,10 +246,6 @@ resource "google_dataproc_cluster" "dp_cluster" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
-    }
-
-    endpoint_config {
-      enable_http_port_access = true
     }
 
     master_config {
@@ -321,7 +315,8 @@ resource "google_dataproc_metastore_service" "dpms_service" {
   service_id = "tf-test-metastore-srv-%{random_suffix}"
   location   = "us-central1"
 
-  tier       = "DEVELOPER"
+  tier                = "DEVELOPER"
+  deletion_protection = false
 
   hive_metastore_config {
     version = "3.1.2"
@@ -338,10 +333,6 @@ resource "google_dataproc_cluster" "dp_cluster" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
-    }
-
-    endpoint_config {
-      enable_http_port_access = true
     }
 
     master_config {
@@ -397,7 +388,8 @@ resource "google_dataproc_metastore_service" "dpms_service" {
   service_id = "tf-test-metastore-srv-%{random_suffix}"
   location   = "us-central1"
 
-  tier       = "DEVELOPER"
+  tier                = "DEVELOPER"
+  deletion_protection = false
 
   hive_metastore_config {
     version = "3.1.2"
@@ -414,10 +406,6 @@ resource "google_dataproc_cluster" "dp_cluster" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
-    }
-
-    endpoint_config {
-      enable_http_port_access = true
     }
 
     master_config {
@@ -471,7 +459,8 @@ resource "google_dataproc_metastore_service" "dpms_service" {
   service_id = "tf-test-metastore-srv-%{random_suffix}"
   location   = "us-central1"
 
-  tier       = "DEVELOPER"
+  tier                = "DEVELOPER"
+  deletion_protection = false
 
   hive_metastore_config {
     version = "3.1.2"
@@ -488,10 +477,6 @@ resource "google_dataproc_cluster" "dp_cluster" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
-    }
-
-    endpoint_config {
-      enable_http_port_access = true
     }
 
     master_config {

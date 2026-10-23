@@ -220,8 +220,10 @@ data "google_storage_project_service_account" "gcs_account" {}
 
 
 resource "google_dataproc_metastore_service" "default" {
-  service_id = "%{metastore_service_name}"
-  location   = "us-central1"
+  service_id          = "%{metastore_service_name}"
+  location            = "us-central1"
+  tier                = "DEVELOPER"
+  deletion_protection = false
 
   encryption_config {
     kms_key = "%{kms_key_name}"
