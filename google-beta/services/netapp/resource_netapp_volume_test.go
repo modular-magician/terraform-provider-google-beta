@@ -817,7 +817,7 @@ func testAccNetappVolume_flexAutoTierVolume_default(context map[string]interface
         name = "tf-test-pool%{random_suffix}"
         location = "us-east4-a"
         service_level = "FLEX"
-        capacity_gib = "2048"
+        capacity_gib = "1024"
         network = data.google_compute_network.default.id
         allow_auto_tiering = true
         custom_performance_enabled = true
@@ -851,7 +851,7 @@ func testAccNetappVolume_flexAutoTierVolume_update(context map[string]interface{
         name = "tf-test-pool%{random_suffix}"
         location = "us-east4-a"
         service_level = "FLEX"
-        capacity_gib = "2048"
+        capacity_gib = "1024"
         network = data.google_compute_network.default.id
         allow_auto_tiering = true
         custom_performance_enabled = true
@@ -921,7 +921,7 @@ func testAccNetappBlockVolume_volumeBasicExample_basic(context map[string]interf
         name = "tf-test-test-pool%{random_suffix}"
         location = "us-central1-a"
         service_level = "FLEX"
-        capacity_gib = "2048"
+        capacity_gib = "1024"
         type = "UNIFIED"
         network = data.google_compute_network.default.id
     }
@@ -958,7 +958,7 @@ func testAccNetappBlockVolume_volumeBasicExample_update(context map[string]inter
         name = "tf-test-test-pool%{random_suffix}"
         location = "us-central1-a"
         service_level = "FLEX"
-        capacity_gib = "2048"
+        capacity_gib = "1024"
         type = "UNIFIED"
         network = data.google_compute_network.default.id
     }
@@ -1529,7 +1529,7 @@ func testAccNetappVolume_LargeCapacityScaleTypeConfig_basic(context map[string]i
         name = "tf-test-test-pool%{random_suffix}"
         location = "us-east4-a"
         service_level = "FLEX"
-        capacity_gib = "13312"
+        capacity_gib = "6144"
         type = "UNIFIED"
         scale_type = "SCALE_TYPE_SCALEOUT"
         network = data.google_compute_network.default.id
@@ -1538,7 +1538,7 @@ func testAccNetappVolume_LargeCapacityScaleTypeConfig_basic(context map[string]i
     resource "google_netapp_volume" "test_volume" {
         location = "us-east4-a"
         name = "tf_test_test_volume%{random_suffix}"
-        capacity_gib = "13312"
+        capacity_gib = "6144"
         storage_pool = google_netapp_storage_pool.default.name
         protocols = ["NFSV3"]
         description = "This is a test description"
@@ -1561,7 +1561,7 @@ func testAccNetappVolume_LargeCapacityScaleTypeConfig_updated(context map[string
         name = "tf-test-test-pool%{random_suffix}"
         location = "us-east4-a"
         service_level = "FLEX"
-        capacity_gib = "13312"
+        capacity_gib = "6144"
         type = "UNIFIED"
         scale_type = "SCALE_TYPE_SCALEOUT"
         network = data.google_compute_network.default.id
@@ -1570,7 +1570,7 @@ func testAccNetappVolume_LargeCapacityScaleTypeConfig_updated(context map[string
     resource "google_netapp_volume" "test_volume" {
         location = "us-east4-a"
         name = "tf_test_test_volume%{random_suffix}"
-        capacity_gib = "13311"
+        capacity_gib = "6143"
         storage_pool = google_netapp_storage_pool.default.name
         protocols = ["NFSV3"]
         description = "This is a test description"
