@@ -126,7 +126,7 @@ resource "google_compute_address" "nat_vm_ip" {
 
 resource "google_compute_instance" "nat_vm" {
   name           = "nat-vm"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
   desired_status  = "RUNNING"
 
