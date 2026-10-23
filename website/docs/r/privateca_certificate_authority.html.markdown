@@ -52,6 +52,7 @@ resource "google_privateca_certificate_authority" "default" {
   certificate_authority_id = "my-certificate-authority"
   location = "us-central1"
   deletion_protection = true
+  skip_grace_period = true
   config {
     subject_config {
       subject {
@@ -99,6 +100,7 @@ resource "google_privateca_certificate_authority" "default" {
   certificate_authority_id = "my-certificate-authority"
   location = "us-central1"
   deletion_protection = true
+  skip_grace_period = true
   config {
     subject_config {
       subject {
@@ -182,6 +184,7 @@ resource "google_privateca_certificate_authority" "default" {
   certificate_authority_id = "my-certificate-authority-sub"
   location = "us-central1"
   deletion_protection = true
+  skip_grace_period = true
   subordinate_config {
     certificate_authority = google_privateca_certificate_authority.root-ca.name
   }
@@ -353,6 +356,7 @@ resource "google_privateca_certificate_authority" "default" {
   certificate_authority_id = "my-certificate-authority"
   location = "us-central1"
   deletion_protection = true
+  skip_grace_period = true
   config {
     subject_config {
       subject {
