@@ -2009,7 +2009,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{instance_name}"
   region       = "%{region}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link
@@ -2079,7 +2079,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{instance_name}"
   region       = "%{region}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link
@@ -2940,7 +2940,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -2984,7 +2984,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region         = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -3049,7 +3049,7 @@ resource "google_compute_image" "foobar" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "%{template}"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -3093,7 +3093,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -3137,7 +3137,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region      = "us-central1"
   can_ip_forward = false
   tags           = ["foo", "bar"]
@@ -3182,7 +3182,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   tags         = ["foo", "bar"]
 
   disk {
@@ -3233,7 +3233,7 @@ resource "google_compute_subnetwork" "subnetwork-ipv6" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
   tags         = ["foo", "bar"]
 
@@ -3266,7 +3266,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link
@@ -3292,7 +3292,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   tags         = ["foo", "bar"]
 
   disk {
@@ -3321,7 +3321,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   tags         = ["foo", "bar"]
 
   disk {
@@ -3357,19 +3357,19 @@ resource "google_compute_disk" "foobar" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link
     auto_delete  = true
-    disk_size_gb = 100
+    disk_size_gb = 10
     boot         = true
   }
 
   disk {
     source       = google_compute_disk.foobar.name
-    disk_size_gb = 50
+    disk_size_gb = 10
     auto_delete  = false
     boot         = false
   }
@@ -3496,13 +3496,13 @@ resource "google_compute_region_disk" "foobar" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link
     auto_delete  = true
-    disk_size_gb = 100
+    disk_size_gb = 10
     boot         = true
   }
 
@@ -3593,7 +3593,7 @@ resource "google_compute_network" "auto-network" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -3635,7 +3635,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -3728,7 +3728,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -3760,7 +3760,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -3792,7 +3792,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -3840,7 +3840,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -3881,7 +3881,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region        = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -3925,7 +3925,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -3961,7 +3961,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -3994,7 +3994,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-standard-4"
+  machine_type = "e2-standard-2"
   region      = "us-central1"
 
   disk {
@@ -4044,7 +4044,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-standard-4"
+  machine_type = "e2-standard-2"
   region      = "us-east1"
 
   disk {
@@ -4088,7 +4088,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-standard-4"
+  machine_type = "e2-micro"
   region      = "us-east1"
 
   disk {
@@ -4123,7 +4123,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instancet-%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   region      = "us-central1"
 
@@ -4188,7 +4188,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   region      = "us-central1"
 
@@ -4469,7 +4469,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   disk {
     source_image = data.google_compute_image.my_image.self_link
@@ -4496,7 +4496,7 @@ func testAccComputeRegionInstanceTemplate_invalidDiskType(suffix string) string 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   disk {
     source_image = "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20210217"
@@ -4572,7 +4572,7 @@ resource "google_compute_image" "diskimage" {
 
 resource "google_compute_region_instance_template" "foobar" {
 	name_prefix = "tf-test-instance-template-"
-	machine_type         = "e2-medium"
+	machine_type         = "e2-micro"
 	region      = "us-central1"
 	disk {
 		source_image = google_compute_image.diskimage.self_link
@@ -4594,7 +4594,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   region      = "us-central1"
   name           = "tf-test-instance-template-%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   disk {
     source_image = data.google_compute_image.my_image.self_link
@@ -4636,7 +4636,7 @@ data "google_compute_image" "example" {
 resource "google_compute_region_instance_template" "foobar" {
 	name           = "tf-test-instance-template-%s"
 	region      = "us-central1"
-	machine_type   = "e2-medium"
+	machine_type   = "e2-micro"
 	can_ip_forward = false
 	tags           = ["foo", "bar"]
 
@@ -4681,7 +4681,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
 	name = "%s"
 	region      = "us-central1"
-	machine_type         = "e2-medium"
+	machine_type         = "e2-micro"
 	network_interface {
 		network = "default"
 		access_config {}
@@ -4708,7 +4708,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region      = "us-central1"
   can_ip_forward = false
   tags           = ["foo", "bar"]
@@ -4787,7 +4787,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -4878,7 +4878,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region         = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
 
   disk {
@@ -4909,7 +4909,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -4951,7 +4951,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -4997,7 +4997,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -5045,7 +5045,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -5086,7 +5086,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -5128,7 +5128,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_region_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
   region      = "us-central1"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -5213,7 +5213,7 @@ resource "google_compute_snapshot" "snapshot" {
 
 resource "google_compute_region_instance_template" "template" {
   name           = "tf-test-instance-template-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -5281,7 +5281,7 @@ resource "google_compute_image" "image" {
 
 resource "google_compute_region_instance_template" "template" {
   name           = "tf-test-instance-template-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region      = "us-central1"
 
   disk {
@@ -5326,7 +5326,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -5360,7 +5360,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -5404,7 +5404,7 @@ resource "google_compute_image" "image" {
 
 resource "google_compute_region_instance_template" "template" {
   name           = "tf-test-instance-template-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region         = "us-central1"
 
   disk {
@@ -5448,7 +5448,7 @@ resource "google_compute_image" "image" {
 
 resource "google_compute_region_instance_template" "template" {
   name           = "tf-test-instance-template-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region         = "us-central1"
 
   disk {
@@ -5502,7 +5502,7 @@ resource "google_compute_snapshot" "snapshot" {
 
 resource "google_compute_region_instance_template" "template" {
   name           = "tf-test-instance-template-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region         = "us-central1"
 
   disk {
@@ -5556,7 +5556,7 @@ resource "google_compute_snapshot" "snapshot" {
 
 resource "google_compute_region_instance_template" "template" {
   name           = "tf-test-instance-template-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   region         = "us-central1"
 
   disk {
@@ -5584,7 +5584,7 @@ data "google_compute_image" "debian" {
 
 resource "google_compute_region_instance_template" "foobar" {
 	name         = "%{template_name}"
-	machine_type = "e2-medium"
+	machine_type = "e2-micro"
 	region       = "us-central1"
 
 	disk {
@@ -5617,7 +5617,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{template_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -5645,7 +5645,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -5684,7 +5684,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "%{instance_name}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -5713,7 +5713,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -5772,7 +5772,7 @@ resource "google_compute_subnetwork" "custom-test" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   region       = "us-central1"
 
   disk {
@@ -5817,7 +5817,7 @@ resource "google_iam_workload_identity_pool_managed_identity" "id" {
 
 resource "google_compute_region_instance_template" "foobar" {
   name         = "tf-test-instance-template-%s"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link

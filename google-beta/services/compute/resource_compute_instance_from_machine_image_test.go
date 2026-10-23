@@ -51,7 +51,7 @@ func TestAccComputeInstanceFromMachineImage_basic(t *testing.T) {
 					testAccCheckComputeInstanceExists(t, resourceName, &instance),
 
 					// Check that fields were set based on the template
-					resource.TestCheckResourceAttr(resourceName, "machine_type", "n1-standard-1"),
+					resource.TestCheckResourceAttr(resourceName, "machine_type", "e2-micro"),
 					resource.TestCheckResourceAttr(resourceName, "attached_disk.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "scheduling.0.automatic_restart", "false"),
 				),
@@ -80,7 +80,7 @@ func TestAccComputeInstanceFromMachineImage_maxRunDuration(t *testing.T) {
 					testAccCheckComputeInstanceExists(t, resourceName, &instance),
 
 					// Check that fields were set based on the template
-					resource.TestCheckResourceAttr(resourceName, "machine_type", "n1-standard-1"),
+					resource.TestCheckResourceAttr(resourceName, "machine_type", "e2-micro"),
 					resource.TestCheckResourceAttr(resourceName, "attached_disk.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "scheduling.0.automatic_restart", "false"),
 					testAccCheckComputeInstanceMaxRunDuration(&instance, expectedMaxRunDuration),
@@ -281,7 +281,7 @@ func TestAccComputeInstanceFromMachineImage_diffProject(t *testing.T) {
 					testAccCheckComputeInstanceExists(t, resourceName, &instance),
 
 					// Check that fields were set based on the template
-					resource.TestCheckResourceAttr(resourceName, "machine_type", "n1-standard-1"),
+					resource.TestCheckResourceAttr(resourceName, "machine_type", "e2-micro"),
 					resource.TestCheckResourceAttr(resourceName, "attached_disk.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "scheduling.0.automatic_restart", "false"),
 				),
@@ -560,7 +560,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -904,7 +904,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -964,7 +964,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1029,7 +1029,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1088,7 +1088,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1142,7 +1142,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1200,7 +1200,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1270,7 +1270,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1348,7 +1348,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "%s"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 
   network_interface {
     network = "default"
@@ -1436,7 +1436,7 @@ resource "google_compute_machine_image" "foobar" {
 
 resource "google_compute_instance" "mi-source" {
   name           = "%s-source"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   zone           = "us-central1-a"
 
   boot_disk {
@@ -1563,7 +1563,7 @@ resource "google_compute_instance" "vm" {
   }
 
   name         = "tf-test-base-vm-%{suffix}"
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
 }
 
 
@@ -1574,7 +1574,7 @@ resource "google_compute_machine_image" "foobar" {
 
 resource "google_compute_instance_from_machine_image" "foobar" {
 	name         = "%{instance_name}"
-	machine_type = "e2-medium"
+	machine_type = "e2-micro"
 	zone         = "%{env_region}-a"
 
 	source_machine_image = google_compute_machine_image.foobar.self_link
@@ -1613,7 +1613,7 @@ resource "google_iam_workload_identity_pool_managed_identity" "id" {
 
 resource "google_compute_instance" "vm" {
   name         = "%{instance_name}-source"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
 
   boot_disk {
@@ -1682,7 +1682,7 @@ resource "google_compute_network_attachment" "test_network_attachment" {
 
 resource "google_compute_instance" "vm" {
   name         = "tf-test-instance-source-%{suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "%{region}-a"
 
   boot_disk {
@@ -1754,7 +1754,7 @@ resource "google_compute_network_attachment" "test_network_attachment" {
 
 resource "google_compute_instance" "vm" {
   name         = "tf-test-instance-source-%{suffix}"
-  machine_type = "e2-medium"
+  machine_type = "e2-micro"
   zone         = "%{region}-a"
 
   boot_disk {
