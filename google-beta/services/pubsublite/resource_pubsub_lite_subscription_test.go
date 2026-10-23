@@ -66,7 +66,7 @@ func testAccPubsubLiteSubscription_pubsubLiteSubscription_deliveryRequirement_up
 	  count = 1
 	  capacity {
 		publish_mib_per_sec = 4
-		subscribe_mib_per_sec = 8
+		subscribe_mib_per_sec = 4
 	  }
 	}
   

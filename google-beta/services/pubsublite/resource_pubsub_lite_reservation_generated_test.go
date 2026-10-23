@@ -94,7 +94,7 @@ func testAccPubsubLiteReservation_pubsubLiteReservationBasicExample(context map[
 resource "google_pubsub_lite_reservation" "example" {
   name = "%{reservation_name}"
   project = data.google_project.project.number
-  throughput_capacity = 2
+  throughput_capacity = 1
 }
 
 data "google_project" "project" {

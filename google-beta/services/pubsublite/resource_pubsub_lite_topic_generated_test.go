@@ -95,7 +95,7 @@ func testAccPubsubLiteTopic_pubsubLiteTopicBasicExample(context map[string]inter
 resource "google_pubsub_lite_reservation" "example" {
   name = "%{reservation_name}"
   project = data.google_project.project.number
-  throughput_capacity = 2
+  throughput_capacity = 1
 }
 
 resource "google_pubsub_lite_topic" "example" {
@@ -106,7 +106,7 @@ resource "google_pubsub_lite_topic" "example" {
     count = 1
     capacity {
       publish_mib_per_sec = 4
-      subscribe_mib_per_sec = 8
+      subscribe_mib_per_sec = 4
     }
   }
 

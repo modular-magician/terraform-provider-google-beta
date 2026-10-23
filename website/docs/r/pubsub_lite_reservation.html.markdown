@@ -44,7 +44,7 @@ To get more information about Reservation, see:
 resource "google_pubsub_lite_reservation" "example" {
   name = "example-reservation"
   project = data.google_project.project.number
-  throughput_capacity = 2
+  throughput_capacity = 1
 }
 
 data "google_project" "project" {
