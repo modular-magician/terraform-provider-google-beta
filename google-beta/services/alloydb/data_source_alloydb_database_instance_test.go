@@ -49,9 +49,10 @@ func TestAccAlloydbDatabaseInstanceDatasourceConfig(t *testing.T) {
 func testAccAlloydbDatabaseInstanceDatasourceConfig(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_alloydb_instance" "default" {
-  cluster       = google_alloydb_cluster.default.name
-  instance_id   = "tf-test-alloydb-instance%{random_suffix}"
-  instance_type = "PRIMARY"
+  cluster           = google_alloydb_cluster.default.name
+  instance_id       = "tf-test-alloydb-instance%{random_suffix}"
+  instance_type     = "PRIMARY"
+  availability_type = "ZONAL"
 
   machine_config {
     cpu_count = 2
@@ -66,6 +67,10 @@ resource "google_alloydb_cluster" "default" {
   }
   initial_user {
     password = "tf-test-alloydb-cluster%{random_suffix}"
+  }
+
+  continuous_backup_config {
+    enabled = false
   }
 
   deletion_protection = false

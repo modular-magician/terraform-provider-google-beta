@@ -93,9 +93,14 @@ func TestAccAlloydbUser_alloydbUserBuiltinTestExample(t *testing.T) {
 func testAccAlloydbUser_alloydbUserBuiltinTestExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_alloydb_instance" "default" {
-  cluster       = google_alloydb_cluster.default.name
-  instance_id   = "%{alloydb_instance_name}"
-  instance_type = "PRIMARY"
+  cluster           = google_alloydb_cluster.default.name
+  instance_id       = "%{alloydb_instance_name}"
+  instance_type     = "PRIMARY"
+  availability_type = "ZONAL"
+
+  machine_config {
+    cpu_count = 2
+  }
 }
 
 resource "google_alloydb_cluster" "default" {
@@ -106,6 +111,10 @@ resource "google_alloydb_cluster" "default" {
   }
   initial_user {
     password = "%{alloydb_cluster_pass}"
+  }
+
+  continuous_backup_config {
+    enabled = false
   }
 
   deletion_protection = false
@@ -165,9 +174,14 @@ func TestAccAlloydbUser_alloydbUserIamTestExample(t *testing.T) {
 func testAccAlloydbUser_alloydbUserIamTestExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_alloydb_instance" "default" {
-  cluster       = google_alloydb_cluster.default.name
-  instance_id   = "%{alloydb_instance_name}"
-  instance_type = "PRIMARY"
+  cluster           = google_alloydb_cluster.default.name
+  instance_id       = "%{alloydb_instance_name}"
+  instance_type     = "PRIMARY"
+  availability_type = "ZONAL"
+
+  machine_config {
+    cpu_count = 2
+  }
 }
 
 resource "google_alloydb_cluster" "default" {
@@ -178,6 +192,10 @@ resource "google_alloydb_cluster" "default" {
   }
   initial_user {
     password = "%{alloydb_cluster_pass}"
+  }
+
+  continuous_backup_config {
+    enabled = false
   }
 
   deletion_protection = false
