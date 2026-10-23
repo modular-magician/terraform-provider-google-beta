@@ -4022,7 +4022,7 @@ func TestAccContainerCluster_withNodePoolResize(t *testing.T) {
 			{
 				Config: testAccContainerCluster_withNodePoolNodeLocations(clusterName, npName, networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.node_count", "2"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.node_count", "1"),
 				),
 			},
 			{
@@ -4039,7 +4039,7 @@ func TestAccContainerCluster_withNodePoolResize(t *testing.T) {
 					},
 				},
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.node_count", "3"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.node_count", "2"),
 				),
 			},
 			{
@@ -4069,7 +4069,7 @@ func TestAccContainerCluster_withNodePoolAutoscaling(t *testing.T) {
 				Config: testAccContainerCluster_withNodePoolAutoscaling(clusterName, npName, networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.min_node_count", "1"),
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.max_node_count", "3"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.max_node_count", "2"),
 				),
 			},
 			{
@@ -4087,7 +4087,7 @@ func TestAccContainerCluster_withNodePoolAutoscaling(t *testing.T) {
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.min_node_count", "1"),
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.max_node_count", "5"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.max_node_count", "3"),
 				),
 			},
 			{
@@ -4136,8 +4136,8 @@ func TestAccContainerCluster_withNodePoolCIA(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.min_node_count", "0"),
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.max_node_count", "0"),
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_min_node_count", "3"),
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_max_node_count", "21"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_min_node_count", "1"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_max_node_count", "3"),
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.location_policy", "BALANCED"),
 				),
 			},
@@ -4157,8 +4157,8 @@ func TestAccContainerCluster_withNodePoolCIA(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.min_node_count", "0"),
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.max_node_count", "0"),
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_min_node_count", "4"),
-					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_max_node_count", "32"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_min_node_count", "2"),
+					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.total_max_node_count", "6"),
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool", "node_pool.0.autoscaling.0.location_policy", "ANY"),
 				),
 			},
@@ -12226,7 +12226,7 @@ resource "google_container_cluster" "with_node_pool" {
 
   node_pool {
     name       = "%s"
-    node_count = 2
+    node_count = 1
   }
   network    = "%s"
   subnetwork = "%s"
@@ -12249,7 +12249,7 @@ resource "google_container_cluster" "with_node_pool" {
 
   node_pool {
     name       = "%s"
-    node_count = 3
+    node_count = 2
   }
   network    = "%s"
   subnetwork = "%s"
@@ -12693,7 +12693,7 @@ resource "google_container_cluster" "with_node_pool" {
     initial_node_count = 1
     autoscaling {
       min_node_count = 1
-      max_node_count = 3
+      max_node_count = 2
     }
   }
   network    = "%s"
@@ -12715,7 +12715,7 @@ resource "google_container_cluster" "with_node_pool" {
     initial_node_count = 1
     autoscaling {
       min_node_count = 1
-      max_node_count = 5
+      max_node_count = 3
     }
   }
   network    = "%s"
@@ -12739,10 +12739,10 @@ resource "google_container_cluster" "with_node_pool" {
 
   node_pool {
     name               = "%s"
-    initial_node_count = 2
+    initial_node_count = 1
     autoscaling {
-      total_min_node_count = 3
-      total_max_node_count = 21
+      total_min_node_count = 1
+      total_max_node_count = 3
       location_policy      = "BALANCED"
     }
   }
@@ -12767,10 +12767,10 @@ resource "google_container_cluster" "with_node_pool" {
 
   node_pool {
     name               = "%s"
-    initial_node_count = 2
+    initial_node_count = 1
     autoscaling {
-      total_min_node_count = 4
-      total_max_node_count = 32
+      total_min_node_count = 2
+      total_max_node_count = 6
       location_policy      = "ANY"
     }
   }
@@ -12795,7 +12795,7 @@ resource "google_container_cluster" "with_node_pool" {
 
   node_pool {
     name               = "%s"
-    initial_node_count = 2
+    initial_node_count = 1
   }
   network    = "%s"
   subnetwork = "%s"
@@ -12813,7 +12813,7 @@ resource "google_container_cluster" "with_node_pool_name_prefix" {
 
   node_pool {
     name_prefix = "%s"
-    node_count  = 2
+    node_count  = 1
   }
   network    = "%s"
   subnetwork = "%s"
@@ -12831,12 +12831,12 @@ resource "google_container_cluster" "with_node_pool_multiple" {
 
   node_pool {
     name       = "%s-one"
-    node_count = 2
+    node_count = 1
   }
 
   node_pool {
     name       = "%s-two"
-    node_count = 3
+    node_count = 1
   }
   network    = "%s"
   subnetwork = "%s"
@@ -12873,7 +12873,7 @@ resource "google_container_cluster" "with_node_pool_node_config" {
   location = "us-east1-b"
   node_pool {
     name       = "%s"
-    node_count = 2
+    node_count = 1
     node_config {
       machine_type    = "n1-standard-1" // can't be e2 because of local-ssd
       disk_size_gb    = 15
@@ -19573,7 +19573,7 @@ resource "google_container_node_pool" "with_multi_nic" {
     }
   }
   node_config {
-    machine_type = "n4-standard-8"
+    machine_type = "n4-standard-4"
 	oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
@@ -19761,7 +19761,7 @@ func testAccContainerCluster_custom_subnet(clusterName string, networkName strin
 	  name     = "custom-node-pool"
 	  cluster  = google_container_cluster.primary.id
 	  location = "us-east1-b"
-	  node_count = 2
+	  node_count = 1
   	  max_pods_per_node = 30
 	  node_config {
 	    machine_type = "n4-standard-2"
@@ -19776,7 +19776,7 @@ func testAccContainerCluster_custom_subnet(clusterName string, networkName strin
 	  name     = "custom-node-pool1"
 	  cluster  = google_container_cluster.primary.id
 	  location = "us-east1-b"
-	  node_count = 2
+	  node_count = 1
   	  max_pods_per_node = 30
 	  node_config {
 	    machine_type = "n4-standard-2"
