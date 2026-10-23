@@ -86,7 +86,7 @@ resource "google_container_cluster" "kubes" {
   initial_node_count = 1
 
   node_config {
-    machine_type = "n4-standard-2"
+    machine_type = "e2-medium"
   }
 
   network    = "%s"
@@ -117,7 +117,7 @@ resource "google_container_cluster" "kubes" {
   initial_node_count = 1
 
   node_config {
-    machine_type = "n4-standard-2"
+    machine_type = "e2-medium"
   }
 
   resource_labels = {
