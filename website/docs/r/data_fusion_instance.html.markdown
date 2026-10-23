@@ -169,6 +169,7 @@ resource "google_data_fusion_instance" "cmek" {
   }
 
   depends_on = [google_kms_crypto_key_iam_member.crypto_key_member_gcs_sa]
+  
 }
 
 resource "google_kms_crypto_key" "crypto_key" {
@@ -236,6 +237,7 @@ resource "google_data_fusion_instance" "event" {
     enabled = true
     topic   = google_pubsub_topic.event.id
   }
+  
 }
 
 resource "google_pubsub_topic" "event" {
@@ -257,6 +259,7 @@ resource "google_data_fusion_instance" "zone" {
   region = "us-central1"
   zone   = "us-central1-a"
   type   = "DEVELOPER"
+  
 }
 ```
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
@@ -275,6 +278,7 @@ resource "google_data_fusion_instance" "data_fusion_instance_patch_revision" {
   type = "BASIC"
   version = "6.10.1"
   patch_revision = "6.10.1.5"
+  
 }
 ```
 

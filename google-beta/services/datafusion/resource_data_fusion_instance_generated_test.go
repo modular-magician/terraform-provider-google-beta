@@ -276,8 +276,9 @@ func TestAccDataFusionInstance_dataFusionInstanceCmekExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"instance_name": "tf-test-my-instance" + randomSuffix,
-		"random_suffix": randomSuffix,
+		"instance_name":   "tf-test-my-instance" + randomSuffix,
+		"prober_test_run": `options = { prober_test_run = "true" }`,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -316,6 +317,7 @@ resource "google_data_fusion_instance" "cmek" {
   }
 
   depends_on = [google_kms_crypto_key_iam_member.crypto_key_member_gcs_sa]
+  %{prober_test_run}
 }
 
 resource "google_kms_crypto_key" "crypto_key" {
@@ -401,8 +403,9 @@ func TestAccDataFusionInstance_dataFusionInstanceEventExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"instance_name": "tf-test-my-instance" + randomSuffix,
-		"random_suffix": randomSuffix,
+		"instance_name":   "tf-test-my-instance" + randomSuffix,
+		"prober_test_run": `options = { prober_test_run = "true" }`,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -440,6 +443,7 @@ resource "google_data_fusion_instance" "event" {
     enabled = true
     topic   = google_pubsub_topic.event.id
   }
+  %{prober_test_run}
 }
 
 resource "google_pubsub_topic" "event" {
@@ -454,8 +458,9 @@ func TestAccDataFusionInstance_dataFusionInstanceZoneExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"instance_name": "tf-test-my-instance" + randomSuffix,
-		"random_suffix": randomSuffix,
+		"instance_name":   "tf-test-my-instance" + randomSuffix,
+		"prober_test_run": `options = { prober_test_run = "true" }`,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -489,6 +494,7 @@ resource "google_data_fusion_instance" "zone" {
   region = "us-central1"
   zone   = "us-central1-a"
   type   = "DEVELOPER"
+  %{prober_test_run}
 }
 `, context)
 }
@@ -499,8 +505,9 @@ func TestAccDataFusionInstance_dataFusionInstancePatchRevisionExample(t *testing
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"instance_name": "tf-test-my-instance" + randomSuffix,
-		"random_suffix": randomSuffix,
+		"instance_name":   "tf-test-my-instance" + randomSuffix,
+		"prober_test_run": `options = { prober_test_run = "true" }`,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -535,6 +542,7 @@ resource "google_data_fusion_instance" "data_fusion_instance_patch_revision" {
   type = "BASIC"
   version = "6.10.1"
   patch_revision = "6.10.1.5"
+  %{prober_test_run}
 }
 `, context)
 }
