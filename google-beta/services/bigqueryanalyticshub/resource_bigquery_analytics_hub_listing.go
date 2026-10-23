@@ -199,6 +199,32 @@ func ResourceBigqueryAnalyticsHubListing() *schema.Resource {
 							},
 							Set: tpgresource.CaseInsensitiveHash,
 						},
+						"restricted_export_policy": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Optional:    true,
+							Description: `If set, restricted export policy will be propagated and enforced on the linked dataset.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, enable restricted export.`,
+									},
+									"restrict_direct_table_access": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, restrict direct table access(read api/tabledata.list) on linked table.`,
+									},
+									"restrict_query_result": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, restrict export of query result derived from restricted linked dataset table.`,
+									},
+								},
+							},
+						},
 						"selected_resources": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -371,6 +397,7 @@ See https://cloud.google.com/about/locations for full listing of possible Cloud 
 			},
 			"restricted_export_config": {
 				Type:        schema.TypeList,
+				Computed:    true,
 				Optional:    true,
 				Description: `If set, restricted export configuration will be propagated and enforced on the linked dataset.`,
 				MaxItems:    1,
@@ -390,6 +417,32 @@ See https://cloud.google.com/about/locations for full listing of possible Cloud 
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: `If true, restrict direct table access(read api/tabledata.list) on linked table.`,
+						},
+					},
+				},
+			},
+			"stored_procedure_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `If set, stored procedure configuration will be propagated and enforced on the linked dataset.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `If true, enable sharing of stored procedure.`,
+						},
+						"allowed_stored_procedure_types": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Description: `Output only. Types of stored procedure supported to share.
+Possible values: STORED_PROCEDURE_TYPE_UNSPECIFIED, SQL_PROCEDURE.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 					},
 				},
@@ -558,6 +611,12 @@ func resourceBigqueryAnalyticsHubListingCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("allow_only_metadata_sharing"); !tpgresource.IsEmptyValue(reflect.ValueOf(allowOnlyMetadataSharingProp)) && (ok || !reflect.DeepEqual(v, allowOnlyMetadataSharingProp)) {
 		obj["allowOnlyMetadataSharing"] = allowOnlyMetadataSharingProp
+	}
+	storedProcedureConfigProp, err := expandBigqueryAnalyticsHubListingStoredProcedureConfig(d.Get("stored_procedure_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("stored_procedure_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(storedProcedureConfigProp)) && (ok || !reflect.DeepEqual(v, storedProcedureConfigProp)) {
+		obj["storedProcedureConfig"] = storedProcedureConfigProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/dataExchanges/{{data_exchange_id}}/listings?listing_id={{listing_id}}")
@@ -957,7 +1016,14 @@ func resourceBigqueryAnalyticsHubListingUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
+	var bigqueryDatasetMasks []string
 	if d.HasChange("bigquery_dataset.0.replica_locations") {
+		bigqueryDatasetMasks = append(bigqueryDatasetMasks, "bigqueryDataset.replicaLocations")
+	}
+	if d.HasChange("bigquery_dataset.0.restricted_export_policy") {
+		bigqueryDatasetMasks = append(bigqueryDatasetMasks, "bigqueryDataset.restrictedExportPolicy")
+	}
+	if len(bigqueryDatasetMasks) > 0 {
 		// Split URL into base and query parts
 		parts := strings.SplitN(url, "?", 2)
 		if len(parts) == 2 {
@@ -967,8 +1033,8 @@ func resourceBigqueryAnalyticsHubListingUpdate(d *schema.ResourceData, meta inte
 			query = strings.ReplaceAll(query, "%2C", ",")
 			query = strings.ReplaceAll(query, "%2c", ",")
 
-			// Replace "bigqueryDataset" with "bigqueryDataset.replicaLocations"
-			query = strings.ReplaceAll(query, "bigqueryDataset", "bigqueryDataset.replicaLocations")
+			// Replace "bigqueryDataset" with changed subfields
+			query = strings.ReplaceAll(query, "bigqueryDataset", strings.Join(bigqueryDatasetMasks, ","))
 
 			// Re-encode commas back
 			query = strings.ReplaceAll(query, ",", "%2C")
@@ -1181,6 +1247,8 @@ func flattenBigqueryAnalyticsHubListingBigqueryDataset(v interface{}, d *schema.
 		flattenBigqueryAnalyticsHubListingBigqueryDatasetReplicaLocations(original["replicaLocations"], d, config)
 	transformed["effective_replicas"] =
 		flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicas(original["effectiveReplicas"], d, config)
+	transformed["restricted_export_policy"] =
+		flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicy(original["restrictedExportPolicy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenBigqueryAnalyticsHubListingBigqueryDatasetDataset(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1252,6 +1320,35 @@ func flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasReplicaSt
 }
 
 func flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasPrimaryState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyEnabled(original["enabled"], d, config)
+	transformed["restrict_direct_table_access"] =
+		flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictDirectTableAccess(original["restrictDirectTableAccess"], d, config)
+	transformed["restrict_query_result"] =
+		flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictQueryResult(original["restrictQueryResult"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictDirectTableAccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictQueryResult(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1359,6 +1456,29 @@ func flattenBigqueryAnalyticsHubListingCommercialInfoCloudMarketplaceService(v i
 }
 
 func flattenBigqueryAnalyticsHubListingCommercialInfoCloudMarketplaceCommercialState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingStoredProcedureConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenBigqueryAnalyticsHubListingStoredProcedureConfigEnabled(original["enabled"], d, config)
+	transformed["allowed_stored_procedure_types"] =
+		flattenBigqueryAnalyticsHubListingStoredProcedureConfigAllowedStoredProcedureTypes(original["allowedStoredProcedureTypes"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigqueryAnalyticsHubListingStoredProcedureConfigEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingStoredProcedureConfigAllowedStoredProcedureTypes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1504,6 +1624,13 @@ func expandBigqueryAnalyticsHubListingBigqueryDataset(v interface{}, d tpgresour
 		transformed["effectiveReplicas"] = transformedEffectiveReplicas
 	}
 
+	transformedRestrictedExportPolicy, err := expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicy(original["restricted_export_policy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRestrictedExportPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["restrictedExportPolicy"] = transformedRestrictedExportPolicy
+	}
+
 	return transformed, nil
 }
 
@@ -1607,6 +1734,54 @@ func expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasPrimarySta
 	return v, nil
 }
 
+func expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedRestrictDirectTableAccess, err := expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictDirectTableAccess(original["restrict_direct_table_access"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRestrictDirectTableAccess); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["restrictDirectTableAccess"] = transformedRestrictDirectTableAccess
+	}
+
+	transformedRestrictQueryResult, err := expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictQueryResult(original["restrict_query_result"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRestrictQueryResult); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["restrictQueryResult"] = transformedRestrictQueryResult
+	}
+
+	return transformed, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictDirectTableAccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetRestrictedExportPolicyRestrictQueryResult(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandBigqueryAnalyticsHubListingPubsubTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1705,6 +1880,43 @@ func expandBigqueryAnalyticsHubListingAllowOnlyMetadataSharing(v interface{}, d 
 	return v, nil
 }
 
+func expandBigqueryAnalyticsHubListingStoredProcedureConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandBigqueryAnalyticsHubListingStoredProcedureConfigEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedAllowedStoredProcedureTypes, err := expandBigqueryAnalyticsHubListingStoredProcedureConfigAllowedStoredProcedureTypes(original["allowed_stored_procedure_types"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowedStoredProcedureTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowedStoredProcedureTypes"] = transformedAllowedStoredProcedureTypes
+	}
+
+	return transformed, nil
+}
+
+func expandBigqueryAnalyticsHubListingStoredProcedureConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingStoredProcedureConfigAllowedStoredProcedureTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceBigqueryAnalyticsHubListingFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -1760,6 +1972,9 @@ func ResourceBigqueryAnalyticsHubListingFlatten(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error reading Listing: %s", err)
 	}
 	if err = d.Set("commercial_info", flattenBigqueryAnalyticsHubListingCommercialInfo(res["commercialInfo"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Listing: %s", err)
+	}
+	if err = d.Set("stored_procedure_config", flattenBigqueryAnalyticsHubListingStoredProcedureConfig(res["storedProcedureConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Listing: %s", err)
 	}
 

@@ -502,6 +502,11 @@ The following arguments are supported:
   (Optional)
   If true, the listing is only available to get the resource metadata. Listing is non subscribable.
 
+* `stored_procedure_config` -
+  (Optional)
+  If set, stored procedure configuration will be propagated and enforced on the linked dataset.
+  Structure is [documented below](#nested_stored_procedure_config).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -555,6 +560,11 @@ The following arguments are supported:
   Each replica includes a system-computed (output-only) state and primary designation.
   Structure is [documented below](#nested_bigquery_dataset_effective_replicas).
 
+* `restricted_export_policy` -
+  (Optional)
+  If set, restricted export policy will be propagated and enforced on the linked dataset.
+  Structure is [documented below](#nested_bigquery_dataset_restricted_export_policy).
+
 
 <a name="nested_bigquery_dataset_selected_resources"></a>The `selected_resources` block supports:
 
@@ -582,6 +592,20 @@ The following arguments are supported:
   Output-only. Indicates that this replica is the primary replica.
   Possible values: PRIMARY_STATE_UNSPECIFIED, PRIMARY_REPLICA
 
+<a name="nested_bigquery_dataset_restricted_export_policy"></a>The `restricted_export_policy` block supports:
+
+* `enabled` -
+  (Optional)
+  If true, enable restricted export.
+
+* `restrict_direct_table_access` -
+  (Optional)
+  If true, restrict direct table access(read api/tabledata.list) on linked table.
+
+* `restrict_query_result` -
+  (Optional)
+  If true, restrict export of query result derived from restricted linked dataset table.
+
 <a name="nested_pubsub_topic"></a>The `pubsub_topic` block supports:
 
 * `topic` -
@@ -606,6 +630,17 @@ The following arguments are supported:
 * `restrict_query_result` -
   (Optional)
   If true, restrict export of query result derived from restricted linked dataset table.
+
+<a name="nested_stored_procedure_config"></a>The `stored_procedure_config` block supports:
+
+* `enabled` -
+  (Optional)
+  If true, enable sharing of stored procedure.
+
+* `allowed_stored_procedure_types` -
+  (Output)
+  Output only. Types of stored procedure supported to share.
+  Possible values: STORED_PROCEDURE_TYPE_UNSPECIFIED, SQL_PROCEDURE.
 
 ## Attributes Reference
 

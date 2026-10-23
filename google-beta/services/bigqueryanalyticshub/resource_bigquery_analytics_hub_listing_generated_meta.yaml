@@ -13,6 +13,9 @@ fields:
     - api_field: bigqueryDataset.effectiveReplicas.primaryState
     - api_field: bigqueryDataset.effectiveReplicas.replicaState
     - api_field: bigqueryDataset.replicaLocations
+    - api_field: bigqueryDataset.restrictedExportPolicy.enabled
+    - api_field: bigqueryDataset.restrictedExportPolicy.restrictDirectTableAccess
+    - api_field: bigqueryDataset.restrictedExportPolicy.restrictQueryResult
     - api_field: bigqueryDataset.selectedResources.routine
     - api_field: bigqueryDataset.selectedResources.table
     - api_field: categories
@@ -45,5 +48,7 @@ fields:
     - api_field: restrictedExportConfig.restrictDirectTableAccess
     - api_field: restrictedExportConfig.restrictQueryResult
     - api_field: state
+    - api_field: storedProcedureConfig.allowedStoredProcedureTypes
+    - api_field: storedProcedureConfig.enabled
     - field: deletion_policy
       provider_only: true
