@@ -164,7 +164,7 @@ resource "google_alloydb_instance" "default" {
   instance_type = "PRIMARY"
 
   machine_config {
-    cpu_count = 8
+    cpu_count = 2
   }
 }
 
@@ -198,7 +198,7 @@ resource "google_alloydb_instance" "default" {
   instance_type = "PRIMARY"
 
   machine_config {
-    cpu_count = 8
+    cpu_count = 2
   }
 }
 
@@ -287,7 +287,7 @@ resource "google_alloydb_instance" "default" {
   instance_type = "PRIMARY"
 
   machine_config {
-    cpu_count = 8
+    cpu_count = 2
   }
 }
 
