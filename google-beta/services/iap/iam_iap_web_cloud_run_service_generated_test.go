@@ -380,7 +380,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -409,7 +409,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -453,7 +453,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -484,7 +484,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -513,7 +513,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -542,7 +542,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -576,7 +576,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -632,7 +632,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -666,7 +666,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
@@ -722,7 +722,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   scaling {
-    max_instance_count = 100
+    max_instance_count = 1
   }
   
   template {
