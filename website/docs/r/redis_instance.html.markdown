@@ -214,7 +214,7 @@ resource "google_redis_instance" "cache" {
 
   redis_version     = "REDIS_7_2"
   display_name      = "Terraform Test Instance"
-  replica_count     = 5
+  replica_count     = 1
   read_replicas_mode = "READ_REPLICAS_ENABLED"
 
   labels = {

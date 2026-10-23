@@ -433,7 +433,7 @@ resource "google_redis_cluster" "primary_cluster" {
   zone_distribution_config {
     mode = "MULTI_ZONE"
   }
-  replica_count = 1
+  replica_count = 0
   maintenance_policy {
     weekly_maintenance_window {
       day = "MONDAY"
@@ -484,7 +484,7 @@ resource "google_redis_cluster" "secondary_cluster" {
   zone_distribution_config {
     mode = "MULTI_ZONE"
   }
-  replica_count = 1
+  replica_count = 0
   maintenance_policy {
     weekly_maintenance_window {
       day = "WEDNESDAY"
