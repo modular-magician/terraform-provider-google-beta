@@ -35,6 +35,15 @@ fields:
     - api_field: decryptedCredential.oauth2ClientCredentials.tokenEndpoint
     - api_field: decryptedCredential.oauth2ClientCredentials.tokenParams.entries.key.literalValue.stringValue
     - api_field: decryptedCredential.oauth2ClientCredentials.tokenParams.entries.value.literalValue.stringValue
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.clientId
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.clientSecret
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.password
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.requestType
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.scope
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.tokenEndpoint
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.tokenParams.entries.key.literalValue.stringValue
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.tokenParams.entries.value.literalValue.stringValue
+    - api_field: decryptedCredential.oauth2ResourceOwnerCredentials.username
     - api_field: decryptedCredential.oidcToken.audience
     - api_field: decryptedCredential.oidcToken.serviceAccountEmail
     - api_field: decryptedCredential.oidcToken.token

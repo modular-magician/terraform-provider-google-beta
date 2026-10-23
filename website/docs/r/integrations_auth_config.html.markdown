@@ -130,6 +130,11 @@ The following arguments are supported:
   OAuth2 client credentials.
   Structure is [documented below](#nested_decrypted_credential_oauth2_client_credentials).
 
+* `oauth2_resource_owner_credentials` -
+  (Optional)
+  OAuth2 resource owner credentials.
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials).
+
 * `jwt` -
   (Optional)
   JWT credential.
@@ -256,6 +261,92 @@ The following arguments are supported:
 
 
 <a name="nested_decrypted_credential_oauth2_client_credentials_token_params_entries_value_literal_value"></a>The `literal_value` block supports:
+
+* `string_value` -
+  (Optional)
+  String.
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials"></a>The `oauth2_resource_owner_credentials` block supports:
+
+* `client_id` -
+  (Optional)
+  The client's ID.
+
+* `client_secret` -
+  (Optional)
+  The client's secret.
+
+* `username` -
+  (Optional)
+  The user's username.
+
+* `password` -
+  (Optional)
+  The user's password.
+
+* `token_endpoint` -
+  (Optional)
+  The token endpoint is used by the client to obtain an access token by presenting its authorization grant or refresh token.
+
+* `scope` -
+  (Optional)
+  A space-delimited list of requested scope permissions.
+
+* `token_params` -
+  (Optional)
+  Token parameters for the auth request.
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials_token_params).
+
+* `request_type` -
+  (Optional)
+  Represent how to pass parameters to fetch access token
+  Possible values are: `REQUEST_BODY`, `QUERY_PARAMETERS`, `ENCODED_HEADER`.
+
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials_token_params"></a>The `token_params` block supports:
+
+* `entries` -
+  (Optional)
+  A list of parameter map entries.
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries).
+
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries"></a>The `entries` block supports:
+
+* `key` -
+  (Optional)
+  Key of the map entry.
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_key).
+
+* `value` -
+  (Optional)
+  Value of the map entry.
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_value).
+
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_key"></a>The `key` block supports:
+
+* `literal_value` -
+  (Optional)
+  Passing a literal value
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_key_literal_value).
+
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_key_literal_value"></a>The `literal_value` block supports:
+
+* `string_value` -
+  (Optional)
+  String.
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_value"></a>The `value` block supports:
+
+* `literal_value` -
+  (Optional)
+  Passing a literal value
+  Structure is [documented below](#nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_value_literal_value).
+
+
+<a name="nested_decrypted_credential_oauth2_resource_owner_credentials_token_params_entries_value_literal_value"></a>The `literal_value` block supports:
 
 * `string_value` -
   (Optional)

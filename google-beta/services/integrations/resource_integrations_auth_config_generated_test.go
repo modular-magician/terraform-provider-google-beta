@@ -290,6 +290,77 @@ resource "google_integrations_auth_config" "oauth2_client_credentials_example" {
 `, context)
 }
 
+func TestAccIntegrationsAuthConfig_integrationsAuthConfigOauth2ResourceOwnerCredentialsExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"auth_config_name": "tf-test-test-authconfig-oauth2-resource-owner-credenti" + randomSuffix,
+		"client":           BootstrapIntegrationsClient(t, "us-east4"),
+		"random_suffix":    randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckIntegrationsAuthConfigDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIntegrationsAuthConfig_integrationsAuthConfigOauth2ResourceOwnerCredentialsExample(context),
+			},
+			{
+				ResourceName:            "google_integrations_auth_config.oauth2_resource_owner_credentials_example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"client_certificate", "location"},
+			},
+			{
+				ResourceName:       "google_integrations_auth_config.oauth2_resource_owner_credentials_example",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccIntegrationsAuthConfig_integrationsAuthConfigOauth2ResourceOwnerCredentialsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_integrations_auth_config" "oauth2_resource_owner_credentials_example" {
+    location = "us-east4"
+    display_name = "%{auth_config_name}"
+    description = "Test auth config created via terraform"
+    decrypted_credential {
+        credential_type = "OAUTH2_RESOURCE_OWNER_CREDENTIALS"
+        oauth2_resource_owner_credentials {
+            client_id = "demo-backend-client"
+            client_secret = "MJlO3binatD9jk1"
+            username = "test-username"
+            password = "test-password"
+            scope = "read"
+            token_endpoint = "https://oauth.wiremockapi.cloud/oauth/token"
+            request_type = "ENCODED_HEADER"
+            token_params {
+                entries {
+                    key {
+                        literal_value {
+                            string_value = "code"
+                        }
+                    }
+                    value {
+                        literal_value {
+                            string_value = "YS4uYi4uYy4uZGVm"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+`, context)
+}
+
 func TestAccIntegrationsAuthConfig_integrationsAuthConfigJwtExample(t *testing.T) {
 	t.Parallel()
 

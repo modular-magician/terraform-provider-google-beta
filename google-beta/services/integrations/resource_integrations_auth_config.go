@@ -206,7 +206,7 @@ Note that 'passphrase' is not the password for web server, but an extra layer of
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
+							ConflictsWith: []string{"decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
 						},
 						"jwt": {
 							Type:        schema.TypeList,
@@ -237,7 +237,7 @@ Note that 'passphrase' is not the password for web server, but an extra layer of
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
 						},
 						"oauth2_authorization_code": {
 							Type:        schema.TypeList,
@@ -273,7 +273,7 @@ Note that 'passphrase' is not the password for web server, but an extra layer of
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
 						},
 						"oauth2_client_credentials": {
 							Type:        schema.TypeList,
@@ -379,7 +379,123 @@ Note that 'passphrase' is not the password for web server, but an extra layer of
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
+						},
+						"oauth2_resource_owner_credentials": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `OAuth2 resource owner credentials.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"client_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The client's ID.`,
+									},
+									"client_secret": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The client's secret.`,
+									},
+									"password": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The user's password.`,
+									},
+									"request_type": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"REQUEST_BODY", "QUERY_PARAMETERS", "ENCODED_HEADER", ""}),
+										Description:  `Represent how to pass parameters to fetch access token Possible values: ["REQUEST_BODY", "QUERY_PARAMETERS", "ENCODED_HEADER"]`,
+									},
+									"scope": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `A space-delimited list of requested scope permissions.`,
+									},
+									"token_endpoint": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The token endpoint is used by the client to obtain an access token by presenting its authorization grant or refresh token.`,
+									},
+									"token_params": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Token parameters for the auth request.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"entries": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of parameter map entries.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Key of the map entry.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"literal_value": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			Description: `Passing a literal value`,
+																			MaxItems:    1,
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"string_value": {
+																						Type:        schema.TypeString,
+																						Optional:    true,
+																						Description: `String.`,
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+															"value": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Value of the map entry.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"literal_value": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			Description: `Passing a literal value`,
+																			MaxItems:    1,
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"string_value": {
+																						Type:        schema.TypeString,
+																						Optional:    true,
+																						Description: `String.`,
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"username": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The user's username.`,
+									},
+								},
+							},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
 						},
 						"oidc_token": {
 							Type:        schema.TypeList,
@@ -412,7 +528,7 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.service_account_credentials", "decrypted_credential.0.username_and_password"},
 						},
 						"service_account_credentials": {
 							Type:        schema.TypeList,
@@ -433,7 +549,7 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.username_and_password"},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.username_and_password"},
 						},
 						"username_and_password": {
 							Type:        schema.TypeList,
@@ -454,7 +570,7 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 									},
 								},
 							},
-							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials"},
+							ConflictsWith: []string{"decrypted_credential.0.auth_token", "decrypted_credential.0.jwt", "decrypted_credential.0.oauth2_authorization_code", "decrypted_credential.0.oauth2_client_credentials", "decrypted_credential.0.oauth2_resource_owner_credentials", "decrypted_credential.0.oidc_token", "decrypted_credential.0.service_account_credentials"},
 						},
 					},
 				},
@@ -1102,6 +1218,8 @@ func flattenIntegrationsAuthConfigDecryptedCredential(v interface{}, d *schema.R
 		flattenIntegrationsAuthConfigDecryptedCredentialOauth2AuthorizationCode(original["oauth2AuthorizationCode"], d, config)
 	transformed["oauth2_client_credentials"] =
 		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ClientCredentials(original["oauth2ClientCredentials"], d, config)
+	transformed["oauth2_resource_owner_credentials"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentials(original["oauth2ResourceOwnerCredentials"], d, config)
 	transformed["jwt"] =
 		flattenIntegrationsAuthConfigDecryptedCredentialJwt(original["jwt"], d, config)
 	transformed["auth_token"] =
@@ -1319,6 +1437,154 @@ func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ClientCredentialsRequ
 	return v
 }
 
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentials(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["client_id"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientId(original["clientId"], d, config)
+	transformed["client_secret"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientSecret(original["clientSecret"], d, config)
+	transformed["username"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsUsername(original["username"], d, config)
+	transformed["password"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsPassword(original["password"], d, config)
+	transformed["token_endpoint"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenEndpoint(original["tokenEndpoint"], d, config)
+	transformed["scope"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsScope(original["scope"], d, config)
+	transformed["token_params"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParams(original["tokenParams"], d, config)
+	transformed["request_type"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsRequestType(original["requestType"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParams(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["entries"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntries(original["entries"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntries(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"key":   flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKey(original["key"], d, config),
+			"value": flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValue(original["value"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["literal_value"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValue(original["literalValue"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["string_value"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValueStringValue(original["stringValue"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValueStringValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["literal_value"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValue(original["literalValue"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["string_value"] =
+		flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValueStringValue(original["stringValue"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValueStringValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsRequestType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenIntegrationsAuthConfigDecryptedCredentialJwt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1493,6 +1759,13 @@ func expandIntegrationsAuthConfigDecryptedCredential(v interface{}, d tpgresourc
 		return nil, err
 	} else if val := reflect.ValueOf(transformedOauth2ClientCredentials); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["oauth2ClientCredentials"] = transformedOauth2ClientCredentials
+	}
+
+	transformedOauth2ResourceOwnerCredentials, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentials(original["oauth2_resource_owner_credentials"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOauth2ResourceOwnerCredentials); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oauth2ResourceOwnerCredentials"] = transformedOauth2ResourceOwnerCredentials
 	}
 
 	transformedJwt, err := expandIntegrationsAuthConfigDecryptedCredentialJwt(original["jwt"], d, config)
@@ -1861,6 +2134,255 @@ func expandIntegrationsAuthConfigDecryptedCredentialOauth2ClientCredentialsToken
 }
 
 func expandIntegrationsAuthConfigDecryptedCredentialOauth2ClientCredentialsRequestType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentials(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedClientId, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientId(original["client_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientId"] = transformedClientId
+	}
+
+	transformedClientSecret, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientSecret(original["client_secret"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientSecret); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientSecret"] = transformedClientSecret
+	}
+
+	transformedUsername, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsUsername(original["username"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["username"] = transformedUsername
+	}
+
+	transformedPassword, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsPassword(original["password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["password"] = transformedPassword
+	}
+
+	transformedTokenEndpoint, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenEndpoint(original["token_endpoint"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTokenEndpoint); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tokenEndpoint"] = transformedTokenEndpoint
+	}
+
+	transformedScope, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsScope(original["scope"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScope); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scope"] = transformedScope
+	}
+
+	transformedTokenParams, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParams(original["token_params"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTokenParams); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tokenParams"] = transformedTokenParams
+	}
+
+	transformedRequestType, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsRequestType(original["request_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRequestType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["requestType"] = transformedRequestType
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsClientSecret(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenEndpoint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEntries, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntries(original["entries"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEntries); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["entries"] = transformedEntries
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedKey, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKey(original["key"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["key"] = transformedKey
+		}
+
+		transformedValue, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValue(original["value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["value"] = transformedValue
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedLiteralValue, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValue(original["literal_value"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLiteralValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["literalValue"] = transformedLiteralValue
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedStringValue, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValueStringValue(original["string_value"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStringValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["stringValue"] = transformedStringValue
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesKeyLiteralValueStringValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedLiteralValue, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValue(original["literal_value"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLiteralValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["literalValue"] = transformedLiteralValue
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedStringValue, err := expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValueStringValue(original["string_value"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStringValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["stringValue"] = transformedStringValue
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsTokenParamsEntriesValueLiteralValueStringValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationsAuthConfigDecryptedCredentialOauth2ResourceOwnerCredentialsRequestType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
