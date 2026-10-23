@@ -146,7 +146,7 @@ resource "google_spanner_instance" "instance" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {
@@ -181,7 +181,7 @@ resource "google_spanner_instance" "instance" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {
@@ -214,7 +214,7 @@ resource "google_spanner_instance" "instance" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {
@@ -248,7 +248,7 @@ resource "google_spanner_instance" "instance" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {

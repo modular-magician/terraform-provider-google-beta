@@ -465,7 +465,7 @@ func TestAccSpannerInstance_basicWithAsymmetricAutoscalingConfigsUpdate(t *testi
 				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
 			},
 			{
-				Config: testAccSpannerInstance_basicWithAsymmetricAutoscalingConfigsUpdate(displayName, 1, 10),
+				Config: testAccSpannerInstance_basicWithAsymmetricAutoscalingConfigsUpdate(displayName, 1, 2),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("google_spanner_instance.main", "state"),
 				),
@@ -477,7 +477,7 @@ func TestAccSpannerInstance_basicWithAsymmetricAutoscalingConfigsUpdate(t *testi
 				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
 			},
 			{
-				Config: testAccSpannerInstance_basicWithAsymmetricAutoscalingConfigsUpdate(displayName, 3, 5),
+				Config: testAccSpannerInstance_basicWithAsymmetricAutoscalingConfigsUpdate(displayName, 2, 3),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("google_spanner_instance.main", "state"),
 				),
@@ -571,7 +571,7 @@ func TestAccSpannerInstance_autoscalingWithTotalCPUUtilizationPercent(t *testing
 		CheckDestroy:             testAccCheckSpannerInstanceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSpannerInstance_autoscalingWithTotalCPUUtilizationPercent(displayName, 2000, 4000, 65, 85, 95),
+				Config: testAccSpannerInstance_autoscalingWithTotalCPUUtilizationPercent(displayName, 1000, 2000, 65, 85, 95),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("google_spanner_instance.test", "state"),
 					resource.TestCheckResourceAttr("google_spanner_instance.test", "autoscaling_config.0.autoscaling_targets.0.total_cpu_utilization_percent", "85"),
@@ -584,7 +584,7 @@ func TestAccSpannerInstance_autoscalingWithTotalCPUUtilizationPercent(t *testing
 				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
 			},
 			{
-				Config: testAccSpannerInstance_autoscalingWithTotalCPUUtilizationPercent(displayName, 3000, 5000, 75, 90, 95),
+				Config: testAccSpannerInstance_autoscalingWithTotalCPUUtilizationPercent(displayName, 2000, 3000, 75, 90, 95),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("google_spanner_instance.test", "state"),
 					resource.TestCheckResourceAttr("google_spanner_instance.test", "autoscaling_config.0.autoscaling_targets.0.total_cpu_utilization_percent", "90"),
@@ -836,7 +836,7 @@ resource "google_spanner_instance" "main" {
   display_name =  "%s"
   autoscaling_config {
     autoscaling_limits {
-      max_nodes = 3
+      max_nodes = 2
       min_nodes = 1
     }
     autoscaling_targets {
@@ -849,8 +849,8 @@ resource "google_spanner_instance" "main" {
       }
       overrides {
         autoscaling_limits {
-          min_nodes = 3
-          max_nodes = 30
+          min_nodes = 1
+          max_nodes = 2
         }
       }
     }
@@ -881,8 +881,8 @@ resource "google_spanner_instance" "example" {
       // Define the minimum and maximum compute capacity allocated to the instance
       // Either use nodes or processing units to specify the limits,
       // but should use the same unit to set both the min_limit and max_limit.
-      max_processing_units            = 3000 // OR max_nodes  = 3
-      min_processing_units            = 2000 // OR min_nodes = 2
+      max_processing_units            = 2000 // OR max_nodes  = 3
+      min_processing_units            = 1000 // OR min_nodes = 2
     }
     autoscaling_targets {
       high_priority_cpu_utilization_percent = 75
@@ -1029,7 +1029,7 @@ resource "google_spanner_instance" "test" {
   display_name = "%s"
   autoscaling_config {
     autoscaling_limits {
-      max_processing_units = 3000
+      max_processing_units = 2000
       min_processing_units = 1000
     }
     autoscaling_targets {
@@ -1043,8 +1043,8 @@ resource "google_spanner_instance" "test" {
       }
       overrides {
         autoscaling_limits {
-          min_processing_units = 2000
-          max_processing_units = 4000
+          min_processing_units = 1000
+          max_processing_units = 2000
         }
         autoscaling_target_high_priority_cpu_utilization_percent = 70
         autoscaling_target_total_cpu_utilization_percent         = 85
@@ -1057,7 +1057,7 @@ resource "google_spanner_instance" "test" {
       overrides {
         autoscaling_limits {
           min_processing_units = 1000
-          max_processing_units = 5000
+          max_processing_units = 2000
         }
         disable_high_priority_cpu_autoscaling = true
         disable_total_cpu_autoscaling         = false
@@ -1076,7 +1076,7 @@ resource "google_spanner_instance" "test" {
   display_name = "%s"
   autoscaling_config {
     autoscaling_limits {
-      max_processing_units = 4000
+      max_processing_units = 3000
       min_processing_units = 2000
     }
     autoscaling_targets {
@@ -1090,8 +1090,8 @@ resource "google_spanner_instance" "test" {
       }
       overrides {
         autoscaling_limits {
-          min_processing_units = 3000
-          max_processing_units = 5000
+          min_processing_units = 2000
+          max_processing_units = 3000
         }
         autoscaling_target_high_priority_cpu_utilization_percent = 75
         autoscaling_target_total_cpu_utilization_percent         = 90
@@ -1104,7 +1104,7 @@ resource "google_spanner_instance" "test" {
       overrides {
         autoscaling_limits {
           min_processing_units = 2000
-          max_processing_units = 6000
+          max_processing_units = 3000
         }
         disable_high_priority_cpu_autoscaling = false
         disable_total_cpu_autoscaling         = true

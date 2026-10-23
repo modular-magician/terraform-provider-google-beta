@@ -93,7 +93,7 @@ func testAccSpannerInstance_spannerInstanceBasicExample(context map[string]inter
 resource "google_spanner_instance" "example" {
   config       = "regional-us-central1"
   display_name = "Test Spanner Instance"
-  num_nodes    = 2
+  num_nodes    = 1
   edition      = "STANDARD"
   default_backup_schedule_type = "AUTOMATIC"
   labels = {
@@ -142,7 +142,7 @@ func testAccSpannerInstance_spannerInstanceProcessingUnitsExample(context map[st
 resource "google_spanner_instance" "example" {
   config       = "regional-us-central1"
   display_name = "Test Spanner Instance"
-  processing_units    = 200
+  processing_units    = 100
   labels = {
     "foo" = "bar"
   }
@@ -189,7 +189,7 @@ func testAccSpannerInstance_spannerInstanceMultiRegionalExample(context map[stri
 resource "google_spanner_instance" "example" {
   config       = "nam-eur-asia1"
   display_name = "Multi Regional Instance"
-  num_nodes    = 2
+  num_nodes    = 1
   labels = {
     "foo" = "bar"
   }

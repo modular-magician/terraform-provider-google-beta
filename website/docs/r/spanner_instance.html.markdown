@@ -45,7 +45,7 @@ To get more information about Instance, see:
 resource "google_spanner_instance" "example" {
   config       = "regional-us-central1"
   display_name = "Test Spanner Instance"
-  num_nodes    = 2
+  num_nodes    = 1
   edition      = "STANDARD"
   default_backup_schedule_type = "AUTOMATIC"
   labels = {
@@ -66,7 +66,7 @@ resource "google_spanner_instance" "example" {
 resource "google_spanner_instance" "example" {
   config       = "regional-us-central1"
   display_name = "Test Spanner Instance"
-  processing_units    = 200
+  processing_units    = 100
   labels = {
     "foo" = "bar"
   }
@@ -85,7 +85,7 @@ resource "google_spanner_instance" "example" {
 resource "google_spanner_instance" "example" {
   config       = "nam-eur-asia1"
   display_name = "Multi Regional Instance"
-  num_nodes    = 2
+  num_nodes    = 1
   labels = {
     "foo" = "bar"
   }

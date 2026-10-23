@@ -108,7 +108,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -129,7 +129,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -153,7 +153,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -216,7 +216,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic_spangres" {
@@ -239,7 +239,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic_spangres" {
@@ -325,7 +325,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -346,7 +346,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -368,7 +368,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -390,7 +390,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -453,7 +453,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -474,7 +474,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -494,7 +494,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -549,7 +549,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -570,7 +570,7 @@ resource "google_spanner_instance" "basic" {
   name         = "%s"
   config       = "regional-us-central1"
   display_name = "%s-display"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "basic" {
@@ -628,7 +628,7 @@ resource "google_spanner_instance" "main" {
   name         = "%{instance_name}"
   display_name = "main-instance"
   config       = "regional-europe-west1"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {
@@ -687,7 +687,7 @@ resource "google_spanner_instance" "main" {
   display_name = "main-instance1"
 
   config           = "regional-europe-west1"
-  processing_units = 200
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {
@@ -748,7 +748,7 @@ resource "google_spanner_instance" "main" {
   display_name = "Terraform test"
 
   config           = "nam3"
-  processing_units = 200
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {

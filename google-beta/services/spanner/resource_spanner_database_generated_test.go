@@ -95,7 +95,7 @@ resource "google_spanner_instance" "main" {
   name         = "%{instance_name}"
   config       = "regional-europe-west1"
   display_name = "main-instance"
-  num_nodes    = 1
+  processing_units = 100
 }
 
 resource "google_spanner_database" "database" {
