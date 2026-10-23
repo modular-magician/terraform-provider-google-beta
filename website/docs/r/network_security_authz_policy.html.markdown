@@ -60,7 +60,7 @@ resource "google_compute_subnetwork" "proxy_only" {
 resource "google_compute_instance" "callouts_instance" {
   name                = "l7-ilb-callouts-ins"
   zone                = "us-west1-a"
-  machine_type        = "e2-small"
+  machine_type        = "e2-micro"
   tags                = ["allow-ssh","load-balanced-backend"]
   deletion_protection = false
 
