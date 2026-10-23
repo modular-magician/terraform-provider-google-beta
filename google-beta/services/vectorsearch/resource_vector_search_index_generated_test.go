@@ -250,8 +250,8 @@ resource "google_vector_search_index" "example-dedicated-index" {
   dedicated_infrastructure {
     mode = "PERFORMANCE_OPTIMIZED"
     autoscaling_spec {
-      min_replica_count = 2
-      max_replica_count = 5
+      min_replica_count = 1
+      max_replica_count = 2
     }
   }
 }
