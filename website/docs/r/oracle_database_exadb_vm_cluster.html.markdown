@@ -73,7 +73,7 @@ resource "google_oracle_database_exascale_db_storage_vault" "exascaleDbStorageVa
   project = "my-project"
   properties {
     exascale_db_storage_details {
-        total_size_gbs = 512
+        total_size_gbs = 300
     }
   }
 
@@ -122,7 +122,7 @@ resource "google_oracle_database_exadb_vm_cluster" "my_exadb_vm_cluster"{
         }
         license_model = "LICENSE_INCLUDED"
         scan_listener_port_tcp = 1521
-        additional_ecpu_count_per_node = 8
+        additional_ecpu_count_per_node = 4
         cluster_name = "example"
     }
 
@@ -136,7 +136,7 @@ resource "google_oracle_database_exascale_db_storage_vault" "exascaleDbStorageVa
   project = "my-project"
   properties {
     exascale_db_storage_details {
-        total_size_gbs = 512
+        total_size_gbs = 300
     }
   }
 

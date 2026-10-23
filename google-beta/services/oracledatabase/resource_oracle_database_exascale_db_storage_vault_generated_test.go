@@ -129,7 +129,7 @@ resource "google_oracle_database_exascale_db_storage_vault" "my_storage_vault"{
   project = "%{project}"
   properties {
     exascale_db_storage_details {
-        total_size_gbs = 512
+        total_size_gbs = 300
     }
   }
 
@@ -277,7 +277,7 @@ resource "google_oracle_database_exascale_db_storage_vault" "my_storage_vault" {
 
   properties {
     exascale_db_storage_details {
-      total_size_gbs = 2048
+      total_size_gbs = 300
     }
   }
 
