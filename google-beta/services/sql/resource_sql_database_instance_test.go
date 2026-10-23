@@ -103,7 +103,7 @@ func BootstrapSharedSQLInstanceBackupRun(t *testing.T) string {
 			PointInTimeRecoveryEnabled: true,
 		}
 		settings := &sqladmin.Settings{
-			Tier:                "db-custom-2-3840",
+			Tier:                "db-f1-micro",
 			BackupConfiguration: backupConfig,
 		}
 		bootstrapInstance = &sqladmin.DatabaseInstance{
@@ -2624,7 +2624,7 @@ func TestAccSqlDatabaseInstance_EnableGoogleMlIntegration(t *testing.T) {
 		CheckDestroy:             testAccSqlDatabaseInstanceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testGoogleSqlDatabaseInstance_EnableGoogleMlIntegration(masterID, true, "POSTGRES_14", "db-custom-2-13312"),
+				Config: testGoogleSqlDatabaseInstance_EnableGoogleMlIntegration(masterID, true, "POSTGRES_14", "db-g1-small"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -2634,7 +2634,7 @@ func TestAccSqlDatabaseInstance_EnableGoogleMlIntegration(t *testing.T) {
 			},
 			// Test that updates to other settings work after google-ml-integration is enabled
 			{
-				Config: testGoogleSqlDatabaseInstance_EnableGoogleMlIntegration(masterID, true, "POSTGRES_14", "db-custom-2-10240"),
+				Config: testGoogleSqlDatabaseInstance_EnableGoogleMlIntegration(masterID, true, "POSTGRES_14", "db-f1-micro"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -2643,7 +2643,7 @@ func TestAccSqlDatabaseInstance_EnableGoogleMlIntegration(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
 			},
 			{
-				Config: testGoogleSqlDatabaseInstance_EnableGoogleMlIntegration(masterID, false, "POSTGRES_14", "db-custom-2-10240"),
+				Config: testGoogleSqlDatabaseInstance_EnableGoogleMlIntegration(masterID, false, "POSTGRES_14", "db-f1-micro"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -2666,7 +2666,7 @@ func TestAccSqlDatabaseInstance_AutoUpgradeEnabled(t *testing.T) {
 		CheckDestroy:             testAccSqlDatabaseInstanceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, false, "MYSQL_8_0_31", "db-custom-2-13312"),
+				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, false, "MYSQL_8_0_31", "db-g1-small"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -2675,7 +2675,7 @@ func TestAccSqlDatabaseInstance_AutoUpgradeEnabled(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
 			},
 			{
-				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, false, "MYSQL_8_0_36", "db-custom-2-13312"),
+				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, false, "MYSQL_8_0_36", "db-g1-small"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -2684,7 +2684,7 @@ func TestAccSqlDatabaseInstance_AutoUpgradeEnabled(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
 			},
 			{
-				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, true, "MYSQL_8_0", "db-custom-2-13312"),
+				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, true, "MYSQL_8_0", "db-g1-small"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -2693,7 +2693,7 @@ func TestAccSqlDatabaseInstance_AutoUpgradeEnabled(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
 			},
 			{
-				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, true, "MYSQL_8_0", "db-custom-2-10240"),
+				Config: testGoogleSqlDatabaseInstance_AutoUpgradeEnabled(masterID, true, "MYSQL_8_0", "db-f1-micro"),
 			},
 			{
 				ResourceName:            "google_sql_database_instance.instance",
@@ -3138,7 +3138,7 @@ func TestAccSQLDatabaseInstance_DefaultEdition(t *testing.T) {
 	t.Parallel()
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
 	databaseVersion := "POSTGRES_16"
-	enterprisePlusTier := "db-c4a-highmem-4"
+	enterprisePlusTier := "db-c4a-highmem-2"
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -3165,7 +3165,7 @@ func TestAccSqlDatabaseInstance_Edition(t *testing.T) {
 	enterprisePlusName := "tf-test-enterprise-plus" + acctest.RandString(t, 10)
 	enterprisePlusTier := "db-perf-optimized-N-2"
 	enterpriseName := "tf-test-enterprise-" + acctest.RandString(t, 10)
-	enterpriseTier := "db-custom-2-13312"
+	enterpriseTier := "db-f1-micro"
 	noEditionName := "tf-test-enterprise-noedition-" + acctest.RandString(t, 10)
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -3249,7 +3249,7 @@ func TestAccSQLDatabaseInstance_sqlPostgresDataCacheConfig(t *testing.T) {
 	enterprisePlusInstanceName := "tf-test-enterprise-plus" + acctest.RandString(t, 10)
 	enterprisePlusTier := "db-perf-optimized-N-2"
 	enterpriseInstanceName := "tf-test-enterprise-" + acctest.RandString(t, 10)
-	enterpriseTier := "db-custom-2-13312"
+	enterpriseTier := "db-f1-micro"
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -3290,7 +3290,7 @@ func TestAccSQLDatabaseInstance_sqlPostgresDataCacheConfig(t *testing.T) {
 
 func TestAccSqlDatabaseInstance_Mysql_Edition_Upgrade(t *testing.T) {
 	t.Parallel()
-	enterpriseTier := "db-custom-2-13312"
+	enterpriseTier := "db-f1-micro"
 	editionUpgrade := "tf-test-enterprise-upgrade-" + acctest.RandString(t, 10)
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -3328,7 +3328,7 @@ func TestAccSqlDatabaseInstance_Mysql_Edition_Upgrade(t *testing.T) {
 
 func TestAccSqlDatabaseInstance_Postgres_Edition_Upgrade(t *testing.T) {
 	t.Parallel()
-	enterpriseTier := "db-custom-2-13312"
+	enterpriseTier := "db-f1-micro"
 	enterprisePlusTier := "db-perf-optimized-N-2"
 	editionUpgrade := "tf-test-enterprise-upgrade-" + acctest.RandString(t, 10)
 	acctest.VcrTest(t, resource.TestCase{
@@ -3367,7 +3367,7 @@ func TestAccSqlDatabaseInstance_Postgres_Edition_Upgrade(t *testing.T) {
 func TestAccSqlDatabaseInstance_Edition_Downgrade(t *testing.T) {
 	t.Parallel()
 	enterprisePlusTier := "db-perf-optimized-N-2"
-	enterpriseTier := "db-custom-2-13312"
+	enterpriseTier := "db-f1-micro"
 	editionDowngrade := "tf-test-enterprise-downgrade-" + acctest.RandString(t, 10)
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -5276,7 +5276,7 @@ func TestAccSqlDatabaseInstance_editionUpdateForEnhancedBackupTierInstance(t *te
 			},
 			{
 				// Edition upgrade, which should ignore backup_configuration settings
-				Config: testGoogleSqlDatabaseInstance_editionUpdateForGcbdrManagedInstance(context, "ENTERPRISE_PLUS", "db-perf-optimized-N-4"),
+				Config: testGoogleSqlDatabaseInstance_editionUpdateForGcbdrManagedInstance(context, "ENTERPRISE_PLUS", "db-perf-optimized-N-2"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("google_sql_database_instance.instance", "settings.0.edition", "ENTERPRISE_PLUS"),
 				),
@@ -6192,7 +6192,7 @@ resource "google_sql_database_instance" "instance" {
   database_version = "SQLSERVER_2022_STANDARD"
   root_password    = "%s"
   settings {
-    tier = "db-custom-2-8192"
+    tier = "db-custom-1-3840"
     entraid_config {
       application_id = "%s"
       tenant_id      = "%s"
@@ -6232,7 +6232,7 @@ resource "google_sql_database_instance" "instance-with-ad" {
   root_password    = "%s"
   deletion_protection = false
   settings {
-    tier = "db-custom-2-7680"
+    tier = "db-custom-1-3840"
     ip_configuration {
       ipv4_enabled       = "false"
       private_network    = data.google_compute_network.servicenet.self_link
@@ -6258,7 +6258,7 @@ resource "google_sql_database_instance" "instance-with-self-managed-ad" {
   root_password    = "%s"
   deletion_protection = false
   settings {
-    tier = "db-custom-2-7680"
+    tier = "db-custom-1-3840"
     ip_configuration {
       ipv4_enabled       = "false"
       private_network    = data.google_compute_network.servicenet.self_link
@@ -6284,7 +6284,7 @@ resource "google_sql_database_instance" "instance" {
   database_version    = "MYSQL_5_7"
   deletion_protection = false
   settings {
-    tier = "db-custom-4-26624"
+    tier = "db-f1-micro"
     deny_maintenance_period {
       end_date     	= "%s"
       start_date	= "%s"
@@ -6462,7 +6462,7 @@ resource "google_sql_database_instance" "instance" {
   root_password    = "%s"
   deletion_protection = false
   settings {
-    tier = "db-custom-8-53248"
+    tier = "db-custom-2-7680"
     ip_configuration {
       ipv4_enabled       = "true"
     }
@@ -6482,7 +6482,7 @@ resource "google_sql_database_instance" "instance" {
   root_password    = "%s"
   deletion_protection = false
   settings {
-    tier = "db-custom-8-53248"
+    tier = "db-custom-2-7680"
     ip_configuration {
       ipv4_enabled       = "true"
     }
@@ -9522,7 +9522,7 @@ resource "google_sql_database_instance" "instance" {
   deletion_protection = false
   root_password		  = "rand-pwd-%d"
   settings {
-    tier = "db-custom-2-13312"
+    tier = "db-custom-1-3840"
     backup_configuration {
       enabled                        = true
       start_time                     = "00:00"
@@ -9630,7 +9630,7 @@ resource "google_sql_database_instance" "instance" {
   deletion_protection = false
   root_password		  = "rand-pwd-%d"
   settings {
-    tier = "db-custom-2-10240"
+    tier = "db-f1-micro"
 	enable_dataplex_integration = %t
   }
 }
@@ -10064,7 +10064,7 @@ resource "google_sql_database_instance" "instance" {
 	project = google_project.project.project_id
 
 	settings {
-		tier = "db-custom-2-3840"
+		tier = "db-g1-small"
 		edition = "ENTERPRISE"
 		ip_configuration {
 			private_network = google_compute_network.sql_network.self_link
@@ -10828,7 +10828,7 @@ resource "google_sql_database_instance" "main" {
 	deletion_protection = false
 	root_password = "%s"
 	settings {
-		tier = "db-custom-2-13312"
+		tier = "db-custom-1-3840"
 	}
 }`, instance, databaseVersion, rootPassword)
 }
@@ -10936,7 +10936,7 @@ resource "google_sql_database_instance" "instance" {
   database_version    = "POSTGRES_15"
   deletion_protection = false
   settings {
-    tier            = "db-custom-2-8192"
+    tier            = "db-custom-1-3840"
     disk_type       = "PD_SSD"
     disk_size       = %d
     disk_autoresize = false
