@@ -101,8 +101,8 @@ resource "google_cloud_run_v2_worker_pool" "default" {
       }
       resources {
         limits = {
-          cpu = "4"
-          memory = "2Gi"
+          cpu = "1"
+          memory = "512Mi"
         }
       }
     }
@@ -165,7 +165,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
       resources {
         limits = {
           cpu = "2"
-          memory = "8Gi"
+          memory = "1Gi"
         }
       }
       startup_probe {
@@ -280,8 +280,8 @@ resource "google_cloud_run_v2_worker_pool" "default" {
       }
       resources {
         limits = {
-          cpu = "4"
-          memory = "2Gi"
+          cpu = "1"
+          memory = "1Gi"
         }
       }
     }

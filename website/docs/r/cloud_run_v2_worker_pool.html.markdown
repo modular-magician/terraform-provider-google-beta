@@ -109,8 +109,8 @@ resource "google_cloud_run_v2_worker_pool" "default" {
       image = "us-docker.pkg.dev/cloudrun/container/worker-pool"
       resources {
         limits = {
-          cpu    = "2"
-          memory = "1024Mi"
+          cpu    = "1"
+          memory = "512Mi"
         }
       }
     }

@@ -75,8 +75,8 @@ resource "google_cloud_run_v2_job" "default" {
         image = "us-docker.pkg.dev/cloudrun/container/job"
         resources {
           limits = {
-            cpu    = "2"
-            memory = "1024Mi"
+            cpu    = "1"
+            memory = "512Mi"
           }
         }
       }
@@ -230,7 +230,7 @@ resource "google_vpc_access_connector" "connector" {
   subnet {
     name = google_compute_subnetwork.custom_test.name
   }
-  machine_type = "e2-standard-4"
+  machine_type = "e2-micro"
   min_instances = 2
   max_instances = 3
   region        = "us-central1"
