@@ -134,7 +134,7 @@ resource "google_gkeonprem_vmware_node_pool" "nodepool-basic" {
   location = "us-west1"
   vmware_cluster = google_gkeonprem_vmware_cluster.default-basic.name
   config {
-    replicas = 3
+    replicas = 1
     image_type = "ubuntu_containerd"
     enable_load_balancer = true
   }
@@ -226,7 +226,7 @@ resource "google_gkeonprem_vmware_node_pool" "nodepool-full" {
   config {
     cpus = 4
     memory_mb = 8196
-    replicas = 3
+    replicas = 1
     image_type = "ubuntu_containerd"
     image = "image"
     boot_disk_size_gb = 10
@@ -256,7 +256,7 @@ resource "google_gkeonprem_vmware_node_pool" "nodepool-full" {
   }
   node_pool_autoscaling {
     min_replicas = 1
-    max_replicas = 5
+    max_replicas = 2
   }
 }
 `, context)
