@@ -115,6 +115,7 @@ resource "google_netapp_volume" "default" {
   share_name = "tf-test-test-volume%{random_suffix}"
   storage_pool = google_netapp_storage_pool.default.name
   protocols = ["NFSV3"]
+  deletion_policy = "FORCE"
 }
 
 resource "google_netapp_volume_quota_rule" "test_default_user_quota_rule" {
@@ -186,6 +187,7 @@ resource "google_netapp_volume" "default" {
   share_name = "tf-test-test-volume%{random_suffix}"
   storage_pool = google_netapp_storage_pool.default.name
   protocols = ["NFSV3"]
+  deletion_policy = "FORCE"
 }
 
 resource "google_netapp_volume_quota_rule" "test_default_user_quota_rule" {

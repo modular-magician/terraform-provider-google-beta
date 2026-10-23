@@ -60,6 +60,7 @@ resource "google_netapp_volume" "default" {
   share_name = "test-volume"
   storage_pool = google_netapp_storage_pool.default.name
   protocols = ["NFSV3"]
+  deletion_policy = "FORCE"
 }
 
 resource "google_netapp_volume_snapshot" "test_snapshot" {
