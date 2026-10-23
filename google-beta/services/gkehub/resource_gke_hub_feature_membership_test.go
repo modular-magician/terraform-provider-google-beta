@@ -1053,7 +1053,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
       }
       deployment_configs {
         component_name = "admission"
-        replica_count = 3
+        replica_count = 2
         pod_affinity = "ANTI_AFFINITY"
         container_resources {
           limits {
@@ -1074,7 +1074,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
       }
       deployment_configs {
         component_name = "mutation"
-        replica_count = 3
+        replica_count = 2
         pod_affinity = "ANTI_AFFINITY"
       }
       policy_content {
