@@ -226,7 +226,6 @@ projects/{project}/locations/{location}/odbNetworks/{odb_network}/odbSubnets/{od
 				Type:        schema.TypeList,
 				Computed:    true,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `The properties of an Autonomous Database.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -329,6 +328,34 @@ ENTERPRISE_EDITION`,
 							ForceNew:    true,
 							Description: `The Oracle Database version for the Autonomous Database.`,
 						},
+						"encryption_key": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Optional: true,
+							Description: `The encryption key used to encrypt the Autonomous Database.
+Updating this field will add a new entry in the
+'encryption_key_history_entries' field with the former version.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"kms_key": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `The KMS key used to encrypt the Autonomous Database.
+This field is required if the provider is GOOGLE_MANAGED.
+The name of the KMS key resource in the following format:
+'projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}'.`,
+									},
+									"provider": {
+										Type:         schema.TypeString,
+										Computed:     true,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"GOOGLE_MANAGED", "ORACLE_MANAGED", ""}),
+										Description:  `The provider of the encryption key. Possible values: ["GOOGLE_MANAGED", "ORACLE_MANAGED"]`,
+									},
+								},
+							},
+						},
 						"is_auto_scaling_enabled": {
 							Type:     schema.TypeBool,
 							Optional: true,
@@ -343,6 +370,21 @@ CPU core count.`,
 							ForceNew: true,
 							Description: `This field indicates if auto scaling is enabled for the Autonomous Database
 storage.`,
+						},
+						"local_adg_auto_failover_max_data_loss_limit_duration": {
+							Type:     schema.TypeInt,
+							Computed: true,
+							Optional: true,
+							Description: `This field indicates the maximum data loss limit for an
+Autonomous Database, in seconds.`,
+						},
+						"local_data_guard_enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+							Optional: true,
+							Description: `Indicates whether the Autonomous Database has a local (in-region)
+standby database. Not applicable to cross-region Data Guard or dedicated
+Exadata infrastructure.`,
 						},
 						"maintenance_schedule_type": {
 							Type:     schema.TypeString,
@@ -396,6 +438,14 @@ FAILED_DISABLING`,
 							Optional:    true,
 							ForceNew:    true,
 							Description: `The private endpoint label for the Autonomous Database.`,
+						},
+						"refreshable_clone": {
+							Type:     schema.TypeBool,
+							Computed: true,
+							Optional: true,
+							Description: `Indicates if the Autonomous Database is a refreshable clone. This
+field is used in update flow to connect / disconnect a refreshable clone
+from its source database.`,
 						},
 						"secret_id": {
 							Type:        schema.TypeString,
@@ -1414,30 +1464,82 @@ func resourceOracleDatabaseAutonomousDatabaseUpdate(d *schema.ResourceData, meta
 	}
 	billingProject = project
 
-	d.Partial(true)
+	obj := make(map[string]interface{})
+	propertiesProp, err := expandOracleDatabaseAutonomousDatabaseProperties(d.Get("properties"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("properties"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, propertiesProp)) {
+		obj["properties"] = propertiesProp
+	}
+	effectiveLabelsProp, err := expandOracleDatabaseAutonomousDatabaseEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/autonomousDatabases/{{autonomous_database_id}}")
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[DEBUG] Updating AutonomousDatabase %q: %#v", d.Id(), obj)
+	headers := make(http.Header)
+	updateMask := []string{}
+
+	if d.HasChange("properties") {
+		updateMask = append(updateMask, "properties")
+	}
 
 	if d.HasChange("effective_labels") {
-		obj := make(map[string]interface{})
+		updateMask = append(updateMask, "labels")
+	}
+	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
+	// won't set it
+	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+	if err != nil {
+		return err
+	}
 
-		labelsProp, err := expandOracleDatabaseAutonomousDatabaseEffectiveLabels(d.Get("effective_labels"), d, config)
-		if err != nil {
-			return err
-		} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-			obj["labels"] = labelsProp
-		}
+	// The generated update mask only contains top-level fields, but most fields
+	// inside "properties" are immutable. Rebuild it from the specific fields that
+	// changed so that only updatable fields are included.
+	updateMask = []string{}
 
-		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/autonomousDatabases/{{autonomous_database_id}}?updateMask=labels")
-		if err != nil {
-			return err
-		}
+	if d.HasChange("effective_labels") {
+		updateMask = append(updateMask, "labels")
+	}
 
-		headers := make(http.Header)
+	if d.HasChange("properties.0.encryption_key") {
+		updateMask = append(updateMask, "properties.encryptionKey")
+	}
 
-		// err == nil indicates that the billing_project value was found
-		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-			billingProject = bp
-		}
+	if d.HasChange("properties.0.local_data_guard_enabled") {
+		updateMask = append(updateMask, "properties.localDataGuardEnabled")
+	}
 
+	if d.HasChange("properties.0.local_adg_auto_failover_max_data_loss_limit_duration") {
+		updateMask = append(updateMask, "properties.localAdgAutoFailoverMaxDataLossLimitDuration")
+	}
+
+	if d.HasChange("properties.0.refreshable_clone") {
+		updateMask = append(updateMask, "properties.refreshableClone")
+	}
+
+	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
+	// won't set it
+	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+	if err != nil {
+		return err
+	}
+
+	// err == nil indicates that the billing_project value was found
+	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		billingProject = bp
+	}
+
+	// if updateMask is empty we are not updating anything so skip the post
+	if len(updateMask) > 0 {
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "PATCH",
@@ -1448,6 +1550,7 @@ func resourceOracleDatabaseAutonomousDatabaseUpdate(d *schema.ResourceData, meta
 			Timeout:   d.Timeout(schema.TimeoutUpdate),
 			Headers:   headers,
 		})
+
 		if err != nil {
 			return fmt.Errorf("Error updating AutonomousDatabase %q: %s", d.Id(), err)
 		} else {
@@ -1457,12 +1560,11 @@ func resourceOracleDatabaseAutonomousDatabaseUpdate(d *schema.ResourceData, meta
 		err = OracleDatabaseOperationWaitTime(
 			config, res, project, "Updating AutonomousDatabase", userAgent,
 			d.Timeout(schema.TimeoutUpdate))
+
 		if err != nil {
 			return err
 		}
 	}
-
-	d.Partial(false)
 
 	return resourceOracleDatabaseAutonomousDatabaseRead(d, meta)
 }
@@ -1584,6 +1686,14 @@ func flattenOracleDatabaseAutonomousDatabaseProperties(v interface{}, d *schema.
 	transformed := make(map[string]interface{})
 	transformed["ocid"] =
 		flattenOracleDatabaseAutonomousDatabasePropertiesOcid(original["ocid"], d, config)
+	transformed["encryption_key"] =
+		flattenOracleDatabaseAutonomousDatabasePropertiesEncryptionKey(original["encryptionKey"], d, config)
+	transformed["local_data_guard_enabled"] =
+		flattenOracleDatabaseAutonomousDatabasePropertiesLocalDataGuardEnabled(original["localDataGuardEnabled"], d, config)
+	transformed["local_adg_auto_failover_max_data_loss_limit_duration"] =
+		flattenOracleDatabaseAutonomousDatabasePropertiesLocalAdgAutoFailoverMaxDataLossLimitDuration(original["localAdgAutoFailoverMaxDataLossLimitDuration"], d, config)
+	transformed["refreshable_clone"] =
+		flattenOracleDatabaseAutonomousDatabasePropertiesRefreshableClone(original["refreshableClone"], d, config)
 	transformed["compute_count"] =
 		flattenOracleDatabaseAutonomousDatabasePropertiesComputeCount(original["computeCount"], d, config)
 	transformed["cpu_core_count"] =
@@ -1699,6 +1809,54 @@ func flattenOracleDatabaseAutonomousDatabaseProperties(v interface{}, d *schema.
 	return []interface{}{transformed}
 }
 func flattenOracleDatabaseAutonomousDatabasePropertiesOcid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenOracleDatabaseAutonomousDatabasePropertiesEncryptionKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["provider"] =
+		flattenOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyProvider(original["provider"], d, config)
+	transformed["kms_key"] =
+		flattenOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyKmsKey(original["kmsKey"], d, config)
+	return []interface{}{transformed}
+}
+func flattenOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyProvider(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyKmsKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenOracleDatabaseAutonomousDatabasePropertiesLocalDataGuardEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenOracleDatabaseAutonomousDatabasePropertiesLocalAdgAutoFailoverMaxDataLossLimitDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenOracleDatabaseAutonomousDatabasePropertiesRefreshableClone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2575,6 +2733,34 @@ func expandOracleDatabaseAutonomousDatabaseProperties(v interface{}, d tpgresour
 		transformed["ocid"] = transformedOcid
 	}
 
+	transformedEncryptionKey, err := expandOracleDatabaseAutonomousDatabasePropertiesEncryptionKey(original["encryption_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEncryptionKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["encryptionKey"] = transformedEncryptionKey
+	}
+
+	transformedLocalDataGuardEnabled, err := expandOracleDatabaseAutonomousDatabasePropertiesLocalDataGuardEnabled(original["local_data_guard_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLocalDataGuardEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["localDataGuardEnabled"] = transformedLocalDataGuardEnabled
+	}
+
+	transformedLocalAdgAutoFailoverMaxDataLossLimitDuration, err := expandOracleDatabaseAutonomousDatabasePropertiesLocalAdgAutoFailoverMaxDataLossLimitDuration(original["local_adg_auto_failover_max_data_loss_limit_duration"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLocalAdgAutoFailoverMaxDataLossLimitDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["localAdgAutoFailoverMaxDataLossLimitDuration"] = transformedLocalAdgAutoFailoverMaxDataLossLimitDuration
+	}
+
+	transformedRefreshableClone, err := expandOracleDatabaseAutonomousDatabasePropertiesRefreshableClone(original["refreshable_clone"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRefreshableClone); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["refreshableClone"] = transformedRefreshableClone
+	}
+
 	transformedComputeCount, err := expandOracleDatabaseAutonomousDatabasePropertiesComputeCount(original["compute_count"], d, config)
 	if err != nil {
 		return nil, err
@@ -2971,6 +3157,55 @@ func expandOracleDatabaseAutonomousDatabaseProperties(v interface{}, d tpgresour
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesOcid(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandOracleDatabaseAutonomousDatabasePropertiesEncryptionKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedProvider, err := expandOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyProvider(original["provider"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProvider); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["provider"] = transformedProvider
+	}
+
+	transformedKmsKey, err := expandOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyKmsKey(original["kms_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKmsKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["kmsKey"] = transformedKmsKey
+	}
+
+	return transformed, nil
+}
+
+func expandOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandOracleDatabaseAutonomousDatabasePropertiesEncryptionKeyKmsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandOracleDatabaseAutonomousDatabasePropertiesLocalDataGuardEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandOracleDatabaseAutonomousDatabasePropertiesLocalAdgAutoFailoverMaxDataLossLimitDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandOracleDatabaseAutonomousDatabasePropertiesRefreshableClone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

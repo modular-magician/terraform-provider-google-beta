@@ -73,6 +73,8 @@ fields:
     - api_field: properties.dbEdition
     - api_field: properties.dbVersion
     - api_field: properties.dbWorkload
+    - api_field: properties.encryptionKey.kmsKey
+    - api_field: properties.encryptionKey.provider
     - api_field: properties.failedDataRecoveryDuration
     - api_field: properties.isAutoScalingEnabled
     - api_field: properties.isLocalDataGuardEnabled
@@ -80,6 +82,8 @@ fields:
     - api_field: properties.licenseType
     - api_field: properties.lifecycleDetails
     - api_field: properties.localAdgAutoFailoverMaxDataLossLimit
+    - api_field: properties.localAdgAutoFailoverMaxDataLossLimitDuration
+    - api_field: properties.localDataGuardEnabled
     - api_field: properties.localDisasterRecoveryType
     - api_field: properties.localStandbyDb.dataGuardRoleChangedTime
     - api_field: properties.localStandbyDb.disasterRecoveryRoleChangedTime
@@ -103,6 +107,7 @@ fields:
     - api_field: properties.privateEndpoint
     - api_field: properties.privateEndpointIp
     - api_field: properties.privateEndpointLabel
+    - api_field: properties.refreshableClone
     - api_field: properties.refreshableMode
     - api_field: properties.refreshableState
     - api_field: properties.role

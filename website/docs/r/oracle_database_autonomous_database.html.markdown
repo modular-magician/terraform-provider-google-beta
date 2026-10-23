@@ -54,6 +54,11 @@ resource "google_oracle_database_autonomous_database" "myADB"{
     db_version = "19c"
     db_workload = "OLTP"
     license_type = "LICENSE_INCLUDED"
+    encryption_key {
+      provider = "ORACLE_MANAGED"
+    }
+    local_data_guard_enabled = true
+    local_adg_auto_failover_max_data_loss_limit_duration = 30
     }
   labels = {
     "label-one" = "value-one"
@@ -302,6 +307,30 @@ The following arguments are supported:
   (Output)
   OCID of the Autonomous Database.
   https://docs.oracle.com/en-us/iaas/Content/General/Concepts/identifiers.htm#Oracle
+
+* `encryption_key` -
+  (Optional)
+  The encryption key used to encrypt the Autonomous Database.
+  Updating this field will add a new entry in the
+  `encryption_key_history_entries` field with the former version.
+  Structure is [documented below](#nested_properties_encryption_key).
+
+* `local_data_guard_enabled` -
+  (Optional)
+  Indicates whether the Autonomous Database has a local (in-region)
+  standby database. Not applicable to cross-region Data Guard or dedicated
+  Exadata infrastructure.
+
+* `local_adg_auto_failover_max_data_loss_limit_duration` -
+  (Optional)
+  This field indicates the maximum data loss limit for an
+  Autonomous Database, in seconds.
+
+* `refreshable_clone` -
+  (Optional)
+  Indicates if the Autonomous Database is a refreshable clone. This
+  field is used in update flow to connect / disconnect a refreshable clone
+  from its source database.
 
 * `compute_count` -
   (Optional)
@@ -650,6 +679,20 @@ The following arguments are supported:
   (Output)
   The date and time when maintenance will end.
 
+
+<a name="nested_properties_encryption_key"></a>The `encryption_key` block supports:
+
+* `provider` -
+  (Optional)
+  The provider of the encryption key.
+  Possible values are: `GOOGLE_MANAGED`, `ORACLE_MANAGED`.
+
+* `kms_key` -
+  (Optional)
+  The KMS key used to encrypt the Autonomous Database.
+  This field is required if the provider is GOOGLE_MANAGED.
+  The name of the KMS key resource in the following format:
+  `projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}`.
 
 <a name="nested_properties_customer_contacts"></a>The `customer_contacts` block supports:
 

@@ -66,8 +66,10 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBas
 		"database_name":          fmt.Sprintf("tftestdatabase%s", randomSuffix),
 		"deletion_protection":    false,
 		"label_value":            "value-one",
-		"project":                "oasis-terraform-testing-prod",
-		"random_suffix":          randomSuffix,
+		"local_adg_auto_failover_max_data_loss_limit_duration": 30,
+		"local_data_guard_enabled":                             true,
+		"project":                                              "oasis-terraform-testing-prod",
+		"random_suffix":                                        randomSuffix,
 	}
 
 	context_1 := map[string]interface{}{
@@ -75,8 +77,21 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBas
 		"database_name":          fmt.Sprintf("tftestdatabase%s", randomSuffix),
 		"deletion_protection":    false,
 		"label_value":            "value-two",
-		"project":                "oasis-terraform-testing-prod",
-		"random_suffix":          randomSuffix,
+		"local_adg_auto_failover_max_data_loss_limit_duration": 60,
+		"local_data_guard_enabled":                             true,
+		"project":                                              "oasis-terraform-testing-prod",
+		"random_suffix":                                        randomSuffix,
+	}
+
+	context_2 := map[string]interface{}{
+		"autonomous_database_id": "tf-test-my-instance" + randomSuffix,
+		"database_name":          fmt.Sprintf("tftestdatabase%s", randomSuffix),
+		"deletion_protection":    false,
+		"label_value":            "value-two",
+		"local_adg_auto_failover_max_data_loss_limit_duration": nil,
+		"local_data_guard_enabled":                             false,
+		"project":                                              "oasis-terraform-testing-prod",
+		"random_suffix":                                        randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -119,6 +134,26 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBas
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
+			{
+				Config: testAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBasicExample(context_2),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_oracle_database_autonomous_database.myADB", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_oracle_database_autonomous_database.myADB",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"admin_password", "autonomous_database_id", "deletion_protection", "labels", "location", "source_config", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_oracle_database_autonomous_database.myADB",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -139,6 +174,11 @@ resource "google_oracle_database_autonomous_database" "myADB"{
     db_version = "19c"
     db_workload = "OLTP"
     license_type = "LICENSE_INCLUDED"
+    encryption_key {
+      provider = "ORACLE_MANAGED"
+    }
+    local_data_guard_enabled = %{local_data_guard_enabled}
+    local_adg_auto_failover_max_data_loss_limit_duration = %{local_adg_auto_failover_max_data_loss_limit_duration}
     }
   labels = {
     "label-one" = "%{label_value}"
