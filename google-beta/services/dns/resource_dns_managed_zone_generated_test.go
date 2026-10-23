@@ -100,7 +100,7 @@ func testAccDNSManagedZone_dnsManagedZoneQuickstartExample(context map[string]in
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {

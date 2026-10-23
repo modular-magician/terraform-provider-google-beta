@@ -401,7 +401,7 @@ func testAccDNSManagedZoneIamMember_basicGenerated(context map[string]interface{
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -467,7 +467,7 @@ func testAccDNSManagedZoneIamPolicy_basicGenerated(context map[string]interface{
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -547,7 +547,7 @@ func testAccDNSManagedZoneIamPolicy_emptyBinding(context map[string]interface{})
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -615,7 +615,7 @@ func testAccDNSManagedZoneIamBinding_basicGenerated(context map[string]interface
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -681,7 +681,7 @@ func testAccDNSManagedZoneIamBinding_updateGenerated(context map[string]interfac
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -747,7 +747,7 @@ func testAccDNSManagedZoneIamBinding_withConditionGenerated(context map[string]i
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -818,7 +818,7 @@ func testAccDNSManagedZoneIamBinding_withAndWithoutConditionGenerated(context ma
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -909,7 +909,7 @@ func testAccDNSManagedZoneIamMember_withConditionGenerated(context map[string]in
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -980,7 +980,7 @@ func testAccDNSManagedZoneIamMember_withAndWithoutConditionGenerated(context map
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
@@ -1071,7 +1071,7 @@ func testAccDNSManagedZoneIamPolicy_withConditionGenerated(context map[string]in
 # to setup a web-server
 resource "google_compute_instance" "default" {
   name         = "%{dns_compute_instance}"
-  machine_type = "g1-small"
+  machine_type = "e2-micro"
   zone         = "us-central1-b"
 
   boot_disk {
