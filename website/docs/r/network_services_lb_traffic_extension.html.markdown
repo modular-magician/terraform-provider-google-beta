@@ -119,7 +119,7 @@ resource "google_compute_region_backend_service" "default" {
 # instance template
 resource "google_compute_instance_template" "instance_template" {
   name         = "l7-ilb-mig-template"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["http-server"]
 
   network_interface {
@@ -182,7 +182,7 @@ resource "google_compute_region_instance_group_manager" "mig" {
   region   = "us-west1"
 
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 
   version {
     instance_template = google_compute_instance_template.instance_template.id
@@ -261,7 +261,7 @@ resource "google_network_services_lb_traffic_extension" "default" {
 resource "google_compute_instance" "vm_test" {
   name         = "l7-ilb-test-vm"
   zone         = "us-west1-b"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   network_interface {
     network    = google_compute_network.ilb_network.id
@@ -279,7 +279,7 @@ resource "google_compute_instance" "vm_test" {
 resource "google_compute_instance" "callouts_instance" {
   name         = "l7-ilb-callouts-ins"
   zone         = "us-west1-a"
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   labels = {
     "container-vm" = "cos-stable-109-17800-147-54"
