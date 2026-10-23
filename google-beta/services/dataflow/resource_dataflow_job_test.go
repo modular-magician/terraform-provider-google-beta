@@ -966,7 +966,7 @@ resource "google_dataflow_job" "big_data" {
 
   region = "%s"
 
-  machine_type      = "e2-standard-2"
+  machine_type      = "n1-standard-1"
   template_gcs_path = "%s"
   temp_gcs_location = google_storage_bucket.temp.url
   parameters = {
@@ -992,7 +992,7 @@ resource "google_dataflow_job" "big_data" {
 
   region = "%s"
 
-  machine_type      = "e2-standard-2"
+  machine_type      = "n1-standard-1"
   template_gcs_path = "%s"
   temp_gcs_location = google_storage_bucket.temp.url
   parameters = {
@@ -1301,7 +1301,7 @@ resource "google_dataflow_job" "big_data" {
 
   region = "%s"
 
-  machine_type      = "e2-standard-2"
+  machine_type      = "n1-standard-1"
   template_gcs_path = "%s"
   temp_gcs_location = google_storage_bucket.temp.url
   kms_key_name		= google_kms_crypto_key.crypto_key.id
