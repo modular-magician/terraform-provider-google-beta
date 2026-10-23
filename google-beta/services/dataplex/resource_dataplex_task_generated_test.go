@@ -217,7 +217,7 @@ resource "google_dataplex_task" "example_spark" {
         infrastructure_spec  {
             batch {
                 executors_count = 2
-                max_executors_count = 100
+                max_executors_count = 3
             }
             container_image {
                 image = "test-image"
@@ -316,7 +316,7 @@ resource "google_dataplex_task" "example_notebook" {
         infrastructure_spec  {
             batch {
                 executors_count = 2
-                max_executors_count = 100
+                max_executors_count = 3
             }
             container_image {
                 image = "test-image"
