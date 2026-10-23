@@ -51,7 +51,7 @@ resource "google_sql_database_instance" "cloudsqldb" {
   name             = "my-database"
   database_version = "MYSQL_5_7"
   settings {
-    tier = "db-n1-standard-1"
+    tier = "db-f1-micro"
     deletion_protection_enabled = false
   }
   deletion_protection = false
@@ -145,7 +145,7 @@ resource "google_sql_database_instance" "postgresqldb" {
   name             = "my-database"
   database_version = "POSTGRES_12"
   settings {
-    tier = "db-custom-2-13312"
+    tier = "db-f1-micro"
   }
   deletion_protection = false
 }
@@ -204,7 +204,7 @@ resource "google_sql_database_instance" "postgresqldb" {
   name             = "my-database"
   database_version = "POSTGRES_12"
   settings {
-    tier = "db-custom-2-13312"
+    tier = "db-f1-micro"
   }
   deletion_protection = false
 }
@@ -260,7 +260,7 @@ resource "google_sql_database_instance" "postgresqldb" {
   name             = "my-database"
   database_version = "POSTGRES_12"
   settings {
-    tier = "db-custom-2-13312"
+    tier = "db-f1-micro"
   }
   deletion_protection = false
 }
@@ -403,7 +403,7 @@ resource "google_sql_database_instance" "destination_csql" {
   name             = "destination-csql"
   database_version = "MYSQL_5_7"
   settings {
-    tier = "db-n1-standard-1"
+    tier = "db-f1-micro"
     deletion_protection_enabled = false
   }
   deletion_protection = false
@@ -439,7 +439,7 @@ resource "google_sql_database_instance" "destination_csql" {
   name             = "destination-csql"
   database_version = "POSTGRES_15"
   settings {
-    tier = "db-custom-2-13312"
+    tier = "db-f1-micro"
     deletion_protection_enabled = false
   }
   deletion_protection = false
