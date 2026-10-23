@@ -1143,13 +1143,7 @@ resource "google_sql_database_instance" "instance" {
   region           = "us-central1"
 
   settings {
-    tier              = "db-f1-micro"
-    availability_type = "REGIONAL"
-
-    backup_configuration {
-      enabled            = true
-      binary_log_enabled = true
-    }
+    tier = "db-f1-micro"
 
     database_flags {
       name  = "cloudsql_iam_authentication"
