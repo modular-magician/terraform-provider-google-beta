@@ -105,7 +105,7 @@ func testAccBackupDRBackupPlanAssociation_backupDrBpaExample(context map[string]
 
 resource "google_compute_instance" "myinstance" {
   name         = "%{compute-name}"
-  machine_type = "n2-standard-2"
+  machine_type = "e2-micro"
   zone         = "us-central1-a"
   boot_disk {
     initialize_params {
@@ -115,15 +115,8 @@ resource "google_compute_instance" "myinstance" {
       }
     }
   }
-  // Local SSD disk
-  scratch_disk {
-    interface = "NVME"
-  }
   network_interface {
     network = "default"
-    access_config {
-      // Ephemeral public IP
-    }
   }
   service_account {
     email  = google_service_account.mySA.email
