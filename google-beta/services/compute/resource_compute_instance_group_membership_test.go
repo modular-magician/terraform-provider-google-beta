@@ -139,7 +139,7 @@ func testAccComputeInstanceGroupMembership_noInstanceGroupMembership(context map
 
     resource "google_compute_instance" "default" {
       name         = "tf-test-default-instance-%{random_suffix}"
-      machine_type = "e2-medium"
+      machine_type = "e2-micro"
 
       boot_disk {
         initialize_params {
@@ -154,7 +154,7 @@ func testAccComputeInstanceGroupMembership_noInstanceGroupMembership(context map
 
     resource "google_compute_instance" "add1" {
       name         = "tf-test-add1-instance-%{random_suffix}"
-      machine_type = "e2-medium"
+      machine_type = "e2-micro"
 
       boot_disk {
         initialize_params {
@@ -169,7 +169,7 @@ func testAccComputeInstanceGroupMembership_noInstanceGroupMembership(context map
 
     resource "google_compute_instance" "add2" {
       name         = "tf-test-add2-instance-%{random_suffix}"
-      machine_type = "e2-medium"
+      machine_type = "e2-micro"
 
       boot_disk {
         initialize_params {

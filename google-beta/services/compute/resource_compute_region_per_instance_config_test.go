@@ -382,7 +382,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "rigm-basic" {
   name           = "tf-test-rigm-%{random_suffix}"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 

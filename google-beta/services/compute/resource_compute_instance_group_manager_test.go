@@ -665,7 +665,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -702,7 +702,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools                   = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name             = "tf-test-igm-basic"
   zone                           = "us-central1-c"
-  target_size                    = 2
+  target_size                    = 1
   list_managed_instances_results = "PAGINATED"
 }
 
@@ -717,7 +717,7 @@ resource "google_compute_instance_group_manager" "igm-no-tp" {
 
   base_instance_name = "tf-test-igm-no-tp"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 }
 `, template, target, igm1, igm2)
 }
@@ -731,7 +731,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -768,7 +768,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools                   = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name             = "tf-test-igm-basic"
   zone                           = "us-central1-c"
-  target_size                    = 2
+  target_size                    = 1
   list_managed_instances_results = "PAGINATED"
 }
 
@@ -783,7 +783,7 @@ resource "google_compute_instance_group_manager" "igm-no-tp" {
 
   base_instance_name = "tf-test-igm-no-tp"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 }
 `, template, target, igm1, igm2)
 }
@@ -797,7 +797,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -840,7 +840,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-update" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -877,7 +877,7 @@ resource "google_compute_instance_group_manager" "igm-update" {
   target_pools       = [google_compute_target_pool.igm-update.self_link]
   base_instance_name = "tf-test-igm-update"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
   named_port {
     name = "customhttp"
     port = 8080
@@ -910,7 +910,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-update" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -943,7 +943,7 @@ resource "google_compute_target_pool" "igm-update2" {
 
 resource "google_compute_instance_template" "igm-update2" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -977,7 +977,7 @@ resource "google_compute_instance_group_manager" "igm-update" {
   ]
   base_instance_name             = "tf-test-igm-update"
   zone                           = "us-central1-c"
-  target_size                    = 3
+  target_size                    = 2
   list_managed_instances_results = "PAGINATED"
   named_port {
     name = "customhttp"
@@ -1020,7 +1020,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-update" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -1053,7 +1053,7 @@ resource "google_compute_target_pool" "igm-update2" {
 
 resource "google_compute_instance_template" "igm-update2" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -1083,7 +1083,7 @@ resource "google_compute_instance_group_manager" "igm-update" {
 
   base_instance_name             = "tf-test-igm-update"
   zone                           = "us-central1-c"
-  target_size                    = 3
+  target_size                    = 2
   list_managed_instances_results = "PAGINATED"
   named_port {
     name = "customhttp"
@@ -1105,7 +1105,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-update" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["%s"]
 
@@ -1139,7 +1139,7 @@ resource "google_compute_instance_group_manager" "igm-update" {
 
   base_instance_name = "tf-test-igm-update"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
   named_port {
     name = "customhttp"
     port = 8080
@@ -1156,7 +1156,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-rolling-update-policy" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["terraform-testing"]
 
@@ -1188,7 +1188,7 @@ resource "google_compute_instance_group_manager" "igm-rolling-update-policy" {
   }
   base_instance_name = "tf-test-igm-rolling-update-policy"
   zone               = "us-central1-c"
-  target_size        = 3
+  target_size        = 2
   update_policy {
     type                    = "PROACTIVE"
     minimal_action          = "REPLACE"
@@ -1211,7 +1211,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-rolling-update-policy" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["terraform-testing"]
 
@@ -1239,7 +1239,7 @@ resource "google_compute_instance_group_manager" "igm-rolling-update-policy" {
   }
   base_instance_name = "tf-test-igm-rolling-update-policy"
   zone               = "us-central1-c"
-  target_size        = 3
+  target_size        = 2
   update_policy {
     type                           = "PROACTIVE"
     minimal_action                 = "REPLACE"
@@ -1263,7 +1263,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-rolling-update-policy" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["terraform-testing"]
   disk {
@@ -1288,7 +1288,7 @@ resource "google_compute_instance_group_manager" "igm-rolling-update-policy" {
   }
   base_instance_name = "tf-test-igm-rolling-update-policy"
   zone               = "us-central1-c"
-  target_size        = 3
+  target_size        = 2
   update_policy {
     type                  = "PROACTIVE"
     minimal_action        = "REPLACE"
@@ -1312,7 +1312,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-rolling-update-policy" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["terraform-testing"]
   disk {
@@ -1337,7 +1337,7 @@ resource "google_compute_instance_group_manager" "igm-rolling-update-policy" {
   }
   base_instance_name = "tf-test-igm-rolling-update-policy"
   zone               = "us-central1-c"
-  target_size        = 3
+  target_size        = 2
   update_policy {
     type                  = "PROACTIVE"
     minimal_action        = "REPLACE"
@@ -1360,7 +1360,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-rolling-update-policy" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["terraform-testing"]
   disk {
@@ -1385,7 +1385,7 @@ resource "google_compute_instance_group_manager" "igm-rolling-update-policy" {
   }
   base_instance_name = "tf-test-igm-rolling-update-policy"
   zone               = "us-central1-c"
-  target_size        = 3
+  target_size        = 2
   update_policy {
     type                  = "PROACTIVE"
     minimal_action        = "REPLACE"
@@ -1409,7 +1409,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance_template" "igm-basic" {
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -1439,7 +1439,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
 
   base_instance_name = "tf-test-igm-basic"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 }
 
 resource "google_compute_instance_group_manager" "igm-basic-2" {
@@ -1453,7 +1453,7 @@ resource "google_compute_instance_group_manager" "igm-basic-2" {
 
   base_instance_name = "tf-test-igm-basic-2"
   zone               = "us-west1-b"
-  target_size        = 2
+  target_size        = 1
 }
 `, igm1, igm2)
 }
@@ -1467,7 +1467,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1500,7 +1500,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools       = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name = "tf-test-igm-basic"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
   auto_healing_policies {
     health_check      = google_compute_http_health_check.zero.self_link
     initial_delay_sec = "10"
@@ -1525,7 +1525,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1558,7 +1558,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools       = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name = "tf-test-igm-basic"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 }
 
 resource "google_compute_http_health_check" "zero" {
@@ -1579,7 +1579,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-primary" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1598,7 +1598,7 @@ resource "google_compute_instance_template" "igm-primary" {
 
 resource "google_compute_instance_template" "igm-canary" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1651,7 +1651,7 @@ resource "google_compute_network" "igm-basic" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1702,7 +1702,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools       = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name = "tf-test-igm-basic"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
   stateful_disk {
     device_name = "my-stateful-disk"
     delete_rule = "ON_PERMANENT_INSTANCE_DELETION"
@@ -1741,7 +1741,7 @@ resource "google_compute_network" "igm-basic" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1792,7 +1792,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools       = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name = "tf-test-igm-basic"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
   stateful_disk {
     device_name = "my-stateful-disk"
     delete_rule = "NEVER"
@@ -1835,7 +1835,7 @@ resource "google_compute_network" "igm-basic" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -1886,7 +1886,7 @@ resource "google_compute_instance_group_manager" "igm-basic" {
   target_pools       = [google_compute_target_pool.igm-basic.self_link]
   base_instance_name = "tf-test-igm-basic"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 }
 `, network, template, target, igm)
 }
@@ -1904,7 +1904,7 @@ resource "google_compute_network" "sr-igm" {
 
 resource "google_compute_instance_template" "sr-igm" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   disk {
     source_image = data.google_compute_image.my_image.self_link
     auto_delete  = true
@@ -1927,7 +1927,7 @@ resource "google_compute_instance_group_manager" "sr-igm" {
 
   base_instance_name        = "tf-test-sr-igm"
   zone                      = "us-central1-c"
-  target_size               = 2
+  target_size               = 1
   standby_policy {
     initial_delay_sec           = 20
     mode                        = "MANUAL"
@@ -1951,7 +1951,7 @@ resource "google_compute_network" "sr-igm" {
 
 resource "google_compute_instance_template" "sr-igm" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   disk {
     source_image = data.google_compute_image.my_image.self_link
     auto_delete  = true
@@ -1974,7 +1974,7 @@ resource "google_compute_instance_group_manager" "sr-igm" {
 
   base_instance_name        = "tf-test-sr-igm"
   zone                      = "us-central1-c"
-  target_size               = 2
+  target_size               = 1
   standby_policy {
     mode                        = "SCALE_OUT_POOL"
   }
@@ -1992,7 +1992,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -2054,7 +2054,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
   disk {
@@ -2172,7 +2172,7 @@ resource "google_compute_instance_group_manager" "igm-workload-policy" {
 
   base_instance_name = "tf-test-igm-no-tp"
   zone               = "us-central1-b"
-  target_size        = 2
+  target_size        = 1
 }
 `, suffix, suffix)
 }
@@ -2225,7 +2225,7 @@ resource "google_compute_instance_group_manager" "igm-workload-policy" {
 
   base_instance_name = "tf-test-igm-no-tp"
   zone               = "us-central1-b"
-  target_size        = 2
+  target_size        = 1
 
   resource_policies {
     workload_policy = google_compute_resource_policy.workload_policy_error.self_link
@@ -2391,7 +2391,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-basic" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
@@ -2434,7 +2434,7 @@ resource "google_compute_instance_group_manager" "igm-tsp" {
 
   base_instance_name = "tf-test-igm-tsp"
   zone               = "us-central1-c"
-  target_size        = 2
+  target_size        = 1
 
   target_size_policy {
     mode = "BULK"
@@ -2452,7 +2452,7 @@ data "google_compute_image" "my_image" {
 resource "google_compute_instance_template" "igm-tags" {
   name           = "%s"
   description    = "Terraform test instance template."
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
 
   disk {
     source_image = data.google_compute_image.my_image.self_link
@@ -2545,7 +2545,7 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "igm-force" {
   name           = "%s"
-  machine_type   = "e2-medium"
+  machine_type   = "e2-micro"
   can_ip_forward = false
   tags           = ["foo", "bar"]
 
