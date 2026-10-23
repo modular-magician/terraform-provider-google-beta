@@ -36,7 +36,7 @@ To get more information about UserStore, see:
 resource "google_discovery_engine_license_config" "basic" {
   location = "us"
   license_config_id = "license-config-id"
-  license_count = 50
+  license_count = 1
   subscription_tier = "SUBSCRIPTION_TIER_SEARCH_AND_ASSISTANT"
   start_date {
     year = 2099
