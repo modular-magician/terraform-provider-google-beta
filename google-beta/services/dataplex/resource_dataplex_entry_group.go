@@ -142,6 +142,24 @@ func ResourceDataplexEntryGroup() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"change_request_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Specifies the configuration for requesting changes in the metadata belonging to the Entry Group.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"approver_emails": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Specifies the email addresses of users who are potential approvers and are notified when a change request is created for the metadata belonging to the Entry Group. The maximum number of emails allowed is 10.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -255,6 +273,12 @@ func resourceDataplexEntryGroupCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	changeRequestConfigProp, err := expandDataplexEntryGroupChangeRequestConfig(d.Get("change_request_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("change_request_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(changeRequestConfigProp)) && (ok || !reflect.DeepEqual(v, changeRequestConfigProp)) {
+		obj["changeRequestConfig"] = changeRequestConfigProp
 	}
 	effectiveLabelsProp, err := expandDataplexEntryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -490,6 +514,12 @@ func resourceDataplexEntryGroupUpdate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	changeRequestConfigProp, err := expandDataplexEntryGroupChangeRequestConfig(d.Get("change_request_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("change_request_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, changeRequestConfigProp)) {
+		obj["changeRequestConfig"] = changeRequestConfigProp
+	}
 	effectiveLabelsProp, err := expandDataplexEntryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -512,6 +542,10 @@ func resourceDataplexEntryGroupUpdate(d *schema.ResourceData, meta interface{}) 
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("change_request_config") {
+		updateMask = append(updateMask, "changeRequestConfig")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -685,6 +719,23 @@ func flattenDataplexEntryGroupTransferStatus(v interface{}, d *schema.ResourceDa
 	return v
 }
 
+func flattenDataplexEntryGroupChangeRequestConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["approver_emails"] =
+		flattenDataplexEntryGroupChangeRequestConfigApproverEmails(original["approverEmails"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDataplexEntryGroupChangeRequestConfigApproverEmails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDataplexEntryGroupTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -709,6 +760,32 @@ func expandDataplexEntryGroupDescription(v interface{}, d tpgresource.TerraformR
 }
 
 func expandDataplexEntryGroupDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataplexEntryGroupChangeRequestConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedApproverEmails, err := expandDataplexEntryGroupChangeRequestConfigApproverEmails(original["approver_emails"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedApproverEmails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["approverEmails"] = transformedApproverEmails
+	}
+
+	return transformed, nil
+}
+
+func expandDataplexEntryGroupChangeRequestConfigApproverEmails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -748,6 +825,9 @@ func ResourceDataplexEntryGroupFlatten(d *schema.ResourceData, meta interface{},
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
 	if err = d.Set("transfer_status", flattenDataplexEntryGroupTransferStatus(res["transferStatus"], d, config)); err != nil {
+		return fmt.Errorf("Error reading EntryGroup: %s", err)
+	}
+	if err = d.Set("change_request_config", flattenDataplexEntryGroupChangeRequestConfig(res["changeRequestConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenDataplexEntryGroupTerraformLabels(res["labels"], d, config)); err != nil {

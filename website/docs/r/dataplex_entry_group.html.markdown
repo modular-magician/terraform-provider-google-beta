@@ -49,6 +49,10 @@ resource "google_dataplex_entry_group" "test_entry_group_full" {
   labels = { "tag": "test-tf" }
   display_name = "terraform entry group"
   description = "entry group created by Terraform"
+
+  change_request_config {
+    approver_emails = ["test-user@example.com"]
+  }
 }
 ```
 
@@ -73,6 +77,11 @@ The following arguments are supported:
   **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
   Please refer to the field `effective_labels` for all of the labels present on the resource.
 
+* `change_request_config` -
+  (Optional)
+  Specifies the configuration for requesting changes in the metadata belonging to the Entry Group.
+  Structure is [documented below](#nested_change_request_config).
+
 * `location` -
   (Optional)
   The location where entry group will be created in.
@@ -91,6 +100,12 @@ The following arguments are supported:
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
 
+
+<a name="nested_change_request_config"></a>The `change_request_config` block supports:
+
+* `approver_emails` -
+  (Optional)
+  Specifies the email addresses of users who are potential approvers and are notified when a change request is created for the metadata belonging to the Entry Group. The maximum number of emails allowed is 10.
 
 ## Attributes Reference
 

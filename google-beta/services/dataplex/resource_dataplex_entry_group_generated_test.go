@@ -144,6 +144,10 @@ resource "google_dataplex_entry_group" "test_entry_group_full" {
   labels = { "tag": "test-tf" }
   display_name = "terraform entry group"
   description = "entry group created by Terraform"
+
+  change_request_config {
+    approver_emails = ["test-user@example.com"]
+  }
 }
 `, context)
 }
