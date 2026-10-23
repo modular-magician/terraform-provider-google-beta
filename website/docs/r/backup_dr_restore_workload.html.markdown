@@ -49,7 +49,7 @@ resource "google_backup_dr_restore_workload" "restore_compute_basic" {
 
   compute_instance_restore_properties {
     name         = "restored-instance"
-    machine_type = "zones/us-central1-a/machineTypes/e2-medium"
+    machine_type = "zones/us-central1-a/machineTypes/e2-micro"
   }
 }
 ```
