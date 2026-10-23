@@ -243,7 +243,7 @@ resource "google_bigquery_connection" "connection" {
       database        = "projects/project/instances/instance/databases/database"
       use_parallelism = true
       use_data_boost  = true
-      max_parallelism = 100
+      max_parallelism = 10
    }
 }
 ```
@@ -283,7 +283,7 @@ resource "google_dataproc_cluster" "basic" {
  
      master_config {
        num_instances = 1
-       machine_type  = "e2-standard-2"
+       machine_type  = "e2-medium"
        disk_config {
          boot_disk_size_gb = 35
        }
