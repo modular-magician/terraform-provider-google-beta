@@ -107,7 +107,7 @@ resource "google_compute_subnetwork" "ilb_subnet" {
 resource "google_compute_instance_template" "instance_template" {
   name         = "l7-ilb-mig-template"
   project      = google_project.service_project.project_id
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["http-server"]
   network_interface {
     network    = google_compute_network.ilb_network.id
@@ -155,7 +155,7 @@ resource "google_compute_region_instance_group_manager" "mig" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 ```
 
@@ -261,7 +261,7 @@ resource "google_compute_subnetwork" "ilb_subnet" {
 resource "google_compute_instance_template" "instance_template" {
   name         = "l7-ilb-mig-template"
   project      = google_project.service_project.project_id
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
   tags         = ["http-server"]
   network_interface {
     network    = google_compute_network.ilb_network.id
@@ -309,7 +309,7 @@ resource "google_compute_region_instance_group_manager" "mig" {
     name              = "primary"
   }
   base_instance_name = "vm"
-  target_size        = 2
+  target_size        = 1
 }
 ```
 
