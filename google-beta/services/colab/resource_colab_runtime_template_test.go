@@ -99,7 +99,7 @@ resource "google_colab_runtime_template" "runtime-template" {
   location = "us-central1"
 
   machine_spec {
-    machine_type     = "e2-standard-4"
+    machine_type     = "e2-standard-2"
   }
 
   network_spec {
@@ -117,7 +117,7 @@ resource "google_colab_runtime_template" "runtime-template" {
   location    = "us-central1"
 
   machine_spec {
-    machine_type     = "e2-standard-4"
+    machine_type     = "e2-standard-2"
   }
 
   network_spec {

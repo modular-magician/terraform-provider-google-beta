@@ -97,7 +97,7 @@ resource "google_colab_runtime_template" "my_template" {
   location = "us-central1"
 
   machine_spec {
-    machine_type     = "e2-standard-4"
+    machine_type     = "e2-standard-2"
   }
 
   network_spec {
@@ -165,7 +165,7 @@ resource "google_colab_runtime_template" "my_template" {
   location = "us-central1"
 
   machine_spec {
-    machine_type     = "e2-standard-4"
+    machine_type     = "e2-standard-2"
   }
 
   network_spec {
@@ -243,7 +243,7 @@ resource "google_colab_runtime_template" "my_template" {
 
   data_persistent_disk_spec {
     disk_type    = "pd-standard"
-    disk_size_gb = 200
+    disk_size_gb = 100
   }
 
   network_spec {
