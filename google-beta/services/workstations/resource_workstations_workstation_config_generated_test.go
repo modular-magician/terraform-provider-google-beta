@@ -157,7 +157,7 @@ resource "google_workstations_workstation_config" "default" {
   
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       disable_ssh                 = false
@@ -241,7 +241,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                 = "n1-standard-4"
+      machine_type                 = "n1-standard-2"
       boot_disk_size_gb            = 35
       disable_public_ip_addresses  = true
       enable_nested_virtualization = true
@@ -323,7 +323,7 @@ resource "google_workstations_workstation_config" "default" {
   host {
     gce_instance {
       # C3 machine types require Hyperdisk storage
-      machine_type = "c3-standard-22"
+      machine_type = "c3-standard-4"
     }
   }
 
@@ -428,7 +428,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
       gce_instance {
-        machine_type                = "c3-standard-22"
+        machine_type                = "c3-standard-4"
         boot_disk_size_gb           = 35
         disable_public_ip_addresses = true
         vm_tags = {
@@ -520,7 +520,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       shielded_instance_config {
@@ -700,7 +700,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       shielded_instance_config {
@@ -922,7 +922,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       boost_configs {
@@ -936,7 +936,7 @@ resource "google_workstations_workstation_config" "default" {
       boost_configs {
         id                           = "boost-2"
         machine_type                 = "n1-standard-2"
-        pool_size                    = 2
+        pool_size                    = 1
         boot_disk_size_gb            = 30
         enable_nested_virtualization = true
       }
@@ -982,7 +982,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       boost_configs {
@@ -997,7 +997,7 @@ resource "google_workstations_workstation_config" "default" {
       boost_configs {
         id                           = "boost-2"
         machine_type                 = "n1-standard-2"
-        pool_size                    = 2
+        pool_size                    = 1
         boot_disk_size_gb            = 30
         enable_nested_virtualization = true
       }
@@ -1101,7 +1101,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       shielded_instance_config {
@@ -1190,7 +1190,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
     }
@@ -1287,7 +1287,7 @@ resource "google_workstations_workstation_config" "default" {
 
   host {
     gce_instance {
-      machine_type                 = "e2-standard-4"
+      machine_type                 = "e2-standard-2"
       boot_disk_size_gb            = 35
       disable_public_ip_addresses  = true
     }

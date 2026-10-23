@@ -227,7 +227,7 @@ resource "google_workstations_workstation_config" "default" {
   
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       disable_ssh                 = false
@@ -309,7 +309,7 @@ resource "google_workstations_workstation_config" "default" {
   
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       disable_ssh                 = false
@@ -407,7 +407,7 @@ resource "google_workstations_workstation_config" "default" {
   
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       disable_ssh                 = false
@@ -491,7 +491,7 @@ resource "google_workstations_workstation_config" "default" {
   
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       disable_ssh                 = false
@@ -573,7 +573,7 @@ resource "google_workstations_workstation_config" "default" {
   
   host {
     gce_instance {
-      machine_type                = "e2-standard-4"
+      machine_type                = "e2-standard-2"
       boot_disk_size_gb           = 35
       disable_public_ip_addresses = true
       disable_ssh                 = false
