@@ -242,7 +242,7 @@ resource "google_integration_connectors_connection" "zendeskconnection" {
   }
   node_config {
     min_node_count = 2
-    max_node_count = 50
+    max_node_count = 3
   }
   labels = {
     foo = "bar"
@@ -502,7 +502,7 @@ resource "google_integration_connectors_connection" "zendeskconnection" {
   }
   node_config {
     min_node_count = 2
-    max_node_count = 50
+    max_node_count = 3
   }
   labels = {
     foo = "bar"
@@ -1117,7 +1117,7 @@ func testAccIntegrationConnectorsConnection_full(context map[string]interface{})
     }
     node_config {
       min_node_count = 2
-      max_node_count = 50
+      max_node_count = 4
     }
     labels = {
       foo = "bar"
@@ -1327,7 +1327,7 @@ func testAccIntegrationConnectorsConnection_update(context map[string]interface{
     }
     node_config {
       min_node_count = 3
-      max_node_count = 49
+      max_node_count = 5
     }
     labels = {
       bar = "foo"

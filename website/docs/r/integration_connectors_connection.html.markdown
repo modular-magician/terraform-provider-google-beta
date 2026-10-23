@@ -168,7 +168,7 @@ resource "google_integration_connectors_connection" "zendeskconnection" {
   }
   node_config {
     min_node_count = 2
-    max_node_count = 50
+    max_node_count = 3
   }
   labels = {
     foo = "bar"
