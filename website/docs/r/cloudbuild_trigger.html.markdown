@@ -143,8 +143,8 @@ resource "google_cloudbuild_trigger" "build-trigger" {
     options {
       source_provenance_hash = ["MD5"]
       requested_verify_option = "VERIFIED"
-      machine_type = "N1_HIGHCPU_8"
-      disk_size_gb = 100
+      machine_type = "E2_MEDIUM"
+      disk_size_gb = 10
       substitution_option = "ALLOW_LOOSE"
       dynamic_substitutions = true
       log_streaming_option = "STREAM_OFF"
@@ -595,8 +595,8 @@ resource "google_cloudbuild_trigger" "allow-failure-trigger" {
     options {
       source_provenance_hash = ["MD5"]
       requested_verify_option = "VERIFIED"
-      machine_type = "N1_HIGHCPU_8"
-      disk_size_gb = 100
+      machine_type = "E2_MEDIUM"
+      disk_size_gb = 10
       substitution_option = "ALLOW_LOOSE"
       dynamic_substitutions = true
       log_streaming_option = "STREAM_OFF"
@@ -673,8 +673,8 @@ resource "google_cloudbuild_trigger" "allow-exit-codes-trigger" {
     options {
       source_provenance_hash = ["MD5"]
       requested_verify_option = "VERIFIED"
-      machine_type = "N1_HIGHCPU_8"
-      disk_size_gb = 100
+      machine_type = "E2_MEDIUM"
+      disk_size_gb = 10
       substitution_option = "ALLOW_LOOSE"
       dynamic_substitutions = true
       log_streaming_option = "STREAM_OFF"
