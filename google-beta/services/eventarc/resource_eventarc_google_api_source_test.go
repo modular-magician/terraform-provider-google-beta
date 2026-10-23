@@ -113,25 +113,11 @@ resource "time_sleep" "wait_create_project" {
   depends_on      = [google_project.project]
 }
 
-resource "google_project_service" "compute" {
-  provider   = google-beta
-  project    = google_project.project.project_id
-  service    = "compute.googleapis.com"
-  depends_on = [time_sleep.wait_create_project]
-}
-
-resource "google_project_service" "servicenetworking" {
-  provider   = google-beta
-  project    = google_project.project.project_id
-  service    = "servicenetworking.googleapis.com"
-  depends_on = [google_project_service.compute]
-}
-
 resource "google_project_service" "kms" {
   provider   = google-beta
   project    = google_project.project.project_id
   service    = "cloudkms.googleapis.com"
-  depends_on = [google_project_service.servicenetworking]
+  depends_on = [time_sleep.wait_create_project]
 }
 
 resource "google_project_service" "eventarc" {
@@ -227,24 +213,10 @@ resource "google_project" "project" {
   deletion_policy = "DELETE"
 }
 
-resource "google_project_service" "compute" {
-  provider   = google-beta
-  project    = google_project.project.project_id
-  service    = "compute.googleapis.com"
-}
-
-resource "google_project_service" "servicenetworking" {
-  provider   = google-beta
-  project    = google_project.project.project_id
-  service    = "servicenetworking.googleapis.com"
-  depends_on = [google_project_service.compute]
-}
-
 resource "google_project_service" "kms" {
   provider   = google-beta
   project    = google_project.project.project_id
   service    = "cloudkms.googleapis.com"
-  depends_on = [google_project_service.servicenetworking]
 }
 
 resource "google_project_service" "eventarc" {
@@ -381,24 +353,10 @@ resource "google_project" "project" {
   deletion_policy = "DELETE"
 }
 
-resource "google_project_service" "compute" {
-  provider   = google-beta
-  project    = google_project.project.project_id
-  service    = "compute.googleapis.com"
-}
-
-resource "google_project_service" "servicenetworking" {
-  provider   = google-beta
-  project    = google_project.project.project_id
-  service    = "servicenetworking.googleapis.com"
-  depends_on = [google_project_service.compute]
-}
-
 resource "google_project_service" "kms" {
   provider   = google-beta
   project    = google_project.project.project_id
   service    = "cloudkms.googleapis.com"
-  depends_on = [google_project_service.servicenetworking]
 }
 
 resource "google_project_service" "eventarc" {
