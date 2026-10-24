@@ -348,12 +348,12 @@ resource "google_vertex_ai_reasoning_engine" "reasoning_engine" {
 
     deployment_spec {
       min_instances         = 1
-      max_instances         = 3
+      max_instances         = 2
       container_concurrency = 5
 
       resource_limits = {
-        cpu    = "4"
-        memory = "4Gi"
+        cpu    = "2"
+        memory = "2Gi"
       }
 
       env {
