@@ -1,0 +1,27 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_design_center_catalog_template_revision
+generation_type: mmv1
+source_file: products/designcenter/CatalogTemplateRevision.yaml
+api_service_name: designcenter.googleapis.com
+api_version: v1
+api_resource_type_kind: CatalogTemplateRevision
+fields:
+    - field: catalog
+      provider_only: true
+    - field: catalog_template
+      provider_only: true
+    - api_field: createTime
+    - api_field: description
+    - api_field: displayName
+    - field: location
+      provider_only: true
+    - api_field: name
+    - field: revision_id
+      provider_only: true
+    - field: space
+      provider_only: true
+    - api_field: updateTime
+    - api_field: selfLink
+    - field: deletion_policy
+      provider_only: true
