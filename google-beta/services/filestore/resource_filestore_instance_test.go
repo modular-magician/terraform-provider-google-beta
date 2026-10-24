@@ -266,7 +266,7 @@ resource "google_filestore_instance" "instance" {
   description = "An instance created during testing."
 
   file_shares {
-    capacity_gb = 1024
+    capacity_gb = 100
     name        = "share"
   }
 
@@ -292,7 +292,7 @@ resource "google_filestore_instance" "instance" {
   description = "An instance created during testing."
 
   file_shares {
-    capacity_gb = 1024
+    capacity_gb = 100
     name        = "share"
   }
 
@@ -932,7 +932,7 @@ resource "google_filestore_instance" "instance" {
   description = "An instance created during testing."
 
   file_shares {
-    capacity_gb = 1024
+    capacity_gb = 100
     name        = "share"
 
 	nfs_export_options {
