@@ -34,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanagerv3"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/tags"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -296,6 +297,237 @@ resource "google_resource_manager_capability_config" "capability_config" {
   types                = ["AGENT_MANAGEMENT"]
   management_project   = "projects/${google_project.project.number}"
   depends_on = [time_sleep.wait_60_seconds]
+}
+`, context)
+}
+
+func TestAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBoundariesExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"billing_account":       envvar.GetTestBillingAccountFromEnv(t),
+		"org_id":                envvar.GetTestOrgFromEnv(t),
+		"service_account":       envvar.GetTestServiceAccountFromEnv(t),
+		"boundaries_expr":       "[google_resource_manager_boundary.boundary_1.name]",
+		"boundary_id_1":         "tf-test-capbnd-1" + randomSuffix,
+		"boundary_id_2":         "tf-test-capbnd-2" + randomSuffix,
+		"capability_config_id":  "tf-test-capcfg-bnd" + randomSuffix,
+		"folder_name":           "tf-test-capbnd-fldr" + randomSuffix,
+		"management_project_id": "tf-test-capbnd-mgmt" + randomSuffix,
+		"tag_key":               tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil),
+		"tag_value_1":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-1", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"tag_value_2":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-2", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"random_suffix":         randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"billing_account":       envvar.GetTestBillingAccountFromEnv(t),
+		"org_id":                envvar.GetTestOrgFromEnv(t),
+		"service_account":       envvar.GetTestServiceAccountFromEnv(t),
+		"boundaries_expr":       "[google_resource_manager_boundary.boundary_2.name, google_resource_manager_boundary.boundary_1.name]",
+		"boundary_id_1":         "tf-test-capbnd-1" + randomSuffix,
+		"boundary_id_2":         "tf-test-capbnd-2" + randomSuffix,
+		"capability_config_id":  "tf-test-capcfg-bnd" + randomSuffix,
+		"folder_name":           "tf-test-capbnd-fldr" + randomSuffix,
+		"management_project_id": "tf-test-capbnd-mgmt" + randomSuffix,
+		"tag_key":               tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil),
+		"tag_value_1":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-1", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"tag_value_2":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-2", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"random_suffix":         randomSuffix,
+	}
+
+	context_2 := map[string]interface{}{
+		"billing_account":       envvar.GetTestBillingAccountFromEnv(t),
+		"org_id":                envvar.GetTestOrgFromEnv(t),
+		"service_account":       envvar.GetTestServiceAccountFromEnv(t),
+		"boundaries_expr":       "[]",
+		"boundary_id_1":         "tf-test-capbnd-1" + randomSuffix,
+		"boundary_id_2":         "tf-test-capbnd-2" + randomSuffix,
+		"capability_config_id":  "tf-test-capcfg-bnd" + randomSuffix,
+		"folder_name":           "tf-test-capbnd-fldr" + randomSuffix,
+		"management_project_id": "tf-test-capbnd-mgmt" + randomSuffix,
+		"tag_key":               tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil),
+		"tag_value_1":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-1", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"tag_value_2":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-2", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"random_suffix":         randomSuffix,
+	}
+
+	context_3 := map[string]interface{}{
+		"billing_account":       envvar.GetTestBillingAccountFromEnv(t),
+		"org_id":                envvar.GetTestOrgFromEnv(t),
+		"service_account":       envvar.GetTestServiceAccountFromEnv(t),
+		"boundaries_expr":       "[google_resource_manager_boundary.boundary_1.name]",
+		"boundary_id_1":         "tf-test-capbnd-1" + randomSuffix,
+		"boundary_id_2":         "tf-test-capbnd-2" + randomSuffix,
+		"capability_config_id":  "tf-test-capcfg-bnd" + randomSuffix,
+		"folder_name":           "tf-test-capbnd-fldr" + randomSuffix,
+		"management_project_id": "tf-test-capbnd-mgmt" + randomSuffix,
+		"tag_key":               tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil),
+		"tag_value_1":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-1", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"tag_value_2":           tags.BootstrapSharedTestOrganizationTagValue(t, "capcfg-boundary-val-2", tags.BootstrapSharedTestOrganizationTagKey(t, "capcfg-boundary-key", nil)),
+		"random_suffix":         randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccCheckResourceManagerV3CapabilityConfigDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBoundariesExample(context),
+			},
+			{
+				ResourceName:            "google_resource_manager_capability_config.capability_config",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
+			},
+			{
+				ResourceName:       "google_resource_manager_capability_config.capability_config",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBoundariesExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_resource_manager_capability_config.capability_config", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_resource_manager_capability_config.capability_config",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
+			},
+			{
+				ResourceName:       "google_resource_manager_capability_config.capability_config",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBoundariesExample(context_2),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_resource_manager_capability_config.capability_config", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_resource_manager_capability_config.capability_config",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
+			},
+			{
+				ResourceName:       "google_resource_manager_capability_config.capability_config",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBoundariesExample(context_3),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_resource_manager_capability_config.capability_config", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_resource_manager_capability_config.capability_config",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"capability_config_id", "etag", "parent", "update_time"},
+			},
+			{
+				ResourceName:       "google_resource_manager_capability_config.capability_config",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccResourceManagerV3CapabilityConfig_resourceManagerCapabilityConfigBoundariesExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_folder" "folder" {
+  display_name        = "%{folder_name}"
+  parent              = "organizations/%{org_id}"
+  deletion_protection = false
+}
+
+resource "google_folder_iam_member" "folder_editor" {
+  folder = google_folder.folder.folder_id
+  role   = "roles/resourcemanager.editor"
+  member = "serviceAccount:%{service_account}"
+}
+
+resource "google_project" "management_project" {
+  project_id      = "%{management_project_id}"
+  name            = "%{management_project_id}"
+  folder_id       = google_folder.folder.folder_id
+  billing_account = "%{billing_account}"
+  deletion_policy = "DELETE"
+}
+
+resource "time_sleep" "wait_60_seconds" {
+  create_duration = "60s"
+  depends_on      = [google_folder_iam_member.folder_editor, google_project.management_project]
+}
+
+resource "google_resource_manager_boundary_config" "boundary_config" {
+  parent     = google_folder.folder.name
+  tag_key    = "%{org_id}/%{tag_key}"
+  depends_on = [time_sleep.wait_60_seconds]
+}
+
+resource "google_resource_manager_boundary" "boundary_1" {
+  parent       = google_folder.folder.name
+  boundary_id  = "%{boundary_id_1}"
+  display_name = "Capability boundary 1"
+
+  resource_filter {
+    tag_filter {
+      tag_key   = google_resource_manager_boundary_config.boundary_config.tag_key
+      tag_value = "%{tag_value_1}"
+    }
+  }
+}
+
+resource "google_resource_manager_boundary" "boundary_2" {
+  parent       = google_folder.folder.name
+  boundary_id  = "%{boundary_id_2}"
+  display_name = "Capability boundary 2"
+
+  resource_filter {
+    tag_filter {
+      tag_key   = google_resource_manager_boundary_config.boundary_config.tag_key
+      tag_value = "%{tag_value_2}"
+    }
+  }
+}
+
+resource "google_resource_manager_capability_config" "capability_config" {
+  parent               = google_folder.folder.name
+  capability_config_id = "%{capability_config_id}"
+  display_name         = "Folder capability config"
+  types                = ["AGENT_MANAGEMENT"]
+  management_project   = "projects/${google_project.management_project.number}"
+  boundaries           = %{boundaries_expr}
+  depends_on = [
+    time_sleep.wait_60_seconds,
+    google_resource_manager_boundary.boundary_1,
+    google_resource_manager_boundary.boundary_2,
+  ]
 }
 `, context)
 }

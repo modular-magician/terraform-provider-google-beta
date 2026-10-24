@@ -109,6 +109,82 @@ resource "google_resource_manager_capability_config" "capability_config" {
 }
 ```
 
+## Example Usage - Resource Manager Capability Config Boundaries
+
+
+```hcl
+resource "google_folder" "folder" {
+  display_name        = "capbnd-fldr"
+  parent              = "organizations/123456789"
+  deletion_protection = false
+}
+
+resource "google_folder_iam_member" "folder_editor" {
+  folder = google_folder.folder.folder_id
+  role   = "roles/resourcemanager.editor"
+  member = "serviceAccount:my@service-account.com"
+}
+
+resource "google_project" "management_project" {
+  project_id      = "capbnd-mgmt"
+  name            = "capbnd-mgmt"
+  folder_id       = google_folder.folder.folder_id
+  billing_account = "000000-0000000-0000000-000000"
+  deletion_policy = "DELETE"
+}
+
+resource "time_sleep" "wait_60_seconds" {
+  create_duration = "60s"
+  depends_on      = [google_folder_iam_member.folder_editor, google_project.management_project]
+}
+
+resource "google_resource_manager_boundary_config" "boundary_config" {
+  parent     = google_folder.folder.name
+  tag_key    = "123456789/capcfg-boundary-key"
+  depends_on = [time_sleep.wait_60_seconds]
+}
+
+resource "google_resource_manager_boundary" "boundary_1" {
+  parent       = google_folder.folder.name
+  boundary_id  = "capbnd-1"
+  display_name = "Capability boundary 1"
+
+  resource_filter {
+    tag_filter {
+      tag_key   = google_resource_manager_boundary_config.boundary_config.tag_key
+      tag_value = "capcfg-boundary-val-1"
+    }
+  }
+}
+
+resource "google_resource_manager_boundary" "boundary_2" {
+  parent       = google_folder.folder.name
+  boundary_id  = "capbnd-2"
+  display_name = "Capability boundary 2"
+
+  resource_filter {
+    tag_filter {
+      tag_key   = google_resource_manager_boundary_config.boundary_config.tag_key
+      tag_value = "capcfg-boundary-val-2"
+    }
+  }
+}
+
+resource "google_resource_manager_capability_config" "capability_config" {
+  parent               = google_folder.folder.name
+  capability_config_id = "capcfg-bnd"
+  display_name         = "Folder capability config"
+  types                = ["AGENT_MANAGEMENT"]
+  management_project   = "projects/${google_project.management_project.number}"
+  boundaries           = [google_resource_manager_boundary.boundary_1.name]
+  depends_on = [
+    time_sleep.wait_60_seconds,
+    google_resource_manager_boundary.boundary_1,
+    google_resource_manager_boundary.boundary_2,
+  ]
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -139,6 +215,13 @@ The following arguments are supported:
   The management project for the capability config. If unspecified, a project will be created automatically.
   Must be specified for project-scoped capability config.
   Format: `projects/{project_number}`.
+
+* `boundaries` -
+  (Optional)
+  The boundaries associated with this capability config. Supported for
+  organization-scoped and folder-scoped capability configs.
+  Each entry has format `organizations/{organization_id}/boundaries/{boundary_id}`
+  or `folders/{folder_id}/boundaries/{boundary_id}`.
 
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
