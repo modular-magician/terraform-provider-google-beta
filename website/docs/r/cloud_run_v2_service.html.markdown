@@ -76,7 +76,7 @@ resource "google_cloud_run_v2_service" "default" {
   template {
     scaling {
       min_instance_count      = 1
-      max_instance_count      = 5
+      max_instance_count      = 2
       cpu_utilization         = 0.75
       concurrency_utilization = 0.5
     }
@@ -133,7 +133,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
   
   scaling {
-    max_instance_count = 2
+    max_instance_count = 1
   }
 
   template { 
