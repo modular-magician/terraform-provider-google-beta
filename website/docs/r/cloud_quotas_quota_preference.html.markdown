@@ -92,10 +92,17 @@ The following arguments are supported:
   The Google account for the email address must have quota update permission for the project, folder or organization this quota preference is for.
 
 * `ignore_safety_checks` -
-  (Optional)
-  The list of quota safety checks to be ignored.
+  (Optional, Deprecated)
+  The quota safety check to be ignored. Cannot be used with `ignore_safety_checks_set`.
   Default value is `QUOTA_SAFETY_CHECK_UNSPECIFIED`.
   Possible values are: `QUOTA_SAFETY_CHECK_UNSPECIFIED`, `QUOTA_DECREASE_BELOW_USAGE`, `QUOTA_DECREASE_PERCENTAGE_TOO_HIGH`.
+
+  ~> **Warning:** `ignore_safety_checks` is deprecated and will be removed in a future major release. Use `ignore_safety_checks_set` instead, which supports ignoring multiple safety checks at once.
+
+* `ignore_safety_checks_set` -
+  (Optional)
+  The set of quota safety checks to be ignored. Cannot be used with `ignore_safety_checks`.
+  Each value may be one of: `QUOTA_DECREASE_BELOW_USAGE`, `QUOTA_DECREASE_PERCENTAGE_TOO_HIGH`.
 
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
