@@ -602,27 +602,58 @@ func resourceDataformRepositoryReleaseConfigUpdate(d *schema.ResourceData, meta 
 
 	log.Printf("[DEBUG] Updating RepositoryReleaseConfig %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
+	updateMask := []string{}
+
+	if d.HasChange("git_commitish") {
+		updateMask = append(updateMask, "gitCommitish")
+	}
+
+	if d.HasChange("cron_schedule") {
+		updateMask = append(updateMask, "cronSchedule")
+	}
+
+	if d.HasChange("time_zone") {
+		updateMask = append(updateMask, "timeZone")
+	}
+
+	if d.HasChange("code_compilation_config") {
+		updateMask = append(updateMask, "codeCompilationConfig")
+	}
+
+	if d.HasChange("disabled") {
+		updateMask = append(updateMask, "disabled")
+	}
+	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
+	// won't set it
+	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+	if err != nil {
+		return err
+	}
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-		Headers:   headers,
-	})
+	// if updateMask is empty we are not updating anything so skip the post
+	if len(updateMask) > 0 {
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
 
-	if err != nil {
-		return fmt.Errorf("Error updating RepositoryReleaseConfig %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished updating RepositoryReleaseConfig %q: %#v", d.Id(), res)
+		if err != nil {
+			return fmt.Errorf("Error updating RepositoryReleaseConfig %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating RepositoryReleaseConfig %q: %#v", d.Id(), res)
+		}
+
 	}
 
 	return resourceDataformRepositoryReleaseConfigRead(d, meta)
