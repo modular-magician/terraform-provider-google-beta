@@ -338,7 +338,10 @@ If rotationPeriod is set, 'next_rotation_time' must be set. 'next_rotation_time'
 				Optional: true,
 				ForceNew: true,
 				Description: `This defines the type of the secret. Enforces certain structural requirements on the SecretVersions.
-For secret of type UNSPECIFIED, the SecretVersions can be of any type.`,
+For secret of type UNSPECIFIED, the SecretVersions can be of any type.
+Possible values include 'OTHER_DB_CREDENTIALS', 'ACCESS_KEY', 'CERTIFICATE' and 'OTHER'.
+'CLOUD_SQL_DB_CREDENTIALS' with managed rotation is only available for regional secrets, see
+'google_secret_manager_regional_secret_managed_rotation'.`,
 			},
 			"tags": {
 				Type:     schema.TypeMap,

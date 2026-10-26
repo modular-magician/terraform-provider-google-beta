@@ -283,6 +283,53 @@ resource "google_secret_manager_secret" "secret-with-automatic-cmek" {
 `, context)
 }
 
+func TestAccSecretManagerSecret_secretWithSecretTypeExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"secret_id":     "tf-test-secret" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckSecretManagerSecretDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecretManagerSecret_secretWithSecretTypeExample(context),
+			},
+			{
+				ResourceName:            "google_secret_manager_secret.secret-with-secret-type",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "labels", "secret_id", "tags", "terraform_labels", "ttl"},
+			},
+			{
+				ResourceName:       "google_secret_manager_secret.secret-with-secret-type",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccSecretManagerSecret_secretWithSecretTypeExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_secret_manager_secret" "secret-with-secret-type" {
+  secret_id   = "%{secret_id}"
+  secret_type = "OTHER_DB_CREDENTIALS"
+
+  replication {
+    auto {}
+  }
+}
+`, context)
+}
+
 func testAccCheckSecretManagerSecretDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

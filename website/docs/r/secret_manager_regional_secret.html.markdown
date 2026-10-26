@@ -311,6 +311,11 @@ The following arguments are supported:
   (Optional)
   This defines the type of the secret. Enforces certain structural requirements on the SecretVersions.
   For secret of type UNSPECIFIED, the SecretVersions can be of any type.
+  Possible values include `CLOUD_SQL_DB_CREDENTIALS`, `OTHER_DB_CREDENTIALS`, `ACCESS_KEY`,
+  `CERTIFICATE` and `OTHER`. Secret versions can't be added manually to a `CLOUD_SQL_DB_CREDENTIALS`
+  secret; use `google_secret_manager_regional_secret_managed_rotation` to have Secret Manager
+  create them. See the [API documentation](https://cloud.google.com/secret-manager/regional-secrets/set-up-automatic-rotation-for-cloudsql-secrets-rs)
+  for details.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -369,6 +374,12 @@ In addition to the arguments listed above, the following computed attributes are
 * `create_time` -
   The time at which the regional secret was created.
 
+* `policy_member` -
+  The IAM principal that represents this regional secret. Grant roles to this principal when a
+  feature acts on other resources on behalf of the secret, for example the Cloud SQL permissions
+  required by `google_secret_manager_regional_secret_managed_rotation`.
+  Structure is [documented below](#nested_policy_member).
+
 * `terraform_labels` -
   The combination of labels configured directly on the resource
    and default labels configured on the provider.
@@ -379,6 +390,14 @@ In addition to the arguments listed above, the following computed attributes are
 * `effective_annotations` -
   All of annotations (key/value pairs) present on the resource in GCP, including the annotations configured through Terraform, other clients and services.
 
+
+<a name="nested_policy_member"></a>The `policy_member` block contains:
+
+* `iam_policy_uid_principal` -
+  (Output)
+  The principal identifier of the secret, in the format
+  `principal://secretmanager.googleapis.com/projects/{{project_number}}/uid/locations/{{location}}/secrets/{{secret_uid}}`.
+  It is tied to this secret instance and changes if the secret is deleted and recreated.
 
 ## Timeouts
 
