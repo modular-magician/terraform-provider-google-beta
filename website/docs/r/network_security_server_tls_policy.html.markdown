@@ -130,8 +130,9 @@ resource "google_network_security_server_tls_policy" "default" {
   allow_open  = "false"
 
   mtls_policy {
-    client_validation_mode         = "REJECT_INVALID"
+    client_validation_mode         = "ALLOW_VALIDATION_RELAXATIONS"
     client_validation_trust_config = "projects/${data.google_project.project.number}/locations/global/trustConfigs/${google_certificate_manager_trust_config.default.name}"
+    client_validation_relaxations  = ["ALLOW_MISSING_EKU"]
   }
 
   labels = {
@@ -244,7 +245,12 @@ The following arguments are supported:
   (Optional)
   When the client presents an invalid certificate or no certificate to the load balancer, the clientValidationMode specifies how the client connection is handled.
   Required if the policy is to be used with the external HTTPS load balancing. For Traffic Director it must be empty.
-  Possible values are: `CLIENT_VALIDATION_MODE_UNSPECIFIED`, `ALLOW_INVALID_OR_MISSING_CLIENT_CERT`, `REJECT_INVALID`.
+  Possible values are: `CLIENT_VALIDATION_MODE_UNSPECIFIED`, `ALLOW_INVALID_OR_MISSING_CLIENT_CERT`, `REJECT_INVALID`, `ALLOW_VALIDATION_RELAXATIONS`.
+
+* `client_validation_relaxations` -
+  (Optional)
+  A list of validation relaxations to apply when clientValidationMode is set to ALLOW_VALIDATION_RELAXATIONS.
+  Each value may be one of: `ALLOW_MISSING_EKU`, `ALLOW_SHA1_HASHING`, `ALLOW_EXPIRED_LEAF_CERTIFICATE`.
 
 * `client_validation_trust_config` -
   (Optional)

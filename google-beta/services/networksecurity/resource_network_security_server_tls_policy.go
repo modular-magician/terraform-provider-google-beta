@@ -231,9 +231,18 @@ Defines a mechanism to provision server identity (public and private keys). Cann
 							Type:         schema.TypeString,
 							Optional:     true,
 							ForceNew:     true,
-							ValidateFunc: verify.ValidateEnum([]string{"CLIENT_VALIDATION_MODE_UNSPECIFIED", "ALLOW_INVALID_OR_MISSING_CLIENT_CERT", "REJECT_INVALID", ""}),
+							ValidateFunc: verify.ValidateEnum([]string{"CLIENT_VALIDATION_MODE_UNSPECIFIED", "ALLOW_INVALID_OR_MISSING_CLIENT_CERT", "REJECT_INVALID", "ALLOW_VALIDATION_RELAXATIONS", ""}),
 							Description: `When the client presents an invalid certificate or no certificate to the load balancer, the clientValidationMode specifies how the client connection is handled.
-Required if the policy is to be used with the external HTTPS load balancing. For Traffic Director it must be empty. Possible values: ["CLIENT_VALIDATION_MODE_UNSPECIFIED", "ALLOW_INVALID_OR_MISSING_CLIENT_CERT", "REJECT_INVALID"]`,
+Required if the policy is to be used with the external HTTPS load balancing. For Traffic Director it must be empty. Possible values: ["CLIENT_VALIDATION_MODE_UNSPECIFIED", "ALLOW_INVALID_OR_MISSING_CLIENT_CERT", "REJECT_INVALID", "ALLOW_VALIDATION_RELAXATIONS"]`,
+						},
+						"client_validation_relaxations": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `A list of validation relaxations to apply when clientValidationMode is set to ALLOW_VALIDATION_RELAXATIONS. Possible values: ["ALLOW_MISSING_EKU", "ALLOW_SHA1_HASHING", "ALLOW_EXPIRED_LEAF_CERTIFICATE"]`,
+							Elem: &schema.Schema{
+								Type:         schema.TypeString,
+								ValidateFunc: verify.ValidateEnum([]string{"ALLOW_MISSING_EKU", "ALLOW_SHA1_HASHING", "ALLOW_EXPIRED_LEAF_CERTIFICATE"}),
+							},
 						},
 						"client_validation_trust_config": {
 							Type:     schema.TypeString,
@@ -864,6 +873,8 @@ func flattenNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d *schema.Re
 	transformed := make(map[string]interface{})
 	transformed["client_validation_mode"] =
 		flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(original["clientValidationMode"], d, config)
+	transformed["client_validation_relaxations"] =
+		flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationRelaxations(original["clientValidationRelaxations"], d, config)
 	transformed["client_validation_trust_config"] =
 		flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationTrustConfig(original["clientValidationTrustConfig"], d, config)
 	transformed["client_validation_ca"] =
@@ -871,6 +882,10 @@ func flattenNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d *schema.Re
 	return []interface{}{transformed}
 }
 func flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationRelaxations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1059,6 +1074,13 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d tpgresource
 		transformed["clientValidationMode"] = transformedClientValidationMode
 	}
 
+	transformedClientValidationRelaxations, err := expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationRelaxations(original["client_validation_relaxations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientValidationRelaxations); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientValidationRelaxations"] = transformedClientValidationRelaxations
+	}
+
 	transformedClientValidationTrustConfig, err := expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationTrustConfig(original["client_validation_trust_config"], d, config)
 	if err != nil {
 		return nil, err
@@ -1077,6 +1099,10 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d tpgresource
 }
 
 func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationRelaxations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

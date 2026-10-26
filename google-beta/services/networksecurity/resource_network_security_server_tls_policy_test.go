@@ -92,3 +92,107 @@ func testAccNetworkSecurityServerTlsPolicy_update(serverTlsPolicyName string) st
   }
 `, serverTlsPolicyName)
 }
+
+var _ = fmt.Sprintf
+
+func TestAccNetworkSecurityServerTlsPolicy_mtlsValidationRelaxationsUpdate(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkSecurityServerTlsPolicyDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkSecurityServerTlsPolicy_mtlsValidationRelaxationsBasic(context),
+			},
+			{
+				ResourceName:      "google_network_security_server_tls_policy.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccNetworkSecurityServerTlsPolicy_mtlsValidationRelaxationsUpdate(context),
+			},
+			{
+				ResourceName:      "google_network_security_server_tls_policy.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccNetworkSecurityServerTlsPolicy_mtlsValidationRelaxationsBasic(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {
+}
+
+resource "google_network_security_server_tls_policy" "default" {
+  name        = "tf-test-server-tls-policy%{random_suffix}"
+  description = "my description"
+  location    = "global"
+  allow_open  = false
+
+  mtls_policy {
+    client_validation_mode         = "ALLOW_VALIDATION_RELAXATIONS"
+    client_validation_trust_config = "projects/${data.google_project.project.number}/locations/global/trustConfigs/${google_certificate_manager_trust_config.default.name}"
+    client_validation_relaxations  = ["ALLOW_MISSING_EKU"]
+  }
+}
+
+resource "google_certificate_manager_trust_config" "default" {
+  name        = "tf-test-trust-config%{random_suffix}"
+  description = "sample trust config description"
+  location    = "global"
+
+  trust_stores {
+    trust_anchors {
+      pem_certificate = file("test-fixtures/ca_cert.pem")
+    }
+    intermediate_cas {
+      pem_certificate = file("test-fixtures/ca_cert.pem")
+    }
+  }
+}
+`, context)
+}
+
+func testAccNetworkSecurityServerTlsPolicy_mtlsValidationRelaxationsUpdate(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {
+}
+
+resource "google_network_security_server_tls_policy" "default" {
+  name        = "tf-test-server-tls-policy%{random_suffix}"
+  description = "updated description"
+  location    = "global"
+  allow_open  = false
+
+  mtls_policy {
+    client_validation_mode         = "ALLOW_VALIDATION_RELAXATIONS"
+    client_validation_trust_config = "projects/${data.google_project.project.number}/locations/global/trustConfigs/${google_certificate_manager_trust_config.default.name}"
+    client_validation_relaxations  = ["ALLOW_SHA1_HASHING", "ALLOW_EXPIRED_LEAF_CERTIFICATE"]
+  }
+}
+
+resource "google_certificate_manager_trust_config" "default" {
+  name        = "tf-test-trust-config%{random_suffix}"
+  description = "sample trust config description"
+  location    = "global"
+
+  trust_stores {
+    trust_anchors {
+      pem_certificate = file("test-fixtures/ca_cert.pem")
+    }
+    intermediate_cas {
+      pem_certificate = file("test-fixtures/ca_cert.pem")
+    }
+  }
+}
+`, context)
+}
