@@ -467,6 +467,43 @@ account and all subaccounts, if they exist.`,
 				Description: `The ownership scope of the budget. The ownership scope and users'
 IAM permissions determine who has full access to the budget's data. Possible values: ["OWNERSHIP_SCOPE_UNSPECIFIED", "ALL_USERS", "BILLING_ACCOUNT"]`,
 			},
+			"spend_cap": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `The spend cap configured for this budget. When set, usage of the
+budget's service is paused once spend exceeds the budget amount, until
+the next period or until the cap is lifted. Spend cap budgets must
+filter on exactly one project and one eligible service, use
+'EXCLUDE_ALL_CREDITS', a 'MONTH' calendar period, a 'specified_amount',
+threshold rules of 0.5, 0.8 and 1.0 on 'CURRENT_SPEND', and
+'enable_project_level_recipients = true'. See
+https://cloud.google.com/billing/docs/how-to/budgets-spend-caps.
+
+While 'output_state' is 'ENFORCED', only 'input_state' can be changed.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"input_state": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"CONFIGURED", "AWAITING_NEXT_PERIOD"}),
+							Description: `The desired state of the spend cap. Must be 'CONFIGURED' on create.
+Set to 'AWAITING_NEXT_PERIOD' to lift an enforced cap until the next
+period starts. Possible values: ["CONFIGURED", "AWAITING_NEXT_PERIOD"]`,
+						},
+						"output_state": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The actual resting state of the spend cap.`,
+						},
+						"reconciling": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Whether the server is processing a state transition.`,
+						},
+					},
+				},
+			},
 			"threshold_rules": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -560,6 +597,12 @@ func resourceBillingBudgetsBudgetCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("ownership_scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(ownershipScopeProp)) && (ok || !reflect.DeepEqual(v, ownershipScopeProp)) {
 		obj["ownershipScope"] = ownershipScopeProp
+	}
+	spendCapProp, err := expandBillingBudgetsBudgetSpendCap(d.Get("spend_cap"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("spend_cap"); !tpgresource.IsEmptyValue(reflect.ValueOf(spendCapProp)) && (ok || !reflect.DeepEqual(v, spendCapProp)) {
+		obj["spendCap"] = spendCapProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"billingAccounts/{{billing_account}}/budgets")
@@ -772,6 +815,12 @@ func resourceBillingBudgetsBudgetUpdate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOkExists("ownership_scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, ownershipScopeProp)) {
 		obj["ownershipScope"] = ownershipScopeProp
 	}
+	spendCapProp, err := expandBillingBudgetsBudgetSpendCap(d.Get("spend_cap"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("spend_cap"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, spendCapProp)) {
+		obj["spendCap"] = spendCapProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"billingAccounts/{{billing_account}}/budgets/{{name}}")
 	if err != nil {
@@ -818,6 +867,10 @@ func resourceBillingBudgetsBudgetUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("ownership_scope") {
 		updateMask = append(updateMask, "ownershipScope")
+	}
+
+	if d.HasChange("spend_cap") {
+		updateMask = append(updateMask, "spendCap.inputState")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1312,6 +1365,35 @@ func flattenBillingBudgetsBudgetOwnershipScope(v interface{}, d *schema.Resource
 	return v
 }
 
+func flattenBillingBudgetsBudgetSpendCap(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["input_state"] =
+		flattenBillingBudgetsBudgetSpendCapInputState(original["inputState"], d, config)
+	transformed["output_state"] =
+		flattenBillingBudgetsBudgetSpendCapOutputState(original["outputState"], d, config)
+	transformed["reconciling"] =
+		flattenBillingBudgetsBudgetSpendCapReconciling(original["reconciling"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBillingBudgetsBudgetSpendCapInputState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBillingBudgetsBudgetSpendCapOutputState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBillingBudgetsBudgetSpendCapReconciling(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandBillingBudgetsBudgetDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1759,6 +1841,54 @@ func expandBillingBudgetsBudgetOwnershipScope(v interface{}, d tpgresource.Terra
 	return v, nil
 }
 
+func expandBillingBudgetsBudgetSpendCap(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedInputState, err := expandBillingBudgetsBudgetSpendCapInputState(original["input_state"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInputState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inputState"] = transformedInputState
+	}
+
+	transformedOutputState, err := expandBillingBudgetsBudgetSpendCapOutputState(original["output_state"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOutputState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["outputState"] = transformedOutputState
+	}
+
+	transformedReconciling, err := expandBillingBudgetsBudgetSpendCapReconciling(original["reconciling"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReconciling); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["reconciling"] = transformedReconciling
+	}
+
+	return transformed, nil
+}
+
+func expandBillingBudgetsBudgetSpendCapInputState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBillingBudgetsBudgetSpendCapOutputState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBillingBudgetsBudgetSpendCapReconciling(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourceBillingBudgetsBudgetResourceV0() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -2040,6 +2170,9 @@ func ResourceBillingBudgetsBudgetFlatten(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error reading Budget: %s", err)
 	}
 	if err = d.Set("ownership_scope", flattenBillingBudgetsBudgetOwnershipScope(res["ownershipScope"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Budget: %s", err)
+	}
+	if err = d.Set("spend_cap", flattenBillingBudgetsBudgetSpendCap(res["spendCap"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Budget: %s", err)
 	}
 
