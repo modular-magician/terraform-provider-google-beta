@@ -191,6 +191,42 @@ resource "google_compute_organization_security_policy_rule" "policy" {
 }
 ```
 
+## Example Usage - Organization Security Policy Rule With Rate Limit
+
+
+```hcl
+resource "google_compute_organization_security_policy" "policy" {
+  short_name = "tf-test%{random_suffix}"
+  parent     = "organizations/123456789"
+  type       = "CLOUD_ARMOR"
+}
+
+resource "google_compute_organization_security_policy_rule" "policy" {
+  policy_id = google_compute_organization_security_policy.policy.id
+  action    = "throttle"
+
+  match {
+    config {
+      src_ip_ranges = ["10.0.1.0/24"]
+    }
+    versioned_expr = "SRC_IPS_V1"
+  }
+
+  rate_limit_options {
+    conform_action = "allow"
+    exceed_action  = "deny(429)"
+    enforce_on_key = "IP"
+
+    rate_limit_threshold {
+      count        = 100
+      interval_sec = 60
+    }
+  }
+
+  priority = 100
+}
+```
+
 ## Example Usage - Organization Security Policy Rule Firewall
 
 
@@ -249,6 +285,8 @@ The following arguments are supported:
   "deny": deny access to target.
   "goto_next": forward the request to the next hierarchical policy for evaluation.
   "redirect": redirect to a different target. Parameters for this action can be configured via redirectOptions. Only EXTERNAL_302 redirect type is supported for organization security policies.
+  "throttle": limit client traffic to the configured threshold. Configure parameters for this action in rateLimitOptions. Requires rateLimitOptions to be set.
+  "rate_based_ban": limit client traffic to the configured threshold and ban the client if the traffic exceeds the threshold. Configure parameters for this action in rateLimitOptions. Requires rateLimitOptions to be set.
 
 * `policy_id` -
   (Required)
@@ -258,6 +296,12 @@ The following arguments are supported:
 * `description` -
   (Optional)
   A description of the rule.
+
+* `rate_limit_options` -
+  (Optional)
+  Must be specified if the action is "rate_based_ban" or "throttle". Cannot be specified for any other actions.
+  This field is only supported for organization security policies of type CLOUD_ARMOR.
+  Structure is [documented below](#nested_rate_limit_options).
 
 * `preconfigured_waf_config` -
   (Optional)
@@ -379,6 +423,125 @@ The following arguments are supported:
   applies to connections through any port.
   Example inputs include: ["22"], ["80","443"], and
   ["12345-12349"].
+
+<a name="nested_rate_limit_options"></a>The `rate_limit_options` block supports:
+
+* `rate_limit_threshold` -
+  (Optional)
+  Threshold at which to begin ratelimiting.
+  Structure is [documented below](#nested_rate_limit_options_rate_limit_threshold).
+
+* `conform_action` -
+  (Optional)
+  Action to take for requests that are under the configured rate limit threshold.
+  Valid option is "allow" only.
+
+* `exceed_action` -
+  (Optional)
+  Action to take for requests that are above the configured rate limit threshold, to either deny with a specified HTTP response code, or redirect to a different endpoint.
+  Valid options are deny(STATUS), where valid values for STATUS are 403, 404, 429, and 502, and redirect, where the redirect parameters come from exceedRedirectOptions.
+
+* `exceed_redirect_options` -
+  (Optional)
+  Parameters defining the redirect action that is used as the exceed action. Cannot be specified if the exceed action is not redirect.
+  Structure is [documented below](#nested_rate_limit_options_exceed_redirect_options).
+
+* `enforce_on_key` -
+  (Optional)
+  Determines the key to enforce the rateLimitThreshold on. Possible values are:
+  * ALL: A single rate limit threshold is applied to all the requests matching this rule. This is the default value if "enforceOnKey" is not configured.
+  * IP: The source IP address of the request is the key. Each IP has this limit enforced separately.
+  * HTTP_HEADER: The value of the HTTP header whose name is configured under "enforceOnKeyName". The key value is truncated to the first 128 bytes of the header value. If no such header is present in the request, the key type defaults to ALL.
+  * XFF_IP: The first IP address (i.e. the originating client IP address) specified in the list of IPs under X-Forwarded-For HTTP header. If no such header is present or the value is not a valid IP, the key defaults to the source IP address of the request i.e. key type IP.
+  * HTTP_COOKIE: The value of the HTTP cookie whose name is configured under "enforceOnKeyName". The key value is truncated to the first 128 bytes of the cookie value. If no such cookie is present in the request, the key type defaults to ALL.
+  * HTTP_PATH: The URL path of the HTTP request. The key value is truncated to the first 128 bytes.
+  * SNI: Server name indication in the TLS session of the HTTPS request. The key value is truncated to the first 128 bytes. The key type defaults to ALL on a HTTP session.
+  * REGION_CODE: The country/region from which the request originates.
+  * TLS_JA3_FINGERPRINT: JA3 TLS/SSL fingerprint if the client connects using HTTPS, HTTP/2 or HTTP/3. If not available, the key type defaults to ALL.
+  * USER_IP: The IP address of the originating client, which is resolved based on "userIpRequestHeaders" configured with the security policy. If there is no "userIpRequestHeaders" configuration or an IP address cannot be resolved from it, the key type defaults to IP.
+  * ASN: The autonomous system number of the originating client. If not available, the key type defaults to ALL.
+  * TLS_JA4_FINGERPRINT: JA4 TLS/SSL fingerprint if the client connects using HTTPS, HTTP/2 or HTTP/3. If not available, the key type defaults to ALL.
+  Possible values are: `ALL`, `IP`, `HTTP_HEADER`, `XFF_IP`, `HTTP_COOKIE`, `HTTP_PATH`, `SNI`, `REGION_CODE`, `TLS_JA3_FINGERPRINT`, `USER_IP`, `ASN`, `TLS_JA4_FINGERPRINT`.
+
+* `enforce_on_key_name` -
+  (Optional)
+  Rate limit key name applicable only for the following key types:
+  HTTP_HEADER -- Name of the HTTP header whose value is taken as the key value.
+  HTTP_COOKIE -- Name of the HTTP cookie whose value is taken as the key value.
+
+* `enforce_on_key_configs` -
+  (Optional)
+  If specified, any combination of values of enforceOnKeyType/enforceOnKeyName is treated as the key on which ratelimit threshold/action is enforced.
+  You can specify up to 3 enforceOnKeyConfigs.
+  If enforceOnKeyConfigs is specified, enforceOnKey must not be specified.
+  Structure is [documented below](#nested_rate_limit_options_enforce_on_key_configs).
+
+* `ban_threshold` -
+  (Optional)
+  Can only be specified if the action for the rule is "rate_based_ban".
+  If specified, the key will be banned for the configured 'banDurationSec' when the number of requests that exceed the 'rateLimitThreshold' also exceed this 'banThreshold'.
+  Structure is [documented below](#nested_rate_limit_options_ban_threshold).
+
+* `ban_duration_sec` -
+  (Optional)
+  Can only be specified if the action for the rule is "rate_based_ban".
+  If specified, determines the time (in seconds) the traffic will continue to be banned by the rate limit after the rate falls below the threshold.
+
+
+<a name="nested_rate_limit_options_rate_limit_threshold"></a>The `rate_limit_threshold` block supports:
+
+* `count` -
+  (Optional)
+  Number of HTTP(S) requests for calculating the threshold.
+
+* `interval_sec` -
+  (Optional)
+  Interval over which the threshold is computed.
+
+<a name="nested_rate_limit_options_exceed_redirect_options"></a>The `exceed_redirect_options` block supports:
+
+* `type` -
+  (Required)
+  Type of the redirect action.
+
+* `target` -
+  (Optional)
+  Target for the redirect action. This is required if the type is EXTERNAL_302.
+
+<a name="nested_rate_limit_options_enforce_on_key_configs"></a>The `enforce_on_key_configs` block supports:
+
+* `enforce_on_key_type` -
+  (Optional)
+  Determines the key to enforce the rateLimitThreshold on. Possible values are:
+  * ALL: A single rate limit threshold is applied to all the requests matching this rule. This is the default value if "enforceOnKeyConfigs" is not configured.
+  * IP: The source IP address of the request is the key. Each IP has this limit enforced separately.
+  * HTTP_HEADER: The value of the HTTP header whose name is configured under "enforceOnKeyName". The key value is truncated to the first 128 bytes of the header value. If no such header is present in the request, the key type defaults to ALL.
+  * XFF_IP: The first IP address (i.e. the originating client IP address) specified in the list of IPs under X-Forwarded-For HTTP header. If no such header is present or the value is not a valid IP, the key defaults to the source IP address of the request i.e. key type IP.
+  * HTTP_COOKIE: The value of the HTTP cookie whose name is configured under "enforceOnKeyName". The key value is truncated to the first 128 bytes of the cookie value. If no such cookie is present in the request, the key type defaults to ALL.
+  * HTTP_PATH: The URL path of the HTTP request. The key value is truncated to the first 128 bytes.
+  * SNI: Server name indication in the TLS session of the HTTPS request. The key value is truncated to the first 128 bytes. The key type defaults to ALL on a HTTP session.
+  * REGION_CODE: The country/region from which the request originates.
+  * TLS_JA3_FINGERPRINT: JA3 TLS/SSL fingerprint if the client connects using HTTPS, HTTP/2 or HTTP/3. If not available, the key type defaults to ALL.
+  * USER_IP: The IP address of the originating client, which is resolved based on "userIpRequestHeaders" configured with the security policy. If there is no "userIpRequestHeaders" configuration or an IP address cannot be resolved from it, the key type defaults to IP.
+  * ASN: The autonomous system number of the originating client. If not available, the key type defaults to ALL.
+  * TLS_JA4_FINGERPRINT: JA4 TLS/SSL fingerprint if the client connects using HTTPS, HTTP/2 or HTTP/3. If not available, the key type defaults to ALL.
+  Possible values are: `ALL`, `IP`, `HTTP_HEADER`, `XFF_IP`, `HTTP_COOKIE`, `HTTP_PATH`, `SNI`, `REGION_CODE`, `TLS_JA3_FINGERPRINT`, `USER_IP`, `ASN`, `TLS_JA4_FINGERPRINT`.
+
+* `enforce_on_key_name` -
+  (Optional)
+  Rate limit key name applicable only for the following key types:
+  HTTP_HEADER -- Name of the HTTP header whose value is taken as the key value.
+  HTTP_COOKIE -- Name of the HTTP cookie whose value is taken as the key value.
+
+<a name="nested_rate_limit_options_ban_threshold"></a>The `ban_threshold` block supports:
+
+* `count` -
+  (Optional)
+  Number of HTTP(S) requests for calculating the threshold.
+
+* `interval_sec` -
+  (Optional)
+  Interval over which the threshold is computed.
 
 <a name="nested_preconfigured_waf_config"></a>The `preconfigured_waf_config` block supports:
 

@@ -59,6 +59,32 @@ fields:
       field: preview
     - api_field: rules.priority
       field: priority
+    - api_field: rules.rateLimitOptions.banDurationSec
+      field: rate_limit_options.ban_duration_sec
+    - api_field: rules.rateLimitOptions.banThreshold.count
+      field: rate_limit_options.ban_threshold.count
+    - api_field: rules.rateLimitOptions.banThreshold.intervalSec
+      field: rate_limit_options.ban_threshold.interval_sec
+    - api_field: rules.rateLimitOptions.conformAction
+      field: rate_limit_options.conform_action
+    - api_field: rules.rateLimitOptions.enforceOnKey
+      field: rate_limit_options.enforce_on_key
+    - api_field: rules.rateLimitOptions.enforceOnKeyConfigs.enforceOnKeyName
+      field: rate_limit_options.enforce_on_key_configs.enforce_on_key_name
+    - api_field: rules.rateLimitOptions.enforceOnKeyConfigs.enforceOnKeyType
+      field: rate_limit_options.enforce_on_key_configs.enforce_on_key_type
+    - api_field: rules.rateLimitOptions.enforceOnKeyName
+      field: rate_limit_options.enforce_on_key_name
+    - api_field: rules.rateLimitOptions.exceedAction
+      field: rate_limit_options.exceed_action
+    - api_field: rules.rateLimitOptions.exceedRedirectOptions.target
+      field: rate_limit_options.exceed_redirect_options.target
+    - api_field: rules.rateLimitOptions.exceedRedirectOptions.type
+      field: rate_limit_options.exceed_redirect_options.type
+    - api_field: rules.rateLimitOptions.rateLimitThreshold.count
+      field: rate_limit_options.rate_limit_threshold.count
+    - api_field: rules.rateLimitOptions.rateLimitThreshold.intervalSec
+      field: rate_limit_options.rate_limit_threshold.interval_sec
     - api_field: rules.redirectOptions.target
       field: redirect_options.target
     - api_field: rules.redirectOptions.type
