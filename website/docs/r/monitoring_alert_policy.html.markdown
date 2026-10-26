@@ -1078,7 +1078,7 @@ The following arguments are supported:
 * `notification_prompts` -
   (Optional)
   Control when notifications will be sent out.
-  Each value may be one of: `NOTIFICATION_PROMPT_UNSPECIFIED`, `OPENED`, `CLOSED`.
+  Each value may be one of: `OPENED`, `CLOSED`.
 
 * `notification_channel_strategy` -
   (Optional)

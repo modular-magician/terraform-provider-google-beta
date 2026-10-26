@@ -1155,10 +1155,10 @@ referenced in the notification_channels field of this AlertPolicy. The format is
 						"notification_prompts": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: `Control when notifications will be sent out. Possible values: ["NOTIFICATION_PROMPT_UNSPECIFIED", "OPENED", "CLOSED"]`,
+							Description: `Control when notifications will be sent out. Possible values: ["OPENED", "CLOSED"]`,
 							Elem: &schema.Schema{
 								Type:         schema.TypeString,
-								ValidateFunc: verify.ValidateEnum([]string{"NOTIFICATION_PROMPT_UNSPECIFIED", "OPENED", "CLOSED"}),
+								ValidateFunc: verify.ValidateEnum([]string{"OPENED", "CLOSED"}),
 							},
 						},
 						"notification_rate_limit": {
