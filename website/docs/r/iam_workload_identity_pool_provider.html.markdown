@@ -179,7 +179,11 @@ EOT
   oidc {
     allowed_audiences = ["https://example.com/gcp-oidc-federation", "example.com/gcp-oidc-federation"]
     issuer_uri        = "https://sts.windows.net/azure-tenant-id"
+    discovery_uri     = "https://sts.windows.net/azure-tenant-id/.well-known/openid-configuration"
   }
+  actor_providers = [
+    "projects/${google_iam_workload_identity_pool.pool.project}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.pool.workload_identity_pool_id}/providers/example-actor-prvdr"
+  ]
 }
 ```
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
@@ -455,6 +459,14 @@ The following arguments are supported:
   An OpenId Connect 1.0 identity provider. Not compatible with the property aws or saml.
   Structure is [documented below](#nested_oidc).
 
+* `actor_providers` -
+  (Optional)
+  A list of the resource names of WorkloadIdentityPoolProviders in the same pool
+  that are authorized to issue actor tokens for this provider.
+  An actor token represents the identity of the acting party to whom authority is
+  delegated.
+  At most 3 actor providers can be specified.
+
 * `saml` -
   (Optional)
   An SAML 2.0 identity provider. Not compatible with the property oidc or aws.
@@ -528,6 +540,27 @@ The following arguments are supported:
     ]
   }
   ```
+
+* `discovery_uri` -
+  (Optional)
+  The URL to fetch the OIDC discovery document from, overriding the default URL
+  derived from `issuer_uri`.
+  If not set, `discovery_uri` defaults to `issuer_uri` with
+  `/.well-known/openid-configuration` appended, as per the OpenID Connect
+  Discovery 1.0 specification.
+  If set, `discovery_uri` must meet the following requirements:
+    * Must start with `https://`.
+    * Must not exceed 2000 characters.
+    * The scheme, host, and port must match `issuer_uri`.
+    * The path must contain `/.well-known/<suffix>` (where `<suffix>` is not
+      empty, such as `openid-configuration`) and conform to the `issuer_uri`
+      topology:
+      * The well-known path segment is inserted before the issuer path (for
+        example, `https://example.com/.well-known/openid-configuration/tenant1`
+        for issuer `https://example.com/tenant1`), or
+      * The well-known path segment is appended under the issuer path (for
+        example, `https://example.com/tenant1/.well-known/openid-configuration`
+        for issuer `https://example.com/tenant1`).
 
 <a name="nested_saml"></a>The `saml` block supports:
 

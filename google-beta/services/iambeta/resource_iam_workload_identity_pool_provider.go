@@ -204,6 +204,20 @@ value should be 4-32 characters, and may contain the characters [a-z0-9-]. The p
 value must be 4-32 characters, and may contain the characters [a-z0-9-]. The prefix
 'gcp-' is reserved for use by Google, and may not be specified.`,
 			},
+			"actor_providers": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `A list of the resource names of WorkloadIdentityPoolProviders in the same pool
+that are authorized to issue actor tokens for this provider.
+
+An actor token represents the identity of the acting party to whom authority is
+delegated.
+
+At most 3 actor providers can be specified.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"attribute_condition": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -354,6 +368,30 @@ https://iam.googleapis.com/projects/<project-number>/locations/<location>/worklo
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+						},
+						"discovery_uri": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The URL to fetch the OIDC discovery document from, overriding the default URL
+derived from 'issuer_uri'.
+
+If not set, 'discovery_uri' defaults to 'issuer_uri' with
+'/.well-known/openid-configuration' appended, as per the OpenID Connect
+Discovery 1.0 specification.
+
+If set, 'discovery_uri' must meet the following requirements:
+  * Must start with 'https://'.
+  * Must not exceed 2000 characters.
+  * The scheme, host, and port must match 'issuer_uri'.
+  * The path must contain '/.well-known/<suffix>' (where '<suffix>' is not
+    empty, such as 'openid-configuration') and conform to the 'issuer_uri'
+    topology:
+    * The well-known path segment is inserted before the issuer path (for
+      example, 'https://example.com/.well-known/openid-configuration/tenant1'
+      for issuer 'https://example.com/tenant1'), or
+    * The well-known path segment is appended under the issuer path (for
+      example, 'https://example.com/tenant1/.well-known/openid-configuration'
+      for issuer 'https://example.com/tenant1').`,
 						},
 						"jwks_json": {
 							Type:             schema.TypeString,
@@ -552,6 +590,12 @@ func resourceIAMBetaWorkloadIdentityPoolProviderCreate(d *schema.ResourceData, m
 		return err
 	} else if v, ok := d.GetOkExists("oidc"); !tpgresource.IsEmptyValue(reflect.ValueOf(oidcProp)) && (ok || !reflect.DeepEqual(v, oidcProp)) {
 		obj["oidc"] = oidcProp
+	}
+	actorProvidersProp, err := expandIAMBetaWorkloadIdentityPoolProviderActorProviders(d.Get("actor_providers"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("actor_providers"); !tpgresource.IsEmptyValue(reflect.ValueOf(actorProvidersProp)) && (ok || !reflect.DeepEqual(v, actorProvidersProp)) {
+		obj["actorProviders"] = actorProvidersProp
 	}
 	samlProp, err := expandIAMBetaWorkloadIdentityPoolProviderSaml(d.Get("saml"), d, config)
 	if err != nil {
@@ -835,6 +879,12 @@ func resourceIAMBetaWorkloadIdentityPoolProviderUpdate(d *schema.ResourceData, m
 	} else if v, ok := d.GetOkExists("oidc"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, oidcProp)) {
 		obj["oidc"] = oidcProp
 	}
+	actorProvidersProp, err := expandIAMBetaWorkloadIdentityPoolProviderActorProviders(d.Get("actor_providers"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("actor_providers"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, actorProvidersProp)) {
+		obj["actorProviders"] = actorProvidersProp
+	}
 	samlProp, err := expandIAMBetaWorkloadIdentityPoolProviderSaml(d.Get("saml"), d, config)
 	if err != nil {
 		return err
@@ -884,7 +934,12 @@ func resourceIAMBetaWorkloadIdentityPoolProviderUpdate(d *schema.ResourceData, m
 	if d.HasChange("oidc") {
 		updateMask = append(updateMask, "oidc.allowed_audiences",
 			"oidc.issuer_uri",
-			"oidc.jwks_json")
+			"oidc.jwks_json",
+			"oidc.discovery_uri")
+	}
+
+	if d.HasChange("actor_providers") {
+		updateMask = append(updateMask, "actorProviders")
 	}
 
 	if d.HasChange("saml") {
@@ -1079,6 +1134,8 @@ func flattenIAMBetaWorkloadIdentityPoolProviderOidc(v interface{}, d *schema.Res
 		flattenIAMBetaWorkloadIdentityPoolProviderOidcIssuerUri(original["issuerUri"], d, config)
 	transformed["jwks_json"] =
 		flattenIAMBetaWorkloadIdentityPoolProviderOidcJwksJson(original["jwksJson"], d, config)
+	transformed["discovery_uri"] =
+		flattenIAMBetaWorkloadIdentityPoolProviderOidcDiscoveryUri(original["discoveryUri"], d, config)
 	return []interface{}{transformed}
 }
 func flattenIAMBetaWorkloadIdentityPoolProviderOidcAllowedAudiences(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1090,6 +1147,14 @@ func flattenIAMBetaWorkloadIdentityPoolProviderOidcIssuerUri(v interface{}, d *s
 }
 
 func flattenIAMBetaWorkloadIdentityPoolProviderOidcJwksJson(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIAMBetaWorkloadIdentityPoolProviderOidcDiscoveryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIAMBetaWorkloadIdentityPoolProviderActorProviders(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1270,6 +1335,13 @@ func expandIAMBetaWorkloadIdentityPoolProviderOidc(v interface{}, d tpgresource.
 		transformed["jwksJson"] = transformedJwksJson
 	}
 
+	transformedDiscoveryUri, err := expandIAMBetaWorkloadIdentityPoolProviderOidcDiscoveryUri(original["discovery_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDiscoveryUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["discoveryUri"] = transformedDiscoveryUri
+	}
+
 	return transformed, nil
 }
 
@@ -1282,6 +1354,14 @@ func expandIAMBetaWorkloadIdentityPoolProviderOidcIssuerUri(v interface{}, d tpg
 }
 
 func expandIAMBetaWorkloadIdentityPoolProviderOidcJwksJson(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIAMBetaWorkloadIdentityPoolProviderOidcDiscoveryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIAMBetaWorkloadIdentityPoolProviderActorProviders(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1456,6 +1536,9 @@ func ResourceIAMBetaWorkloadIdentityPoolProviderFlatten(d *schema.ResourceData, 
 		return fmt.Errorf("Error reading WorkloadIdentityPoolProvider: %s", err)
 	}
 	if err = d.Set("oidc", flattenIAMBetaWorkloadIdentityPoolProviderOidc(res["oidc"], d, config)); err != nil {
+		return fmt.Errorf("Error reading WorkloadIdentityPoolProvider: %s", err)
+	}
+	if err = d.Set("actor_providers", flattenIAMBetaWorkloadIdentityPoolProviderActorProviders(res["actorProviders"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkloadIdentityPoolProvider: %s", err)
 	}
 	if err = d.Set("saml", flattenIAMBetaWorkloadIdentityPoolProviderSaml(res["saml"], d, config)); err != nil {
