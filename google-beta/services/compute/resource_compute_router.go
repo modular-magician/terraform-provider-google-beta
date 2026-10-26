@@ -72,6 +72,22 @@ func resourceComputeRouterCustomDiff(_ context.Context, diff *schema.ResourceDif
 	return nil
 }
 
+// mergeComputeRouterMd5AuthenticationKeys returns the router's md5AuthenticationKeys
+// with newKey in place of the key previously managed by google_compute_router (oldName).
+// All other keys belong to google_compute_router_peer and are sent with only their
+// name, which tells the API to keep their current value.
+func mergeComputeRouterMd5AuthenticationKeys(current []interface{}, oldName interface{}, newKey map[string]interface{}) []interface{} {
+	merged := make([]interface{}, 0, len(current)+1)
+	for _, raw := range current {
+		key, ok := raw.(map[string]interface{})
+		if !ok || key["name"] == oldName || key["name"] == newKey["name"] {
+			continue
+		}
+		merged = append(merged, map[string]interface{}{"name": key["name"]})
+	}
+	return append(merged, newKey)
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -261,16 +277,19 @@ The default is 20.`,
 attachments (interconnectAttachments).`,
 			},
 			"md5_authentication_keys": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `Keys used for MD5 authentication.`,
-				MaxItems:    1,
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Keys used for MD5 authentication. Keys used by BGP peers managed with
+'google_compute_router_peer' are configured on that resource with
+'md5_authentication_key', and are kept when this key is updated.`,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: `Value of the key used for MD5 authentication.`,
+							Sensitive:   true,
 						},
 						"name": {
 							Type:     schema.TypeString,
@@ -683,6 +702,11 @@ func resourceComputeRouterUpdate(d *schema.ResourceData, meta interface{}) error
 		obj["md5AuthenticationKeys"] = md5AuthenticationKeysProp
 	}
 
+	obj, err = resourceComputeRouterUpdateEncoder(d, meta, obj)
+	if err != nil {
+		return err
+	}
+
 	lockName, err := tpgresource.ReplaceVars(d, config, "router/{{region}}/{{name}}")
 	if err != nil {
 		return err
@@ -697,6 +721,29 @@ func resourceComputeRouterUpdate(d *schema.ResourceData, meta interface{}) error
 
 	log.Printf("[DEBUG] Updating Router %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
+
+	// The router's MD5 key changed (see the update encoder). Read the keys currently on the
+	// router while holding the router mutex, so keys owned by google_compute_router_peer
+	// are sent back instead of being replaced.
+	if newKey, ok := obj["md5AuthenticationKeys"].(map[string]interface{}); ok {
+		current, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+		})
+		if err != nil {
+			return fmt.Errorf("Error reading Router %q before update: %s", d.Id(), err)
+		}
+		currentKeys, _ := current["md5AuthenticationKeys"].([]interface{})
+
+		var oldName interface{}
+		if old, _ := d.GetChange("md5_authentication_keys"); len(old.([]interface{})) > 0 && old.([]interface{})[0] != nil {
+			oldName = old.([]interface{})[0].(map[string]interface{})["name"]
+		}
+		obj["md5AuthenticationKeys"] = mergeComputeRouterMd5AuthenticationKeys(currentKeys, oldName, newKey)
+	}
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
@@ -1202,6 +1249,17 @@ func expandComputeRouterRegion(v interface{}, d tpgresource.TerraformResourceDat
 		return nil, fmt.Errorf("Invalid value for region: %s", err)
 	}
 	return f.RelativeLink(), nil
+}
+
+func resourceComputeRouterUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	// md5AuthenticationKeys is a single list on the router that google_compute_router_peer
+	// also writes to, and PATCH replaces it as a whole. Sending the configured key on every
+	// update would drop the keys of all peers, so only send it when it changed. The changed
+	// key is merged into the router's current keys in pre_update, under the router mutex.
+	if !d.HasChange("md5_authentication_keys") {
+		delete(obj, "md5AuthenticationKeys")
+	}
+	return obj, nil
 }
 
 func ResourceComputeRouterFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
