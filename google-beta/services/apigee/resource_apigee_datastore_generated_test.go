@@ -33,9 +33,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apigee"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/bigquery"
-	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
-	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicenetworking"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storage"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -118,57 +116,17 @@ resource "google_project_service" "apigee" {
   depends_on = [time_sleep.wait_60_seconds]
 }
 
-resource "google_project_service" "compute" {
-  project = google_project.project.project_id
-  service = "compute.googleapis.com"
-  depends_on = [google_project_service.apigee]
-}
-
-resource "google_project_service" "servicenetworking" {
-  project = google_project.project.project_id
-  service = "servicenetworking.googleapis.com"
-  depends_on = [google_project_service.compute]
-}
-
 resource "google_project_service" "storage" {
   project = google_project.project.project_id
   service = "storage.googleapis.com"
-  depends_on = [google_project_service.servicenetworking]
-}
-
-resource "time_sleep" "wait_300_seconds" {
-  create_duration = "300s"
-  depends_on = [google_project_service.servicenetworking]
-}
-
-resource "google_compute_network" "apigee_network" {
-  name       = "apigee-network"
-  project    = google_project.project.project_id
-  depends_on = [time_sleep.wait_300_seconds]
-}
-
-resource "google_compute_global_address" "apigee_range" {
-  name          = "apigee-range"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.apigee_network.id
-  project       = google_project.project.project_id
-}
-
-resource "google_service_networking_connection" "apigee_vpc_connection" {
-  network                 = google_compute_network.apigee_network.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.apigee_range.name]
-  depends_on              = [google_project_service.servicenetworking]
+  depends_on = [google_project_service.apigee]
 }
 
 resource "google_apigee_organization" "apigee_org" {
-  analytics_region   = "us-central1"
-  project_id         = google_project.project.project_id
-  authorized_network = google_compute_network.apigee_network.id
-  depends_on         = [
-    google_service_networking_connection.apigee_vpc_connection,
+  analytics_region    = "us-central1"
+  project_id          = google_project.project.project_id
+  disable_vpc_peering = true
+  depends_on          = [
     google_project_service.apigee,
   ]
 }
@@ -178,6 +136,7 @@ resource "google_storage_bucket" "analytics_bucket" {
   location                    = "US"
   project                     = google_project.project.project_id
   uniform_bucket_level_access = true
+  force_destroy               = true
   depends_on                  = [google_project_service.storage]
 }
 
@@ -254,57 +213,17 @@ resource "google_project_service" "apigee" {
   depends_on = [time_sleep.wait_60_seconds]
 }
 
-resource "google_project_service" "compute" {
-  project = google_project.project.project_id
-  service = "compute.googleapis.com"
-  depends_on = [google_project_service.apigee]
-}
-
-resource "google_project_service" "servicenetworking" {
-  project = google_project.project.project_id
-  service = "servicenetworking.googleapis.com"
-  depends_on = [google_project_service.compute]
-}
-
 resource "google_project_service" "bigquery" {
   project = google_project.project.project_id
   service = "bigquery.googleapis.com"
-  depends_on = [google_project_service.servicenetworking]
-}
-
-resource "time_sleep" "wait_300_seconds" {
-  create_duration = "300s"
-  depends_on = [google_project_service.bigquery]
-}
-
-resource "google_compute_network" "apigee_network" {
-  name       = "apigee-network"
-  project    = google_project.project.project_id
-  depends_on = [time_sleep.wait_300_seconds]
-}
-
-resource "google_compute_global_address" "apigee_range" {
-  name          = "apigee-range"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.apigee_network.id
-  project       = google_project.project.project_id
-}
-
-resource "google_service_networking_connection" "apigee_vpc_connection" {
-  network                 = google_compute_network.apigee_network.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.apigee_range.name]
-  depends_on              = [google_project_service.servicenetworking]
+  depends_on = [google_project_service.apigee]
 }
 
 resource "google_apigee_organization" "apigee_org" {
-  analytics_region   = "us-central1"
-  project_id         = google_project.project.project_id
-  authorized_network = google_compute_network.apigee_network.id
-  depends_on         = [
-    google_service_networking_connection.apigee_vpc_connection,
+  analytics_region    = "us-central1"
+  project_id          = google_project.project.project_id
+  disable_vpc_peering = true
+  depends_on          = [
     google_project_service.apigee,
   ]
 }
