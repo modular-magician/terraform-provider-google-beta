@@ -167,9 +167,8 @@ func TestAccWorkbenchInstance_workbenchInstanceBasicGpuExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"instance_name":    "tf-test-workbench-instance" + randomSuffix,
-		"reservation_name": "tf-test-wbi-reservation" + randomSuffix,
-		"random_suffix":    randomSuffix,
+		"instance_name": "tf-test-workbench-instance" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -198,26 +197,6 @@ func TestAccWorkbenchInstance_workbenchInstanceBasicGpuExample(t *testing.T) {
 
 func testAccWorkbenchInstance_workbenchInstanceBasicGpuExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_compute_reservation" "gpu_reservation" {
-  name     = "%{reservation_name}"
-  zone     = "us-east1-b"
-
-  specific_reservation {
-    count = 1
-    
-    instance_properties {
-      machine_type = "g2-standard-4"
-      
-      guest_accelerators {
-        accelerator_type  = "nvidia-l4"
-        accelerator_count = 1
-      }
-    }
-  }
-
-  specific_reservation_required = false
-}
-
 resource "google_workbench_instance" "instance" {
   name = "%{instance_name}"
   location = "us-east1-b"
@@ -241,11 +220,6 @@ resource "google_workbench_instance" "instance" {
       consume_reservation_type = "RESERVATION_ANY"
     }
   }
-
-  depends_on = [
-    google_compute_reservation.gpu_reservation
-  ]
-
 }
 `, context)
 }

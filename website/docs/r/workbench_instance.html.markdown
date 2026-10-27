@@ -88,26 +88,6 @@ resource "google_workbench_instance" "instance" {
 
 
 ```hcl
-resource "google_compute_reservation" "gpu_reservation" {
-  name     = "wbi-reservation"
-  zone     = "us-east1-b"
-
-  specific_reservation {
-    count = 1
-    
-    instance_properties {
-      machine_type = "g2-standard-4"
-      
-      guest_accelerators {
-        accelerator_type  = "nvidia-l4"
-        accelerator_count = 1
-      }
-    }
-  }
-
-  specific_reservation_required = false
-}
-
 resource "google_workbench_instance" "instance" {
   name = "workbench-instance"
   location = "us-east1-b"
@@ -131,11 +111,6 @@ resource "google_workbench_instance" "instance" {
       consume_reservation_type = "RESERVATION_ANY"
     }
   }
-
-  depends_on = [
-    google_compute_reservation.gpu_reservation
-  ]
-
 }
 ```
 
