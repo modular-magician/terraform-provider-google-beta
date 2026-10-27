@@ -803,6 +803,7 @@ func TestAccDataplexDatascan_dataplexDatascanDocumentationExample(t *testing.T) 
 		"location":                   envvar.GetTestRegionFromEnv(),
 		"project_name":               envvar.GetTestProjectFromEnv(),
 		"catalog_publishing_enabled": true,
+		"custom_instructions":        "example custom instructions",
 		"datascan_name":              "tf-test-datadocumentation" + randomSuffix,
 		"sql_dialect":                "GOOGLE_SQL",
 		"random_suffix":              randomSuffix,
@@ -812,6 +813,7 @@ func TestAccDataplexDatascan_dataplexDatascanDocumentationExample(t *testing.T) 
 		"location":                   envvar.GetTestRegionFromEnv(),
 		"project_name":               envvar.GetTestProjectFromEnv(),
 		"catalog_publishing_enabled": false,
+		"custom_instructions":        "updated custom instructions",
 		"datascan_name":              "tf-test-datadocumentation" + randomSuffix,
 		"sql_dialect":                "GOOGLE_SQL",
 		"random_suffix":              randomSuffix,
@@ -940,6 +942,7 @@ resource "google_dataplex_datascan" "documentation" {
   }
 
   data_documentation_spec {
+    custom_instructions        = "%{custom_instructions}"
     catalog_publishing_enabled = %{catalog_publishing_enabled}
     sql_dialect                = "%{sql_dialect}"
     generation_scopes          = ["ALL"]
