@@ -1,0 +1,46 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_sql_blue_green_deployment
+generation_type: mmv1
+source_file: products/sql/BlueGreenDeployment.yaml
+api_service_name: sqladmin.googleapis.com
+api_version: v1beta4
+api_resource_type_kind: BlueGreenDeployment
+autogen_status: true
+autogen_version: 2
+fields:
+    - field: blue_green_deployment_id
+      provider_only: true
+    - api_field: createTime
+    - api_field: deploymentMappings.diffs.field
+    - api_field: deploymentMappings.diffs.sourceValue
+    - api_field: deploymentMappings.diffs.targetValue
+    - api_field: deploymentMappings.source.connection
+    - api_field: deploymentMappings.source.dns
+    - api_field: deploymentMappings.source.instance
+    - api_field: deploymentMappings.source.ipMappings.ipAddress
+    - api_field: deploymentMappings.source.ipMappings.timeToRetire
+    - api_field: deploymentMappings.source.ipMappings.type
+    - api_field: deploymentMappings.state
+    - api_field: deploymentMappings.target.connection
+    - api_field: deploymentMappings.target.dns
+    - api_field: deploymentMappings.target.instance
+    - api_field: deploymentMappings.target.ipMappings.ipAddress
+    - api_field: deploymentMappings.target.ipMappings.timeToRetire
+    - api_field: deploymentMappings.target.ipMappings.type
+    - api_field: deploymentTasks.task.endTime
+    - api_field: deploymentTasks.task.errorMessage
+    - api_field: deploymentTasks.task.startTime
+    - api_field: deploymentTasks.task.state
+    - api_field: deploymentTasks.task.type
+    - api_field: description
+    - api_field: errorDetail
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: requestedConfig.databaseVersion
+    - api_field: sourceInstance
+    - api_field: state
+    - api_field: switchoverTargetInstance
+    - field: deletion_policy
+      provider_only: true
