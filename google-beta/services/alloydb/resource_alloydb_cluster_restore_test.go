@@ -743,9 +743,14 @@ resource "google_alloydb_cluster" "source" {
 }
 
 resource "google_alloydb_instance" "source" {
-  cluster       = google_alloydb_cluster.source.name
-  instance_id   = "tf-test-alloydb-instance-%{random_suffix}"
-  instance_type = "PRIMARY"
+  cluster           = google_alloydb_cluster.source.name
+  instance_id       = "tf-test-alloydb-instance-%{random_suffix}"
+  instance_type     = "PRIMARY"
+  availability_type = "ZONAL"
+
+  machine_config {
+    cpu_count = 2
+  }
 }
 
 // Create a backup plan
@@ -844,9 +849,14 @@ resource "google_alloydb_cluster" "source" {
 }
 
 resource "google_alloydb_instance" "source" {
-  cluster       = google_alloydb_cluster.source.name
-  instance_id   = "tf-test-alloydb-instance-%{random_suffix}"
-  instance_type = "PRIMARY"
+  cluster           = google_alloydb_cluster.source.name
+  instance_id       = "tf-test-alloydb-instance-%{random_suffix}"
+  instance_type     = "PRIMARY"
+  availability_type = "ZONAL"
+
+  machine_config {
+    cpu_count = 2
+  }
 }
 
 // Create a backup plan
@@ -950,9 +960,14 @@ resource "google_alloydb_cluster" "source" {
 }
 
 resource "google_alloydb_instance" "source" {
-  cluster       = google_alloydb_cluster.source.name
-  instance_id   = "tf-test-alloydb-instance-%{random_suffix}"
-  instance_type = "PRIMARY"
+  cluster           = google_alloydb_cluster.source.name
+  instance_id       = "tf-test-alloydb-instance-%{random_suffix}"
+  instance_type     = "PRIMARY"
+  availability_type = "ZONAL"
+
+  machine_config {
+    cpu_count = 2
+  }
 }
 
 // Create a backup plan
