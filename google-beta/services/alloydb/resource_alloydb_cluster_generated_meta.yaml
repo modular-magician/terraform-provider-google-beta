@@ -55,6 +55,16 @@ fields:
     - api_field: labels
     - field: location
       provider_only: true
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.endDate.day
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.endDate.month
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.endDate.year
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.startDate.day
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.startDate.month
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.startDate.year
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.time.hours
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.time.minutes
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.time.nanos
+    - api_field: maintenanceUpdatePolicy.denyMaintenancePeriods.time.seconds
     - api_field: maintenanceUpdatePolicy.maintenanceWindows.day
     - api_field: maintenanceUpdatePolicy.maintenanceWindows.startTime.hours
     - api_field: maintenanceUpdatePolicy.maintenanceWindows.startTime.minutes
