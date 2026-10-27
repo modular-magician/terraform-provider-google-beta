@@ -1154,7 +1154,7 @@ In addition to the arguments listed above, the following computed attributes are
   Output only. The pem-encoded, signed X.509 certificate.
 
 * `certificate_description` -
-  Output only. Details regarding the revocation of this Certificate. This Certificate is considered revoked if and only if this field is present.
+  Output only. A structured description of the issued X.509 certificate.
   Structure is [documented below](#nested_certificate_description).
 
 * `pem_certificate_chain` -

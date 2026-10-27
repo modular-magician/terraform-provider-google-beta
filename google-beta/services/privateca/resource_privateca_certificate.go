@@ -773,7 +773,7 @@ issuing CaPool.`,
 			"certificate_description": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: `Output only. Details regarding the revocation of this Certificate. This Certificate is considered revoked if and only if this field is present.`,
+				Description: `Output only. A structured description of the issued X.509 certificate.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"aia_issuing_certificate_urls": {
