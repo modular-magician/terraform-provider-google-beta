@@ -172,8 +172,8 @@ func ResourceNetworkSecurityGatewaySecurityPolicyRule() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `Name of the resource. ame is the full resource name so projects/{project}/locations/{location}/gatewaySecurityPolicies/{gateway_security_policy}/rules/{rule}
-rule should match the pattern: (^a-z?$).`,
+				Description: `Name of the resource. Name is the full resource name so projects/{project}/locations/{location}/gatewaySecurityPolicies/{gateway_security_policy}/rules/{rule}
+rule should match the pattern: '(^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$)'.`,
 			},
 			"priority": {
 				Type:        schema.TypeInt,
