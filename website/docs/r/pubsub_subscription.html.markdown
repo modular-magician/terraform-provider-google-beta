@@ -710,11 +710,9 @@ resource "google_pubsub_topic" "example" {
 }
 
 resource "google_pubsub_subscription" "example" {
-  name  = "example-subscription"
-  topic = google_pubsub_topic.example.id
-  tags = {
-    (google_tags_tag_key.tag_key.namespaced_name) = google_tags_tag_value.tag_value.short_name
-  }
+  name    = "example-subscription"
+  topic   = google_pubsub_topic.example.id
+  project = data.google_project.project.project_id
 }
 
 data "google_project" "project" {}
@@ -722,12 +720,16 @@ data "google_project" "project" {}
 resource "google_tags_tag_key" "tag_key" {
   parent     = data.google_project.project.id
   short_name = "tag_key"
-  depends_on = [google_pubsub_topic.example]
 }
 
 resource "google_tags_tag_value" "tag_value" {
   parent     = google_tags_tag_key.tag_key.id
   short_name = "tag_value"
+}
+
+resource "google_tags_tag_binding" "binding" {
+  parent    = "//pubsub.googleapis.com/projects/${data.google_project.project.number}/subscriptions/${google_pubsub_subscription.example.name}"
+  tag_value = google_tags_tag_value.tag_value.id
 }
 ```
 
