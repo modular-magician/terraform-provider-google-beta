@@ -197,6 +197,11 @@ The following arguments are supported:
   Configuration for Document understanding and enrichment.
   Structure is [documented below](#nested_document_processing_config).
 
+* `federated_search_config` -
+  (Optional)
+  Configuration for federated search.
+  Structure is [documented below](#nested_federated_search_config).
+
 * `create_advanced_site_search` -
   (Optional)
   If true, an advanced data store for site search will be created. If the
@@ -397,6 +402,20 @@ The following arguments are supported:
 * `exclude_html_ids` -
   (Optional)
   List of HTML ids to exclude from the parsed content.
+
+<a name="nested_federated_search_config"></a>The `federated_search_config` block supports:
+
+* `notebooklm_config` -
+  (Optional)
+  Configuration for NotebookLM.
+  Structure is [documented below](#nested_federated_search_config_notebooklm_config).
+
+
+<a name="nested_federated_search_config_notebooklm_config"></a>The `notebooklm_config` block supports:
+
+* `search_config` -
+  (Optional)
+  The search config resource name for NotebookLM.
 
 ## Attributes Reference
 

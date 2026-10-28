@@ -470,6 +470,31 @@ config will be applied to all file types for Document parsing.`,
 					},
 				},
 			},
+			"federated_search_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration for federated search.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"notebooklm_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for NotebookLM.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"search_config": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The search config resource name for NotebookLM.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"kms_key_name": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -598,6 +623,12 @@ func resourceDiscoveryEngineDataStoreCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("document_processing_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(documentProcessingConfigProp)) && (ok || !reflect.DeepEqual(v, documentProcessingConfigProp)) {
 		obj["documentProcessingConfig"] = documentProcessingConfigProp
+	}
+	federatedSearchConfigProp, err := expandDiscoveryEngineDataStoreFederatedSearchConfig(d.Get("federated_search_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("federated_search_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(federatedSearchConfigProp)) && (ok || !reflect.DeepEqual(v, federatedSearchConfigProp)) {
+		obj["federatedSearchConfig"] = federatedSearchConfigProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/collections/default_collection/dataStores?dataStoreId={{data_store_id}}&createAdvancedSiteSearch={{create_advanced_site_search}}&skipDefaultSchemaCreation={{skip_default_schema_creation}}")
@@ -835,6 +866,12 @@ func resourceDiscoveryEngineDataStoreUpdate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
 		obj["kmsKeyName"] = kmsKeyNameProp
 	}
+	federatedSearchConfigProp, err := expandDiscoveryEngineDataStoreFederatedSearchConfig(d.Get("federated_search_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("federated_search_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, federatedSearchConfigProp)) {
+		obj["federatedSearchConfig"] = federatedSearchConfigProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/collections/default_collection/dataStores/{{data_store_id}}")
 	if err != nil {
@@ -854,6 +891,10 @@ func resourceDiscoveryEngineDataStoreUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("kms_key_name") {
 		updateMask = append(updateMask, "kmsKeyName")
+	}
+
+	if d.HasChange("federated_search_config") {
+		updateMask = append(updateMask, "federatedSearchConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1291,6 +1332,36 @@ func flattenDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverrid
 }
 
 func flattenDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverridesLayoutParsingConfigExcludeHtmlIds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataStoreFederatedSearchConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["notebooklm_config"] =
+		flattenDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfig(original["notebooklmConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["search_config"] =
+		flattenDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfigSearchConfig(original["searchConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfigSearchConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1849,6 +1920,54 @@ func expandDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverride
 	return v, nil
 }
 
+func expandDiscoveryEngineDataStoreFederatedSearchConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedNotebooklmConfig, err := expandDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfig(original["notebooklm_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNotebooklmConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["notebooklmConfig"] = transformedNotebooklmConfig
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSearchConfig, err := expandDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfigSearchConfig(original["search_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSearchConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["searchConfig"] = transformedSearchConfig
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataStoreFederatedSearchConfigNotebooklmConfigSearchConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceDiscoveryEngineDataStoreFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -1877,6 +1996,9 @@ func ResourceDiscoveryEngineDataStoreFlatten(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading DataStore: %s", err)
 	}
 	if err = d.Set("document_processing_config", flattenDiscoveryEngineDataStoreDocumentProcessingConfig(res["documentProcessingConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataStore: %s", err)
+	}
+	if err = d.Set("federated_search_config", flattenDiscoveryEngineDataStoreFederatedSearchConfig(res["federatedSearchConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataStore: %s", err)
 	}
 	if err = d.Set("create_time", flattenDiscoveryEngineDataStoreCreateTime(res["createTime"], d, config)); err != nil {
