@@ -226,6 +226,7 @@ PUBLIC_WEBSITE contentConfig), this flag will be ignored.`,
 						"chunking_config": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							ForceNew:    true,
 							Description: `Whether chunking mode is enabled.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
@@ -233,6 +234,7 @@ PUBLIC_WEBSITE contentConfig), this flag will be ignored.`,
 									"layout_based_chunking_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configuration for the layout based chunking.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -240,12 +242,14 @@ PUBLIC_WEBSITE contentConfig), this flag will be ignored.`,
 												"chunk_size": {
 													Type:     schema.TypeInt,
 													Optional: true,
+													ForceNew: true,
 													Description: `The token size limit for each chunk.
 Supported values: 100-500 (inclusive). Default value: 500.`,
 												},
 												"include_ancestor_headings": {
 													Type:     schema.TypeBool,
 													Optional: true,
+													ForceNew: true,
 													Description: `Whether to include appending different levels of headings to chunks from the middle of the document to prevent context loss.
 Default value: False.`,
 												},
@@ -258,6 +262,7 @@ Default value: False.`,
 						"default_parsing_config": {
 							Type:     schema.TypeList,
 							Optional: true,
+							ForceNew: true,
 							Description: `Configurations for default Document parser. If not specified, this resource
 will be configured to use a default DigitalParsingConfig, and the default parsing
 config will be applied to all file types for Document parsing.`,
@@ -267,6 +272,7 @@ config will be applied to all file types for Document parsing.`,
 									"digital_parsing_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configurations applied to digital parser.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -277,6 +283,7 @@ config will be applied to all file types for Document parsing.`,
 									"layout_parsing_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configurations applied to layout parser.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -284,26 +291,31 @@ config will be applied to all file types for Document parsing.`,
 												"enable_get_processed_document": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the processed document will be made available for the GetProcessedDocument API.`,
 												},
 												"enable_image_annotation": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the LLM based annotation is added to the image during parsing.`,
 												},
 												"enable_llm_layout_parsing": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the pdf layout will be refined using an LLM.`,
 												},
 												"enable_table_annotation": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the LLM based annotation is added to the table during parsing.`,
 												},
 												"exclude_html_classes": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `List of HTML classes to exclude from the parsed content.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -312,6 +324,7 @@ config will be applied to all file types for Document parsing.`,
 												"exclude_html_elements": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `List of HTML elements to exclude from the parsed content.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -320,6 +333,7 @@ config will be applied to all file types for Document parsing.`,
 												"exclude_html_ids": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `List of HTML ids to exclude from the parsed content.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -328,6 +342,7 @@ config will be applied to all file types for Document parsing.`,
 												"structured_content_types": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `Contains the required structure types to extract from the document. Supported values: 'shareholder-structure'.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -340,6 +355,7 @@ config will be applied to all file types for Document parsing.`,
 									"ocr_parsing_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configurations applied to OCR parser. Currently it only applies to PDFs.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -347,6 +363,7 @@ config will be applied to all file types for Document parsing.`,
 												"use_native_text": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, will use native text instead of OCR text on pages containing native text.`,
 												},
 											},
@@ -359,6 +376,7 @@ config will be applied to all file types for Document parsing.`,
 						"parsing_config_overrides": {
 							Type:     schema.TypeSet,
 							Optional: true,
+							ForceNew: true,
 							Description: `Map from file type to override the default parsing configuration based on the file type. Supported keys:
   * 'pdf': Override parsing config for PDF files, either digital parsing, ocr parsing or layout parsing is supported.
   * 'html': Override parsing config for HTML files, only digital parsing and or layout parsing are supported.
@@ -368,10 +386,12 @@ config will be applied to all file types for Document parsing.`,
 									"file_type": {
 										Type:     schema.TypeString,
 										Required: true,
+										ForceNew: true,
 									},
 									"digital_parsing_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configurations applied to digital parser.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -382,6 +402,7 @@ config will be applied to all file types for Document parsing.`,
 									"layout_parsing_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configurations applied to layout parser.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -389,26 +410,31 @@ config will be applied to all file types for Document parsing.`,
 												"enable_get_processed_document": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the processed document will be made available for the GetProcessedDocument API.`,
 												},
 												"enable_image_annotation": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the LLM based annotation is added to the image during parsing.`,
 												},
 												"enable_llm_layout_parsing": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the pdf layout will be refined using an LLM.`,
 												},
 												"enable_table_annotation": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, the LLM based annotation is added to the table during parsing.`,
 												},
 												"exclude_html_classes": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `List of HTML classes to exclude from the parsed content.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -417,6 +443,7 @@ config will be applied to all file types for Document parsing.`,
 												"exclude_html_elements": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `List of HTML elements to exclude from the parsed content.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -425,6 +452,7 @@ config will be applied to all file types for Document parsing.`,
 												"exclude_html_ids": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `List of HTML ids to exclude from the parsed content.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -433,6 +461,7 @@ config will be applied to all file types for Document parsing.`,
 												"structured_content_types": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `Contains the required structure types to extract from the document. Supported values: 'shareholder-structure'.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -445,6 +474,7 @@ config will be applied to all file types for Document parsing.`,
 									"ocr_parsing_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										ForceNew:    true,
 										Description: `Configurations applied to OCR parser. Currently it only applies to PDFs.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -452,6 +482,7 @@ config will be applied to all file types for Document parsing.`,
 												"use_native_text": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													ForceNew:    true,
 													Description: `If true, will use native text instead of OCR text on pages containing native text.`,
 												},
 											},
