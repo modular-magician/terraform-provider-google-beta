@@ -60,6 +60,7 @@ var metadataDefaults = map[string]string{
 	"enable-opencode":         "true",
 	"enable-opencode-web":     "true",
 	"enable-antigravity":      "true",
+	"enable-antigravity-hub":  "true",
 }
 
 var WorkbenchInstanceSettableUnmodifiableDefaultMetadata = []string{
@@ -1495,6 +1496,7 @@ func resourceWorkbenchInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 		"enable-opencode",
 		"enable-opencode-web",
 		"enable-antigravity",
+		"enable-antigravity-hub",
 	}
 
 	stopInstance := false
