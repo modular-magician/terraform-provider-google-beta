@@ -1803,6 +1803,14 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   (Output)
   Column length.
 
+* `precision` -
+  (Output)
+  Column precision.
+
+* `scale` -
+  (Output)
+  Column scale.
+
 * `collation` -
   (Optional)
   Column collation.
@@ -1865,6 +1873,14 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
 * `length` -
   (Output)
   Column length.
+
+* `precision` -
+  (Output)
+  Column precision.
+
+* `scale` -
+  (Output)
+  Column scale.
 
 * `collation` -
   (Optional)
@@ -2423,6 +2439,14 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   (Optional)
   Field name.
 
+* `data_type` -
+  (Output)
+  The data type of the field.
+
+* `nillable` -
+  (Output)
+  Indicates whether the field can accept nil values.
+
 <a name="nested_source_config_salesforce_source_config_exclude_objects"></a>The `exclude_objects` block supports:
 
 * `objects` -
@@ -2448,6 +2472,14 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
 * `name` -
   (Optional)
   Field name.
+
+* `data_type` -
+  (Output)
+  The data type of the field.
+
+* `nillable` -
+  (Output)
+  Indicates whether the field can accept nil values.
 
 <a name="nested_source_config_spanner_source_config"></a>The `spanner_source_config` block supports:
 
@@ -2606,6 +2638,11 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   Optional. Maximum number of concurrent backfill tasks. The number
   should be non-negative and less than or equal to 50. If not set
   (or set to 0), the system''s default value is used
+
+* `json_mode` -
+  (Optional)
+  Optional. JSON mode for the stream.
+  Possible values are: `STRICT`, `CANONICAL`.
 
 
 <a name="nested_source_config_mongodb_source_config_include_objects"></a>The `include_objects` block supports:
@@ -2921,6 +2958,14 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   (Output)
   Column length.
 
+* `precision` -
+  (Output)
+  Column precision.
+
+* `scale` -
+  (Output)
+  Column scale.
+
 * `collation` -
   (Optional)
   Column collation.
@@ -3167,6 +3212,14 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
 * `name` -
   (Optional)
   Field name.
+
+* `data_type` -
+  (Output)
+  The data type of the field.
+
+* `nillable` -
+  (Output)
+  Indicates whether the field can accept nil values.
 
 <a name="nested_backfill_all_spanner_excluded_objects"></a>The `spanner_excluded_objects` block supports:
 

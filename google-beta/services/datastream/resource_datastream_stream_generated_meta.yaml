@@ -17,7 +17,9 @@ fields:
     - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.mysqlColumns.length
     - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.mysqlColumns.nullable
     - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.mysqlColumns.ordinalPosition
+    - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.mysqlColumns.precision
     - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.mysqlColumns.primaryKey
+    - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.mysqlColumns.scale
     - api_field: backfillAll.mysqlExcludedObjects.mysqlDatabases.mysqlTables.table
     - api_field: backfillAll.oracleExcludedObjects.oracleSchemas.oracleTables.oracleColumns.column
     - api_field: backfillAll.oracleExcludedObjects.oracleSchemas.oracleTables.oracleColumns.dataType
@@ -40,7 +42,9 @@ fields:
     - api_field: backfillAll.postgresqlExcludedObjects.postgresqlSchemas.postgresqlTables.postgresqlColumns.scale
     - api_field: backfillAll.postgresqlExcludedObjects.postgresqlSchemas.postgresqlTables.table
     - api_field: backfillAll.postgresqlExcludedObjects.postgresqlSchemas.schema
+    - api_field: backfillAll.salesforceExcludedObjects.objects.fields.dataType
     - api_field: backfillAll.salesforceExcludedObjects.objects.fields.name
+    - api_field: backfillAll.salesforceExcludedObjects.objects.fields.nillable
     - api_field: backfillAll.salesforceExcludedObjects.objects.objectName
     - api_field: backfillAll.spannerExcludedObjects.schemas.schema
     - api_field: backfillAll.spannerExcludedObjects.schemas.tables.columns.column
@@ -119,6 +123,7 @@ fields:
     - api_field: sourceConfig.mongodbSourceConfig.includeObjects.databases.collections.collection
     - api_field: sourceConfig.mongodbSourceConfig.includeObjects.databases.collections.fields.field
     - api_field: sourceConfig.mongodbSourceConfig.includeObjects.databases.database
+    - api_field: sourceConfig.mongodbSourceConfig.jsonMode
     - api_field: sourceConfig.mongodbSourceConfig.maxConcurrentBackfillTasks
     - api_field: sourceConfig.mysqlSourceConfig.binaryLogPosition
     - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.database
@@ -128,7 +133,9 @@ fields:
     - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.mysqlColumns.length
     - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.mysqlColumns.nullable
     - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.mysqlColumns.ordinalPosition
+    - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.mysqlColumns.precision
     - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.mysqlColumns.primaryKey
+    - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.mysqlColumns.scale
     - api_field: sourceConfig.mysqlSourceConfig.excludeObjects.mysqlDatabases.mysqlTables.table
     - api_field: sourceConfig.mysqlSourceConfig.gtid
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.database
@@ -138,7 +145,9 @@ fields:
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.mysqlColumns.length
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.mysqlColumns.nullable
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.mysqlColumns.ordinalPosition
+    - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.mysqlColumns.precision
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.mysqlColumns.primaryKey
+    - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.mysqlColumns.scale
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.table
     - api_field: sourceConfig.mysqlSourceConfig.maxConcurrentBackfillTasks
     - api_field: sourceConfig.mysqlSourceConfig.maxConcurrentCdcTasks
@@ -191,9 +200,13 @@ fields:
     - api_field: sourceConfig.postgresqlSourceConfig.maxConcurrentBackfillTasks
     - api_field: sourceConfig.postgresqlSourceConfig.publication
     - api_field: sourceConfig.postgresqlSourceConfig.replicationSlot
+    - api_field: sourceConfig.salesforceSourceConfig.excludeObjects.objects.fields.dataType
     - api_field: sourceConfig.salesforceSourceConfig.excludeObjects.objects.fields.name
+    - api_field: sourceConfig.salesforceSourceConfig.excludeObjects.objects.fields.nillable
     - api_field: sourceConfig.salesforceSourceConfig.excludeObjects.objects.objectName
+    - api_field: sourceConfig.salesforceSourceConfig.includeObjects.objects.fields.dataType
     - api_field: sourceConfig.salesforceSourceConfig.includeObjects.objects.fields.name
+    - api_field: sourceConfig.salesforceSourceConfig.includeObjects.objects.fields.nillable
     - api_field: sourceConfig.salesforceSourceConfig.includeObjects.objects.objectName
     - api_field: sourceConfig.salesforceSourceConfig.pollingInterval
     - api_field: sourceConfig.sourceConnectionProfile

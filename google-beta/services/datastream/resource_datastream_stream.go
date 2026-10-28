@@ -623,6 +623,14 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 											},
 										},
 									},
+									"json_mode": {
+										Type:         schema.TypeString,
+										Computed:     true,
+										Optional:     true,
+										ForceNew:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"STRICT", "CANONICAL", ""}),
+										Description:  `Optional. JSON mode for the stream. Possible values: ["STRICT", "CANONICAL"]`,
+									},
 									"max_concurrent_backfill_tasks": {
 										Type:     schema.TypeInt,
 										Optional: true,
@@ -725,6 +733,16 @@ https://dev.mysql.com/doc/refman/8.0/en/data-types.html`,
 																						Computed:    true,
 																						Description: `Column length.`,
 																					},
+																					"precision": {
+																						Type:        schema.TypeInt,
+																						Computed:    true,
+																						Description: `Column precision.`,
+																					},
+																					"scale": {
+																						Type:        schema.TypeInt,
+																						Computed:    true,
+																						Description: `Column scale.`,
+																					},
 																				},
 																			},
 																		},
@@ -819,6 +837,16 @@ https://dev.mysql.com/doc/refman/8.0/en/data-types.html`,
 																						Type:        schema.TypeInt,
 																						Computed:    true,
 																						Description: `Column length.`,
+																					},
+																					"precision": {
+																						Type:        schema.TypeInt,
+																						Computed:    true,
+																						Description: `Column precision.`,
+																					},
+																					"scale": {
+																						Type:        schema.TypeInt,
+																						Computed:    true,
+																						Description: `Column scale.`,
 																					},
 																				},
 																			},
@@ -1340,6 +1368,16 @@ negative. If not set (or set to 0), the system's default value will be used.`,
 																			Optional:    true,
 																			Description: `Field name.`,
 																		},
+																		"data_type": {
+																			Type:        schema.TypeString,
+																			Computed:    true,
+																			Description: `The data type of the field.`,
+																		},
+																		"nillable": {
+																			Type:        schema.TypeBool,
+																			Computed:    true,
+																			Description: `Indicates whether the field can accept nil values.`,
+																		},
 																	},
 																},
 															},
@@ -1379,6 +1417,16 @@ negative. If not set (or set to 0), the system's default value will be used.`,
 																			Type:        schema.TypeString,
 																			Optional:    true,
 																			Description: `Field name.`,
+																		},
+																		"data_type": {
+																			Type:        schema.TypeString,
+																			Computed:    true,
+																			Description: `The data type of the field.`,
+																		},
+																		"nillable": {
+																			Type:        schema.TypeBool,
+																			Computed:    true,
+																			Description: `Indicates whether the field can accept nil values.`,
 																		},
 																	},
 																},
@@ -1956,6 +2004,16 @@ https://dev.mysql.com/doc/refman/8.0/en/data-types.html`,
 																			Computed:    true,
 																			Description: `Column length.`,
 																		},
+																		"precision": {
+																			Type:        schema.TypeInt,
+																			Computed:    true,
+																			Description: `Column precision.`,
+																		},
+																		"scale": {
+																			Type:        schema.TypeInt,
+																			Computed:    true,
+																			Description: `Column scale.`,
+																		},
 																	},
 																},
 															},
@@ -2180,6 +2238,16 @@ https://www.postgresql.org/docs/current/datatype.html`,
 																Type:        schema.TypeString,
 																Optional:    true,
 																Description: `Field name.`,
+															},
+															"data_type": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `The data type of the field.`,
+															},
+															"nillable": {
+																Type:        schema.TypeBool,
+																Computed:    true,
+																Description: `Indicates whether the field can accept nil values.`,
 															},
 														},
 													},
@@ -3419,6 +3487,8 @@ func flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlData
 			"column":           flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsColumn(original["column"], d, config),
 			"data_type":        flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsDataType(original["dataType"], d, config),
 			"length":           flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(original["length"], d, config),
+			"precision":        flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(original["precision"], d, config),
+			"scale":            flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(original["scale"], d, config),
 			"collation":        flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config),
 			"primary_key":      flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrimaryKey(original["primaryKey"], d, config),
 			"nullable":         flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsNullable(original["nullable"], d, config),
@@ -3436,6 +3506,40 @@ func flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlData
 }
 
 func flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -3559,6 +3663,8 @@ func flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlData
 			"column":           flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsColumn(original["column"], d, config),
 			"data_type":        flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsDataType(original["dataType"], d, config),
 			"length":           flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(original["length"], d, config),
+			"precision":        flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(original["precision"], d, config),
+			"scale":            flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(original["scale"], d, config),
 			"collation":        flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config),
 			"primary_key":      flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrimaryKey(original["primaryKey"], d, config),
 			"nullable":         flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsNullable(original["nullable"], d, config),
@@ -3576,6 +3682,40 @@ func flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlData
 }
 
 func flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -4955,12 +5095,22 @@ func flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObje
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"name": flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsName(original["name"], d, config),
+			"name":      flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsName(original["name"], d, config),
+			"data_type": flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsDataType(original["dataType"], d, config),
+			"nillable":  flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsNillable(original["nillable"], d, config),
 		})
 	}
 	return transformed
 }
 func flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsDataType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsNillable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5015,12 +5165,22 @@ func flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObje
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"name": flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsName(original["name"], d, config),
+			"name":      flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsName(original["name"], d, config),
+			"data_type": flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsDataType(original["dataType"], d, config),
+			"nillable":  flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsNillable(original["nillable"], d, config),
 		})
 	}
 	return transformed
 }
 func flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsDataType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsNillable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5338,6 +5498,8 @@ func flattenDatastreamStreamSourceConfigMongodbSourceConfig(v interface{}, d *sc
 		flattenDatastreamStreamSourceConfigMongodbSourceConfigExcludeObjects(original["excludeObjects"], d, config)
 	transformed["max_concurrent_backfill_tasks"] =
 		flattenDatastreamStreamSourceConfigMongodbSourceConfigMaxConcurrentBackfillTasks(original["maxConcurrentBackfillTasks"], d, config)
+	transformed["json_mode"] =
+		flattenDatastreamStreamSourceConfigMongodbSourceConfigJsonMode(original["jsonMode"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatastreamStreamSourceConfigMongodbSourceConfigIncludeObjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5523,6 +5685,10 @@ func flattenDatastreamStreamSourceConfigMongodbSourceConfigMaxConcurrentBackfill
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamSourceConfigMongodbSourceConfigJsonMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenDatastreamStreamDestinationConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5876,6 +6042,8 @@ func flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTa
 			"column":           flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsColumn(original["column"], d, config),
 			"data_type":        flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsDataType(original["dataType"], d, config),
 			"length":           flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(original["length"], d, config),
+			"precision":        flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(original["precision"], d, config),
+			"scale":            flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(original["scale"], d, config),
 			"collation":        flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config),
 			"primary_key":      flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrimaryKey(original["primaryKey"], d, config),
 			"nullable":         flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsNullable(original["nullable"], d, config),
@@ -5893,6 +6061,40 @@ func flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTa
 }
 
 func flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -6507,12 +6709,22 @@ func flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFields(v 
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"name": flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsName(original["name"], d, config),
+			"name":      flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsName(original["name"], d, config),
+			"data_type": flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsDataType(original["dataType"], d, config),
+			"nillable":  flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsNillable(original["nillable"], d, config),
 		})
 	}
 	return transformed
 }
 func flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsDataType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsNillable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -7396,6 +7608,20 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatab
 			transformed["length"] = transformedLength
 		}
 
+		transformedPrecision, err := expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(original["precision"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["precision"] = transformedPrecision
+		}
+
+		transformedScale, err := expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(original["scale"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["scale"] = transformedScale
+		}
+
 		transformedCollation, err := expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config)
 		if err != nil {
 			return nil, err
@@ -7438,6 +7664,14 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatab
 }
 
 func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -7585,6 +7819,20 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatab
 			transformed["length"] = transformedLength
 		}
 
+		transformedPrecision, err := expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(original["precision"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["precision"] = transformedPrecision
+		}
+
+		transformedScale, err := expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(original["scale"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["scale"] = transformedScale
+		}
+
 		transformedCollation, err := expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config)
 		if err != nil {
 			return nil, err
@@ -7627,6 +7875,14 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatab
 }
 
 func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -9310,12 +9566,34 @@ func expandDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjec
 			transformed["name"] = transformedName
 		}
 
+		transformedDataType, err := expandDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsDataType(original["data_type"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDataType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["dataType"] = transformedDataType
+		}
+
+		transformedNillable, err := expandDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsNillable(original["nillable"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedNillable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["nillable"] = transformedNillable
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
 }
 
 func expandDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigSalesforceSourceConfigIncludeObjectsObjectsFieldsNillable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -9397,12 +9675,34 @@ func expandDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjec
 			transformed["name"] = transformedName
 		}
 
+		transformedDataType, err := expandDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsDataType(original["data_type"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDataType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["dataType"] = transformedDataType
+		}
+
+		transformedNillable, err := expandDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsNillable(original["nillable"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedNillable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["nillable"] = transformedNillable
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
 }
 
 func expandDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigSalesforceSourceConfigExcludeObjectsObjectsFieldsNillable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -9860,6 +10160,13 @@ func expandDatastreamStreamSourceConfigMongodbSourceConfig(v interface{}, d tpgr
 		transformed["maxConcurrentBackfillTasks"] = transformedMaxConcurrentBackfillTasks
 	}
 
+	transformedJsonMode, err := expandDatastreamStreamSourceConfigMongodbSourceConfigJsonMode(original["json_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedJsonMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["jsonMode"] = transformedJsonMode
+	}
+
 	return transformed, nil
 }
 
@@ -10110,6 +10417,10 @@ func expandDatastreamStreamSourceConfigMongodbSourceConfigExcludeObjectsDatabase
 }
 
 func expandDatastreamStreamSourceConfigMongodbSourceConfigMaxConcurrentBackfillTasks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigMongodbSourceConfigJsonMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -10750,6 +11061,20 @@ func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTab
 			transformed["length"] = transformedLength
 		}
 
+		transformedPrecision, err := expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(original["precision"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["precision"] = transformedPrecision
+		}
+
+		transformedScale, err := expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(original["scale"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["scale"] = transformedScale
+		}
+
 		transformedCollation, err := expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config)
 		if err != nil {
 			return nil, err
@@ -10792,6 +11117,14 @@ func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTab
 }
 
 func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -11500,12 +11833,34 @@ func expandDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFields(v i
 			transformed["name"] = transformedName
 		}
 
+		transformedDataType, err := expandDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsDataType(original["data_type"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDataType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["dataType"] = transformedDataType
+		}
+
+		transformedNillable, err := expandDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsNillable(original["nillable"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedNillable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["nillable"] = transformedNillable
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
 }
 
 func expandDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamBackfillAllSalesforceExcludedObjectsObjectsFieldsNillable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
