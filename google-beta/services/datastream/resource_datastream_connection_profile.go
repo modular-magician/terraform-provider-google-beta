@@ -699,26 +699,30 @@ and the server identity will be authenticated.`,
 								Schema: map[string]*schema.Schema{
 									"client_id": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Required:    true,
 										Description: `Client ID to use for authentication.`,
 									},
 									"client_secret": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: `Client secret to use for authentication.`,
+										Type:         schema.TypeString,
+										Optional:     true,
+										Description:  `Client secret to use for authentication.`,
+										Sensitive:    true,
+										ExactlyOneOf: []string{"salesforce_profile.0.oauth2_client_credentials.0.client_secret", "salesforce_profile.0.oauth2_client_credentials.0.secret_manager_stored_client_secret"},
 									},
 									"secret_manager_stored_client_secret": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: `A reference to a Secret Manager resource name storing the client secret.`,
+										Type:         schema.TypeString,
+										Optional:     true,
+										Description:  `A reference to a Secret Manager resource name storing the client secret.`,
+										ExactlyOneOf: []string{"salesforce_profile.0.oauth2_client_credentials.0.client_secret", "salesforce_profile.0.oauth2_client_credentials.0.secret_manager_stored_client_secret"},
 									},
 								},
 							},
-							ExactlyOneOf: []string{},
+							ExactlyOneOf: []string{"salesforce_profile.0.oauth2_client_credentials", "salesforce_profile.0.user_credentials"},
 						},
 						"user_credentials": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Deprecated:  "`user_credentials` is deprecated. Use `oauth2_client_credentials` instead.",
 							Description: `User credentials to use for Salesforce authentication.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
@@ -750,7 +754,7 @@ and the server identity will be authenticated.`,
 									},
 								},
 							},
-							ExactlyOneOf: []string{},
+							ExactlyOneOf: []string{"salesforce_profile.0.oauth2_client_credentials", "salesforce_profile.0.user_credentials"},
 						},
 					},
 				},
@@ -766,6 +770,7 @@ and the server identity will be authenticated.`,
 						"database": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 							Description: `The full project and resource path for Spanner database. Format:
 projects/{project}/instances/{instance}/databases/{database}.`,
 						},
@@ -1882,7 +1887,7 @@ func flattenDatastreamConnectionProfileSalesforceProfileOauth2ClientCredentialsC
 }
 
 func flattenDatastreamConnectionProfileSalesforceProfileOauth2ClientCredentialsClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("salesforce_profile.0.oauth2_client_credentials.0.client_secret")
 }
 
 func flattenDatastreamConnectionProfileSalesforceProfileOauth2ClientCredentialsSecretManagerStoredClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

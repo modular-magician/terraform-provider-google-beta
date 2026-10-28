@@ -31,7 +31,7 @@ To get more information about ConnectionProfile, see:
     * [Official Documentation](https://cloud.google.com/datastream/docs/create-connection-profiles)
 
 ~> **Warning:** All arguments including the following potentially sensitive
-values will be stored in the raw state as plain text: `oracle_profile.password`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
+values will be stored in the raw state as plain text: `oracle_profile.password`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `salesforce_profile.oauth2_client_credentials.client_secret`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
 [Read more about sensitive data in state](https://developer.hashicorp.com/terraform/language/manage-sensitive-data).
 
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
@@ -445,14 +445,12 @@ resource "google_datastream_connection_profile" "default" {
     location              = "us-central1"
     connection_profile_id = "source-profile"
     create_without_validation = true
-    provider = google-beta
 
     salesforce_profile {
         domain = "fake-domain.my.salesforce.com"
-        user_credentials {
-          username = "fake-username"
-          secret_manager_stored_password = "fake-password"
-          secret_manager_stored_security_token = "fake-token"
+        oauth2_client_credentials {
+          client_id = "fake-client-id"
+          secret_manager_stored_client_secret = "projects/fake-project/secrets/fake-secret/versions/1"
         }
     }
 }
@@ -467,7 +465,6 @@ resource "google_datastream_connection_profile" "default" {
     location              = "us-central1"
     connection_profile_id = "source-profile"
     create_without_validation = true
-    provider = google-beta
 
     spanner_profile {
         database = "projects/example-project/instances/example-instance/databases/example-database"
@@ -582,12 +579,12 @@ The following arguments are supported:
   Structure is [documented below](#nested_postgresql_profile).
 
 * `salesforce_profile` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Salesforce profile.
   Structure is [documented below](#nested_salesforce_profile).
 
 * `spanner_profile` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Spanner profile.
   Structure is [documented below](#nested_spanner_profile).
 
@@ -817,9 +814,11 @@ The following arguments are supported:
   Domain for the Salesforce Org.
 
 * `user_credentials` -
-  (Optional)
+  (Optional, [Beta](../guides/provider_versions.html.markdown), Deprecated)
   User credentials to use for Salesforce authentication.
   Structure is [documented below](#nested_salesforce_profile_user_credentials).
+
+  ~> **Warning:** `user_credentials` is deprecated. Use `oauth2_client_credentials` instead.
 
 * `oauth2_client_credentials` -
   (Optional)
@@ -852,12 +851,13 @@ The following arguments are supported:
 <a name="nested_salesforce_profile_oauth2_client_credentials"></a>The `oauth2_client_credentials` block supports:
 
 * `client_id` -
-  (Optional)
+  (Required)
   Client ID to use for authentication.
 
 * `client_secret` -
   (Optional)
   Client secret to use for authentication.
+  **Note**: This property is sensitive and will not be displayed in the plan.
 
 * `secret_manager_stored_client_secret` -
   (Optional)
