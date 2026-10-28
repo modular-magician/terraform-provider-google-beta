@@ -40,6 +40,13 @@ fields:
     - api_field: backfillAll.postgresqlExcludedObjects.postgresqlSchemas.postgresqlTables.postgresqlColumns.scale
     - api_field: backfillAll.postgresqlExcludedObjects.postgresqlSchemas.postgresqlTables.table
     - api_field: backfillAll.postgresqlExcludedObjects.postgresqlSchemas.schema
+    - api_field: backfillAll.saasExcludedObjects.objects.objectName
+    - api_field: backfillAll.saasExcludedObjects.objects.properties.primaryKey
+    - api_field: backfillAll.saasExcludedObjects.objects.properties.properties.primaryKey
+    - api_field: backfillAll.saasExcludedObjects.objects.properties.properties.properties.primaryKey
+    - api_field: backfillAll.saasExcludedObjects.objects.properties.properties.properties.propertyName
+    - api_field: backfillAll.saasExcludedObjects.objects.properties.properties.propertyName
+    - api_field: backfillAll.saasExcludedObjects.objects.properties.propertyName
     - api_field: backfillAll.salesforceExcludedObjects.objects.fields.name
     - api_field: backfillAll.salesforceExcludedObjects.objects.objectName
     - api_field: backfillAll.spannerExcludedObjects.schemas.schema
@@ -113,6 +120,21 @@ fields:
     - api_field: ruleSets.objectFilter.sourceObjectIdentifier.spannerIdentifier.table
     - api_field: ruleSets.objectFilter.sourceObjectIdentifier.sqlServerIdentifier.schema
     - api_field: ruleSets.objectFilter.sourceObjectIdentifier.sqlServerIdentifier.table
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.objectName
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.properties.primaryKey
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.properties.properties.primaryKey
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.properties.properties.properties.primaryKey
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.properties.properties.properties.propertyName
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.properties.properties.propertyName
+    - api_field: sourceConfig.dataverseSourceConfig.excludeObjects.objects.properties.propertyName
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.objectName
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.properties.primaryKey
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.properties.properties.primaryKey
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.properties.properties.properties.primaryKey
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.properties.properties.properties.propertyName
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.properties.properties.propertyName
+    - api_field: sourceConfig.dataverseSourceConfig.includeObjects.objects.properties.propertyName
+    - api_field: sourceConfig.dataverseSourceConfig.pollingInterval
     - api_field: sourceConfig.mongodbSourceConfig.excludeObjects.databases.collections.collection
     - api_field: sourceConfig.mongodbSourceConfig.excludeObjects.databases.collections.fields.field
     - api_field: sourceConfig.mongodbSourceConfig.excludeObjects.databases.database
@@ -191,11 +213,42 @@ fields:
     - api_field: sourceConfig.postgresqlSourceConfig.maxConcurrentBackfillTasks
     - api_field: sourceConfig.postgresqlSourceConfig.publication
     - api_field: sourceConfig.postgresqlSourceConfig.replicationSlot
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.objectName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.properties.primaryKey
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.properties.properties.primaryKey
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.properties.properties.properties.primaryKey
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.properties.properties.properties.propertyName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.properties.properties.propertyName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.excludeObjects.objects.properties.propertyName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.fullRefreshPollingInterval
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.objectName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.properties.primaryKey
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.properties.properties.primaryKey
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.properties.properties.properties.primaryKey
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.properties.properties.properties.propertyName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.properties.properties.propertyName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.includeObjects.objects.properties.propertyName
+    - api_field: sourceConfig.salesforceMarketingCloudSourceConfig.pollingInterval
     - api_field: sourceConfig.salesforceSourceConfig.excludeObjects.objects.fields.name
     - api_field: sourceConfig.salesforceSourceConfig.excludeObjects.objects.objectName
     - api_field: sourceConfig.salesforceSourceConfig.includeObjects.objects.fields.name
     - api_field: sourceConfig.salesforceSourceConfig.includeObjects.objects.objectName
     - api_field: sourceConfig.salesforceSourceConfig.pollingInterval
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.objectName
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.properties.primaryKey
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.properties.properties.primaryKey
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.properties.properties.properties.primaryKey
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.properties.properties.properties.propertyName
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.properties.properties.propertyName
+    - api_field: sourceConfig.serviceNowSourceConfig.excludeObjects.objects.properties.propertyName
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.objectName
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.properties.primaryKey
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.properties.properties.primaryKey
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.properties.properties.properties.primaryKey
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.properties.properties.properties.propertyName
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.properties.properties.propertyName
+    - api_field: sourceConfig.serviceNowSourceConfig.includeObjects.objects.properties.propertyName
+    - api_field: sourceConfig.serviceNowSourceConfig.pollingInterval
     - api_field: sourceConfig.sourceConnectionProfile
     - api_field: sourceConfig.spannerSourceConfig.backfillDataBoostEnabled
     - api_field: sourceConfig.spannerSourceConfig.changeStreamName

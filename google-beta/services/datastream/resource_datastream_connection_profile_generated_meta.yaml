@@ -12,6 +12,11 @@ fields:
       provider_only: true
     - field: create_without_validation
       provider_only: true
+    - api_field: dataverseProfile.environmentUrl
+    - api_field: dataverseProfile.oauthClientCredentials.clientId
+    - api_field: dataverseProfile.oauthClientCredentials.clientSecret.rawValue
+    - api_field: dataverseProfile.oauthClientCredentials.clientSecret.secretVersion
+    - api_field: dataverseProfile.tenantId
     - api_field: displayName
     - field: effective_labels
       provider_only: true
@@ -71,6 +76,10 @@ fields:
     - api_field: postgresqlProfile.sslConfig.serverVerification.caCertificate
     - api_field: postgresqlProfile.username
     - api_field: privateConnectivity.privateConnection
+    - api_field: salesforceMarketingCloudProfile.oauthClientCredentials.clientId
+    - api_field: salesforceMarketingCloudProfile.oauthClientCredentials.clientSecret.rawValue
+    - api_field: salesforceMarketingCloudProfile.oauthClientCredentials.clientSecret.secretVersion
+    - api_field: salesforceMarketingCloudProfile.subdomain
     - api_field: salesforceProfile.domain
     - api_field: salesforceProfile.oauth2ClientCredentials.clientId
     - api_field: salesforceProfile.oauth2ClientCredentials.clientSecret
@@ -80,6 +89,13 @@ fields:
     - api_field: salesforceProfile.userCredentials.secretManagerStoredSecurityToken
     - api_field: salesforceProfile.userCredentials.securityToken
     - api_field: salesforceProfile.userCredentials.username
+    - api_field: serviceNowProfile.instance
+    - api_field: serviceNowProfile.oauthClientCredentials.clientId
+    - api_field: serviceNowProfile.oauthClientCredentials.clientSecret.rawValue
+    - api_field: serviceNowProfile.oauthClientCredentials.clientSecret.secretVersion
+    - api_field: serviceNowProfile.userPasswordCredentials.password.rawValue
+    - api_field: serviceNowProfile.userPasswordCredentials.password.secretVersion
+    - api_field: serviceNowProfile.userPasswordCredentials.username
     - api_field: spannerProfile.database
     - api_field: spannerProfile.host
     - api_field: sqlServerProfile.database

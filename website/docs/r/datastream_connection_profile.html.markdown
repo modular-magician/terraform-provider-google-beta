@@ -31,7 +31,7 @@ To get more information about ConnectionProfile, see:
     * [Official Documentation](https://cloud.google.com/datastream/docs/create-connection-profiles)
 
 ~> **Warning:** All arguments including the following potentially sensitive
-values will be stored in the raw state as plain text: `oracle_profile.password`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
+values will be stored in the raw state as plain text: `oracle_profile.password`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `dataverse_profile.oauth_client_credentials.client_secret.raw_value`, `salesforce_marketing_cloud_profile.oauth_client_credentials.client_secret.raw_value`, `service_now_profile.user_password_credentials.password.raw_value`, `service_now_profile.oauth_client_credentials.client_secret.raw_value`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
 [Read more about sensitive data in state](https://developer.hashicorp.com/terraform/language/manage-sensitive-data).
 
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
@@ -601,6 +601,21 @@ The following arguments are supported:
   Configuration for connecting to a MongoDB database.
   Structure is [documented below](#nested_mongodb_profile).
 
+* `dataverse_profile` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Configuration for connecting to a Microsoft Dataverse organization.
+  Structure is [documented below](#nested_dataverse_profile).
+
+* `salesforce_marketing_cloud_profile` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Configuration for connecting to a Salesforce Marketing Cloud instance.
+  Structure is [documented below](#nested_salesforce_marketing_cloud_profile).
+
+* `service_now_profile` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Configuration for connecting to a ServiceNow instance.
+  Structure is [documented below](#nested_service_now_profile).
+
 * `forward_ssh_connectivity` -
   (Optional)
   Forward SSH tunnel connectivity.
@@ -1009,6 +1024,148 @@ The following arguments are supported:
   (Optional)
   Specifies whether the client connects directly to the
   host[:port] in the connection URI.
+
+<a name="nested_dataverse_profile"></a>The `dataverse_profile` block supports:
+
+* `tenant_id` -
+  (Required)
+  Tenant ID of the Microsoft Dataverse instance.
+
+* `environment_url` -
+  (Required)
+  Environment URL of the Microsoft Dataverse instance. Example: `<subdomain>.crm.dynamics.com`
+
+* `oauth_client_credentials` -
+  (Required)
+  Credentials for authenticating with the Dataverse API.
+  Structure is [documented below](#nested_dataverse_profile_oauth_client_credentials).
+
+
+<a name="nested_dataverse_profile_oauth_client_credentials"></a>The `oauth_client_credentials` block supports:
+
+* `client_id` -
+  (Required)
+  Client ID for OAuth Client Credentials.
+
+* `client_secret` -
+  (Required)
+  Client secret for OAuth Client Credentials.
+  Structure is [documented below](#nested_dataverse_profile_oauth_client_credentials_client_secret).
+
+
+<a name="nested_dataverse_profile_oauth_client_credentials_client_secret"></a>The `client_secret` block supports:
+
+* `raw_value` -
+  (Optional)
+  Input only. The raw secret value.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `secret_version` -
+  (Optional)
+  The resource name of the Secret Manager secret version. Format:
+  projects/{project}/secrets/{secret}/versions/{secret_version}
+
+<a name="nested_salesforce_marketing_cloud_profile"></a>The `salesforce_marketing_cloud_profile` block supports:
+
+* `subdomain` -
+  (Required)
+  Subdomain for the Salesforce Marketing Cloud connection.
+
+* `oauth_client_credentials` -
+  (Required)
+  Credentials for authenticating with the Salesforce Marketing Cloud API.
+  Structure is [documented below](#nested_salesforce_marketing_cloud_profile_oauth_client_credentials).
+
+
+<a name="nested_salesforce_marketing_cloud_profile_oauth_client_credentials"></a>The `oauth_client_credentials` block supports:
+
+* `client_id` -
+  (Required)
+  Client ID for OAuth Client Credentials.
+
+* `client_secret` -
+  (Required)
+  Client secret for OAuth Client Credentials.
+  Structure is [documented below](#nested_salesforce_marketing_cloud_profile_oauth_client_credentials_client_secret).
+
+
+<a name="nested_salesforce_marketing_cloud_profile_oauth_client_credentials_client_secret"></a>The `client_secret` block supports:
+
+* `raw_value` -
+  (Optional)
+  Input only. The raw secret value.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `secret_version` -
+  (Optional)
+  The resource name of the Secret Manager secret version. Format:
+  projects/{project}/secrets/{secret}/versions/{secret_version}
+
+<a name="nested_service_now_profile"></a>The `service_now_profile` block supports:
+
+* `instance` -
+  (Required)
+  The instance of the ServiceNow account. This is the `<instance>` part of
+  the URL `https://<instance>.service-now.com`.
+
+* `user_password_credentials` -
+  (Optional)
+  User-password authentication.
+  Structure is [documented below](#nested_service_now_profile_user_password_credentials).
+
+* `oauth_client_credentials` -
+  (Optional)
+  Credentials for authenticating with the ServiceNow API.
+  Structure is [documented below](#nested_service_now_profile_oauth_client_credentials).
+
+
+<a name="nested_service_now_profile_user_password_credentials"></a>The `user_password_credentials` block supports:
+
+* `username` -
+  (Required)
+  Username for the connection.
+
+* `password` -
+  (Required)
+  Password for the connection.
+  Structure is [documented below](#nested_service_now_profile_user_password_credentials_password).
+
+
+<a name="nested_service_now_profile_user_password_credentials_password"></a>The `password` block supports:
+
+* `raw_value` -
+  (Optional)
+  Input only. The raw secret value.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `secret_version` -
+  (Optional)
+  The resource name of the Secret Manager secret version. Format:
+  projects/{project}/secrets/{secret}/versions/{secret_version}
+
+<a name="nested_service_now_profile_oauth_client_credentials"></a>The `oauth_client_credentials` block supports:
+
+* `client_id` -
+  (Required)
+  Client ID for OAuth Client Credentials.
+
+* `client_secret` -
+  (Required)
+  Client secret for OAuth Client Credentials.
+  Structure is [documented below](#nested_service_now_profile_oauth_client_credentials_client_secret).
+
+
+<a name="nested_service_now_profile_oauth_client_credentials_client_secret"></a>The `client_secret` block supports:
+
+* `raw_value` -
+  (Optional)
+  Input only. The raw secret value.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `secret_version` -
+  (Optional)
+  The resource name of the Secret Manager secret version. Format:
+  projects/{project}/secrets/{secret}/versions/{secret_version}
 
 <a name="nested_forward_ssh_connectivity"></a>The `forward_ssh_connectivity` block supports:
 

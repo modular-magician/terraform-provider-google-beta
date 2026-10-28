@@ -1724,6 +1724,21 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   MongoDB source configuration.
   Structure is [documented below](#nested_source_config_mongodb_source_config).
 
+* `dataverse_source_config` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Dataverse data source configuration.
+  Structure is [documented below](#nested_source_config_dataverse_source_config).
+
+* `salesforce_marketing_cloud_source_config` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Salesforce Marketing Cloud data source configuration.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config).
+
+* `service_now_source_config` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  ServiceNow data source configuration.
+  Structure is [documented below](#nested_source_config_service_now_source_config).
+
 
 <a name="nested_source_config_mysql_source_config"></a>The `mysql_source_config` block supports:
 
@@ -2684,6 +2699,460 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   (Optional)
   Field name.
 
+<a name="nested_source_config_dataverse_source_config"></a>The `dataverse_source_config` block supports:
+
+* `include_objects` -
+  (Optional)
+  Dataverse objects to retrieve from the source.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_include_objects).
+
+* `exclude_objects` -
+  (Optional)
+  Dataverse objects to exclude from the stream.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_exclude_objects).
+
+* `polling_interval` -
+  (Required)
+  Dataverse objects polling interval. The interval at which new changes
+  will be polled for each object. The duration must be between 5 minutes
+  and 24 hours.
+
+
+<a name="nested_source_config_dataverse_source_config_include_objects"></a>The `include_objects` block supports:
+
+* `objects` -
+  (Optional)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_include_objects_objects).
+
+
+<a name="nested_source_config_dataverse_source_config_include_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_include_objects_objects_properties).
+
+
+<a name="nested_source_config_dataverse_source_config_include_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_include_objects_objects_properties_properties).
+
+
+<a name="nested_source_config_dataverse_source_config_include_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_include_objects_objects_properties_properties_properties).
+
+
+<a name="nested_source_config_dataverse_source_config_include_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+<a name="nested_source_config_dataverse_source_config_exclude_objects"></a>The `exclude_objects` block supports:
+
+* `objects` -
+  (Optional)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_exclude_objects_objects).
+
+
+<a name="nested_source_config_dataverse_source_config_exclude_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_exclude_objects_objects_properties).
+
+
+<a name="nested_source_config_dataverse_source_config_exclude_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_exclude_objects_objects_properties_properties).
+
+
+<a name="nested_source_config_dataverse_source_config_exclude_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_dataverse_source_config_exclude_objects_objects_properties_properties_properties).
+
+
+<a name="nested_source_config_dataverse_source_config_exclude_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config"></a>The `salesforce_marketing_cloud_source_config` block supports:
+
+* `include_objects` -
+  (Optional)
+  Salesforce Marketing Cloud objects to retrieve from the source.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_include_objects).
+
+* `exclude_objects` -
+  (Optional)
+  Salesforce Marketing Cloud objects to exclude from the stream.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects).
+
+* `polling_interval` -
+  (Required)
+  Salesforce Marketing Cloud objects polling interval. The interval at
+  which new changes will be polled for each object. The duration must be
+  between 5 minutes and 24 hours.
+
+* `full_refresh_polling_interval` -
+  (Required)
+  Salesforce Marketing Cloud objects full refresh polling interval. The
+  interval at which a full refresh will be performed for objects that do
+  not support incremental extraction. The duration must be between 1 hour
+  and 24 hours.
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_include_objects"></a>The `include_objects` block supports:
+
+* `objects` -
+  (Optional)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects_properties).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects_properties_properties).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects_properties_properties_properties).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_include_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects"></a>The `exclude_objects` block supports:
+
+* `objects` -
+  (Optional)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects_properties).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects_properties_properties).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects_properties_properties_properties).
+
+
+<a name="nested_source_config_salesforce_marketing_cloud_source_config_exclude_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+<a name="nested_source_config_service_now_source_config"></a>The `service_now_source_config` block supports:
+
+* `include_objects` -
+  (Optional)
+  ServiceNow objects to retrieve from the source.
+  Structure is [documented below](#nested_source_config_service_now_source_config_include_objects).
+
+* `exclude_objects` -
+  (Optional)
+  ServiceNow objects to exclude from the stream.
+  Structure is [documented below](#nested_source_config_service_now_source_config_exclude_objects).
+
+* `polling_interval` -
+  (Required)
+  ServiceNow objects polling interval. The interval at which new changes
+  will be polled for each object. The duration must be between 5 minutes
+  and 24 hours.
+
+
+<a name="nested_source_config_service_now_source_config_include_objects"></a>The `include_objects` block supports:
+
+* `objects` -
+  (Optional)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_source_config_service_now_source_config_include_objects_objects).
+
+
+<a name="nested_source_config_service_now_source_config_include_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_source_config_service_now_source_config_include_objects_objects_properties).
+
+
+<a name="nested_source_config_service_now_source_config_include_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_service_now_source_config_include_objects_objects_properties_properties).
+
+
+<a name="nested_source_config_service_now_source_config_include_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_service_now_source_config_include_objects_objects_properties_properties_properties).
+
+
+<a name="nested_source_config_service_now_source_config_include_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+<a name="nested_source_config_service_now_source_config_exclude_objects"></a>The `exclude_objects` block supports:
+
+* `objects` -
+  (Optional)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_source_config_service_now_source_config_exclude_objects_objects).
+
+
+<a name="nested_source_config_service_now_source_config_exclude_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_source_config_service_now_source_config_exclude_objects_objects_properties).
+
+
+<a name="nested_source_config_service_now_source_config_exclude_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_service_now_source_config_exclude_objects_objects_properties_properties).
+
+
+<a name="nested_source_config_service_now_source_config_exclude_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_source_config_service_now_source_config_exclude_objects_objects_properties_properties_properties).
+
+
+<a name="nested_source_config_service_now_source_config_exclude_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
 <a name="nested_destination_config"></a>The `destination_config` block supports:
 
 * `destination_connection_profile` -
@@ -2872,6 +3341,11 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   (Optional)
   MongoDB data source objects to avoid backfilling.
   Structure is [documented below](#nested_backfill_all_mongodb_excluded_objects).
+
+* `saas_excluded_objects` -
+  (Optional)
+  SaaS data source objects to avoid backfilling.
+  Structure is [documented below](#nested_backfill_all_saas_excluded_objects).
 
 
 <a name="nested_backfill_all_mysql_excluded_objects"></a>The `mysql_excluded_objects` block supports:
@@ -3256,6 +3730,71 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
 * `field` -
   (Optional)
   Field name.
+
+<a name="nested_backfill_all_saas_excluded_objects"></a>The `saas_excluded_objects` block supports:
+
+* `objects` -
+  (Required)
+  Source objects in the catalog.
+  Structure is [documented below](#nested_backfill_all_saas_excluded_objects_objects).
+
+
+<a name="nested_backfill_all_saas_excluded_objects_objects"></a>The `objects` block supports:
+
+* `object_name` -
+  (Required)
+  The object name.
+
+* `properties` -
+  (Optional)
+  Source properties. When unspecified as part of include objects, includes
+  everything, when unspecified as part of exclude objects, excludes nothing.
+  Structure is [documented below](#nested_backfill_all_saas_excluded_objects_objects_properties).
+
+
+<a name="nested_backfill_all_saas_excluded_objects_objects_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_backfill_all_saas_excluded_objects_objects_properties_properties).
+
+
+<a name="nested_backfill_all_saas_excluded_objects_objects_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
+
+* `properties` -
+  (Optional)
+  Source properties. When specified, it means that the current property
+  contains nested properties of its own.
+  Structure is [documented below](#nested_backfill_all_saas_excluded_objects_objects_properties_properties_properties).
+
+
+<a name="nested_backfill_all_saas_excluded_objects_objects_properties_properties_properties"></a>The `properties` block supports:
+
+* `property_name` -
+  (Required)
+  The property name.
+
+* `primary_key` -
+  (Optional)
+  Whether or not the property is a primary key.
 
 <a name="nested_rule_sets"></a>The `rule_sets` block supports:
 

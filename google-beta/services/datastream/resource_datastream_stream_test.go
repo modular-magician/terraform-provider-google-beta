@@ -614,6 +614,21 @@ resource "google_datastream_stream" "default" {
                 }
             }
         }
+        saas_excluded_objects {
+            objects {
+                object_name = "account"
+                properties {
+                    property_name = "address"
+                    primary_key   = true
+                    properties {
+                        property_name = "location"
+                        properties {
+                            property_name = "zip_code"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 `, context)
