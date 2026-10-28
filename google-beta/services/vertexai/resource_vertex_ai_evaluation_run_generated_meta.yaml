@@ -1,0 +1,308 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_vertex_ai_evaluation_run
+generation_type: mmv1
+source_file: products/vertexai/EvaluationRun.yaml
+api_service_name: aiplatform.googleapis.com
+api_version: v1beta1
+api_resource_type_kind: EvaluationRun
+fields:
+    - api_field: completionTime
+    - api_field: createTime
+    - api_field: dataSource.bigqueryRequestSet.candidateResponseColumns
+    - api_field: dataSource.bigqueryRequestSet.promptColumn
+    - api_field: dataSource.bigqueryRequestSet.rubricsColumn
+    - api_field: dataSource.bigqueryRequestSet.samplingConfig.samplingCount
+    - api_field: dataSource.bigqueryRequestSet.samplingConfig.samplingDuration
+    - api_field: dataSource.bigqueryRequestSet.samplingConfig.samplingMethod
+    - api_field: dataSource.bigqueryRequestSet.uri
+    - api_field: dataSource.evaluationSet
+    - api_field: displayName
+    - field: effective_labels
+      provider_only: true
+    - api_field: encryptionSpec.kmsKeyName
+    - api_field: error.code
+    - api_field: error.details
+    - api_field: error.message
+    - api_field: evaluationConfig.allowCrossRegionModel
+    - api_field: evaluationConfig.autoraterConfig.autoraterModel
+    - api_field: evaluationConfig.autoraterConfig.generationConfig.seed
+    - api_field: evaluationConfig.autoraterConfig.generationConfig.temperature
+    - api_field: evaluationConfig.autoraterConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.autoraterConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.autoraterConfig.generationConfig.topK
+    - api_field: evaluationConfig.autoraterConfig.generationConfig.topP
+    - api_field: evaluationConfig.autoraterConfig.sampleCount
+    - api_field: evaluationConfig.cloudLoggingConfig.project
+    - api_field: evaluationConfig.cloudLoggingConfig.resourceLabels
+    - api_field: evaluationConfig.cloudLoggingConfig.resourceType
+    - api_field: evaluationConfig.cloudLoggingConfig.tracingContext.conversationId
+    - api_field: evaluationConfig.cloudLoggingConfig.tracingContext.spanId
+    - api_field: evaluationConfig.cloudLoggingConfig.tracingContext.traceId
+    - api_field: evaluationConfig.datasetCustomMetrics.aggregationFunction
+    - api_field: evaluationConfig.datasetCustomMetrics.displayName
+    - api_field: evaluationConfig.lossAnalysisConfig.candidate
+    - api_field: evaluationConfig.lossAnalysisConfig.metric
+    - api_field: evaluationConfig.metrics.computationBasedMetricSpec.parameters
+      json: true
+    - api_field: evaluationConfig.metrics.computationBasedMetricSpec.type
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.additionalConfig
+      json: true
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.autoraterModel
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.seed
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.temperature
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.topK
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.topP
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.judgeAutoraterConfig.sampleCount
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.metricPromptTemplate
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.predefinedRubricGenerationSpec.metricSpecName
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.predefinedRubricGenerationSpec.parameters
+      json: true
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.metricResourceName
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.autoraterModel
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.seed
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.temperature
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.topK
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.topP
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.sampleCount
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.promptTemplate
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.rubricContentType
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGenerationSpec.rubricTypeOntology
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.rubricGroupKey
+    - api_field: evaluationConfig.metrics.llmBasedMetricSpec.systemInstruction
+    - api_field: evaluationConfig.metrics.metric
+    - api_field: evaluationConfig.metrics.metricConfig.aggregationMetrics
+    - api_field: evaluationConfig.metrics.metricConfig.computationBasedMetricSpec.parameters
+      json: true
+    - api_field: evaluationConfig.metrics.metricConfig.computationBasedMetricSpec.type
+    - api_field: evaluationConfig.metrics.metricConfig.customCodeExecutionSpec.evaluationFunction
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.additionalConfig
+      json: true
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.autoraterModel
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.flipEnabled
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.seed
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.temperature
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.topK
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.generationConfig.topP
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.judgeAutoraterConfig.samplingCount
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.metricPromptTemplate
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.predefinedRubricGenerationSpec.metricSpecName
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.predefinedRubricGenerationSpec.metricSpecParameters
+      json: true
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.resultParserConfig.customCodeParserConfig.parsingFunction
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.autoraterModel
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.flipEnabled
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.seed
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.temperature
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.topK
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.topP
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.modelConfig.samplingCount
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.promptTemplate
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.rubricContentType
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGenerationSpec.rubricTypeOntology
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.rubricGroupKey
+    - api_field: evaluationConfig.metrics.metricConfig.llmBasedMetricSpec.systemInstruction
+    - api_field: evaluationConfig.metrics.metricConfig.metadata.otherMetadata
+      json: true
+    - api_field: evaluationConfig.metrics.metricConfig.metadata.scoreRange.description
+    - api_field: evaluationConfig.metrics.metricConfig.metadata.scoreRange.max
+    - api_field: evaluationConfig.metrics.metricConfig.metadata.scoreRange.min
+    - api_field: evaluationConfig.metrics.metricConfig.metadata.scoreRange.step
+    - api_field: evaluationConfig.metrics.metricConfig.metadata.title
+    - api_field: evaluationConfig.metrics.metricConfig.pointwiseMetricSpec.customOutputFormatConfig.returnRawOutput
+    - api_field: evaluationConfig.metrics.metricConfig.pointwiseMetricSpec.metricPromptTemplate
+    - api_field: evaluationConfig.metrics.metricConfig.pointwiseMetricSpec.systemInstruction
+    - api_field: evaluationConfig.metrics.metricConfig.predefinedMetricSpec.metricSpecName
+    - api_field: evaluationConfig.metrics.metricConfig.predefinedMetricSpec.metricSpecParameters
+      json: true
+    - api_field: evaluationConfig.metrics.metricResourceName
+    - api_field: evaluationConfig.metrics.predefinedMetricSpec.metricSpecName
+    - api_field: evaluationConfig.metrics.predefinedMetricSpec.parameters
+      json: true
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.inlineRubrics.rubrics.content.property.description
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.inlineRubrics.rubrics.importance
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.inlineRubrics.rubrics.rubricId
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.inlineRubrics.rubrics.type
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.autoraterModel
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.generationConfig.seed
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.generationConfig.temperature
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.generationConfig.topK
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.generationConfig.topP
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.judgeAutoraterConfig.sampleCount
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.metricPromptTemplate
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.metricResourceName
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.autoraterModel
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.seed
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.temperature
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.topK
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.generationConfig.topP
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.modelConfig.sampleCount
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.promptTemplate
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.rubricContentType
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGenerationSpec.rubricTypeOntology
+    - api_field: evaluationConfig.metrics.rubricBasedMetricSpec.rubricGroupKey
+    - api_field: evaluationConfig.outputConfig.bigqueryDestination.outputUri
+    - api_field: evaluationConfig.outputConfig.gcsDestination.outputUriPrefix
+    - api_field: evaluationConfig.promptTemplate.gcsUri
+    - api_field: evaluationConfig.promptTemplate.promptTemplate
+    - api_field: evaluationConfig.rubricConfigs.predefinedRubricGenerationSpec.metricSpecName
+    - api_field: evaluationConfig.rubricConfigs.predefinedRubricGenerationSpec.parameters
+      json: true
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.metricResourceName
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.autoraterModel
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.generationConfig.seed
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.generationConfig.temperature
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.includeThoughts
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.generationConfig.thinkingConfig.thinkingBudget
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.generationConfig.topK
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.generationConfig.topP
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.modelConfig.sampleCount
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.promptTemplate
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.rubricContentType
+    - api_field: evaluationConfig.rubricConfigs.rubricGenerationSpec.rubricTypeOntology
+    - api_field: evaluationConfig.rubricConfigs.rubricGroupKey
+    - api_field: evaluationResults.evaluationSet
+    - api_field: evaluationResults.summaryMetrics.failedItems
+    - api_field: evaluationResults.summaryMetrics.metrics
+      json: true
+    - api_field: evaluationResults.summaryMetrics.totalItems
+    - api_field: evaluationSetSnapshot
+    - api_field: inferenceConfigs.key
+      field: inference_configs.candidate
+    - api_field: inferenceConfigs.value.agentRunConfig.agentEngine
+      field: inference_configs.agent_run_config.agent_engine
+    - api_field: inferenceConfigs.value.agentRunConfig.geminiAgentConfig.geminiAgent
+      field: inference_configs.agent_run_config.gemini_agent_config.gemini_agent
+    - api_field: inferenceConfigs.value.agentRunConfig.sessionInput.parameters
+      field: inference_configs.agent_run_config.session_input.parameters
+    - api_field: inferenceConfigs.value.agentRunConfig.sessionInput.sessionState
+      field: inference_configs.agent_run_config.session_input.session_state
+      json: true
+    - api_field: inferenceConfigs.value.agentRunConfig.sessionInput.userId
+      field: inference_configs.agent_run_config.session_input.user_id
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.maxTurn
+      field: inference_configs.agent_run_config.user_simulator_config.max_turn
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.candidateCount
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.candidate_count
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.frequencyPenalty
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.frequency_penalty
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.logprobs
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.logprobs
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.maxOutputTokens
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.max_output_tokens
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.presencePenalty
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.presence_penalty
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.responseJsonSchema
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.response_json_schema
+      json: true
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.responseLogprobs
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.response_logprobs
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.responseMimeType
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.response_mime_type
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.responseSchema
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.response_schema
+      json: true
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.routingConfig.autoMode.modelRoutingPreference
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.routing_config.auto_mode.model_routing_preference
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.routingConfig.manualMode.modelName
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.routing_config.manual_mode.model_name
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.seed
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.seed
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.stopSequences
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.stop_sequences
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.temperature
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.temperature
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.thinkingConfig.includeThoughts
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.thinking_config.include_thoughts
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.thinkingConfig.thinkingBudget
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.thinking_config.thinking_budget
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.topK
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.top_k
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelConfig.topP
+      field: inference_configs.agent_run_config.user_simulator_config.model_config.top_p
+    - api_field: inferenceConfigs.value.agentRunConfig.userSimulatorConfig.modelName
+      field: inference_configs.agent_run_config.user_simulator_config.model_name
+    - api_field: inferenceConfigs.value.agents.key
+      field: inference_configs.agents.agent_key
+    - api_field: inferenceConfigs.value.agents.value.agentId
+      field: inference_configs.agents.agent_id
+    - api_field: inferenceConfigs.value.agents.value.agentType
+      field: inference_configs.agents.agent_type
+    - api_field: inferenceConfigs.value.agents.value.description
+      field: inference_configs.agents.description
+    - api_field: inferenceConfigs.value.agents.value.instruction
+      field: inference_configs.agents.instruction
+    - api_field: inferenceConfigs.value.agents.value.subAgents
+      field: inference_configs.agents.sub_agents
+    - api_field: inferenceConfigs.value.agents.value.tools
+      field: inference_configs.agents.tools
+      json: true
+    - api_field: inferenceConfigs.value.generationConfig.candidateCount
+      field: inference_configs.generation_config.candidate_count
+    - api_field: inferenceConfigs.value.generationConfig.frequencyPenalty
+      field: inference_configs.generation_config.frequency_penalty
+    - api_field: inferenceConfigs.value.generationConfig.logprobs
+      field: inference_configs.generation_config.logprobs
+    - api_field: inferenceConfigs.value.generationConfig.maxOutputTokens
+      field: inference_configs.generation_config.max_output_tokens
+    - api_field: inferenceConfigs.value.generationConfig.presencePenalty
+      field: inference_configs.generation_config.presence_penalty
+    - api_field: inferenceConfigs.value.generationConfig.responseJsonSchema
+      field: inference_configs.generation_config.response_json_schema
+      json: true
+    - api_field: inferenceConfigs.value.generationConfig.responseLogprobs
+      field: inference_configs.generation_config.response_logprobs
+    - api_field: inferenceConfigs.value.generationConfig.responseMimeType
+      field: inference_configs.generation_config.response_mime_type
+    - api_field: inferenceConfigs.value.generationConfig.responseSchema
+      field: inference_configs.generation_config.response_schema
+      json: true
+    - api_field: inferenceConfigs.value.generationConfig.routingConfig.autoMode.modelRoutingPreference
+      field: inference_configs.generation_config.routing_config.auto_mode.model_routing_preference
+    - api_field: inferenceConfigs.value.generationConfig.routingConfig.manualMode.modelName
+      field: inference_configs.generation_config.routing_config.manual_mode.model_name
+    - api_field: inferenceConfigs.value.generationConfig.seed
+      field: inference_configs.generation_config.seed
+    - api_field: inferenceConfigs.value.generationConfig.stopSequences
+      field: inference_configs.generation_config.stop_sequences
+    - api_field: inferenceConfigs.value.generationConfig.temperature
+      field: inference_configs.generation_config.temperature
+    - api_field: inferenceConfigs.value.generationConfig.thinkingConfig.includeThoughts
+      field: inference_configs.generation_config.thinking_config.include_thoughts
+    - api_field: inferenceConfigs.value.generationConfig.thinkingConfig.thinkingBudget
+      field: inference_configs.generation_config.thinking_config.thinking_budget
+    - api_field: inferenceConfigs.value.generationConfig.topK
+      field: inference_configs.generation_config.top_k
+    - api_field: inferenceConfigs.value.generationConfig.topP
+      field: inference_configs.generation_config.top_p
+    - api_field: inferenceConfigs.value.model
+      field: inference_configs.model
+    - api_field: inferenceConfigs.value.parallelism
+      field: inference_configs.parallelism
+    - api_field: inferenceConfigs.value.promptTemplate.gcsUri
+      field: inference_configs.prompt_template.gcs_uri
+    - api_field: inferenceConfigs.value.promptTemplate.promptTemplate
+      field: inference_configs.prompt_template.prompt_template
+    - api_field: labels
+    - api_field: metadata
+      json: true
+    - api_field: name
+    - field: region
+      provider_only: true
+    - api_field: state
+    - field: terraform_labels
+      provider_only: true
+    - field: deletion_policy
+      provider_only: true
