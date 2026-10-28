@@ -82,7 +82,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderSamlBa
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -140,7 +140,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderSamlFu
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -215,7 +215,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderOidcBa
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -283,7 +283,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderOidcFu
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -369,7 +369,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderOidcUp
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -438,7 +438,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderExtraA
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -516,7 +516,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderExtraA
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -598,7 +598,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderExtraA
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -677,7 +677,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderExtraA
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -758,7 +758,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderExtend
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -836,7 +836,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderExtend
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -917,7 +917,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProvider_iamWorkforcePoolProviderOidcDe
 			},
 			{
 				ResourceName:       "google_iam_workforce_pool_provider.example",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

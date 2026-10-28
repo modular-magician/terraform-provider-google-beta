@@ -83,7 +83,7 @@ func TestAccBigQueryDataset_bigqueryDatasetBasicExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -148,7 +148,7 @@ func TestAccBigQueryDataset_bigqueryDatasetWithMaxTimeTravelHoursExample(t *test
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -215,7 +215,7 @@ func TestAccBigQueryDataset_bigqueryDatasetAuthorizedDatasetExample(t *testing.T
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -314,7 +314,7 @@ func TestAccBigQueryDataset_bigqueryDatasetAuthorizedRoutineExample(t *testing.T
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.private",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -392,7 +392,7 @@ func TestAccBigQueryDataset_bigqueryDatasetCaseInsensitiveNamesExample(t *testin
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -458,7 +458,7 @@ func TestAccBigQueryDataset_bigqueryDatasetDefaultCollationSetExample(t *testing
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -523,7 +523,7 @@ func TestAccBigQueryDataset_bigqueryDatasetExternalCatalogDatasetOptionsExample(
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -579,7 +579,7 @@ func TestAccBigQueryDataset_bigqueryDatasetResourceTagsExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_bigquery_dataset.dataset",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

@@ -80,7 +80,7 @@ func TestAccDocumentAIProcessor_documentaiProcessorExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_document_ai_processor.processor",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -124,7 +124,7 @@ func TestAccDocumentAIProcessor_documentaiProcessorEuExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_document_ai_processor.processor",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

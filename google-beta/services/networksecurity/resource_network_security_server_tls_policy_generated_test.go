@@ -82,7 +82,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyBasicEx
 			},
 			{
 				ResourceName:       "google_network_security_server_tls_policy.default",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -141,7 +141,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyAdvance
 			},
 			{
 				ResourceName:       "google_network_security_server_tls_policy.default",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -192,7 +192,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyServerC
 			},
 			{
 				ResourceName:       "google_network_security_server_tls_policy.default",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -246,7 +246,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyMtlsExa
 			},
 			{
 				ResourceName:       "google_network_security_server_tls_policy.default",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

@@ -83,7 +83,7 @@ func TestAccWorkstationsWorkstation_workstationBasicExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_workstations_workstation.default",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

@@ -84,7 +84,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineDeletionPolicyExample
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -129,7 +129,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineBasicExample(t *testi
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -176,7 +176,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineSourceBasedDeployment
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -234,7 +234,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineDeveloperConnectSourc
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -298,7 +298,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineImageSpecExample(t *t
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -355,7 +355,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineByocExample(t *testin
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -460,7 +460,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineFullExample(t *testin
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -677,7 +677,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineContextSpecExample(t 
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -894,7 +894,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineGranularTtlExample(t 
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -960,7 +960,7 @@ func TestAccVertexAIReasoningEngine_vertexAiReasoningEngineTrafficConfigExample(
 			},
 			{
 				ResourceName:       "google_vertex_ai_reasoning_engine.reasoning_engine",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

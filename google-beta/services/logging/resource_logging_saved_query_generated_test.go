@@ -81,7 +81,7 @@ func TestAccLoggingSavedQuery_loggingSavedQueryBasicExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_logging_saved_query.saved_query",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -132,7 +132,7 @@ func TestAccLoggingSavedQuery_loggingSavedQueryNoDescriptionExample(t *testing.T
 			},
 			{
 				ResourceName:       "google_logging_saved_query.saved_query",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -182,7 +182,7 @@ func TestAccLoggingSavedQuery_loggingSavedQueryPrivateExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_logging_saved_query.saved_query",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -233,7 +233,7 @@ func TestAccLoggingSavedQuery_loggingSavedQuerySummaryFieldsExample(t *testing.T
 			},
 			{
 				ResourceName:       "google_logging_saved_query.saved_query",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -291,7 +291,7 @@ func TestAccLoggingSavedQuery_loggingSavedQuerySqlBasicExample(t *testing.T) {
 			},
 			{
 				ResourceName:       "google_logging_saved_query.saved_query",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

@@ -97,7 +97,7 @@ func TestAccGKEHub2RolloutSequence_gkeHubRolloutSequenceBasicExample(t *testing.
 			},
 			{
 				ResourceName:       "google_gke_hub_rollout_sequence.rollout_sequence",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -117,7 +117,7 @@ func TestAccGKEHub2RolloutSequence_gkeHubRolloutSequenceBasicExample(t *testing.
 			},
 			{
 				ResourceName:       "google_gke_hub_rollout_sequence.rollout_sequence",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -287,7 +287,7 @@ func TestAccGKEHub2RolloutSequence_gkeHubRolloutSequenceUserTriggeredExample(t *
 			},
 			{
 				ResourceName:       "google_gke_hub_rollout_sequence.rollout_sequence",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -307,7 +307,7 @@ func TestAccGKEHub2RolloutSequence_gkeHubRolloutSequenceUserTriggeredExample(t *
 			},
 			{
 				ResourceName:       "google_gke_hub_rollout_sequence.rollout_sequence",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

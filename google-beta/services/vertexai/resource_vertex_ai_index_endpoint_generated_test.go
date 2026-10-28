@@ -86,7 +86,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointTestExample(t *testing.T)
 			},
 			{
 				ResourceName:       "google_vertex_ai_index_endpoint.index_endpoint",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -164,7 +164,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithPscExample(t *testing
 			},
 			{
 				ResourceName:       "google_vertex_ai_index_endpoint.index_endpoint",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -259,7 +259,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithPublicEndpointExample
 			},
 			{
 				ResourceName:       "google_vertex_ai_index_endpoint.index_endpoint",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

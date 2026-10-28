@@ -118,7 +118,7 @@ func TestAccVertexAISemanticGovernancePolicy_vertexAiSemanticGovernancePolicyUpd
 			},
 			{
 				ResourceName:       "google_vertex_ai_semantic_governance_policy.policy",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -138,7 +138,7 @@ func TestAccVertexAISemanticGovernancePolicy_vertexAiSemanticGovernancePolicyUpd
 			},
 			{
 				ResourceName:       "google_vertex_ai_semantic_governance_policy.policy",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -158,7 +158,7 @@ func TestAccVertexAISemanticGovernancePolicy_vertexAiSemanticGovernancePolicyUpd
 			},
 			{
 				ResourceName:       "google_vertex_ai_semantic_governance_policy.policy",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},

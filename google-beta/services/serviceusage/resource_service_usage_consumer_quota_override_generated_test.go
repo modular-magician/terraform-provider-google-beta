@@ -82,7 +82,7 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideExample(t *te
 			},
 			{
 				ResourceName:       "google_service_usage_consumer_quota_override.override",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -139,7 +139,7 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideZeroValueExam
 			},
 			{
 				ResourceName:       "google_service_usage_consumer_quota_override.override",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -196,7 +196,7 @@ func TestAccServiceUsageConsumerQuotaOverride_regionConsumerQuotaOverrideExample
 			},
 			{
 				ResourceName:       "google_service_usage_consumer_quota_override.override",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
@@ -256,7 +256,7 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideCustomDimensi
 			},
 			{
 				ResourceName:       "google_service_usage_consumer_quota_override.override",
-				RefreshState:       true,
+				ImportState:        true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
