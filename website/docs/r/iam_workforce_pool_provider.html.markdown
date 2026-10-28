@@ -624,7 +624,7 @@ The following arguments are supported:
 
 * `scim_usage` -
   (Optional)
-  Agentspace only. Specifies whether the workforce identity pool
+  Specifies whether the workforce identity pool
   provider uses SCIM-managed groups instead of the `google.groups`
   attribute mapping for authorization checks.
   The `scimUsage` and `extendedAttributesOauth2Client` fields are
@@ -633,7 +633,8 @@ The following arguments are supported:
   * SCIM_USAGE_UNSPECIFIED: Default behaviour
   * ENABLED_FOR_GROUPS: Use SCIM-managed groups instead of the `google.groups`
     attribute mapping for authorization checks
-  Possible values are: `SCIM_USAGE_UNSPECIFIED`, `ENABLED_FOR_GROUPS`.
+  * ENABLED_FOR_USERS_GROUPS: Use SCIM-managed user claims and groups.
+  Possible values are: `SCIM_USAGE_UNSPECIFIED`, `ENABLED_FOR_GROUPS`, `ENABLED_FOR_USERS_GROUPS`.
 
 * `detailed_audit_logging` -
   (Optional)
