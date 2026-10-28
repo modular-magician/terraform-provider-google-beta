@@ -56,6 +56,9 @@ fields:
     - api_field: oracleProfile.connectionAttributes
     - api_field: oracleProfile.databaseService
     - api_field: oracleProfile.hostname
+    - api_field: oracleProfile.oracleSslConfig.caCertificate
+    - api_field: oracleProfile.oracleSslConfig.caCertificateSet
+    - api_field: oracleProfile.oracleSslConfig.serverCertificateDistinguishedName
     - api_field: oracleProfile.password
     - api_field: oracleProfile.port
     - api_field: oracleProfile.secretManagerStoredPassword
@@ -68,7 +71,9 @@ fields:
     - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.caCertificate
     - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.clientCertificate
     - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.clientKey
+    - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.serverCertificateHostname
     - api_field: postgresqlProfile.sslConfig.serverVerification.caCertificate
+    - api_field: postgresqlProfile.sslConfig.serverVerification.serverCertificateHostname
     - api_field: postgresqlProfile.username
     - api_field: privateConnectivity.privateConnection
     - api_field: salesforceProfile.domain
@@ -87,6 +92,10 @@ fields:
     - api_field: sqlServerProfile.password
     - api_field: sqlServerProfile.port
     - api_field: sqlServerProfile.secretManagerStoredPassword
+    - api_field: sqlServerProfile.sslConfig.basicEncryption
+    - api_field: sqlServerProfile.sslConfig.encryptionAndServerValidation.caCertificate
+    - api_field: sqlServerProfile.sslConfig.encryptionAndServerValidation.serverCertificateHostname
+    - api_field: sqlServerProfile.sslConfig.encryptionNotEnforced
     - api_field: sqlServerProfile.username
     - field: terraform_labels
       provider_only: true

@@ -529,6 +529,39 @@ If this field is used then the 'client_certificate' and the
 							Description: `Connection string attributes`,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
+						"oracle_ssl_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. SSL configuration for the Oracle connection.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ca_certificate": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `PEM-encoded certificate of the CA that signed the source database
+server's certificate.`,
+										Sensitive: true,
+									},
+									"server_certificate_distinguished_name": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `The distinguished name (DN) mentioned in the server
+certificate. This corresponds to SSL_SERVER_CERT_DN sqlnet parameter.
+Refer
+https://docs.oracle.com/en/database/oracle/oracle-database/19/netrf/local-naming-parameters-in-the-tnsnames-ora-file.html#GUID-70AB0695-A9AA-4A94-B141-4C605236EEB7
+If this field is not provided, the DN matching is not enforced.`,
+									},
+									"ca_certificate_set": {
+										Type:     schema.TypeBool,
+										Computed: true,
+										Description: `Indicates whether the caCertificate field has been set for this
+Connection-Profile.`,
+									},
+								},
+							},
+						},
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -632,9 +665,16 @@ the PostgreSQL server to authenticate the client's identity,
 i.e. identity of the stream.`,
 													Sensitive: true,
 												},
+												"server_certificate_hostname": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The hostname mentioned in the Subject or the Subject Alternative Name
+field of the server certificate. If this field is not provided, the
+hostname in the server certificate is not validated.`,
+												},
 											},
 										},
-										ExactlyOneOf: []string{},
+										ExactlyOneOf: []string{"postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification"},
 									},
 									"server_verification": {
 										Type:     schema.TypeList,
@@ -651,9 +691,16 @@ and the server identity will be authenticated.`,
 													Description: `PEM-encoded server root CA certificate.`,
 													Sensitive:   true,
 												},
+												"server_certificate_hostname": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The hostname mentioned in the Subject or the Subject Alternative Name
+field of the server certificate. If this field is not provided, the
+hostname in the server certificate is not validated.`,
+												},
 											},
 										},
-										ExactlyOneOf: []string{},
+										ExactlyOneOf: []string{"postgresql_profile.0.ssl_config.0.server_and_client_verification", "postgresql_profile.0.ssl_config.0.server_verification"},
 									},
 								},
 							},
@@ -817,6 +864,66 @@ https://spanner.{region}.rep.googleapis.com.`,
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: `A reference to a Secret Manager resource name storing the user's password.`,
+						},
+						"ssl_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `SSL configuration for the SQL Server connection.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"basic_encryption": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `If this field is set, the communication will be encrypted with TLS
+encryption, without validating the server certificate.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{"sql_server_profile.0.ssl_config.0.basic_encryption", "sql_server_profile.0.ssl_config.0.encryption_and_server_validation", "sql_server_profile.0.ssl_config.0.encryption_not_enforced"},
+									},
+									"encryption_and_server_validation": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `If this field is set, the communication will be encrypted with TLS
+encryption and the server identity will be authenticated using the Common
+Name (CN) and/or Subject Alternative Name (SAN) fields in the server
+certificate.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"ca_certificate": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `PEM-encoded certificate of the CA that signed the source database
+server's certificate.`,
+													Sensitive: true,
+												},
+												"server_certificate_hostname": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The hostname mentioned in the Subject or the Subject Alternative Name
+field of the server certificate.`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"sql_server_profile.0.ssl_config.0.basic_encryption", "sql_server_profile.0.ssl_config.0.encryption_and_server_validation", "sql_server_profile.0.ssl_config.0.encryption_not_enforced"},
+									},
+									"encryption_not_enforced": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `If this field is set, Datastream will not enforce encryption for
+communication with the database server. Encryption will be used only if
+the database server forces it, without validating the server certificate.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{"sql_server_profile.0.ssl_config.0.basic_encryption", "sql_server_profile.0.ssl_config.0.encryption_and_server_validation", "sql_server_profile.0.ssl_config.0.encryption_not_enforced"},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -1511,6 +1618,8 @@ func flattenDatastreamConnectionProfileOracleProfile(v interface{}, d *schema.Re
 		flattenDatastreamConnectionProfileOracleProfileDatabaseService(original["databaseService"], d, config)
 	transformed["connection_attributes"] =
 		flattenDatastreamConnectionProfileOracleProfileConnectionAttributes(original["connectionAttributes"], d, config)
+	transformed["oracle_ssl_config"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleSslConfig(original["oracleSslConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatastreamConnectionProfileOracleProfileHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1551,6 +1660,35 @@ func flattenDatastreamConnectionProfileOracleProfileDatabaseService(v interface{
 }
 
 func flattenDatastreamConnectionProfileOracleProfileConnectionAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleSslConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["ca_certificate"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificate(original["caCertificate"], d, config)
+	transformed["ca_certificate_set"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificateSet(original["caCertificateSet"], d, config)
+	transformed["server_certificate_distinguished_name"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleSslConfigServerCertificateDistinguishedName(original["serverCertificateDistinguishedName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("oracle_profile.0.oracle_ssl_config.0.ca_certificate")
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificateSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleSslConfigServerCertificateDistinguishedName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1777,14 +1915,36 @@ func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificat
 	transformed := make(map[string]interface{})
 	transformed["ca_certificate"] =
 		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationCaCertificate(original["caCertificate"], d, config)
+	transformed["server_certificate_hostname"] =
+		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationServerCertificateHostname(original["serverCertificateHostname"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("postgresql_profile.0.ssl_config.0.server_verification.0.ca_certificate")
 }
 
+func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationServerCertificateHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerification(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("postgresql_profile.0.ssl_config.0.server_and_client_verification")
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["client_certificate"] =
+		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationClientCertificate(original["clientCertificate"], d, config)
+	transformed["client_key"] =
+		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationClientKey(original["clientKey"], d, config)
+	transformed["ca_certificate"] =
+		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationCaCertificate(original["caCertificate"], d, config)
+	transformed["server_certificate_hostname"] =
+		flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationServerCertificateHostname(original["serverCertificateHostname"], d, config)
+	return []interface{}{transformed}
 }
 func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationClientCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("postgresql_profile.0.ssl_config.0.server_and_client_verification.0.client_certificate")
@@ -1796,6 +1956,10 @@ func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClient
 
 func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("postgresql_profile.0.ssl_config.0.server_and_client_verification.0.ca_certificate")
+}
+
+func flattenDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationServerCertificateHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenDatastreamConnectionProfileSalesforceProfile(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1933,6 +2097,8 @@ func flattenDatastreamConnectionProfileSqlServerProfile(v interface{}, d *schema
 		flattenDatastreamConnectionProfileSqlServerProfileSecretManagerStoredPassword(original["secretManagerStoredPassword"], d, config)
 	transformed["database"] =
 		flattenDatastreamConnectionProfileSqlServerProfileDatabase(original["database"], d, config)
+	transformed["ssl_config"] =
+		flattenDatastreamConnectionProfileSqlServerProfileSslConfig(original["sslConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatastreamConnectionProfileSqlServerProfileHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1969,6 +2135,62 @@ func flattenDatastreamConnectionProfileSqlServerProfileSecretManagerStoredPasswo
 }
 
 func flattenDatastreamConnectionProfileSqlServerProfileDatabase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileSqlServerProfileSslConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["encryption_not_enforced"] =
+		flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionNotEnforced(original["encryptionNotEnforced"], d, config)
+	transformed["basic_encryption"] =
+		flattenDatastreamConnectionProfileSqlServerProfileSslConfigBasicEncryption(original["basicEncryption"], d, config)
+	transformed["encryption_and_server_validation"] =
+		flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidation(original["encryptionAndServerValidation"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionNotEnforced(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenDatastreamConnectionProfileSqlServerProfileSslConfigBasicEncryption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["ca_certificate"] =
+		flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationCaCertificate(original["caCertificate"], d, config)
+	transformed["server_certificate_hostname"] =
+		flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationServerCertificateHostname(original["serverCertificateHostname"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sql_server_profile.0.ssl_config.0.encryption_and_server_validation.0.ca_certificate")
+}
+
+func flattenDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationServerCertificateHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2292,6 +2514,13 @@ func expandDatastreamConnectionProfileOracleProfile(v interface{}, d tpgresource
 		transformed["connectionAttributes"] = transformedConnectionAttributes
 	}
 
+	transformedOracleSslConfig, err := expandDatastreamConnectionProfileOracleProfileOracleSslConfig(original["oracle_ssl_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOracleSslConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oracleSslConfig"] = transformedOracleSslConfig
+	}
+
 	return transformed, nil
 }
 
@@ -2328,6 +2557,54 @@ func expandDatastreamConnectionProfileOracleProfileConnectionAttributes(v interf
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleSslConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCaCertificate, err := expandDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificate(original["ca_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificate"] = transformedCaCertificate
+	}
+
+	transformedCaCertificateSet, err := expandDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificateSet(original["ca_certificate_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificateSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificateSet"] = transformedCaCertificateSet
+	}
+
+	transformedServerCertificateDistinguishedName, err := expandDatastreamConnectionProfileOracleProfileOracleSslConfigServerCertificateDistinguishedName(original["server_certificate_distinguished_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServerCertificateDistinguishedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serverCertificateDistinguishedName"] = transformedServerCertificateDistinguishedName
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleSslConfigCaCertificateSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleSslConfigServerCertificateDistinguishedName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDatastreamConnectionProfileGcsProfile(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2679,10 +2956,21 @@ func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificati
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
+	transformedServerCertificateHostname, err := expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationServerCertificateHostname(original["server_certificate_hostname"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServerCertificateHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serverCertificateHostname"] = transformedServerCertificateHostname
+	}
+
 	return transformed, nil
 }
 
 func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerVerificationServerCertificateHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2719,6 +3007,13 @@ func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientV
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
+	transformedServerCertificateHostname, err := expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationServerCertificateHostname(original["server_certificate_hostname"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServerCertificateHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serverCertificateHostname"] = transformedServerCertificateHostname
+	}
+
 	return transformed, nil
 }
 
@@ -2731,6 +3026,10 @@ func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientV
 }
 
 func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfilePostgresqlProfileSslConfigServerAndClientVerificationServerCertificateHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2983,6 +3282,13 @@ func expandDatastreamConnectionProfileSqlServerProfile(v interface{}, d tpgresou
 		transformed["database"] = transformedDatabase
 	}
 
+	transformedSslConfig, err := expandDatastreamConnectionProfileSqlServerProfileSslConfig(original["ssl_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSslConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sslConfig"] = transformedSslConfig
+	}
+
 	return transformed, nil
 }
 
@@ -3007,6 +3313,115 @@ func expandDatastreamConnectionProfileSqlServerProfileSecretManagerStoredPasswor
 }
 
 func expandDatastreamConnectionProfileSqlServerProfileDatabase(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileSqlServerProfileSslConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEncryptionNotEnforced, err := expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionNotEnforced(original["encryption_not_enforced"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["encryptionNotEnforced"] = transformedEncryptionNotEnforced
+	}
+
+	transformedBasicEncryption, err := expandDatastreamConnectionProfileSqlServerProfileSslConfigBasicEncryption(original["basic_encryption"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["basicEncryption"] = transformedBasicEncryption
+	}
+
+	transformedEncryptionAndServerValidation, err := expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidation(original["encryption_and_server_validation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEncryptionAndServerValidation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["encryptionAndServerValidation"] = transformedEncryptionAndServerValidation
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionNotEnforced(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileSqlServerProfileSslConfigBasicEncryption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCaCertificate, err := expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationCaCertificate(original["ca_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificate"] = transformedCaCertificate
+	}
+
+	transformedServerCertificateHostname, err := expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationServerCertificateHostname(original["server_certificate_hostname"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServerCertificateHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serverCertificateHostname"] = transformedServerCertificateHostname
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileSqlServerProfileSslConfigEncryptionAndServerValidationServerCertificateHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

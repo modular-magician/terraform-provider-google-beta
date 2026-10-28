@@ -31,7 +31,7 @@ To get more information about ConnectionProfile, see:
     * [Official Documentation](https://cloud.google.com/datastream/docs/create-connection-profiles)
 
 ~> **Warning:** All arguments including the following potentially sensitive
-values will be stored in the raw state as plain text: `oracle_profile.password`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
+values will be stored in the raw state as plain text: `oracle_profile.password`, `oracle_profile.oracle_ssl_config.ca_certificate`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `sql_server_profile.ssl_config.encryption_and_server_validation.ca_certificate`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
 [Read more about sensitive data in state](https://developer.hashicorp.com/terraform/language/manage-sensitive-data).
 
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
@@ -657,6 +657,33 @@ The following arguments are supported:
   (Optional)
   Connection string attributes
 
+* `oracle_ssl_config` -
+  (Optional)
+  Optional. SSL configuration for the Oracle connection.
+  Structure is [documented below](#nested_oracle_profile_oracle_ssl_config).
+
+
+<a name="nested_oracle_profile_oracle_ssl_config"></a>The `oracle_ssl_config` block supports:
+
+* `ca_certificate` -
+  (Optional)
+  PEM-encoded certificate of the CA that signed the source database
+  server's certificate.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `ca_certificate_set` -
+  (Output)
+  Indicates whether the caCertificate field has been set for this
+  Connection-Profile.
+
+* `server_certificate_distinguished_name` -
+  (Optional)
+  The distinguished name (DN) mentioned in the server
+  certificate. This corresponds to SSL_SERVER_CERT_DN sqlnet parameter.
+  Refer
+  https://docs.oracle.com/en/database/oracle/oracle-database/19/netrf/local-naming-parameters-in-the-tnsnames-ora-file.html#GUID-70AB0695-A9AA-4A94-B141-4C605236EEB7
+  If this field is not provided, the DN matching is not enforced.
+
 <a name="nested_gcs_profile"></a>The `gcs_profile` block supports:
 
 * `bucket` -
@@ -786,6 +813,12 @@ The following arguments are supported:
   PEM-encoded server root CA certificate.
   **Note**: This property is sensitive and will not be displayed in the plan.
 
+* `server_certificate_hostname` -
+  (Optional)
+  The hostname mentioned in the Subject or the Subject Alternative Name
+  field of the server certificate. If this field is not provided, the
+  hostname in the server certificate is not validated.
+
 <a name="nested_postgresql_profile_ssl_config_server_and_client_verification"></a>The `server_and_client_verification` block supports:
 
 * `client_certificate` -
@@ -809,6 +842,12 @@ The following arguments are supported:
   (Required)
   PEM-encoded server root CA certificate.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `server_certificate_hostname` -
+  (Optional)
+  The hostname mentioned in the Subject or the Subject Alternative Name
+  field of the server certificate. If this field is not provided, the
+  hostname in the server certificate is not validated.
 
 <a name="nested_salesforce_profile"></a>The `salesforce_profile` block supports:
 
@@ -901,6 +940,47 @@ The following arguments are supported:
 * `database` -
   (Required)
   Database for the SQL Server connection.
+
+* `ssl_config` -
+  (Optional)
+  SSL configuration for the SQL Server connection.
+  Structure is [documented below](#nested_sql_server_profile_ssl_config).
+
+
+<a name="nested_sql_server_profile_ssl_config"></a>The `ssl_config` block supports:
+
+* `encryption_not_enforced` -
+  (Optional)
+  If this field is set, Datastream will not enforce encryption for
+  communication with the database server. Encryption will be used only if
+  the database server forces it, without validating the server certificate.
+
+* `basic_encryption` -
+  (Optional)
+  If this field is set, the communication will be encrypted with TLS
+  encryption, without validating the server certificate.
+
+* `encryption_and_server_validation` -
+  (Optional)
+  If this field is set, the communication will be encrypted with TLS
+  encryption and the server identity will be authenticated using the Common
+  Name (CN) and/or Subject Alternative Name (SAN) fields in the server
+  certificate.
+  Structure is [documented below](#nested_sql_server_profile_ssl_config_encryption_and_server_validation).
+
+
+<a name="nested_sql_server_profile_ssl_config_encryption_and_server_validation"></a>The `encryption_and_server_validation` block supports:
+
+* `ca_certificate` -
+  (Optional)
+  PEM-encoded certificate of the CA that signed the source database
+  server's certificate.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `server_certificate_hostname` -
+  (Optional)
+  The hostname mentioned in the Subject or the Subject Alternative Name
+  field of the server certificate.
 
 <a name="nested_mongodb_profile"></a>The `mongodb_profile` block supports:
 
