@@ -62,6 +62,7 @@ func TestAccNetworkSecurityGatewaySecurityPolicy_networkSecurityGatewaySecurityP
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "us-central1",
 		"resource_name": "tf-test-my-gateway-security-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -94,7 +95,7 @@ func testAccNetworkSecurityGatewaySecurityPolicy_networkSecurityGatewaySecurityP
 	return acctest.Nprintf(`
 resource "google_network_security_gateway_security_policy" "default" {
   name        = "%{resource_name}"
-  location    = "us-central1"
+  location    = "%{location}"
   description = "my description"
 }
 `, context)

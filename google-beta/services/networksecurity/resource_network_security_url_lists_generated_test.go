@@ -60,6 +60,7 @@ func TestAccNetworkSecurityUrlLists_networkSecurityUrlListsBasicExample(t *testi
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "us-central1",
 		"resource_name": "tf-test-my-url-lists" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -92,7 +93,7 @@ func testAccNetworkSecurityUrlLists_networkSecurityUrlListsBasicExample(context 
 	return acctest.Nprintf(`
 resource "google_network_security_url_lists" "default" {
   name        = "%{resource_name}"
-  location    = "us-central1"
+  location    = "%{location}"
   values = ["www.example.com"]
 }
 `, context)
