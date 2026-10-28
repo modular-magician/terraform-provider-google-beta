@@ -1912,6 +1912,15 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
   (Optional)
   Configuration to drop large object values.
 
+* `log_miner` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Configuration to use LogMiner for CDC replication.
+
+* `binary_log_parser` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Configuration to use Binary Log Parser CDC replication method.
+  Structure is [documented below](#nested_source_config_oracle_source_config_binary_log_parser).
+
 
 <a name="nested_source_config_oracle_source_config_include_objects"></a>The `include_objects` block supports:
 
@@ -2054,6 +2063,28 @@ Possible values: NOT_STARTED, RUNNING, PAUSED. Default: NOT_STARTED
 * `ordinal_position` -
   (Output)
   The ordinal position of the column in the table.
+
+<a name="nested_source_config_oracle_source_config_binary_log_parser"></a>The `binary_log_parser` block supports:
+
+* `oracle_asm_log_file_access` -
+  (Optional)
+  Configuration to use Oracle ASM to access the log files.
+
+* `log_file_directories` -
+  (Optional)
+  Configuration to specify the directories to access the log files.
+  Structure is [documented below](#nested_source_config_oracle_source_config_binary_log_parser_log_file_directories).
+
+
+<a name="nested_source_config_oracle_source_config_binary_log_parser_log_file_directories"></a>The `log_file_directories` block supports:
+
+* `online_log_directory` -
+  (Required)
+  Oracle directory for online logs.
+
+* `archived_log_directory` -
+  (Required)
+  Oracle directory for archived logs.
 
 <a name="nested_source_config_postgresql_source_config"></a>The `postgresql_source_config` block supports:
 

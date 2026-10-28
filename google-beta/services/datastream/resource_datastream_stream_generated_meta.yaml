@@ -142,6 +142,9 @@ fields:
     - api_field: sourceConfig.mysqlSourceConfig.includeObjects.mysqlDatabases.mysqlTables.table
     - api_field: sourceConfig.mysqlSourceConfig.maxConcurrentBackfillTasks
     - api_field: sourceConfig.mysqlSourceConfig.maxConcurrentCdcTasks
+    - api_field: sourceConfig.oracleSourceConfig.binaryLogParser.logFileDirectories.archivedLogDirectory
+    - api_field: sourceConfig.oracleSourceConfig.binaryLogParser.logFileDirectories.onlineLogDirectory
+    - api_field: sourceConfig.oracleSourceConfig.binaryLogParser.oracleAsmLogFileAccess
     - api_field: sourceConfig.oracleSourceConfig.dropLargeObjects
     - api_field: sourceConfig.oracleSourceConfig.excludeObjects.oracleSchemas.oracleTables.oracleColumns.column
     - api_field: sourceConfig.oracleSourceConfig.excludeObjects.oracleSchemas.oracleTables.oracleColumns.dataType
@@ -165,6 +168,7 @@ fields:
     - api_field: sourceConfig.oracleSourceConfig.includeObjects.oracleSchemas.oracleTables.oracleColumns.scale
     - api_field: sourceConfig.oracleSourceConfig.includeObjects.oracleSchemas.oracleTables.table
     - api_field: sourceConfig.oracleSourceConfig.includeObjects.oracleSchemas.schema
+    - api_field: sourceConfig.oracleSourceConfig.logMiner
     - api_field: sourceConfig.oracleSourceConfig.maxConcurrentBackfillTasks
     - api_field: sourceConfig.oracleSourceConfig.maxConcurrentCdcTasks
     - api_field: sourceConfig.oracleSourceConfig.streamLargeObjects

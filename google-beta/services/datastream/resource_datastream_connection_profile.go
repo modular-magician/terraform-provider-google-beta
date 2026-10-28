@@ -529,6 +529,89 @@ If this field is used then the 'client_certificate' and the
 							Description: `Connection string attributes`,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
+						"oracle_asm_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Configuration for Oracle ASM connection.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"asm_service": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `ASM service name for the Oracle ASM connection.`,
+									},
+									"hostname": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Hostname for the Oracle ASM connection.`,
+									},
+									"port": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: `Port for the Oracle ASM connection.`,
+									},
+									"username": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Username for the Oracle ASM connection.`,
+									},
+									"connection_attributes": {
+										Type:        schema.TypeMap,
+										Optional:    true,
+										Description: `Custom connection string attributes.`,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"oracle_ssl_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. SSL configuration for the Oracle connection.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"ca_certificate": {
+													Type:     schema.TypeString,
+													Optional: true,
+													ForceNew: true,
+													Description: `PEM-encoded certificate of the CA that signed the source database
+server's certificate.`,
+													Sensitive: true,
+												},
+												"server_certificate_distinguished_name": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The distinguished name (DN) mentioned in the server
+certificate. This corresponds to SSL_SERVER_CERT_DN sqlnet parameter.
+Refer
+https://docs.oracle.com/en/database/oracle/oracle-database/19/netrf/local-naming-parameters-in-the-tnsnames-ora-file.html#GUID-70AB0695-A9AA-4A94-B141-4C605236EEB7
+If this field is not provided, the DN matching is not enforced.`,
+												},
+												"ca_certificate_set": {
+													Type:     schema.TypeBool,
+													Computed: true,
+													Description: `Indicates whether the caCertificate field has been set for this
+Connection-Profile.`,
+												},
+											},
+										},
+									},
+									"password": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										Description:  `Password for the Oracle ASM connection.`,
+										Sensitive:    true,
+										ExactlyOneOf: []string{"oracle_profile.0.oracle_asm_config.0.password", "oracle_profile.0.oracle_asm_config.0.secret_manager_stored_password"},
+									},
+									"secret_manager_stored_password": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `A reference to a Secret Manager resource name storing the Oracle ASM
+connection password.`,
+										ExactlyOneOf: []string{"oracle_profile.0.oracle_asm_config.0.password", "oracle_profile.0.oracle_asm_config.0.secret_manager_stored_password"},
+									},
+								},
+							},
+						},
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -1511,6 +1594,8 @@ func flattenDatastreamConnectionProfileOracleProfile(v interface{}, d *schema.Re
 		flattenDatastreamConnectionProfileOracleProfileDatabaseService(original["databaseService"], d, config)
 	transformed["connection_attributes"] =
 		flattenDatastreamConnectionProfileOracleProfileConnectionAttributes(original["connectionAttributes"], d, config)
+	transformed["oracle_asm_config"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfig(original["oracleAsmConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatastreamConnectionProfileOracleProfileHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1551,6 +1636,103 @@ func flattenDatastreamConnectionProfileOracleProfileDatabaseService(v interface{
 }
 
 func flattenDatastreamConnectionProfileOracleProfileConnectionAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["hostname"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigHostname(original["hostname"], d, config)
+	transformed["port"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigPort(original["port"], d, config)
+	transformed["username"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigUsername(original["username"], d, config)
+	transformed["password"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigPassword(original["password"], d, config)
+	transformed["secret_manager_stored_password"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigSecretManagerStoredPassword(original["secretManagerStoredPassword"], d, config)
+	transformed["asm_service"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigAsmService(original["asmService"], d, config)
+	transformed["connection_attributes"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigConnectionAttributes(original["connectionAttributes"], d, config)
+	transformed["oracle_ssl_config"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfig(original["oracleSslConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("oracle_profile.0.oracle_asm_config.0.password")
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigSecretManagerStoredPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigAsmService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigConnectionAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["ca_certificate"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificate(original["caCertificate"], d, config)
+	transformed["ca_certificate_set"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificateSet(original["caCertificateSet"], d, config)
+	transformed["server_certificate_distinguished_name"] =
+		flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigServerCertificateDistinguishedName(original["serverCertificateDistinguishedName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("oracle_profile.0.oracle_asm_config.0.oracle_ssl_config.0.ca_certificate")
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificateSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigServerCertificateDistinguishedName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2292,6 +2474,13 @@ func expandDatastreamConnectionProfileOracleProfile(v interface{}, d tpgresource
 		transformed["connectionAttributes"] = transformedConnectionAttributes
 	}
 
+	transformedOracleAsmConfig, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfig(original["oracle_asm_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOracleAsmConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oracleAsmConfig"] = transformedOracleAsmConfig
+	}
+
 	return transformed, nil
 }
 
@@ -2328,6 +2517,160 @@ func expandDatastreamConnectionProfileOracleProfileConnectionAttributes(v interf
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedHostname, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigHostname(original["hostname"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["hostname"] = transformedHostname
+	}
+
+	transformedPort, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigPort(original["port"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["port"] = transformedPort
+	}
+
+	transformedUsername, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigUsername(original["username"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["username"] = transformedUsername
+	}
+
+	transformedPassword, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigPassword(original["password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["password"] = transformedPassword
+	}
+
+	transformedSecretManagerStoredPassword, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigSecretManagerStoredPassword(original["secret_manager_stored_password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecretManagerStoredPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["secretManagerStoredPassword"] = transformedSecretManagerStoredPassword
+	}
+
+	transformedAsmService, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigAsmService(original["asm_service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAsmService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["asmService"] = transformedAsmService
+	}
+
+	transformedConnectionAttributes, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigConnectionAttributes(original["connection_attributes"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnectionAttributes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["connectionAttributes"] = transformedConnectionAttributes
+	}
+
+	transformedOracleSslConfig, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfig(original["oracle_ssl_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOracleSslConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["oracleSslConfig"] = transformedOracleSslConfig
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigSecretManagerStoredPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigAsmService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigConnectionAttributes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCaCertificate, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificate(original["ca_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificate"] = transformedCaCertificate
+	}
+
+	transformedCaCertificateSet, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificateSet(original["ca_certificate_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificateSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificateSet"] = transformedCaCertificateSet
+	}
+
+	transformedServerCertificateDistinguishedName, err := expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigServerCertificateDistinguishedName(original["server_certificate_distinguished_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServerCertificateDistinguishedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serverCertificateDistinguishedName"] = transformedServerCertificateDistinguishedName
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigCaCertificateSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileOracleProfileOracleAsmConfigOracleSslConfigServerCertificateDistinguishedName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDatastreamConnectionProfileGcsProfile(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

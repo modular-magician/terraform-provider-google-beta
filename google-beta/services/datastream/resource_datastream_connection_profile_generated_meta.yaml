@@ -56,6 +56,16 @@ fields:
     - api_field: oracleProfile.connectionAttributes
     - api_field: oracleProfile.databaseService
     - api_field: oracleProfile.hostname
+    - api_field: oracleProfile.oracleAsmConfig.asmService
+    - api_field: oracleProfile.oracleAsmConfig.connectionAttributes
+    - api_field: oracleProfile.oracleAsmConfig.hostname
+    - api_field: oracleProfile.oracleAsmConfig.oracleSslConfig.caCertificate
+    - api_field: oracleProfile.oracleAsmConfig.oracleSslConfig.caCertificateSet
+    - api_field: oracleProfile.oracleAsmConfig.oracleSslConfig.serverCertificateDistinguishedName
+    - api_field: oracleProfile.oracleAsmConfig.password
+    - api_field: oracleProfile.oracleAsmConfig.port
+    - api_field: oracleProfile.oracleAsmConfig.secretManagerStoredPassword
+    - api_field: oracleProfile.oracleAsmConfig.username
     - api_field: oracleProfile.password
     - api_field: oracleProfile.port
     - api_field: oracleProfile.secretManagerStoredPassword

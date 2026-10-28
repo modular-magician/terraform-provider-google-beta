@@ -31,7 +31,7 @@ To get more information about ConnectionProfile, see:
     * [Official Documentation](https://cloud.google.com/datastream/docs/create-connection-profiles)
 
 ~> **Warning:** All arguments including the following potentially sensitive
-values will be stored in the raw state as plain text: `oracle_profile.password`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
+values will be stored in the raw state as plain text: `oracle_profile.password`, `oracle_profile.oracle_asm_config.password`, `oracle_profile.oracle_asm_config.oracle_ssl_config.ca_certificate`, `mysql_profile.password`, `mysql_profile.ssl_config.client_key`, `mysql_profile.ssl_config.client_certificate`, `mysql_profile.ssl_config.ca_certificate`, `postgresql_profile.password`, `postgresql_profile.ssl_config.server_verification.ca_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_certificate`, `postgresql_profile.ssl_config.server_and_client_verification.client_key`, `postgresql_profile.ssl_config.server_and_client_verification.ca_certificate`, `sql_server_profile.password`, `mongodb_profile.password`, `mongodb_profile.secret_manager_stored_password`, `mongodb_profile.ssl_config.client_key`, `mongodb_profile.ssl_config.client_certificate`, `mongodb_profile.ssl_config.ca_certificate`, `mongodb_profile.ssl_config.secret_manager_stored_client_key`, `forward_ssh_connectivity.password`, `forward_ssh_connectivity.private_key`.
 [Read more about sensitive data in state](https://developer.hashicorp.com/terraform/language/manage-sensitive-data).
 
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
@@ -656,6 +656,71 @@ The following arguments are supported:
 * `connection_attributes` -
   (Optional)
   Connection string attributes
+
+* `oracle_asm_config` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Optional. Configuration for Oracle ASM connection.
+  Structure is [documented below](#nested_oracle_profile_oracle_asm_config).
+
+
+<a name="nested_oracle_profile_oracle_asm_config"></a>The `oracle_asm_config` block supports:
+
+* `hostname` -
+  (Required)
+  Hostname for the Oracle ASM connection.
+
+* `port` -
+  (Required)
+  Port for the Oracle ASM connection.
+
+* `username` -
+  (Required)
+  Username for the Oracle ASM connection.
+
+* `password` -
+  (Optional)
+  Password for the Oracle ASM connection.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `secret_manager_stored_password` -
+  (Optional)
+  A reference to a Secret Manager resource name storing the Oracle ASM
+  connection password.
+
+* `asm_service` -
+  (Required)
+  ASM service name for the Oracle ASM connection.
+
+* `connection_attributes` -
+  (Optional)
+  Custom connection string attributes.
+
+* `oracle_ssl_config` -
+  (Optional)
+  Optional. SSL configuration for the Oracle connection.
+  Structure is [documented below](#nested_oracle_profile_oracle_asm_config_oracle_ssl_config).
+
+
+<a name="nested_oracle_profile_oracle_asm_config_oracle_ssl_config"></a>The `oracle_ssl_config` block supports:
+
+* `ca_certificate` -
+  (Optional)
+  PEM-encoded certificate of the CA that signed the source database
+  server's certificate.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `ca_certificate_set` -
+  (Output)
+  Indicates whether the caCertificate field has been set for this
+  Connection-Profile.
+
+* `server_certificate_distinguished_name` -
+  (Optional)
+  The distinguished name (DN) mentioned in the server
+  certificate. This corresponds to SSL_SERVER_CERT_DN sqlnet parameter.
+  Refer
+  https://docs.oracle.com/en/database/oracle/oracle-database/19/netrf/local-naming-parameters-in-the-tnsnames-ora-file.html#GUID-70AB0695-A9AA-4A94-B141-4C605236EEB7
+  If this field is not provided, the DN matching is not enforced.
 
 <a name="nested_gcs_profile"></a>The `gcs_profile` block supports:
 

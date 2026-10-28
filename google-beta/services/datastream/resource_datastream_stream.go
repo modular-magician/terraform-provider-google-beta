@@ -859,6 +859,53 @@ If not set (or set to 0), the system's default value will be used.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"binary_log_parser": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Configuration to use Binary Log Parser CDC replication method.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"log_file_directories": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Configuration to specify the directories to access the log files.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"archived_log_directory": {
+																Type:        schema.TypeString,
+																Required:    true,
+																ForceNew:    true,
+																Description: `Oracle directory for archived logs.`,
+															},
+															"online_log_directory": {
+																Type:        schema.TypeString,
+																Required:    true,
+																ForceNew:    true,
+																Description: `Oracle directory for online logs.`,
+															},
+														},
+													},
+													ExactlyOneOf: []string{"source_config.0.oracle_source_config.0.binary_log_parser.0.log_file_directories", "source_config.0.oracle_source_config.0.binary_log_parser.0.oracle_asm_log_file_access"},
+												},
+												"oracle_asm_log_file_access": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Configuration to use Oracle ASM to access the log files.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{},
+													},
+													ExactlyOneOf: []string{"source_config.0.oracle_source_config.0.binary_log_parser.0.log_file_directories", "source_config.0.oracle_source_config.0.binary_log_parser.0.oracle_asm_log_file_access"},
+												},
+											},
+										},
+										ConflictsWith: []string{"source_config.0.oracle_source_config.0.log_miner"},
+									},
 									"drop_large_objects": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -1059,6 +1106,17 @@ https://docs.oracle.com/en/database/oracle/oracle-database/21/sqlrf/Data-Types.h
 												},
 											},
 										},
+									},
+									"log_miner": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Configuration to use LogMiner for CDC replication.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ConflictsWith: []string{"source_config.0.oracle_source_config.0.binary_log_parser"},
 									},
 									"max_concurrent_backfill_tasks": {
 										Type:         schema.TypeInt,
@@ -3689,6 +3747,10 @@ func flattenDatastreamStreamSourceConfigOracleSourceConfig(v interface{}, d *sch
 		flattenDatastreamStreamSourceConfigOracleSourceConfigDropLargeObjects(original["dropLargeObjects"], d, config)
 	transformed["stream_large_objects"] =
 		flattenDatastreamStreamSourceConfigOracleSourceConfigStreamLargeObjects(original["streamLargeObjects"], d, config)
+	transformed["log_miner"] =
+		flattenDatastreamStreamSourceConfigOracleSourceConfigLogMiner(original["logMiner"], d, config)
+	transformed["binary_log_parser"] =
+		flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParser(original["binaryLogParser"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatastreamStreamSourceConfigOracleSourceConfigIncludeObjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4091,6 +4153,60 @@ func flattenDatastreamStreamSourceConfigOracleSourceConfigStreamLargeObjects(v i
 	}
 	transformed := make(map[string]interface{})
 	return []interface{}{transformed}
+}
+
+func flattenDatastreamStreamSourceConfigOracleSourceConfigLogMiner(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParser(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["oracle_asm_log_file_access"] =
+		flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserOracleAsmLogFileAccess(original["oracleAsmLogFileAccess"], d, config)
+	transformed["log_file_directories"] =
+		flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectories(original["logFileDirectories"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserOracleAsmLogFileAccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectories(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["online_log_directory"] =
+		flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesOnlineLogDirectory(original["onlineLogDirectory"], d, config)
+	transformed["archived_log_directory"] =
+		flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesArchivedLogDirectory(original["archivedLogDirectory"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesOnlineLogDirectory(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesArchivedLogDirectory(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenDatastreamStreamSourceConfigPostgresqlSourceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -7749,6 +7865,20 @@ func expandDatastreamStreamSourceConfigOracleSourceConfig(v interface{}, d tpgre
 		transformed["streamLargeObjects"] = transformedStreamLargeObjects
 	}
 
+	transformedLogMiner, err := expandDatastreamStreamSourceConfigOracleSourceConfigLogMiner(original["log_miner"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["logMiner"] = transformedLogMiner
+	}
+
+	transformedBinaryLogParser, err := expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParser(original["binary_log_parser"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedBinaryLogParser); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["binaryLogParser"] = transformedBinaryLogParser
+	}
+
 	return transformed, nil
 }
 
@@ -8216,6 +8346,108 @@ func expandDatastreamStreamSourceConfigOracleSourceConfigStreamLargeObjects(v in
 	transformed := make(map[string]interface{})
 
 	return transformed, nil
+}
+
+func expandDatastreamStreamSourceConfigOracleSourceConfigLogMiner(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParser(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedOracleAsmLogFileAccess, err := expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserOracleAsmLogFileAccess(original["oracle_asm_log_file_access"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["oracleAsmLogFileAccess"] = transformedOracleAsmLogFileAccess
+	}
+
+	transformedLogFileDirectories, err := expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectories(original["log_file_directories"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLogFileDirectories); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["logFileDirectories"] = transformedLogFileDirectories
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserOracleAsmLogFileAccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectories(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedOnlineLogDirectory, err := expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesOnlineLogDirectory(original["online_log_directory"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOnlineLogDirectory); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["onlineLogDirectory"] = transformedOnlineLogDirectory
+	}
+
+	transformedArchivedLogDirectory, err := expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesArchivedLogDirectory(original["archived_log_directory"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedArchivedLogDirectory); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["archivedLogDirectory"] = transformedArchivedLogDirectory
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesOnlineLogDirectory(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamStreamSourceConfigOracleSourceConfigBinaryLogParserLogFileDirectoriesArchivedLogDirectory(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDatastreamStreamSourceConfigPostgresqlSourceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
