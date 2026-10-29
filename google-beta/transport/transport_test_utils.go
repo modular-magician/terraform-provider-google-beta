@@ -24,6 +24,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 	"testing"
 	"time"
 
@@ -45,6 +46,12 @@ func (e *TimeoutError) Error() string {
 
 var TimeoutErr = &TimeoutError{timeout: true}
 
+var (
+	bootstrapConfigOnce sync.Once
+	bootstrapConfigVal  *Config
+	bootstrapConfigErr  error
+)
+
 // BootstrapConfig returns a Config pulled from the environment.
 func BootstrapConfig(t *testing.T) *Config {
 	if v := os.Getenv("TF_ACC"); v == "" {
@@ -52,19 +59,26 @@ func BootstrapConfig(t *testing.T) *Config {
 		return nil
 	}
 
-	config := &Config{
-		Credentials:               envvar.GetTestCredsFromEnv(),
-		AccessToken:               envvar.GetTestAccessTokenFromEnv(),
-		ImpersonateServiceAccount: envvar.GetTestImpersonateServiceAccountFromEnv(),
-		Project:                   envvar.GetTestProjectFromEnv(),
-		Region:                    envvar.GetTestRegionFromEnv(),
-		Zone:                      envvar.GetTestZoneFromEnv(),
-	}
+	bootstrapConfigOnce.Do(func() {
+		config := &Config{
+			Credentials:               envvar.GetTestCredsFromEnv(),
+			AccessToken:               envvar.GetTestAccessTokenFromEnv(),
+			ImpersonateServiceAccount: envvar.GetTestImpersonateServiceAccountFromEnv(),
+			Project:                   envvar.GetTestProjectFromEnv(),
+			Region:                    envvar.GetTestRegionFromEnv(),
+			Zone:                      envvar.GetTestZoneFromEnv(),
+		}
 
-	if err := config.LoadAndValidate(context.Background()); err != nil {
-		t.Fatalf("Bootstrapping failed. Unable to load test config: %s", err)
+		bootstrapConfigErr = config.LoadAndValidate(context.Background())
+		if bootstrapConfigErr == nil {
+			bootstrapConfigVal = config
+		}
+	})
+
+	if bootstrapConfigErr != nil {
+		t.Fatalf("Bootstrapping failed. Unable to load test config: %s", bootstrapConfigErr)
 	}
-	return config
+	return bootstrapConfigVal
 }
 
 // SendRequestRawBodyWithTimeout is derived from sendRequestWithTimeout with direct pass through of request body
