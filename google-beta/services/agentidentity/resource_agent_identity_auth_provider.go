@@ -55,22 +55,21 @@ import (
 )
 
 // This customizeDiff recreates the resource if changing between different auth provider types
-// (api_key, two_legged_oauth, three_legged_oauth), as changing the type via PATCH is rejected by the API.
+// (api_key, two_legged_oauth, three_legged_oauth, xaa_auth_provider, connector_reference_auth_provider),
+// as changing the type via PATCH is rejected by the API.
 func agentIdentityAuthProviderCustomizeDiffFunc(diff tpgresource.TerraformResourceDiff) error {
-	oldApiKey, newApiKey := diff.GetChange("auth_provider_type_params.0.api_key")
-	oldTwoLegged, newTwoLegged := diff.GetChange("auth_provider_type_params.0.two_legged_oauth")
-	oldThreeLegged, newThreeLegged := diff.GetChange("auth_provider_type_params.0.three_legged_oauth")
-	if !tpgresource.IsEmptyValue(reflect.ValueOf(oldApiKey)) && tpgresource.IsEmptyValue(reflect.ValueOf(newApiKey)) {
-		diff.ForceNew("auth_provider_type_params.0.api_key")
-		return nil
-	}
-	if !tpgresource.IsEmptyValue(reflect.ValueOf(oldTwoLegged)) && tpgresource.IsEmptyValue(reflect.ValueOf(newTwoLegged)) {
-		diff.ForceNew("auth_provider_type_params.0.two_legged_oauth")
-		return nil
-	}
-	if !tpgresource.IsEmptyValue(reflect.ValueOf(oldThreeLegged)) && tpgresource.IsEmptyValue(reflect.ValueOf(newThreeLegged)) {
-		diff.ForceNew("auth_provider_type_params.0.three_legged_oauth")
-		return nil
+	for _, typeField := range []string{
+		"auth_provider_type_params.0.api_key",
+		"auth_provider_type_params.0.two_legged_oauth",
+		"auth_provider_type_params.0.three_legged_oauth",
+		"auth_provider_type_params.0.xaa_auth_provider",
+		"auth_provider_type_params.0.connector_reference_auth_provider",
+	} {
+		oldVal, newVal := diff.GetChange(typeField)
+		if !tpgresource.IsEmptyValue(reflect.ValueOf(oldVal)) && tpgresource.IsEmptyValue(reflect.ValueOf(newVal)) {
+			diff.ForceNew(typeField)
+			return nil
+		}
 	}
 	return nil
 }
@@ -201,7 +200,31 @@ Required when creating an auth_provider.`,
 									},
 								},
 							},
-							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth"},
+							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.connector_reference_auth_provider", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth", "auth_provider_type_params.0.xaa_auth_provider"},
+						},
+						"connector_reference_auth_provider": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration parameters for the Connector Reference auth provider.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"connector": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The name of the referenced connector.`,
+									},
+									"authorization_details": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: validation.StringIsJSON,
+										StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+										Description: `Optional. Rich Authorization Requests (RFC 9396) detailing targeted OAuth
+resources/scopes, formatted as a JSON array of JSON objects.`,
+									},
+								},
+							},
+							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.connector_reference_auth_provider", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth", "auth_provider_type_params.0.xaa_auth_provider"},
 						},
 						"three_legged_oauth": {
 							Type:        schema.TypeList,
@@ -269,7 +292,7 @@ This is deterministic based on the name of the auth_provider.`,
 									},
 								},
 							},
-							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth"},
+							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.connector_reference_auth_provider", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth", "auth_provider_type_params.0.xaa_auth_provider"},
 						},
 						"two_legged_oauth": {
 							Type:        schema.TypeList,
@@ -311,7 +334,149 @@ This is deterministic based on the name of the auth_provider.`,
 									},
 								},
 							},
-							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth"},
+							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.connector_reference_auth_provider", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth", "auth_provider_type_params.0.xaa_auth_provider"},
+						},
+						"xaa_auth_provider": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration parameters for the Cross-App Access auth provider.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"additional_parameters": {
+										Type:        schema.TypeMap,
+										Optional:    true,
+										Description: `Optional. Additional parameters to be passed to the token endpoint.`,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"client_assertion_jwt_auth": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Option 2: Authenticate using a standard 'client_id' and a Client Assertion JWT.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"client_id": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The client identifier.`,
+												},
+											},
+										},
+										ConflictsWith: []string{"auth_provider_type_params.0.xaa_auth_provider.0.client_secret_auth"},
+									},
+									"client_secret_auth": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Option 1: Authenticate using a standard 'client_id' and 'client_secret'.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"client_id": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The client identifier.`,
+												},
+												"client_secret": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Input only. The client secret.`,
+													Sensitive:   true,
+												},
+											},
+										},
+										ConflictsWith: []string{"auth_provider_type_params.0.xaa_auth_provider.0.client_assertion_jwt_auth"},
+									},
+									"custom_issuer": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Configuration when using a custom or third-party authorization server as the issuer.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"token_url": {
+													Type:     schema.TypeString,
+													Required: true,
+													Description: `Required. The token endpoint of the target OAuth authorization server to
+retrieve resource tokens.`,
+												},
+												"issuer": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Optional. The issuer identifier of the target Authorization Server.`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.custom_issuer", "auth_provider_type_params.0.xaa_auth_provider.0.google_account", "auth_provider_type_params.0.xaa_auth_provider.0.workforce_identity_federation"},
+									},
+									"google_account": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Configuration when using Google Accounts as the issuer.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.custom_issuer", "auth_provider_type_params.0.xaa_auth_provider.0.google_account", "auth_provider_type_params.0.xaa_auth_provider.0.workforce_identity_federation"},
+									},
+									"id_jag_input": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Configuration for when the input is already an ID-JAG.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.id_jag_input", "auth_provider_type_params.0.xaa_auth_provider.0.id_token_input"},
+									},
+									"id_token_input": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Configuration for when the input is an ID token.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"agent_identity_pool": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Indicates the managed Agent Identity pool should be used to fetch the ID-JAG.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{},
+													},
+													ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.id_token_input.0.agent_identity_pool", "auth_provider_type_params.0.xaa_auth_provider.0.id_token_input.0.id_jag_auth_provider"},
+												},
+												"id_jag_additional_claims": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringIsJSON,
+													StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+													Description:  `Optional additional claims to include when fetching an ID-JAG.`,
+												},
+												"id_jag_auth_provider": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The resource name of the ID-JAG auth provider.
+Format: 'projects/{project}/locations/{location}/authProviders/{auth_provider}'`,
+													ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.id_token_input.0.agent_identity_pool", "auth_provider_type_params.0.xaa_auth_provider.0.id_token_input.0.id_jag_auth_provider"},
+												},
+											},
+										},
+										ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.id_jag_input", "auth_provider_type_params.0.xaa_auth_provider.0.id_token_input"},
+									},
+									"workforce_identity_federation": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Configuration when using Workforce Identity Federation as the issuer.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{"auth_provider_type_params.0.xaa_auth_provider.0.custom_issuer", "auth_provider_type_params.0.xaa_auth_provider.0.google_account", "auth_provider_type_params.0.xaa_auth_provider.0.workforce_identity_federation"},
+									},
+								},
+							},
+							ExactlyOneOf: []string{"auth_provider_type_params.0.api_key", "auth_provider_type_params.0.connector_reference_auth_provider", "auth_provider_type_params.0.three_legged_oauth", "auth_provider_type_params.0.two_legged_oauth", "auth_provider_type_params.0.xaa_auth_provider"},
 						},
 						"ge_auth_provider": {
 							Type:     schema.TypeList,
@@ -500,6 +665,9 @@ func resourceAgentIdentityAuthProviderCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+	if strings.Contains(url, "{{location}}") {
+		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
+	}
 
 	log.Printf("[DEBUG] Creating new AuthProvider: %#v", obj)
 	billingProject := ""
@@ -578,6 +746,9 @@ func resourceAgentIdentityAuthProviderRead(d *schema.ResourceData, meta interfac
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/authProviders/{{auth_provider_id}}")
 	if err != nil {
 		return err
+	}
+	if strings.Contains(url, "{{location}}") {
+		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
 	}
 
 	billingProject := ""
@@ -764,6 +935,9 @@ func resourceAgentIdentityAuthProviderUpdate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+	if strings.Contains(url, "{{location}}") {
+		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
+	}
 
 	log.Printf("[DEBUG] Updating AuthProvider %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
@@ -857,6 +1031,9 @@ func resourceAgentIdentityAuthProviderDelete(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+	if strings.Contains(url, "{{location}}") {
+		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
+	}
 
 	var obj map[string]interface{}
 
@@ -925,12 +1102,16 @@ func flattenAgentIdentityAuthProviderAuthProviderTypeParams(v interface{}, d *sc
 	transformed := make(map[string]interface{})
 	transformed["api_key"] =
 		flattenAgentIdentityAuthProviderAuthProviderTypeParamsApiKey(original["apiKey"], d, config)
+	transformed["connector_reference_auth_provider"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProvider(original["connectorReferenceAuthProvider"], d, config)
 	transformed["ge_auth_provider"] =
 		flattenAgentIdentityAuthProviderAuthProviderTypeParamsGeAuthProvider(original["geAuthProvider"], d, config)
 	transformed["three_legged_oauth"] =
 		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauth(original["threeLeggedOauth"], d, config)
 	transformed["two_legged_oauth"] =
 		flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauth(original["twoLeggedOauth"], d, config)
+	transformed["xaa_auth_provider"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProvider(original["xaaAuthProvider"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsApiKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -938,6 +1119,37 @@ func flattenAgentIdentityAuthProviderAuthProviderTypeParamsApiKey(v interface{},
 }
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsApiKeyApiKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("auth_provider_type_params.0.api_key.0.api_key")
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProvider(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["connector"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderConnector(original["connector"], d, config)
+	transformed["authorization_details"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderAuthorizationDetails(original["authorizationDetails"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderConnector(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderAuthorizationDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsGeAuthProvider(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -949,7 +1161,31 @@ func flattenAgentIdentityAuthProviderAuthProviderTypeParamsGeAuthProvider(v inte
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("auth_provider_type_params.0.three_legged_oauth")
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["authorization_url"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthAuthorizationUrl(original["authorizationUrl"], d, config)
+	transformed["client_id"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthClientId(original["clientId"], d, config)
+	transformed["client_secret"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthClientSecret(original["clientSecret"], d, config)
+	transformed["default_continue_uri"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthDefaultContinueUri(original["defaultContinueUri"], d, config)
+	transformed["enable_pkce"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthEnablePkce(original["enablePkce"], d, config)
+	transformed["redirect_url"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthRedirectUrl(original["redirectUrl"], d, config)
+	transformed["token_url"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthTokenUrl(original["tokenUrl"], d, config)
+	transformed["client_secret_wo_version"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthClientSecretWoVersion(original["clientSecretWoVersion"], d, config)
+	return []interface{}{transformed}
 }
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthAuthorizationUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
@@ -960,7 +1196,7 @@ func flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthClien
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("auth_provider_type_params.0.three_legged_oauth.0.client_secret")
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthDefaultContinueUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -984,14 +1220,30 @@ func flattenAgentIdentityAuthProviderAuthProviderTypeParamsThreeLeggedOauthClien
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("auth_provider_type_params.0.two_legged_oauth")
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["client_id"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientId(original["clientId"], d, config)
+	transformed["client_secret"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientSecret(original["clientSecret"], d, config)
+	transformed["token_url"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthTokenUrl(original["tokenUrl"], d, config)
+	transformed["client_secret_wo_version"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientSecretWoVersion(original["clientSecretWoVersion"], d, config)
+	return []interface{}{transformed}
 }
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	return d.Get("auth_provider_type_params.0.two_legged_oauth.0.client_secret")
 }
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthTokenUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1000,6 +1252,165 @@ func flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthTokenUr
 
 func flattenAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientSecretWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("auth_provider_type_params.0.two_legged_oauth.0.client_secret_wo_version")
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProvider(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["additional_parameters"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderAdditionalParameters(original["additionalParameters"], d, config)
+	transformed["client_assertion_jwt_auth"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuth(original["clientAssertionJwtAuth"], d, config)
+	transformed["client_secret_auth"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuth(original["clientSecretAuth"], d, config)
+	transformed["custom_issuer"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuer(original["customIssuer"], d, config)
+	transformed["google_account"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderGoogleAccount(original["googleAccount"], d, config)
+	transformed["id_jag_input"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdJagInput(original["idJagInput"], d, config)
+	transformed["id_token_input"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInput(original["idTokenInput"], d, config)
+	transformed["workforce_identity_federation"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderWorkforceIdentityFederation(original["workforceIdentityFederation"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderAdditionalParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["client_id"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuthClientId(original["clientId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuthClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["client_id"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientId(original["clientId"], d, config)
+	transformed["client_secret"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientSecret(original["clientSecret"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("auth_provider_type_params.0.xaa_auth_provider.0.client_secret_auth.0.client_secret")
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuer(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["issuer"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerIssuer(original["issuer"], d, config)
+	transformed["token_url"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerTokenUrl(original["tokenUrl"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerIssuer(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerTokenUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderGoogleAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdJagInput(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInput(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["agent_identity_pool"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputAgentIdentityPool(original["agentIdentityPool"], d, config)
+	transformed["id_jag_additional_claims"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAdditionalClaims(original["idJagAdditionalClaims"], d, config)
+	transformed["id_jag_auth_provider"] =
+		flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAuthProvider(original["idJagAuthProvider"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputAgentIdentityPool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAdditionalClaims(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAuthProvider(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderWorkforceIdentityFederation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
 }
 
 func flattenAgentIdentityAuthProviderBlockedScopes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1091,6 +1502,13 @@ func expandAgentIdentityAuthProviderAuthProviderTypeParams(v interface{}, d tpgr
 		transformed["apiKey"] = transformedApiKey
 	}
 
+	transformedConnectorReferenceAuthProvider, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProvider(original["connector_reference_auth_provider"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnectorReferenceAuthProvider); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["connectorReferenceAuthProvider"] = transformedConnectorReferenceAuthProvider
+	}
+
 	transformedGeAuthProvider, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsGeAuthProvider(original["ge_auth_provider"], d, config)
 	if err != nil {
 		return nil, err
@@ -1110,6 +1528,13 @@ func expandAgentIdentityAuthProviderAuthProviderTypeParams(v interface{}, d tpgr
 		return nil, err
 	} else if val := reflect.ValueOf(transformedTwoLeggedOauth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["twoLeggedOauth"] = transformedTwoLeggedOauth
+	}
+
+	transformedXaaAuthProvider, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProvider(original["xaa_auth_provider"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedXaaAuthProvider); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["xaaAuthProvider"] = transformedXaaAuthProvider
 	}
 
 	return transformed, nil
@@ -1139,6 +1564,51 @@ func expandAgentIdentityAuthProviderAuthProviderTypeParamsApiKey(v interface{}, 
 
 func expandAgentIdentityAuthProviderAuthProviderTypeParamsApiKeyApiKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedConnector, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderConnector(original["connector"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnector); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["connector"] = transformedConnector
+	}
+
+	transformedAuthorizationDetails, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderAuthorizationDetails(original["authorization_details"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthorizationDetails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authorizationDetails"] = transformedAuthorizationDetails
+	}
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderConnector(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsConnectorReferenceAuthProviderAuthorizationDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	var j interface{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return nil, err
+	}
+	return j, nil
 }
 
 func expandAgentIdentityAuthProviderAuthProviderTypeParamsGeAuthProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1327,6 +1797,312 @@ func expandAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientSe
 
 func expandAgentIdentityAuthProviderAuthProviderTypeParamsTwoLeggedOauthClientSecretWoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAdditionalParameters, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderAdditionalParameters(original["additional_parameters"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAdditionalParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["additionalParameters"] = transformedAdditionalParameters
+	}
+
+	transformedClientAssertionJwtAuth, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuth(original["client_assertion_jwt_auth"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientAssertionJwtAuth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientAssertionJwtAuth"] = transformedClientAssertionJwtAuth
+	}
+
+	transformedClientSecretAuth, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuth(original["client_secret_auth"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientSecretAuth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientSecretAuth"] = transformedClientSecretAuth
+	}
+
+	transformedCustomIssuer, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuer(original["custom_issuer"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomIssuer); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customIssuer"] = transformedCustomIssuer
+	}
+
+	transformedGoogleAccount, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderGoogleAccount(original["google_account"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["googleAccount"] = transformedGoogleAccount
+	}
+
+	transformedIdJagInput, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdJagInput(original["id_jag_input"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["idJagInput"] = transformedIdJagInput
+	}
+
+	transformedIdTokenInput, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInput(original["id_token_input"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdTokenInput); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["idTokenInput"] = transformedIdTokenInput
+	}
+
+	transformedWorkforceIdentityFederation, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderWorkforceIdentityFederation(original["workforce_identity_federation"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["workforceIdentityFederation"] = transformedWorkforceIdentityFederation
+	}
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderAdditionalParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedClientId, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuthClientId(original["client_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientId"] = transformedClientId
+	}
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientAssertionJwtAuthClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedClientId, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientId(original["client_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientId"] = transformedClientId
+	}
+
+	transformedClientSecret, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientSecret(original["client_secret"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientSecret); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientSecret"] = transformedClientSecret
+	}
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderClientSecretAuthClientSecret(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIssuer, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerIssuer(original["issuer"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIssuer); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["issuer"] = transformedIssuer
+	}
+
+	transformedTokenUrl, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerTokenUrl(original["token_url"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTokenUrl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tokenUrl"] = transformedTokenUrl
+	}
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerIssuer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderCustomIssuerTokenUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderGoogleAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdJagInput(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInput(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAgentIdentityPool, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputAgentIdentityPool(original["agent_identity_pool"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["agentIdentityPool"] = transformedAgentIdentityPool
+	}
+
+	transformedIdJagAdditionalClaims, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAdditionalClaims(original["id_jag_additional_claims"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdJagAdditionalClaims); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["idJagAdditionalClaims"] = transformedIdJagAdditionalClaims
+	}
+
+	transformedIdJagAuthProvider, err := expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAuthProvider(original["id_jag_auth_provider"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdJagAuthProvider); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["idJagAuthProvider"] = transformedIdJagAuthProvider
+	}
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputAgentIdentityPool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAdditionalClaims(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderIdTokenInputIdJagAuthProvider(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAgentIdentityAuthProviderAuthProviderTypeParamsXaaAuthProviderWorkforceIdentityFederation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
 }
 
 func expandAgentIdentityAuthProviderBlockedScopes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
