@@ -9841,6 +9841,9 @@ resource "google_container_cluster" "primary" {
     kalm_config {
       enabled = false
     }
+    wiz_sensor_config {
+      enabled = false
+    }
   }
   network    = "%s"
   subnetwork = "%s"
@@ -9926,6 +9929,9 @@ resource "google_container_cluster" "primary" {
       auth     = "AUTH_NONE"
     }
     kalm_config {
+      enabled = true
+    }
+    wiz_sensor_config {
       enabled = true
     }
 	}
