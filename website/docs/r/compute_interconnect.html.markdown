@@ -183,7 +183,7 @@ The following arguments are supported:
 <a name="nested_macsec"></a>The `macsec` block supports:
 
 * `pre_shared_keys` -
-  (Required)
+  (Optional)
   A keychain placeholder describing a set of named key objects along with their
   start times. A MACsec CKN/CAK is generated for each key in the key chain.
   Google router automatically picks the key with the most recent startTime when establishing
@@ -197,6 +197,23 @@ The following arguments are supported:
   traffic if the MKA session cannot be established. By default, the Interconnect
   connection is configured with a must-secure security policy that drops all traffic
   if the MKA session cannot be established with your router.
+
+* `interconnect_key_group` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  The InterconnectKeyGroup that provides customer-provided MACsec keys for this
+  Interconnect, in the format
+  `projects/{project}/locations/{region}/interconnectKeyGroups/{name}` (for example, the
+  `id` of a `google_network_connectivity_interconnect_key_group`). At least one of
+  `pre_shared_keys` or `interconnect_key_group` must be set.
+  The API enforces these rules:
+  * MACsec can't be enabled when the Interconnect is created. Create it with
+    `macsec_enabled = false` and no `macsec` block, then enable MACsec in a later apply.
+  * The key group can't be removed while MACsec is enabled. Set `macsec_enabled = false`
+    in the same apply that removes it.
+  * To switch to a different key group, remove the current one in one apply (with MACsec
+    disabled), then add the new one in a later apply.
+  * To migrate from pre-shared keys without downtime, add `interconnect_key_group` while
+    keeping one `pre_shared_keys` entry, then remove `pre_shared_keys` in a later apply.
 
 
 <a name="nested_macsec_pre_shared_keys"></a>The `pre_shared_keys` block supports:

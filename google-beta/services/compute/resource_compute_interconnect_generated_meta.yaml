@@ -47,6 +47,7 @@ fields:
     - api_field: linkType
     - api_field: location
     - api_field: macsec.failOpen
+    - api_field: macsec.interconnectKeyGroup
     - api_field: macsec.preSharedKeys.failOpen
     - api_field: macsec.preSharedKeys.name
     - api_field: macsec.preSharedKeys.startTime
