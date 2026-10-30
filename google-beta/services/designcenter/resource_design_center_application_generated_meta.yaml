@@ -1,0 +1,39 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_design_center_application
+generation_type: mmv1
+source_file: products/designcenter/Application.yaml
+api_service_name: designcenter.googleapis.com
+api_version: v1
+api_resource_type_kind: Application
+fields:
+    - api_field: appParameters
+    - api_field: apphubApplication
+    - field: application_id
+      provider_only: true
+    - api_field: attributes
+    - api_field: componentParameters
+    - api_field: compositeApplicationParameters
+    - api_field: connectionConfigs.connectionId
+    - api_field: connectionConfigs.destinationUri
+    - api_field: createTime
+    - api_field: deploymentMetadata
+    - api_field: deploymentProject
+    - api_field: deploymentRegion
+    - api_field: deploymentTarget
+    - api_field: description
+    - api_field: displayName
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: rolesApisConfig.apis
+    - api_field: rolesApisConfig.roles
+    - api_field: scope.type
+    - api_field: serviceAccount
+    - api_field: source.applicationTemplateRevision
+    - field: space
+      provider_only: true
+    - api_field: state
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
