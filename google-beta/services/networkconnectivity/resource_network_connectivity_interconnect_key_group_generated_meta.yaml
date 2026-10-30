@@ -1,0 +1,29 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_network_connectivity_interconnect_key_group
+generation_type: mmv1
+source_file: products/networkconnectivity/InterconnectKeyGroup.yaml
+api_service_name: networkconnectivity.googleapis.com
+api_version: v1beta
+api_resource_type_kind: InterconnectKeyGroup
+fields:
+    - api_field: createTime
+    - api_field: description
+    - field: effective_labels
+      provider_only: true
+    - api_field: interconnects
+    - api_field: keys.cak
+      field: keys.cak_wo
+    - api_field: keys.ckn
+    - api_field: keys.name
+    - api_field: keys.startTime
+    - api_field: labels
+    - field: name
+      provider_only: true
+    - field: region
+      provider_only: true
+    - field: terraform_labels
+      provider_only: true
+    - api_field: updateTime
+    - field: deletion_policy
+      provider_only: true
