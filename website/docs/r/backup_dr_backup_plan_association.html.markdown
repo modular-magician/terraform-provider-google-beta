@@ -254,6 +254,11 @@ In addition to the arguments listed above, the following computed attributes are
   (Output)
   The point in time when the last successful backup was captured from the source
 
+* `data_source` -
+  (Output, [Beta](../guides/provider_versions.html.markdown))
+  The DataSource in the vault targeted by this rule.
+  Format: `projects/{project}/locations/{location}/backupVaults/{backup_vault}/dataSources/{data_source}`
+
 
 <a name="nested_rules_config_info_last_backup_error"></a>The `last_backup_error` block contains:
 

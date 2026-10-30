@@ -199,6 +199,12 @@ Examples include, "compute.googleapis.com/Instance", "compute.googleapis.com/Dis
 				Description: `Message for rules config info`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"data_source": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The DataSource in the vault targeted by this rule.
+Format: 'projects/{project}/locations/{location}/backupVaults/{backup_vault}/dataSources/{data_source}'`,
+						},
 						"last_backup_error": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -716,6 +722,7 @@ func flattenBackupDRBackupPlanAssociationRulesConfigInfo(v interface{}, d *schem
 			"last_backup_state": flattenBackupDRBackupPlanAssociationRulesConfigInfoLastBackupState(original["lastBackupState"], d, config),
 			"last_backup_error": flattenBackupDRBackupPlanAssociationRulesConfigInfoLastBackupError(original["lastBackupError"], d, config),
 			"last_successful_backup_consistency_time": flattenBackupDRBackupPlanAssociationRulesConfigInfoLastSuccessfulBackupConsistencyTime(original["lastSuccessfulBackupConsistencyTime"], d, config),
+			"data_source": flattenBackupDRBackupPlanAssociationRulesConfigInfoDataSource(original["dataSource"], d, config),
 		})
 	}
 	return transformed
@@ -752,6 +759,10 @@ func flattenBackupDRBackupPlanAssociationRulesConfigInfoLastBackupErrorMessage(v
 }
 
 func flattenBackupDRBackupPlanAssociationRulesConfigInfoLastSuccessfulBackupConsistencyTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRBackupPlanAssociationRulesConfigInfoDataSource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

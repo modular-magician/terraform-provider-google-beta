@@ -18,6 +18,7 @@ fields:
     - api_field: name
     - api_field: resource
     - api_field: resourceType
+    - api_field: rulesConfigInfo.dataSource
     - api_field: rulesConfigInfo.lastBackupError.code
     - api_field: rulesConfigInfo.lastBackupError.message
     - api_field: rulesConfigInfo.lastBackupState
