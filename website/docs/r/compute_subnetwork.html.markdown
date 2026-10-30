@@ -708,6 +708,10 @@ In addition to the arguments listed above, the following computed attributes are
    A subnetwork that is draining cannot be used or modified until it reaches a status of READY'
 * `self_link` - The URI of the created resource.
 
+* `fingerprint` - (Deprecated) Fingerprint of this resource. This field is used internally during updates of this resource.
+
+  ~> **Warning:** This field is not useful for users, and has been removed as an output.
+
 
 ## Timeouts
 

@@ -244,6 +244,9 @@ The following arguments are supported:
 	When set to "ABANDON", the command will remove the resource from Terraform
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
+* `multi_cluster_routing_cluster_ids` - (Optional) The set of clusters to route to. The order is ignored; clusters will be tried in order of distance. If left empty, all clusters are eligible.
+
+* `row_affinity` - (Optional) Must be used with multi-cluster routing. If true, then this app profile will use row affinity sticky routing. With row affinity, Bigtable will route single row key requests based on the row key, rather than randomly. Instead, each row key will be assigned to a cluster by Cloud Bigtable, and will stick to that cluster. Choosing this option improves read-your-writes consistency for most requests under most circumstances, without sacrificing availability. Consistency is not guaranteed, as requests may still fail over between clusters in the event of errors or latency.
 
 
 <a name="nested_single_cluster_routing"></a>The `single_cluster_routing` block supports:

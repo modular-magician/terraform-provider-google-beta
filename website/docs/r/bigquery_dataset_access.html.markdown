@@ -330,6 +330,8 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/datasets/{{dataset_id}}`
 
+* `api_updated_member` - If true, represents that that the iam_member in the config was translated to a different member type by the API, and is stored in state as a different member type.
+
 
 ## Timeouts
 
