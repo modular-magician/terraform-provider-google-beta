@@ -217,6 +217,14 @@ plugin supports API_HUB_SCHEDULE_TRIGGER mode for this action.`,
 							Description: `The time zone for the schedule cron expression. If not provided, UTC will
 be used.`,
 						},
+						"service_account": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `The service account of the plugin hosting service. This service account
+should have the required permissions to invoke the remote service if the
+gateway_type is PLUGIN_GATEWAY.`,
+						},
 						"hub_instance_action": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -316,6 +324,171 @@ resource.
 
 This value should be 4-63 characters, and valid characters
 are /a-z[0-9]-_/.`,
+			},
+			"additional_config": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Description: `The additional information for this plugin instance corresponding to
+the additional config template of the plugin. This information will be sent
+to plugin hosting service on each call to plugin hosted service. The key
+will be the config_variable_template.id from the plugin and the value will
+be the additional configuration provided by the user for the plugin
+instance.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+						},
+						"bool_value": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The config variable value in case of config variable of type boolean.`,
+						},
+						"enum_value": {
+							Type:     schema.TypeList,
+							Optional: true,
+							ForceNew: true,
+							Description: `ConfigValueOption represents an option for a config variable of type enum
+or multi select.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"display_name": {
+										Type:        schema.TypeString,
+										Required:    true,
+										ForceNew:    true,
+										Description: `Display name of the option.`,
+									},
+									"id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										ForceNew:    true,
+										Description: `Id of the option.`,
+									},
+									"description": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Description of the option.`,
+									},
+								},
+							},
+						},
+						"int_value": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The config variable value in case of config variable of type integer.`,
+						},
+						"multi_int_values": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The config variable value in case of config variable of type multi integer.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"values": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The config variable value in case of config variable of type multi integer.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeInt,
+										},
+									},
+								},
+							},
+						},
+						"multi_select_values": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The config variable value in case of config variable of type multi select.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"values": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The config variable value in case of config variable of type multi select.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"display_name": {
+													Type:        schema.TypeString,
+													Required:    true,
+													ForceNew:    true,
+													Description: `Display name of the option.`,
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Required:    true,
+													ForceNew:    true,
+													Description: `Id of the option.`,
+												},
+												"description": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Description of the option.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"multi_string_values": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The config variable value in case of config variable of type multi string.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"values": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The config variable value in case of config variable of type multi string.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+						"secret_value": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Secret provides a reference to entries in Secret Manager.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"secret_version": {
+										Type:     schema.TypeString,
+										Required: true,
+										ForceNew: true,
+										Description: `The resource name of the secret version in the format,
+format as: 'projects/*/secrets/*/versions/*'.`,
+									},
+								},
+							},
+						},
+						"string_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The config variable value in case of config variable of type string.`,
+						},
+					},
+				},
 			},
 			"auth_config": {
 				Type:        schema.TypeList,
@@ -488,6 +661,49 @@ format as: 'projects/*/secrets/*/versions/*'.`,
 				Description: `The display name for this plugin instance. Max length is 255 characters.`,
 				Default:     false,
 			},
+			"source_environments_config": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Description: `The source environment's config present in the gateway instance linked to
+the plugin instance. The key is the 'source_environment' name from the
+SourceEnvironment message.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+						},
+						"source_environment": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `The name of the environment at the source (e.g., "prod", "staging", "dev").
+This is the unique key within the source_environments_config map.`,
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The time at which the environment was created at the source.`,
+						},
+						"source_environment_uri": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `The location where the environment details are stored or can be accessed
+at the source.`,
+						},
+						"update_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The time at which the environment was last updated at the source.`,
+						},
+					},
+				},
+			},
 			"source_project_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -592,6 +808,18 @@ func resourceApihubPluginInstanceCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("actions"); !tpgresource.IsEmptyValue(reflect.ValueOf(actionsProp)) && (ok || !reflect.DeepEqual(v, actionsProp)) {
 		obj["actions"] = actionsProp
+	}
+	additionalConfigProp, err := expandApihubPluginInstanceAdditionalConfig(d.Get("additional_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("additional_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(additionalConfigProp)) && (ok || !reflect.DeepEqual(v, additionalConfigProp)) {
+		obj["additionalConfig"] = additionalConfigProp
+	}
+	sourceEnvironmentsConfigProp, err := expandApihubPluginInstanceSourceEnvironmentsConfig(d.Get("source_environments_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("source_environments_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(sourceEnvironmentsConfigProp)) && (ok || !reflect.DeepEqual(v, sourceEnvironmentsConfigProp)) {
+		obj["sourceEnvironmentsConfig"] = sourceEnvironmentsConfigProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{location}}/plugins/{{plugin}}/instances?pluginInstanceId={{plugin_instance_id}}")
@@ -1167,6 +1395,7 @@ func flattenApihubPluginInstanceActions(v interface{}, d *schema.ResourceData, c
 			"schedule_cron_expression": flattenApihubPluginInstanceActionsScheduleCronExpression(original["scheduleCronExpression"], d, config),
 			"curation_config":          flattenApihubPluginInstanceActionsCurationConfig(original["curationConfig"], d, config),
 			"schedule_time_zone":       flattenApihubPluginInstanceActionsScheduleTimeZone(original["scheduleTimeZone"], d, config),
+			"service_account":          flattenApihubPluginInstanceActionsServiceAccount(original["serviceAccount"], d, config),
 		})
 	}
 	return transformed
@@ -1274,6 +1503,229 @@ func flattenApihubPluginInstanceActionsCurationConfigCurationType(v interface{},
 }
 
 func flattenApihubPluginInstanceActionsScheduleTimeZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceActionsServiceAccount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	if strVal, ok := v.(string); ok {
+		return strings.TrimPrefix(strVal, "serviceAccount:")
+	}
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"key":                 k,
+			"string_value":        flattenApihubPluginInstanceAdditionalConfigStringValue(original["stringValue"], d, config),
+			"int_value":           flattenApihubPluginInstanceAdditionalConfigIntValue(original["intValue"], d, config),
+			"bool_value":          flattenApihubPluginInstanceAdditionalConfigBoolValue(original["boolValue"], d, config),
+			"secret_value":        flattenApihubPluginInstanceAdditionalConfigSecretValue(original["secretValue"], d, config),
+			"enum_value":          flattenApihubPluginInstanceAdditionalConfigEnumValue(original["enumValue"], d, config),
+			"multi_select_values": flattenApihubPluginInstanceAdditionalConfigMultiSelectValues(original["multiSelectValues"], d, config),
+			"multi_string_values": flattenApihubPluginInstanceAdditionalConfigMultiStringValues(original["multiStringValues"], d, config),
+			"multi_int_values":    flattenApihubPluginInstanceAdditionalConfigMultiIntValues(original["multiIntValues"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenApihubPluginInstanceAdditionalConfigStringValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigIntValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenApihubPluginInstanceAdditionalConfigBoolValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigSecretValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["secret_version"] =
+		flattenApihubPluginInstanceAdditionalConfigSecretValueSecretVersion(original["secretVersion"], d, config)
+	return []interface{}{transformed}
+}
+func flattenApihubPluginInstanceAdditionalConfigSecretValueSecretVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigEnumValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["id"] =
+		flattenApihubPluginInstanceAdditionalConfigEnumValueId(original["id"], d, config)
+	transformed["display_name"] =
+		flattenApihubPluginInstanceAdditionalConfigEnumValueDisplayName(original["displayName"], d, config)
+	transformed["description"] =
+		flattenApihubPluginInstanceAdditionalConfigEnumValueDescription(original["description"], d, config)
+	return []interface{}{transformed}
+}
+func flattenApihubPluginInstanceAdditionalConfigEnumValueId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigEnumValueDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigEnumValueDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigMultiSelectValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["values"] =
+		flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValues(original["values"], d, config)
+	return []interface{}{transformed}
+}
+func flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"id":           flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesId(original["id"], d, config),
+			"display_name": flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDisplayName(original["displayName"], d, config),
+			"description":  flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDescription(original["description"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigMultiStringValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["values"] =
+		flattenApihubPluginInstanceAdditionalConfigMultiStringValuesValues(original["values"], d, config)
+	return []interface{}{transformed}
+}
+func flattenApihubPluginInstanceAdditionalConfigMultiStringValuesValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceAdditionalConfigMultiIntValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["values"] =
+		flattenApihubPluginInstanceAdditionalConfigMultiIntValuesValues(original["values"], d, config)
+	return []interface{}{transformed}
+}
+func flattenApihubPluginInstanceAdditionalConfigMultiIntValuesValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceSourceEnvironmentsConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"key":                    k,
+			"source_environment":     flattenApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironment(original["sourceEnvironment"], d, config),
+			"source_environment_uri": flattenApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironmentUri(original["sourceEnvironmentUri"], d, config),
+			"create_time":            flattenApihubPluginInstanceSourceEnvironmentsConfigCreateTime(original["createTime"], d, config),
+			"update_time":            flattenApihubPluginInstanceSourceEnvironmentsConfigUpdateTime(original["updateTime"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironmentUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApihubPluginInstanceSourceEnvironmentsConfigCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if s, ok := v.(string); ok && s == "0001-01-01T00:00:00Z" {
+		return nil
+	}
+	return v
+}
+
+func flattenApihubPluginInstanceSourceEnvironmentsConfigUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if s, ok := v.(string); ok && s == "0001-01-01T00:00:00Z" {
+		return nil
+	}
 	return v
 }
 
@@ -1612,6 +2064,13 @@ func expandApihubPluginInstanceActions(v interface{}, d tpgresource.TerraformRes
 			transformed["scheduleTimeZone"] = transformedScheduleTimeZone
 		}
 
+		transformedServiceAccount, err := expandApihubPluginInstanceActionsServiceAccount(original["service_account"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceAccount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["serviceAccount"] = transformedServiceAccount
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -1784,6 +2243,369 @@ func expandApihubPluginInstanceActionsScheduleTimeZone(v interface{}, d tpgresou
 	return v, nil
 }
 
+func expandApihubPluginInstanceActionsServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
+	if v == nil {
+		return map[string]interface{}{}, nil
+	}
+	m := make(map[string]interface{})
+	for _, raw := range v.(*schema.Set).List() {
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedStringValue, err := expandApihubPluginInstanceAdditionalConfigStringValue(original["string_value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedStringValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["stringValue"] = transformedStringValue
+		}
+
+		transformedIntValue, err := expandApihubPluginInstanceAdditionalConfigIntValue(original["int_value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIntValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["intValue"] = transformedIntValue
+		}
+
+		transformedBoolValue, err := expandApihubPluginInstanceAdditionalConfigBoolValue(original["bool_value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedBoolValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["boolValue"] = transformedBoolValue
+		}
+
+		transformedSecretValue, err := expandApihubPluginInstanceAdditionalConfigSecretValue(original["secret_value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSecretValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["secretValue"] = transformedSecretValue
+		}
+
+		transformedEnumValue, err := expandApihubPluginInstanceAdditionalConfigEnumValue(original["enum_value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEnumValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["enumValue"] = transformedEnumValue
+		}
+
+		transformedMultiSelectValues, err := expandApihubPluginInstanceAdditionalConfigMultiSelectValues(original["multi_select_values"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMultiSelectValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["multiSelectValues"] = transformedMultiSelectValues
+		}
+
+		transformedMultiStringValues, err := expandApihubPluginInstanceAdditionalConfigMultiStringValues(original["multi_string_values"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMultiStringValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["multiStringValues"] = transformedMultiStringValues
+		}
+
+		transformedMultiIntValues, err := expandApihubPluginInstanceAdditionalConfigMultiIntValues(original["multi_int_values"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMultiIntValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["multiIntValues"] = transformedMultiIntValues
+		}
+
+		// ConfigVariable uses a protobuf oneof across its value fields, and the API
+		// requires `{"boolValue": false}` rather than `{}` for false boolean variables.
+		// Because additional_config is a TypeSet, SDKv2 populates `original["bool_value"] = false`
+		// on every entry (including string/int/enum entries), so `send_empty_value: true`
+		// on boolValue would send `"boolValue": false` alongside other oneof fields and
+		// fail proto oneof unmarshaling. Only send `"boolValue": false` when no other
+		// oneof field populated `transformed`.
+		if len(transformed) == 0 {
+			if b, ok := original["bool_value"].(bool); ok && !b {
+				transformed["boolValue"] = false
+			}
+		}
+
+		transformedKey, err := tpgresource.ExpandString(original["key"], d, config)
+		if err != nil {
+			return nil, err
+		}
+		m[transformedKey] = transformed
+	}
+	return m, nil
+}
+func expandApihubPluginInstanceAdditionalConfigStringValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigIntValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigBoolValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigSecretValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSecretVersion, err := expandApihubPluginInstanceAdditionalConfigSecretValueSecretVersion(original["secret_version"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecretVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["secretVersion"] = transformedSecretVersion
+	}
+
+	return transformed, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigSecretValueSecretVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigEnumValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedId, err := expandApihubPluginInstanceAdditionalConfigEnumValueId(original["id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["id"] = transformedId
+	}
+
+	transformedDisplayName, err := expandApihubPluginInstanceAdditionalConfigEnumValueDisplayName(original["display_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["displayName"] = transformedDisplayName
+	}
+
+	transformedDescription, err := expandApihubPluginInstanceAdditionalConfigEnumValueDescription(original["description"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["description"] = transformedDescription
+	}
+
+	return transformed, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigEnumValueId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigEnumValueDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigEnumValueDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiSelectValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedValues, err := expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValues(original["values"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["values"] = transformedValues
+	}
+
+	return transformed, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedId, err := expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesId(original["id"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["id"] = transformedId
+		}
+
+		transformedDisplayName, err := expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDisplayName(original["display_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayName"] = transformedDisplayName
+		}
+
+		transformedDescription, err := expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDescription(original["description"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["description"] = transformedDescription
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiSelectValuesValuesDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiStringValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedValues, err := expandApihubPluginInstanceAdditionalConfigMultiStringValuesValues(original["values"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["values"] = transformedValues
+	}
+
+	return transformed, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiStringValuesValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiIntValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedValues, err := expandApihubPluginInstanceAdditionalConfigMultiIntValuesValues(original["values"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["values"] = transformedValues
+	}
+
+	return transformed, nil
+}
+
+func expandApihubPluginInstanceAdditionalConfigMultiIntValuesValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceSourceEnvironmentsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
+	if v == nil {
+		return map[string]interface{}{}, nil
+	}
+	m := make(map[string]interface{})
+	for _, raw := range v.(*schema.Set).List() {
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedSourceEnvironment, err := expandApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironment(original["source_environment"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSourceEnvironment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["sourceEnvironment"] = transformedSourceEnvironment
+		}
+
+		transformedSourceEnvironmentUri, err := expandApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironmentUri(original["source_environment_uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSourceEnvironmentUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["sourceEnvironmentUri"] = transformedSourceEnvironmentUri
+		}
+
+		transformedCreateTime, err := expandApihubPluginInstanceSourceEnvironmentsConfigCreateTime(original["create_time"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["createTime"] = transformedCreateTime
+		}
+
+		transformedUpdateTime, err := expandApihubPluginInstanceSourceEnvironmentsConfigUpdateTime(original["update_time"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedUpdateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["updateTime"] = transformedUpdateTime
+		}
+
+		transformedKey, err := tpgresource.ExpandString(original["key"], d, config)
+		if err != nil {
+			return nil, err
+		}
+		m[transformedKey] = transformed
+	}
+	return m, nil
+}
+
+func expandApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceSourceEnvironmentsConfigSourceEnvironmentUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceSourceEnvironmentsConfigCreateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApihubPluginInstanceSourceEnvironmentsConfigUpdateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceApihubPluginInstanceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -1815,6 +2637,12 @@ func ResourceApihubPluginInstanceFlatten(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error reading PluginInstance: %s", err)
 	}
 	if err = d.Set("actions", flattenApihubPluginInstanceActions(res["actions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PluginInstance: %s", err)
+	}
+	if err = d.Set("additional_config", flattenApihubPluginInstanceAdditionalConfig(res["additionalConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PluginInstance: %s", err)
+	}
+	if err = d.Set("source_environments_config", flattenApihubPluginInstanceSourceEnvironmentsConfig(res["sourceEnvironmentsConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PluginInstance: %s", err)
 	}
 

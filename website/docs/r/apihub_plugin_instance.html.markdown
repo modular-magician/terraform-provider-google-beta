@@ -89,6 +89,23 @@ The following arguments are supported:
   AuthConfig represents the authentication information.
   Structure is [documented below](#nested_auth_config).
 
+* `additional_config` -
+  (Optional)
+  The additional information for this plugin instance corresponding to
+  the additional config template of the plugin. This information will be sent
+  to plugin hosting service on each call to plugin hosted service. The key
+  will be the config_variable_template.id from the plugin and the value will
+  be the additional configuration provided by the user for the plugin
+  instance.
+  Structure is [documented below](#nested_additional_config).
+
+* `source_environments_config` -
+  (Optional)
+  The source environment's config present in the gateway instance linked to
+  the plugin instance. The key is the `source_environment` name from the
+  SourceEnvironment message.
+  Structure is [documented below](#nested_source_environments_config).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -137,6 +154,12 @@ The following arguments are supported:
   (Optional)
   The time zone for the schedule cron expression. If not provided, UTC will
   be used.
+
+* `service_account` -
+  (Optional)
+  The service account of the plugin hosting service. This service account
+  should have the required permissions to invoke the remote service if the
+  gateway_type is PLUGIN_GATEWAY.
 
 
 <a name="nested_actions_hub_instance_action"></a>The `hub_instance_action` block contains:
@@ -313,6 +336,126 @@ The following arguments are supported:
   (Required)
   The resource name of the secret version in the format,
   format as: `projects/*/secrets/*/versions/*`.
+
+<a name="nested_additional_config"></a>The `additional_config` block supports:
+
+* `key` - (Required) The identifier for this object. Format specified above.
+
+* `string_value` -
+  (Optional)
+  The config variable value in case of config variable of type string.
+
+* `int_value` -
+  (Optional)
+  The config variable value in case of config variable of type integer.
+
+* `bool_value` -
+  (Optional)
+  The config variable value in case of config variable of type boolean.
+
+* `secret_value` -
+  (Optional)
+  Secret provides a reference to entries in Secret Manager.
+  Structure is [documented below](#nested_additional_config_secret_value).
+
+* `enum_value` -
+  (Optional)
+  ConfigValueOption represents an option for a config variable of type enum
+  or multi select.
+  Structure is [documented below](#nested_additional_config_enum_value).
+
+* `multi_select_values` -
+  (Optional)
+  The config variable value in case of config variable of type multi select.
+  Structure is [documented below](#nested_additional_config_multi_select_values).
+
+* `multi_string_values` -
+  (Optional)
+  The config variable value in case of config variable of type multi string.
+  Structure is [documented below](#nested_additional_config_multi_string_values).
+
+* `multi_int_values` -
+  (Optional)
+  The config variable value in case of config variable of type multi integer.
+  Structure is [documented below](#nested_additional_config_multi_int_values).
+
+
+<a name="nested_additional_config_secret_value"></a>The `secret_value` block supports:
+
+* `secret_version` -
+  (Required)
+  The resource name of the secret version in the format,
+  format as: `projects/*/secrets/*/versions/*`.
+
+<a name="nested_additional_config_enum_value"></a>The `enum_value` block supports:
+
+* `id` -
+  (Required)
+  Id of the option.
+
+* `display_name` -
+  (Required)
+  Display name of the option.
+
+* `description` -
+  (Optional)
+  Description of the option.
+
+<a name="nested_additional_config_multi_select_values"></a>The `multi_select_values` block supports:
+
+* `values` -
+  (Optional)
+  The config variable value in case of config variable of type multi select.
+  Structure is [documented below](#nested_additional_config_multi_select_values_values).
+
+
+<a name="nested_additional_config_multi_select_values_values"></a>The `values` block supports:
+
+* `id` -
+  (Required)
+  Id of the option.
+
+* `display_name` -
+  (Required)
+  Display name of the option.
+
+* `description` -
+  (Optional)
+  Description of the option.
+
+<a name="nested_additional_config_multi_string_values"></a>The `multi_string_values` block supports:
+
+* `values` -
+  (Optional)
+  The config variable value in case of config variable of type multi string.
+
+<a name="nested_additional_config_multi_int_values"></a>The `multi_int_values` block supports:
+
+* `values` -
+  (Optional)
+  The config variable value in case of config variable of type multi integer.
+
+<a name="nested_source_environments_config"></a>The `source_environments_config` block supports:
+
+* `key` - (Required) The identifier for this object. Format specified above.
+
+* `source_environment` -
+  (Required)
+  The name of the environment at the source (e.g., "prod", "staging", "dev").
+  This is the unique key within the source_environments_config map.
+
+* `source_environment_uri` -
+  (Optional)
+  The location where the environment details are stored or can be accessed
+  at the source.
+
+* `create_time` -
+  (Optional)
+  The time at which the environment was created at the source.
+
+* `update_time` -
+  (Optional)
+  The time at which the environment was last updated at the source.
 
 ## Attributes Reference
 
