@@ -31,6 +31,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/logging"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/vertexaiaad"
@@ -63,11 +64,20 @@ func TestAccVertexAiAadAgentAnomalyDetectionScope_vertexAiAgentAnomalyDetectionS
 			Member: "serviceAccount:service-{project_number}@gcp-sa-aiplatform.iam.gserviceaccount.com",
 			Role:   "roles/logging.configWriter",
 		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-aiplatform.iam.gserviceaccount.com",
+			Role:   "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-logging.iam.gserviceaccount.com",
+			Role:   "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+		},
 	})
 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"kms_key_name":  kms.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
 		"log_bucket_id": "tf-test-aad-log-bucket" + randomSuffix,
 		"scope_id":      "tf-test-agent-anomaly-detection-scope" + randomSuffix,
 		"random_suffix": randomSuffix,
@@ -99,6 +109,11 @@ func TestAccVertexAiAadAgentAnomalyDetectionScope_vertexAiAgentAnomalyDetectionS
 
 func testAccVertexAiAadAgentAnomalyDetectionScope_vertexAiAgentAnomalyDetectionScopeBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+data "google_logging_project_cmek_settings" "cmek_settings" {
+  provider = google-beta
+  project  = data.google_project.project.project_id
+}
+
 resource "google_logging_project_bucket_config" "%{log_bucket_id}" {
   provider         = google-beta
   project          = data.google_project.project.project_id
@@ -106,6 +121,12 @@ resource "google_logging_project_bucket_config" "%{log_bucket_id}" {
   retention_days   = 30
   bucket_id        = "%{log_bucket_id}"
   enable_analytics = true
+  cmek_settings {
+    kms_key_name = "%{kms_key_name}"
+  }
+  depends_on = [
+    data.google_logging_project_cmek_settings.cmek_settings,
+  ]
 }
 
 resource "google_vertex_ai_agent_anomaly_detection_scope" "scope" {
@@ -113,12 +134,16 @@ resource "google_vertex_ai_agent_anomaly_detection_scope" "scope" {
   region                           = "us"
   agent_anomaly_detection_scope_id = "%{scope_id}"
   display_name                     = "Basic AAD scope"
+  auto_enroll                      = true
   log_buckets = [
     google_logging_project_bucket_config.%{log_bucket_id}.id,
   ]
   observability_buckets = [
     "projects/${data.google_project.project.project_id}/locations/us/buckets/_Trace/datasets/Spans",
   ]
+  encryption_spec {
+    kms_key_name = "%{kms_key_name}"
+  }
 }
 
 data "google_project" "project" {

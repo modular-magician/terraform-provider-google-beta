@@ -47,6 +47,11 @@ To get more information about AgentAnomalyDetectionScope, see:
 
 
 ```hcl
+data "google_logging_project_cmek_settings" "cmek_settings" {
+  provider = google-beta
+  project  = data.google_project.project.project_id
+}
+
 resource "google_logging_project_bucket_config" "aad-log-bucket" {
   provider         = google-beta
   project          = data.google_project.project.project_id
@@ -54,6 +59,12 @@ resource "google_logging_project_bucket_config" "aad-log-bucket" {
   retention_days   = 30
   bucket_id        = "aad-log-bucket"
   enable_analytics = true
+  cmek_settings {
+    kms_key_name = "projects/keys-project/locations/us/keyRings/key-ring/cryptoKeys/crypto-key"
+  }
+  depends_on = [
+    data.google_logging_project_cmek_settings.cmek_settings,
+  ]
 }
 
 resource "google_vertex_ai_agent_anomaly_detection_scope" "scope" {
@@ -61,12 +72,16 @@ resource "google_vertex_ai_agent_anomaly_detection_scope" "scope" {
   region                           = "us"
   agent_anomaly_detection_scope_id = "agent-anomaly-detection-scope"
   display_name                     = "Basic AAD scope"
+  auto_enroll                      = true
   log_buckets = [
     google_logging_project_bucket_config.aad-log-bucket.id,
   ]
   observability_buckets = [
     "projects/${data.google_project.project.project_id}/locations/us/buckets/_Trace/datasets/Spans",
   ]
+  encryption_spec {
+    kms_key_name = "projects/keys-project/locations/us/keyRings/key-ring/cryptoKeys/crypto-key"
+  }
 }
 
 data "google_project" "project" {
@@ -105,6 +120,19 @@ The following arguments are supported:
   (Optional)
   User provided display name of the AgentAnomalyDetectionScope.
 
+* `auto_enroll` -
+  (Optional)
+  When true, agents created in Agent Engine that share log and observability
+  buckets with this scope are automatically enrolled as monitored agents.
+  When false, agents must be enrolled explicitly.
+
+* `encryption_spec` -
+  (Optional)
+  Customer-managed encryption key spec for the scope. If set, this scope
+  and all sub-resources are secured by this key. The key must be a
+  multi-region (`us` or `eu`) Cloud KMS key in the same region as the scope.
+  Structure is [documented below](#nested_encryption_spec).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -115,6 +143,13 @@ The following arguments are supported:
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
 
+
+<a name="nested_encryption_spec"></a>The `encryption_spec` block supports:
+
+* `kms_key_name` -
+  (Required)
+  Resource name of the Cloud KMS key used to protect the resource.
+  Format: projects/{{project}}/locations/{{location}}/keyRings/{{key_ring}}/cryptoKeys/{{crypto_key}}.
 
 ## Attributes Reference
 
