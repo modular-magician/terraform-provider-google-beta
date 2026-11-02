@@ -177,6 +177,101 @@ func resourceBigQueryDatasetAccessReassignIamMemberInNestedObjectList(d *schema.
 	return "", nil, nil
 }
 
+// resourceBigQueryDatasetAccessImportNested handles import IDs for the "view", "dataset", and
+// "routine" nested blocks, which can't be set via the flat-field ParseImportId helper.
+func resourceBigQueryDatasetAccessImportNested(d *schema.ResourceData, config *transport_tpg.Config) (bool, error) {
+	type nestedImportPattern struct {
+		re   *regexp.Regexp
+		kind string
+	}
+	// Each kind is tried as "projects/{project}/datasets/{dataset_id}/...", the same without the
+	// "projects"/"datasets" literals, and with project omitted (defaults to the provider project),
+	// each with an optional "roles/{role}/" prefix since role isn't required for these grant types.
+	patterns := []nestedImportPattern{
+		{regexp.MustCompile(`^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?view/(?P<view_project_id>[^/]+)/(?P<view_dataset_id>[^/]+)/(?P<view_table_id>[^/]+)$`), "view"},
+		{regexp.MustCompile(`^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?view/(?P<view_project_id>[^/]+)/(?P<view_dataset_id>[^/]+)/(?P<view_table_id>[^/]+)$`), "view"},
+		{regexp.MustCompile(`^(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?view/(?P<view_project_id>[^/]+)/(?P<view_dataset_id>[^/]+)/(?P<view_table_id>[^/]+)$`), "view"},
+		{regexp.MustCompile(`^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?dataset/(?P<dataset_project_id>[^/]+)/(?P<dataset_dataset_id>[^/]+)/(?P<target_types>[^/]+)$`), "dataset"},
+		{regexp.MustCompile(`^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?dataset/(?P<dataset_project_id>[^/]+)/(?P<dataset_dataset_id>[^/]+)/(?P<target_types>[^/]+)$`), "dataset"},
+		{regexp.MustCompile(`^(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?dataset/(?P<dataset_project_id>[^/]+)/(?P<dataset_dataset_id>[^/]+)/(?P<target_types>[^/]+)$`), "dataset"},
+		{regexp.MustCompile(`^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?routine/(?P<routine_project_id>[^/]+)/(?P<routine_dataset_id>[^/]+)/(?P<routine_id>[^/]+)$`), "routine"},
+		{regexp.MustCompile(`^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?routine/(?P<routine_project_id>[^/]+)/(?P<routine_dataset_id>[^/]+)/(?P<routine_id>[^/]+)$`), "routine"},
+		{regexp.MustCompile(`^(?P<dataset_id>[^/]+)/(?:roles/(?P<role>[^/]+)/)?routine/(?P<routine_project_id>[^/]+)/(?P<routine_dataset_id>[^/]+)/(?P<routine_id>[^/]+)$`), "routine"},
+	}
+
+	for _, p := range patterns {
+		match := p.re.FindStringSubmatch(d.Id())
+		if match == nil {
+			continue
+		}
+		groups := make(map[string]string)
+		for i, name := range p.re.SubexpNames() {
+			if i == 0 || name == "" {
+				continue
+			}
+			groups[name] = match[i]
+		}
+
+		if err := d.Set("dataset_id", groups["dataset_id"]); err != nil {
+			return true, fmt.Errorf("Error setting dataset_id: %s", err)
+		}
+		if project, ok := groups["project"]; ok && project != "" {
+			if err := d.Set("project", project); err != nil {
+				return true, fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+		if role, ok := groups["role"]; ok && role != "" {
+			if err := d.Set("role", role); err != nil {
+				return true, fmt.Errorf("Error setting role: %s", err)
+			}
+		}
+
+		switch p.kind {
+		case "view":
+			if err := d.Set("view", []interface{}{map[string]interface{}{
+				"project_id": groups["view_project_id"],
+				"dataset_id": groups["view_dataset_id"],
+				"table_id":   groups["view_table_id"],
+			}}); err != nil {
+				return true, fmt.Errorf("Error setting view: %s", err)
+			}
+		case "routine":
+			if err := d.Set("routine", []interface{}{map[string]interface{}{
+				"project_id": groups["routine_project_id"],
+				"dataset_id": groups["routine_dataset_id"],
+				"routine_id": groups["routine_id"],
+			}}); err != nil {
+				return true, fmt.Errorf("Error setting routine: %s", err)
+			}
+		case "dataset":
+			var targetTypes []interface{}
+			for _, t := range strings.Split(groups["target_types"], ",") {
+				if t != "" {
+					targetTypes = append(targetTypes, t)
+				}
+			}
+			if err := d.Set("dataset", []interface{}{map[string]interface{}{
+				"dataset": []interface{}{map[string]interface{}{
+					"project_id": groups["dataset_project_id"],
+					"dataset_id": groups["dataset_dataset_id"],
+				}},
+				"target_types": targetTypes,
+			}}); err != nil {
+				return true, fmt.Errorf("Error setting dataset: %s", err)
+			}
+		}
+
+		id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/datasets/{{dataset_id}}")
+		if err != nil {
+			return true, fmt.Errorf("Error constructing id: %s", err)
+		}
+		d.SetId(id)
+		return true, nil
+	}
+
+	return false, nil
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -224,6 +319,10 @@ func ResourceBigQueryDatasetAccess() *schema.Resource {
 		Read:   resourceBigQueryDatasetAccessRead,
 		Update: resourceBigQueryDatasetAccessUpdate,
 		Delete: resourceBigQueryDatasetAccessDelete,
+
+		Importer: &schema.ResourceImporter{
+			State: resourceBigQueryDatasetAccessImport,
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
@@ -851,6 +950,50 @@ func resourceBigQueryDatasetAccessDelete(d *schema.ResourceData, meta interface{
 
 	log.Printf("[DEBUG] Finished deleting DatasetAccess %q: %#v", d.Id(), res)
 	return nil
+}
+
+func resourceBigQueryDatasetAccessImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	config := meta.(*transport_tpg.Config)
+
+	// google_bigquery_dataset_access entries have no unique ID of their own in the API - they are
+	// identified within a dataset's access list by an aggregate of role plus exactly one member
+	// field, so the id must specify which member field it refers to.
+	if matched, err := resourceBigQueryDatasetAccessImportNested(d, config); err != nil {
+		return nil, err
+	} else if matched {
+		return []*schema.ResourceData{d}, nil
+	}
+
+	if err := tpgresource.ParseImportId([]string{
+		"^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/userByEmail/(?P<user_by_email>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/groupByEmail/(?P<group_by_email>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/domain/(?P<domain>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/specialGroup/(?P<special_group>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/iamMember/(?P<iam_member>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/userByEmail/(?P<user_by_email>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/groupByEmail/(?P<group_by_email>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/domain/(?P<domain>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/specialGroup/(?P<special_group>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/iamMember/(?P<iam_member>[^/]+)$",
+		"^(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/userByEmail/(?P<user_by_email>[^/]+)$",
+		"^(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/groupByEmail/(?P<group_by_email>[^/]+)$",
+		"^(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/domain/(?P<domain>[^/]+)$",
+		"^(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/specialGroup/(?P<special_group>[^/]+)$",
+		"^(?P<dataset_id>[^/]+)/roles/(?P<role>[^/]+)/iamMember/(?P<iam_member>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?P<role>[^/]+)/(?P<user_by_email>[^/]+)$",
+		"^(?P<dataset_id>[^/]+)/(?P<role>[^/]+)/(?P<user_by_email>[^/]+)$",
+	}, d, config); err != nil {
+		return nil, err
+	}
+
+	// Replace import id for the resource id
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/datasets/{{dataset_id}}")
+	if err != nil {
+		return nil, fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
+
+	return []*schema.ResourceData{d}, nil
 }
 
 func flattenNestedBigQueryDatasetAccessRole(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

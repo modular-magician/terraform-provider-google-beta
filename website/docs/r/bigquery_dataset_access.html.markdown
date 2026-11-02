@@ -41,6 +41,12 @@ To get more information about DatasetAccess, see:
 The API does accept both formats but it will always return the legacy format which results in Terraform
 showing permanent diff on each plan and apply operation.
 
+~> **Note:** The short `{{project}}/{{dataset_id}}/{{role}}/{{value}}` and `{{dataset_id}}/{{role}}/{{value}}` import ID
+formats only work for `user_by_email` grants; the final segment is always interpreted as `user_by_email`
+regardless of the grant's actual member type. To import a `group_by_email`, `domain`, `special_group`, or
+`iam_member` grant, use one of the formats that spells out the member field name, e.g.
+`{{dataset_id}}/roles/{{role}}/groupByEmail/{{value}}`.
+
 
 ## Example Usage - Bigquery Dataset Access Basic User
 
@@ -341,7 +347,105 @@ This resource provides the following
 
 ## Import
 
-This resource does not support import.
+
+DatasetAccess can be imported using any of these accepted formats:
+
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/groupByEmail/{{group_by_email}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/iamMember/{{iam_member}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/domain/{{domain}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/userByEmail/{{user_by_email}}`
+* `projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/specialGroup/{{special_group}}`
+* `{{dataset_id}}/roles/{{role}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}`
+* `{{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}`
+* `{{dataset_id}}/roles/{{role}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}`
+* `{{project}}/{{dataset_id}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}`
+* `{{project}}/{{dataset_id}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}`
+* `{{project}}/{{dataset_id}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/groupByEmail/{{group_by_email}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/userByEmail/{{user_by_email}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/domain/{{domain}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/specialGroup/{{special_group}}`
+* `{{project}}/{{dataset_id}}/roles/{{role}}/iamMember/{{iam_member}}`
+* `{{dataset_id}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}`
+* `{{dataset_id}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}`
+* `{{dataset_id}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}`
+* `{{dataset_id}}/roles/{{role}}/userByEmail/{{user_by_email}}`
+* `{{dataset_id}}/roles/{{role}}/domain/{{domain}}`
+* `{{dataset_id}}/roles/{{role}}/specialGroup/{{special_group}}`
+* `{{dataset_id}}/roles/{{role}}/iamMember/{{iam_member}}`
+* `{{dataset_id}}/roles/{{role}}/groupByEmail/{{group_by_email}}`
+* `{{project}}/{{dataset_id}}/{{role}}/{{user_by_email}}`
+* `{{dataset_id}}/{{role}}/{{user_by_email}}`
+
+In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hashicorp.com/terraform/language/block/import#identity) to import DatasetAccess using identity values. For example:
+
+```tf
+import {
+  identity = {
+    datasetId = "<-required value->"
+    project = "<-optional value->"
+  }
+  to = google_bigquery_dataset_access.default
+}
+```
+
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import DatasetAccess using one of the formats above. For example:
+
+```tf
+import {
+  id = "projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}"
+  to = google_bigquery_dataset_access.default
+}
+```
+
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), DatasetAccess can be imported using one of the formats above. For example:
+
+```
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/groupByEmail/{{group_by_email}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/iamMember/{{iam_member}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/domain/{{domain}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/userByEmail/{{user_by_email}}
+$ terraform import google_bigquery_dataset_access.default projects/{{project}}/datasets/{{dataset_id}}/roles/{{role}}/specialGroup/{{special_group}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/groupByEmail/{{group_by_email}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/userByEmail/{{user_by_email}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/domain/{{domain}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/specialGroup/{{special_group}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/roles/{{role}}/iamMember/{{iam_member}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/view/{{view_project_id}}/{{view_dataset_id}}/{{view_table_id}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/dataset/{{dataset_project_id}}/{{dataset_dataset_id}}/{{target_types}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/routine/{{routine_project_id}}/{{routine_dataset_id}}/{{routine_id}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/userByEmail/{{user_by_email}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/domain/{{domain}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/specialGroup/{{special_group}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/iamMember/{{iam_member}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/roles/{{role}}/groupByEmail/{{group_by_email}}
+$ terraform import google_bigquery_dataset_access.default {{project}}/{{dataset_id}}/{{role}}/{{user_by_email}}
+$ terraform import google_bigquery_dataset_access.default {{dataset_id}}/{{role}}/{{user_by_email}}
+```
 
 ## User Project Overrides
 
