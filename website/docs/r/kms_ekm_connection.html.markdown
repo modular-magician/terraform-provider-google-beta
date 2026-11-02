@@ -154,7 +154,7 @@ The following arguments are supported:
   Output only. The certificate serial number as a hex string. Only present if parsed is true.
 
 * `subject_alternative_dns_names` -
-  (Output)
+  (Optional)
   Output only. The subject Alternative DNS names. Only present if parsed is true.
 
 ## Attributes Reference

@@ -176,6 +176,12 @@ matches the server-computed value, and will fail with an ABORTED error
 otherwise.
 Populated in BASIC view and FULL view.`,
 			},
+			"rule_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: `Rule Id is the ID of the Rule.`,
+			},
 			"scope": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -344,12 +350,6 @@ Populated in FULL, REVISION_METADATA_ONLY views.`,
 A new revision is created whenever the rule text is changed in any way.
 Format: v_{10 digits}_{9 digits}
 Populated in REVISION_METADATA_ONLY view and FULL view.`,
-			},
-			"rule_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				Description: `Rule Id is the ID of the Rule.`,
 			},
 			"severity": {
 				Type:        schema.TypeList,

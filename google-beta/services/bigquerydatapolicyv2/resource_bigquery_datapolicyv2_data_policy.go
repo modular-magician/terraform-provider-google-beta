@@ -218,6 +218,16 @@ routine, in the format of
 					},
 				},
 			},
+			"etag": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				Description: `The etag for this Data Policy.
+This field is used for UpdateDataPolicy calls. If Data Policy exists, this
+field is required and must match the server's etag. It will also be
+populated in the response of GetDataPolicy, CreateDataPolicy, and
+UpdateDataPolicy calls.`,
+			},
 			"grantees": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -233,16 +243,6 @@ This field is supported in V2 Data Policy only. In case of V1 data policies
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-			},
-			"etag": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				Description: `The etag for this Data Policy.
-This field is used for UpdateDataPolicy calls. If Data Policy exists, this
-field is required and must match the server's etag. It will also be
-populated in the response of GetDataPolicy, CreateDataPolicy, and
-UpdateDataPolicy calls.`,
 			},
 			"name": {
 				Type:     schema.TypeString,

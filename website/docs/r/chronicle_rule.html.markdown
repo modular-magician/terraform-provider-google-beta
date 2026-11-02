@@ -97,6 +97,10 @@ The following arguments are supported:
   The unique identifier for the Chronicle instance, which is the same as the customer ID.
 
 
+* `rule_id` -
+  (Optional)
+  Rule Id is the ID of the Rule.
+
 * `text` -
   (Optional)
   The YARA-L content of the rule.
@@ -150,9 +154,6 @@ In addition to the arguments listed above, the following computed attributes are
   Full resource name for the rule. This unique identifier is generated using values provided for the URL parameters.
   Format:
   projects/{project}/locations/{location}/instances/{instance}/rules/{rule}
-
-* `rule_id` -
-  Rule Id is the ID of the Rule.
 
 * `metadata` -
   Output only. Additional metadata specified in the meta section of text.

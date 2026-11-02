@@ -148,6 +148,14 @@ The following arguments are supported:
   The policy used to specify data masking rule.
   Structure is [documented below](#nested_data_masking_policy).
 
+* `etag` -
+  (Optional)
+  The etag for this Data Policy.
+  This field is used for UpdateDataPolicy calls. If Data Policy exists, this
+  field is required and must match the server's etag. It will also be
+  populated in the response of GetDataPolicy, CreateDataPolicy, and
+  UpdateDataPolicy calls.
+
 * `grantees` -
   (Optional)
   The list of IAM principals that have Fine Grained Access to the underlying
@@ -210,13 +218,6 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/dataPolicies/{{data_policy_id}}`
-
-* `etag` -
-  The etag for this Data Policy.
-  This field is used for UpdateDataPolicy calls. If Data Policy exists, this
-  field is required and must match the server's etag. It will also be
-  populated in the response of GetDataPolicy, CreateDataPolicy, and
-  UpdateDataPolicy calls.
 
 * `name` -
   Identifier. Resource name of this data policy, in the format of

@@ -89,6 +89,13 @@ The following arguments are supported:
   (Optional)
   Describes this link. The maximum length of the description is 8000 characters.
 
+* `bigquery_dataset` -
+  (Optional)
+  The information of a BigQuery Dataset. When a link is created, a BigQuery dataset is created along
+  with it, in the same project as the LogBucket it's linked to. This dataset will also have BigQuery
+  Views corresponding to the LogViews in the bucket.
+  Structure is [documented below](#nested_bigquery_dataset).
+
 * `parent` -
   (Optional)
   The parent of the linked dataset.
@@ -104,6 +111,15 @@ The following arguments are supported:
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
 
+
+<a name="nested_bigquery_dataset"></a>The `bigquery_dataset` block supports:
+
+* `dataset_id` -
+  (Output)
+  Output only. The full resource name of the BigQuery dataset. The DATASET_ID will match the ID
+  of the link, so the link must match the naming restrictions of BigQuery datasets
+  (alphanumeric characters and underscores only). The dataset will have a resource path of
+  "bigquery.googleapis.com/projects/[PROJECT_ID]/datasets/[DATASET_ID]"
 
 ## Attributes Reference
 
@@ -123,21 +139,6 @@ In addition to the arguments listed above, the following computed attributes are
 * `lifecycle_state` -
   Output only. The linked dataset lifecycle state.
 
-* `bigquery_dataset` -
-  The information of a BigQuery Dataset. When a link is created, a BigQuery dataset is created along
-  with it, in the same project as the LogBucket it's linked to. This dataset will also have BigQuery
-  Views corresponding to the LogViews in the bucket.
-  Structure is [documented below](#nested_bigquery_dataset).
-
-
-<a name="nested_bigquery_dataset"></a>The `bigquery_dataset` block contains:
-
-* `dataset_id` -
-  (Output)
-  Output only. The full resource name of the BigQuery dataset. The DATASET_ID will match the ID
-  of the link, so the link must match the naming restrictions of BigQuery datasets
-  (alphanumeric characters and underscores only). The dataset will have a resource path of
-  "bigquery.googleapis.com/projects/[PROJECT_ID]/datasets/[DATASET_ID]"
 
 ## Timeouts
 

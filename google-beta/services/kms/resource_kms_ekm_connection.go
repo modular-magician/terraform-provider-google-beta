@@ -176,6 +176,15 @@ A full list of valid locations can be found by running 'gcloud kms locations lis
 										Required:    true,
 										Description: `Required. The raw certificate bytes in DER format. A base64-encoded string.`,
 									},
+									"subject_alternative_dns_names": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Optional:    true,
+										Description: `Output only. The subject Alternative DNS names. Only present if parsed is true.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
 									"issuer": {
 										Type:        schema.TypeString,
 										Computed:    true,
@@ -212,15 +221,6 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: `Output only. The subject distinguished name in RFC 2253 format. Only present if parsed is true.`,
-									},
-									"subject_alternative_dns_names": {
-										Type:        schema.TypeList,
-										Computed:    true,
-										Optional:    true,
-										Description: `Output only. The subject Alternative DNS names. Only present if parsed is true.`,
-										Elem: &schema.Schema{
-											Type: schema.TypeString,
-										},
 									},
 								},
 							},

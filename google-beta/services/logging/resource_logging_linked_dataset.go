@@ -152,6 +152,26 @@ func ResourceLoggingLinkedDataset() *schema.Resource {
 				ForceNew:    true,
 				Description: `The id of the linked dataset.`,
 			},
+			"bigquery_dataset": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Optional: true,
+				Description: `The information of a BigQuery Dataset. When a link is created, a BigQuery dataset is created along
+with it, in the same project as the LogBucket it's linked to. This dataset will also have BigQuery
+Views corresponding to the LogViews in the bucket.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dataset_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Output only. The full resource name of the BigQuery dataset. The DATASET_ID will match the ID
+of the link, so the link must match the naming restrictions of BigQuery datasets
+(alphanumeric characters and underscores only). The dataset will have a resource path of
+"bigquery.googleapis.com/projects/[PROJECT_ID]/datasets/[DATASET_ID]"`,
+						},
+					},
+				},
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -172,26 +192,6 @@ func ResourceLoggingLinkedDataset() *schema.Resource {
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
 				Description:      `The parent of the linked dataset.`,
-			},
-			"bigquery_dataset": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Optional: true,
-				Description: `The information of a BigQuery Dataset. When a link is created, a BigQuery dataset is created along
-with it, in the same project as the LogBucket it's linked to. This dataset will also have BigQuery
-Views corresponding to the LogViews in the bucket.`,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"dataset_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Description: `Output only. The full resource name of the BigQuery dataset. The DATASET_ID will match the ID
-of the link, so the link must match the naming restrictions of BigQuery datasets
-(alphanumeric characters and underscores only). The dataset will have a resource path of
-"bigquery.googleapis.com/projects/[PROJECT_ID]/datasets/[DATASET_ID]"`,
-						},
-					},
-				},
 			},
 			"create_time": {
 				Type:     schema.TypeString,
