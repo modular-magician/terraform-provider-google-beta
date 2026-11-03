@@ -17,18 +17,164 @@
 package cloudsecuritycompliance_test
 
 import (
+	"context"
+	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdk_terraform "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
-	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudsecuritycompliance"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudsecuritycompliance"
 )
+
+func TestUnitCloudSecurityComplianceFramework_cloudControlDetailsDiff(t *testing.T) {
+	t.Parallel()
+
+	res := cloudsecuritycompliance.ResourceCloudSecurityComplianceFramework()
+	internalMap := schema.InternalMap(res.Schema)
+
+	makeControl := func(name, majorRev, locValue string) map[string]interface{} {
+		return map[string]interface{}{
+			"name":              name,
+			"major_revision_id": majorRev,
+			"parameters": []interface{}{
+				map[string]interface{}{
+					"name": "location",
+					"parameter_value": []interface{}{
+						map[string]interface{}{
+							"string_value": locValue,
+						},
+					},
+				},
+			},
+		}
+	}
+
+	makeRaw := func(controls ...map[string]interface{}) map[string]interface{} {
+		list := make([]interface{}, len(controls))
+		for i, c := range controls {
+			list[i] = c
+		}
+		return map[string]interface{}{
+			"organization":          "123456789",
+			"location":              "global",
+			"framework_id":          "test-framework",
+			"display_name":          "Test Framework",
+			"cloud_control_details": list,
+		}
+	}
+
+	ctrlA_v1_central := makeControl("organizations/123456789/locations/global/cloudControls/control-a", "1", "us-central1")
+	ctrlA_v1_west := makeControl("organizations/123456789/locations/global/cloudControls/control-a", "1", "us-west1")
+	ctrlA_v2_central := makeControl("organizations/123456789/locations/global/cloudControls/control-a", "2", "us-central1")
+	ctrlB_v1_east := makeControl("organizations/123456789/locations/global/cloudControls/control-b", "1", "us-east1")
+
+	cases := []struct {
+		name       string
+		oldRaw     map[string]interface{}
+		newRaw     map[string]interface{}
+		expectDiff bool
+	}{
+		{
+			name:       "parameter_value_updated",
+			oldRaw:     makeRaw(ctrlA_v1_central, ctrlB_v1_east),
+			newRaw:     makeRaw(ctrlA_v1_west, ctrlB_v1_east),
+			expectDiff: true,
+		},
+		{
+			name:       "major_revision_id_updated",
+			oldRaw:     makeRaw(ctrlA_v1_central, ctrlB_v1_east),
+			newRaw:     makeRaw(ctrlA_v2_central, ctrlB_v1_east),
+			expectDiff: true,
+		},
+		{
+			name:       "reordered_cloud_control_details_blocks",
+			oldRaw:     makeRaw(ctrlA_v1_central, ctrlB_v1_east),
+			newRaw:     makeRaw(ctrlB_v1_east, ctrlA_v1_central),
+			expectDiff: false,
+		},
+		{
+			name:       "identical_config_and_state",
+			oldRaw:     makeRaw(ctrlA_v1_central, ctrlB_v1_east),
+			newRaw:     makeRaw(ctrlA_v1_central, ctrlB_v1_east),
+			expectDiff: false,
+		},
+	}
+
+	for _, tc := range cases {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			ctx := context.Background()
+			d := res.Data(nil)
+			d.SetId("organizations/123456789/locations/global/frameworks/test-framework")
+			for k, v := range tc.oldRaw {
+				if err := d.Set(k, v); err != nil {
+					t.Fatalf("failed setting %q on ResourceData: %v", k, err)
+				}
+			}
+			state := d.State()
+			diff, err := internalMap.Diff(ctx, state, sdk_terraform.NewResourceConfigRaw(tc.newRaw), nil, nil, true)
+			if err != nil {
+				t.Fatalf("Diff returned unexpected error: %v", err)
+			}
+			hasDiff := false
+			var ccdDiffKeys []string
+			if diff != nil {
+				for k := range diff.Attributes {
+					if strings.HasPrefix(k, "cloud_control_details.") {
+						hasDiff = true
+						ccdDiffKeys = append(ccdDiffKeys, k)
+					}
+				}
+			}
+			if hasDiff != tc.expectDiff {
+				t.Errorf("case %q: got hasDiff=%v (diffKeys=%v), want expectDiff=%v", tc.name, hasDiff, ccdDiffKeys, tc.expectDiff)
+			}
+		})
+	}
+}
 
 func testAccCloudSecurityComplianceFramework_basic(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+resource "google_cloud_security_compliance_cloud_control" "custom" {
+  parent            = "organizations/%{org_id}"
+  location          = "global"
+  cloud_control_id  = "tf-test-cc-%{random_suffix}"
+  display_name      = "TF Test Custom CloudControl"
+  description       = "A custom cloud control for framework revision update testing"
+  categories        = ["CC_CATEGORY_INFRASTRUCTURE"]
+  severity          = "HIGH"
+  finding_category  = "SECURITY_POLICY"
+  remediation_steps = "Review and update the security configuration."
+  supported_cloud_providers = ["GCP"]
+
+  rules {
+    description       = "Ensure compute instances have secure boot enabled"
+    rule_action_types = ["RULE_ACTION_TYPE_DETECTIVE"]
+    cel_expression {
+      expression = "resource.data.shieldedInstanceConfig.enableSecureBoot == true"
+      resource_types_values {
+        values = ["compute.googleapis.com/Instance"]
+      }
+    }
+  }
+
+  parameter_spec {
+    name         = "location"
+    display_name = "Resource Location"
+    description  = "The location where the resource should be deployed"
+    value_type   = "STRING"
+    is_required  = true
+    default_value {
+      string_value = "us-central1"
+    }
+  }
+}
+
 resource "google_cloud_security_compliance_framework" "example" {
   parent       = "organizations/%{org_id}"
   location     = "global"
@@ -55,6 +201,18 @@ resource "google_cloud_security_compliance_framework" "example" {
 		name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-assess-resource-availability"
 		major_revision_id = "2"
     
+    parameters {
+      name = "location"
+      parameter_value {
+        string_value = "us-central1"
+      }
+    }
+  }
+
+  cloud_control_details {
+    name              = google_cloud_security_compliance_cloud_control.custom.name
+    major_revision_id = "1"
+
     parameters {
       name = "location"
       parameter_value {
@@ -105,12 +263,55 @@ func TestAccCloudSecurityComplianceFramework_update(t *testing.T) {
 				Config:   testAccCloudSecurityComplianceFramework_reorder(context),
 				PlanOnly: true,
 			},
+			{
+				Config: testAccCloudSecurityComplianceFramework_updateParametersOnly(context),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_cloud_security_compliance_framework.example", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
 		},
 	})
 }
 
 func testAccCloudSecurityComplianceFramework_update(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+resource "google_cloud_security_compliance_cloud_control" "custom" {
+  parent            = "organizations/%{org_id}"
+  location          = "global"
+  cloud_control_id  = "tf-test-cc-%{random_suffix}"
+  display_name      = "TF Test Custom CloudControl"
+  description       = "A custom cloud control for framework revision update testing"
+  categories        = ["CC_CATEGORY_INFRASTRUCTURE"]
+  severity          = "CRITICAL"
+  finding_category  = "SECURITY_POLICY"
+  remediation_steps = "Review and update the security configuration."
+  supported_cloud_providers = ["GCP"]
+
+  rules {
+    description       = "Ensure compute instances have secure boot and integrity monitoring enabled"
+    rule_action_types = ["RULE_ACTION_TYPE_DETECTIVE"]
+    cel_expression {
+      expression = "resource.data.shieldedInstanceConfig.enableSecureBoot == true && resource.data.shieldedInstanceConfig.enableIntegrityMonitoring == true"
+      resource_types_values {
+        values = ["compute.googleapis.com/Instance"]
+      }
+    }
+  }
+
+  parameter_spec {
+    name         = "location"
+    display_name = "Resource Location"
+    description  = "The location where the resource should be deployed"
+    value_type   = "STRING"
+    is_required  = true
+    default_value {
+      string_value = "us-central1"
+    }
+  }
+}
+
 resource "google_cloud_security_compliance_framework" "example" {
   parent       = "organizations/%{org_id}"
   location     = "global"
@@ -135,12 +336,24 @@ resource "google_cloud_security_compliance_framework" "example" {
 
   cloud_control_details {
     name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-assess-resource-availability"
-    major_revision_id = "1"
+    major_revision_id = "2"
     
     parameters {
       name = "location"
       parameter_value {
         string_value = "us-east1"
+      }
+    }
+  }
+
+  cloud_control_details {
+    name              = google_cloud_security_compliance_cloud_control.custom.name
+    major_revision_id = "1"
+
+    parameters {
+      name = "location"
+      parameter_value {
+        string_value = "us-central1"
       }
     }
   }
@@ -199,6 +412,41 @@ resource "google_cloud_security_compliance_framework" "example" {
 
 func testAccCloudSecurityComplianceFramework_reorder(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+resource "google_cloud_security_compliance_cloud_control" "custom" {
+  parent            = "organizations/%{org_id}"
+  location          = "global"
+  cloud_control_id  = "tf-test-cc-%{random_suffix}"
+  display_name      = "TF Test Custom CloudControl"
+  description       = "A custom cloud control for framework revision update testing"
+  categories        = ["CC_CATEGORY_INFRASTRUCTURE"]
+  severity          = "CRITICAL"
+  finding_category  = "SECURITY_POLICY"
+  remediation_steps = "Review and update the security configuration."
+  supported_cloud_providers = ["GCP"]
+
+  rules {
+    description       = "Ensure compute instances have secure boot and integrity monitoring enabled"
+    rule_action_types = ["RULE_ACTION_TYPE_DETECTIVE"]
+    cel_expression {
+      expression = "resource.data.shieldedInstanceConfig.enableSecureBoot == true && resource.data.shieldedInstanceConfig.enableIntegrityMonitoring == true"
+      resource_types_values {
+        values = ["compute.googleapis.com/Instance"]
+      }
+    }
+  }
+
+  parameter_spec {
+    name         = "location"
+    display_name = "Resource Location"
+    description  = "The location where the resource should be deployed"
+    value_type   = "STRING"
+    is_required  = true
+    default_value {
+      string_value = "us-central1"
+    }
+  }
+}
+
 resource "google_cloud_security_compliance_framework" "example" {
   parent       = "organizations/%{org_id}"
   location     = "global"
@@ -208,8 +456,20 @@ resource "google_cloud_security_compliance_framework" "example" {
   description  = "An updated description for the framework with additional details"
   
   cloud_control_details {
-    name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-assess-resource-availability"
+    name              = google_cloud_security_compliance_cloud_control.custom.name
     major_revision_id = "1"
+
+    parameters {
+      name = "location"
+      parameter_value {
+        string_value = "us-central1"
+      }
+    }
+  }
+
+  cloud_control_details {
+    name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-assess-resource-availability"
+    major_revision_id = "2"
     
     parameters {
       name = "location"
@@ -229,6 +489,92 @@ resource "google_cloud_security_compliance_framework" "example" {
         string_list_value {
           values = ["us-central1"]
         }
+      }
+    }
+  }
+}
+`, context)
+}
+
+func testAccCloudSecurityComplianceFramework_updateParametersOnly(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_cloud_security_compliance_cloud_control" "custom" {
+  parent            = "organizations/%{org_id}"
+  location          = "global"
+  cloud_control_id  = "tf-test-cc-%{random_suffix}"
+  display_name      = "TF Test Custom CloudControl"
+  description       = "A custom cloud control for framework revision update testing"
+  categories        = ["CC_CATEGORY_INFRASTRUCTURE"]
+  severity          = "CRITICAL"
+  finding_category  = "SECURITY_POLICY"
+  remediation_steps = "Review and update the security configuration."
+  supported_cloud_providers = ["GCP"]
+
+  rules {
+    description       = "Ensure compute instances have secure boot and integrity monitoring enabled"
+    rule_action_types = ["RULE_ACTION_TYPE_DETECTIVE"]
+    cel_expression {
+      expression = "resource.data.shieldedInstanceConfig.enableSecureBoot == true && resource.data.shieldedInstanceConfig.enableIntegrityMonitoring == true"
+      resource_types_values {
+        values = ["compute.googleapis.com/Instance"]
+      }
+    }
+  }
+
+  parameter_spec {
+    name         = "location"
+    display_name = "Resource Location"
+    description  = "The location where the resource should be deployed"
+    value_type   = "STRING"
+    is_required  = true
+    default_value {
+      string_value = "us-central1"
+    }
+  }
+}
+
+resource "google_cloud_security_compliance_framework" "example" {
+  parent       = "organizations/%{org_id}"
+  location     = "global"
+  framework_id = "tf-test-example-framework%{random_suffix}"
+  
+  display_name = "Updated Terraform Framework Name"
+  description  = "An updated description for the framework with additional details"
+  
+  cloud_control_details {
+    name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-cmek-key-in-use-for-bigquery-table"
+    major_revision_id = "1"
+    
+    parameters {
+      name = "location"
+      parameter_value {
+        string_list_value {
+          values = ["us-central1", "us-west1"]
+        }
+      }
+    }
+  }
+
+  cloud_control_details {
+    name              = "organizations/%{org_id}/locations/global/cloudControls/builtin-assess-resource-availability"
+    major_revision_id = "2"
+    
+    parameters {
+      name = "location"
+      parameter_value {
+        string_value = "us-west1"
+      }
+    }
+  }
+
+  cloud_control_details {
+    name              = google_cloud_security_compliance_cloud_control.custom.name
+    major_revision_id = "2"
+
+    parameters {
+      name = "location"
+      parameter_value {
+        string_value = "us-central1"
       }
     }
   }

@@ -55,19 +55,6 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func cloudsecuritycomplianceFrameworkCloudControlDetailsHash(v interface{}) int {
-	if v == nil {
-		return 0
-	}
-
-	var buf bytes.Buffer
-	m := v.(map[string]interface{})
-
-	buf.WriteString(fmt.Sprintf("%s-", m["name"].(string)))
-
-	return tpgresource.Hashcode(buf.String())
-}
-
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -181,7 +168,7 @@ This is the last part of the full name of the framework.`,
 				Description: `The details of the cloud controls directly added without any grouping in
 the framework.`,
 				Elem: cloudsecuritycomplianceFrameworkCloudControlDetailsSchema(),
-				Set:  cloudsecuritycomplianceFrameworkCloudControlDetailsHash,
+				// Default schema.HashSchema is used.
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -288,10 +275,9 @@ func cloudsecuritycomplianceFrameworkCloudControlDetailsSchema() *schema.Resourc
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"major_revision_id": {
-				Type:             schema.TypeString,
-				Required:         true,
-				DiffSuppressFunc: tpgresource.SuppressMajorRevisionId,
-				Description:      `Major revision of cloudcontrol`,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `Major revision of cloudcontrol`,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -856,7 +842,7 @@ func flattenCloudSecurityComplianceFrameworkCloudControlDetails(v interface{}, d
 		return v
 	}
 	l := v.([]interface{})
-	transformed := schema.NewSet(cloudsecuritycomplianceFrameworkCloudControlDetailsHash, []interface{}{})
+	transformed := schema.NewSet(schema.HashResource(cloudsecuritycomplianceFrameworkCloudControlDetailsSchema()), []interface{}{})
 	for i, raw := range l {
 		_ = i
 		original := raw.(map[string]interface{})
