@@ -19,7 +19,33 @@ fields:
     - api_field: actions.hubInstanceAction.lastExecution.startTime
     - api_field: actions.scheduleCronExpression
     - api_field: actions.scheduleTimeZone
+    - api_field: actions.serviceAccount
     - api_field: actions.state
+    - api_field: additionalConfig.key
+    - api_field: additionalConfig.value.boolValue
+      field: additional_config.bool_value
+    - api_field: additionalConfig.value.enumValue.description
+      field: additional_config.enum_value.description
+    - api_field: additionalConfig.value.enumValue.displayName
+      field: additional_config.enum_value.display_name
+    - api_field: additionalConfig.value.enumValue.id
+      field: additional_config.enum_value.id
+    - api_field: additionalConfig.value.intValue
+      field: additional_config.int_value
+    - api_field: additionalConfig.value.multiIntValues.values
+      field: additional_config.multi_int_values.values
+    - api_field: additionalConfig.value.multiSelectValues.values.description
+      field: additional_config.multi_select_values.values.description
+    - api_field: additionalConfig.value.multiSelectValues.values.displayName
+      field: additional_config.multi_select_values.values.display_name
+    - api_field: additionalConfig.value.multiSelectValues.values.id
+      field: additional_config.multi_select_values.values.id
+    - api_field: additionalConfig.value.multiStringValues.values
+      field: additional_config.multi_string_values.values
+    - api_field: additionalConfig.value.secretValue.secretVersion
+      field: additional_config.secret_value.secret_version
+    - api_field: additionalConfig.value.stringValue
+      field: additional_config.string_value
     - api_field: authConfig.apiKeyConfig.apiKey.secretVersion
     - api_field: authConfig.apiKeyConfig.httpElementLocation
     - api_field: authConfig.apiKeyConfig.name
@@ -40,6 +66,15 @@ fields:
       provider_only: true
     - field: plugin_instance_id
       provider_only: true
+    - api_field: sourceEnvironmentsConfig.key
+    - api_field: sourceEnvironmentsConfig.value.createTime
+      field: source_environments_config.create_time
+    - api_field: sourceEnvironmentsConfig.value.sourceEnvironment
+      field: source_environments_config.source_environment
+    - api_field: sourceEnvironmentsConfig.value.sourceEnvironmentUri
+      field: source_environments_config.source_environment_uri
+    - api_field: sourceEnvironmentsConfig.value.updateTime
+      field: source_environments_config.update_time
     - api_field: sourceProjectId
     - api_field: state
     - api_field: updateTime
