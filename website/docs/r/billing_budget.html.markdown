@@ -267,6 +267,63 @@ resource "google_billing_budget" "budget" {
 }
 ```
 
+## Example Usage - Billing Budget Spend Cap
+
+
+```hcl
+data "google_billing_account" "account" {
+  billing_account = "000000-0000000-0000000-000000"
+}
+
+resource "google_project" "project" {
+  project_id      = "spend-cap"
+  name            = "spend-cap"
+  org_id          = "123456789"
+  billing_account = "000000-0000000-0000000-000000"
+  deletion_policy = "DELETE"
+}
+
+resource "google_billing_budget" "budget" {
+  billing_account = data.google_billing_account.account.id
+  display_name    = "Example Spend Cap Budget"
+
+  budget_filter {
+    projects               = ["projects/${google_project.project.number}"]
+    services               = ["services/C7E2-9256-1C43"] # Gemini Enterprise Agent Platform
+    credit_types_treatment = "EXCLUDE_ALL_CREDITS"
+    calendar_period        = "MONTH"
+  }
+
+  amount {
+    specified_amount {
+      units = "100"
+    }
+  }
+
+  threshold_rules {
+    threshold_percent = 0.5
+    spend_basis       = "CURRENT_SPEND"
+  }
+  threshold_rules {
+    threshold_percent = 0.8
+    spend_basis       = "CURRENT_SPEND"
+  }
+  threshold_rules {
+    threshold_percent = 1.0
+    spend_basis       = "CURRENT_SPEND"
+  }
+
+  all_updates_rule {
+    monitoring_notification_channels = []
+    enable_project_level_recipients  = true
+  }
+
+  spend_cap {
+    input_state = "CONFIGURED"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -311,6 +368,27 @@ The following arguments are supported:
   The ownership scope of the budget. The ownership scope and users'
   IAM permissions determine who has full access to the budget's data.
   Possible values are: `OWNERSHIP_SCOPE_UNSPECIFIED`, `ALL_USERS`, `BILLING_ACCOUNT`.
+
+* `spend_cap` -
+  (Optional)
+  The spend cap configured for this budget. When set, usage of the
+  budget's service is paused once spend exceeds the budget amount, until
+  the next period or until the cap is lifted. Spend cap budgets must
+  filter on exactly one project and one eligible service, use
+  `EXCLUDE_ALL_CREDITS`, a `MONTH` calendar period, a `specified_amount`,
+  threshold rules of 0.5, 0.8 and 1.0 on `CURRENT_SPEND`, and
+  `enable_project_level_recipients = true`. See
+  https://cloud.google.com/billing/docs/how-to/budgets-spend-caps.
+  Of the budget's settings, only the display name, amount, project and
+  service can be changed, and only while the cap is not enforced. While
+  `output_state` is `ENFORCED`, only `input_state` can be changed, to lift
+  the cap. A budget whose spend cap is `ENFORCED` cannot be deleted. Apply
+  `input_state = AWAITING_NEXT_PERIOD` before destroying it, or wait for
+  the next period to start. The API rejects a spend cap budget whose
+  project and service match an existing spend cap budget. Removing the
+  `spend_cap` block converts the budget back to an alerts-only budget.
+  Adding a `spend_cap` block to an existing budget replaces the budget.
+  Structure is [documented below](#nested_spend_cap).
 
 * `deletion_policy` - (Optional) Whether Terraform will be prevented from destroying the resource. Defaults to DELETE.
 	When a 'terraform destroy' or 'terraform apply' would delete the resource,
@@ -518,6 +596,34 @@ The following arguments are supported:
   notifications will be sent to project level recipients of that project.
   This field will be ignored if the budget has multiple or no project configured.
   Currently, project level recipients are the users with Owner role on a cloud project.
+
+<a name="nested_spend_cap"></a>The `spend_cap` block supports:
+
+* `input_state` -
+  (Required)
+  The desired state of the spend cap. Must be `CONFIGURED` on create.
+  Set to `AWAITING_NEXT_PERIOD` to lift an enforced cap until the next
+  period starts. The API accepts it only while `output_state` is
+  `ENFORCED` and otherwise returns `INVALID_ARGUMENT`. After the next
+  period starts, set it back to `CONFIGURED`, because every update of a
+  capped budget re-sends this field and `AWAITING_NEXT_PERIOD` is
+  rejected once the cap is no longer enforced. An update made while the
+  cap is lifted also re-sends the current value of this field.
+  The API does not return this field. A cap lifted outside Terraform
+  is visible in `output_state` (`AWAITING_NEXT_PERIOD`) and does not
+  produce a diff on this field. Any later Terraform update of the
+  budget re-sends `input_state = CONFIGURED`, which may re-activate a
+  cap lifted outside Terraform. On import, Terraform sets it to
+  `CONFIGURED`.
+  Possible values are: `CONFIGURED`, `AWAITING_NEXT_PERIOD`.
+
+* `output_state` -
+  (Output)
+  The actual resting state of the spend cap. Possible values: `STATE_UNSPECIFIED`, `CONFIGURED`, `ENFORCED`, `AWAITING_NEXT_PERIOD`.
+
+* `reconciling` -
+  (Output)
+  Whether the server is processing a state transition.
 
 ## Attributes Reference
 
