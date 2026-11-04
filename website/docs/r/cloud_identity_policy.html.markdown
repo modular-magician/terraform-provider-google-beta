@@ -23,36 +23,35 @@ description: |-
 
 A Cloud Identity Policy binds a Setting to a PolicyQuery for a Google Workspace / Cloud Identity customer.
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 To get more information about Policy, see:
 
-* [API documentation](https://cloud.google.com/identity/docs/reference/rest/v1beta1/policies)
+* [API documentation](https://cloud.google.com/identity/docs/reference/rest/v1/policies)
 * How-to Guides
     * [Policy API overview](https://docs.cloud.google.com/identity/docs/concepts/overview-policies)
 
-~> **Note:** This is available only in beta
 
 ## Example Usage - Cloudidentity Policy Basic
 
 
 ```hcl
 resource "google_cloud_identity_policy" "primary" {
-    provider = google-beta
+  customer = "customers/C01234567"
 
-    customer = "customers/C01234567"
+  policy_query {
+    org_unit = "orgUnits/03abcxyz"
+  }
 
-    policy_query {
-        org_unit = "orgUnits/03abcxyz"
-        group = "groups/0123456789"
-        query = "true"
-    }
-
-    setting {
-        type = "something.googleapis.com/SettingType"
-	value_json = jsonencode({enabled = true})
-    }
+  setting {
+    type = "settings/detector.word_list"
+    value_json = jsonencode({
+      displayName = "Project Sensitive Terms"
+      description = "Detector for project-specific confidential keywords."
+      wordList = {
+        words = ["confidential", "top-secret"]
+      }
+    })
+  }
 }
 ```
 
