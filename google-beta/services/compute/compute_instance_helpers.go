@@ -1693,9 +1693,12 @@ func expandWorkloadIdentityConfig(d tpgresource.TerraformResourceData) map[strin
 	}
 
 	wicRes := s[0].(map[string]interface{})
-	wicMap := map[string]interface{}{
-		"identity":                   wicRes["identity"].(string),
-		"identityCertificateEnabled": wicRes["identity_certificate_enabled"].(bool),
+	wicMap := map[string]interface{}{}
+	if v, ok := wicRes["identity"]; ok && v != nil && v.(string) != "" {
+		wicMap["identity"] = v.(string)
+	}
+	if v, ok := d.GetOkExists("workload_identity_config.0.identity_certificate_enabled"); ok {
+		wicMap["identityCertificateEnabled"] = v.(bool)
 	}
 	if v, ok := wicRes["identity_type"]; ok && v != nil && v.(string) != "" {
 		wicMap["identityType"] = v.(string)
