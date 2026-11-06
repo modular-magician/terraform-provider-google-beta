@@ -315,7 +315,7 @@ resource "google_access_context_manager_service_perimeters" "test-access" {
           identities = ["group:test@google.com"]
         }
         ingress_to {
-          resources = ["*"]
+          resources = ["projects/%s", google_folder.test-folder.name, "organizations/%s"]
           roles = ["roles/bigquery.admin"]
         }
       }
@@ -421,7 +421,7 @@ resource "google_access_context_manager_service_perimeters" "test-access" {
           identities = ["group:test@google.com"]
         }
         ingress_to {
-          resources = ["*"]
+          resources = ["projects/%s", google_folder.test-folder.name, "organizations/%s"]
           roles = ["roles/bigquery.admin"]
         }
       }
@@ -472,7 +472,7 @@ resource "google_access_context_manager_service_perimeters" "test-access" {
     }
   }
 }
-`, org, policyTitle, org, folderSuffix, levelTitleName, levelTitleName, perimeterTitleName1, perimeterTitleName1, perimeterTitleName2, perimeterTitleName2, perimeterTitleName3, perimeterTitleName3, perimeterTitleName4, perimeterTitleName4, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org)
+`, org, policyTitle, org, folderSuffix, levelTitleName, levelTitleName, perimeterTitleName1, perimeterTitleName1, perimeterTitleName2, perimeterTitleName2, perimeterTitleName3, perimeterTitleName3, perimeterTitleName4, perimeterTitleName4, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org, projectNumber, org)
 }
 
 func testAccAccessContextManagerServicePerimeters_empty(org, policyTitle, levelTitleName, folderSuffix string) string {
