@@ -898,6 +898,18 @@ func resourceDiscoveryEngineDataConnectorRead(d *schema.ResourceData, meta inter
 
 	log.Printf("[DEBUG] Finished reading DiscoveryEngineDataConnector %q: %#v", d.Id(), res)
 
+	res, err = resourceDiscoveryEngineDataConnectorDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing DiscoveryEngineDataConnector because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
@@ -2004,6 +2016,69 @@ func expandDiscoveryEngineDataConnectorMetadataAuthor(v interface{}, d tpgresour
 
 func expandDiscoveryEngineDataConnectorMetadataNote(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceDiscoveryEngineDataConnectorDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	if dataSource, ok := res["dataSource"].(string); ok && dataSource == "gcs_asp" {
+		return res, nil
+	}
+
+	entitiesRaw, ok := res["entities"].([]interface{})
+	if !ok || len(entitiesRaw) == 0 {
+		return res, nil
+	}
+
+	configuredEntities := make(map[string]bool)
+	hasConfiguredEntities := false
+	if d != nil {
+		if cfgRaw, ok := d.GetOk("entities"); ok && cfgRaw != nil {
+			if cfgList, ok := cfgRaw.([]interface{}); ok && len(cfgList) > 0 {
+				hasConfiguredEntities = true
+				for _, item := range cfgList {
+					if m, ok := item.(map[string]interface{}); ok {
+						if name, ok := m["entity_name"].(string); ok && name != "" {
+							configuredEntities[strings.ToLower(name)] = true
+						}
+					}
+				}
+			}
+		}
+	}
+
+	filtered := make([]interface{}, 0, len(entitiesRaw))
+	for _, raw := range entitiesRaw {
+		entityMap, ok := raw.(map[string]interface{})
+		if !ok {
+			filtered = append(filtered, raw)
+			continue
+		}
+
+		dataStore, _ := entityMap["dataStore"].(string)
+		if dataStore == "" {
+			entityName, _ := entityMap["entityName"].(string)
+			if hasConfiguredEntities {
+				// Placeholder parent entities (such as "root" for outlook and "site" for sharepoint)
+				// have no backing dataStore and are synthesized by the API on read. Omit them unless
+				// explicitly declared in configuration/state.
+				if !configuredEntities[strings.ToLower(entityName)] {
+					continue
+				}
+			} else {
+				// During import (or when no prior state/config is present), omit synthesized
+				// placeholder entities unless they carry propagated parent-level params or mappings.
+				paramsMap, _ := entityMap["params"].(map[string]interface{})
+				kpmMap, _ := entityMap["keyPropertyMappings"].(map[string]interface{})
+				if len(paramsMap) == 0 && len(kpmMap) == 0 {
+					continue
+				}
+			}
+		}
+
+		filtered = append(filtered, raw)
+	}
+
+	res["entities"] = filtered
+	return res, nil
 }
 
 func ResourceDiscoveryEngineDataConnectorUpgradeV0(_ context.Context, rawState map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
