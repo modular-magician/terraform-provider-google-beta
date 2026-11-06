@@ -213,7 +213,10 @@ func TestAccComputeFutureReservation_sharedFutureReservationExample(t *testing.T
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckComputeFutureReservationDestroyProducer(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccCheckComputeFutureReservationDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeFutureReservation_sharedFutureReservationExample(context),
@@ -249,6 +252,14 @@ resource "google_project_service" "compute" {
   provider = google-beta
   project            = google_project.owner_project.project_id
   service            = "compute.googleapis.com"
+}
+
+resource "time_sleep" "wait_120_seconds" {
+  create_duration = "120s"
+  depends_on = [
+    google_org_policy_policy.shared_future_reservation_org_policy,
+    google_project_service.compute,
+  ]
 }
 
 resource "google_project" "guest_project" {
@@ -291,10 +302,7 @@ resource "google_compute_future_reservation" "gce_future_reservation" {
   }
 
 
-  depends_on = [
-    google_org_policy_policy.shared_future_reservation_org_policy,
-    google_project_service.compute
-  ]
+  depends_on = [time_sleep.wait_120_seconds]
 }
 `, context)
 }
