@@ -1338,6 +1338,21 @@ bet set to True if any of the fields in the spec are set to non-default values.`
 				Computed:    true,
 				Description: `Time the AccessPolicy was updated in UTC.`,
 			},
+			"deleted_principals_support": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"enable", "disable", ""}),
+				Description: `Sets the 'deletedPrincipalSyntax' query parameter on 'servicePerimeters.patch'
+and 'servicePerimeters.get' requests, which enables or disables deleted IAM
+principal syntax for identities in this perimeter's ingress and egress rules.
+* 'enable': Sends 'DELETED_PRINCIPAL_SYNTAX_SUPPORT_ENABLED'. The request and
+response can contain identities with deleted IAM principal syntax.
+* 'disable': Sends 'DELETED_PRINCIPAL_SYNTAX_SUPPORT_DISABLED'. No identities
+in the request or response will contain deleted principal syntax.
+If omitted, the query parameter is not sent and the API applies
+'DELETED_PRINCIPAL_SYNTAX_SUPPORT_UNSPECIFIED'.
+The API does not accept this parameter on create. Possible values: ["enable", "disable"]`,
+			},
 
 			"deletion_policy": {
 				Type:     schema.TypeString,
@@ -1512,6 +1527,23 @@ func resourceAccessContextManagerServicePerimeterRead(d *schema.ResourceData, me
 	}
 
 	headers := make(http.Header)
+	// deleted_principals_support is a Terraform-only field mapped to the
+	// deletedPrincipalSyntax query parameter. When it is omitted the parameter is
+	// not sent, which the API treats as DELETED_PRINCIPAL_SYNTAX_SUPPORT_UNSPECIFIED.
+	// Omitting it keeps orgs outside the preview working.
+	deletedPrincipalSyntax := ""
+	switch d.Get("deleted_principals_support").(string) {
+	case "enable":
+		deletedPrincipalSyntax = "DELETED_PRINCIPAL_SYNTAX_SUPPORT_ENABLED"
+	case "disable":
+		deletedPrincipalSyntax = "DELETED_PRINCIPAL_SYNTAX_SUPPORT_DISABLED"
+	}
+	if deletedPrincipalSyntax != "" {
+		url, err = transport_tpg.AddQueryParams(url, map[string]string{"deletedPrincipalSyntax": deletedPrincipalSyntax})
+		if err != nil {
+			return err
+		}
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "GET",
@@ -1750,6 +1782,24 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
 	if err != nil {
 		return err
+	}
+
+	// deleted_principals_support is a Terraform-only field mapped to the
+	// deletedPrincipalSyntax query parameter. When it is omitted the parameter is
+	// not sent, which the API treats as DELETED_PRINCIPAL_SYNTAX_SUPPORT_UNSPECIFIED.
+	// Omitting it keeps orgs outside the preview working.
+	deletedPrincipalSyntax := ""
+	switch d.Get("deleted_principals_support").(string) {
+	case "enable":
+		deletedPrincipalSyntax = "DELETED_PRINCIPAL_SYNTAX_SUPPORT_ENABLED"
+	case "disable":
+		deletedPrincipalSyntax = "DELETED_PRINCIPAL_SYNTAX_SUPPORT_DISABLED"
+	}
+	if deletedPrincipalSyntax != "" {
+		url, err = transport_tpg.AddQueryParams(url, map[string]string{"deletedPrincipalSyntax": deletedPrincipalSyntax})
+		if err != nil {
+			return err
+		}
 	}
 
 	// err == nil indicates that the billing_project value was found

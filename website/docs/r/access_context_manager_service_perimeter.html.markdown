@@ -360,6 +360,17 @@ The following arguments are supported:
 	When set to "ABANDON", the command will remove the resource from Terraform
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
+* `deleted_principals_support` - (Optional) Sets the `deletedPrincipalSyntax` query parameter on `servicePerimeters.patch`
+and `servicePerimeters.get` requests, which enables or disables deleted IAM
+principal syntax for identities in this perimeter's ingress and egress rules.
+* `enable`: Sends `DELETED_PRINCIPAL_SYNTAX_SUPPORT_ENABLED`. The request and
+response can contain identities with deleted IAM principal syntax.
+* `disable`: Sends `DELETED_PRINCIPAL_SYNTAX_SUPPORT_DISABLED`. No identities
+in the request or response will contain deleted principal syntax.
+If omitted, the query parameter is not sent and the API applies
+`DELETED_PRINCIPAL_SYNTAX_SUPPORT_UNSPECIFIED`.
+The API does not accept this parameter on create.
+
 
 
 <a name="nested_status"></a>The `status` block supports:
