@@ -1,0 +1,13 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_cloud_identity_allowlisted_domain
+generation_type: mmv1
+source_file: products/cloudidentity/AllowlistedDomain.yaml
+api_service_name: cloudidentity.googleapis.com
+api_version: v1beta1
+api_resource_type_kind: AllowlistedDomain
+fields:
+    - api_field: domain
+    - api_field: name
+    - field: deletion_policy
+      provider_only: true
