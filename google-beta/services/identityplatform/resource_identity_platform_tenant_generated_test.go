@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -92,6 +93,144 @@ func testAccIdentityPlatformTenant_identityPlatformTenantBasicExample(context ma
 resource "google_identity_platform_tenant" "tenant" {
   display_name          = "%{display_name}"
   allow_password_signup = true
+}
+`, context)
+}
+
+func TestAccIdentityPlatformTenant_identityPlatformTenantPasswordPolicyExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"display_name":  "tf-test-tenant-pw",
+		"random_suffix": randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"display_name":  "tf-test-tenant-pw",
+		"random_suffix": randomSuffix,
+	}
+
+	context_2 := map[string]interface{}{
+		"display_name":  "tf-test-tenant-pw",
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckIdentityPlatformTenantDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIdentityPlatformTenant_identityPlatformTenantPasswordPolicyExample(context),
+			},
+			{
+				ResourceName:      "google_identity_platform_tenant.tenant",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				ResourceName:       "google_identity_platform_tenant.tenant",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccIdentityPlatformTenant_identityPlatformTenantStrictPasswordPolicyExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_identity_platform_tenant.tenant", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:      "google_identity_platform_tenant.tenant",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				ResourceName:       "google_identity_platform_tenant.tenant",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccIdentityPlatformTenant_identityPlatformTenantWeakPasswordPolicyExample(context_2),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_identity_platform_tenant.tenant", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:      "google_identity_platform_tenant.tenant",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				ResourceName:       "google_identity_platform_tenant.tenant",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccIdentityPlatformTenant_identityPlatformTenantPasswordPolicyExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_identity_platform_tenant" "tenant" {
+  display_name          = "%{display_name}"
+  allow_password_signup = true
+
+  password_policy_config {
+    password_policy_enforcement_state = "ENFORCE"
+    password_policy_versions {
+      custom_strength_options {
+        min_password_length          = 12
+        contains_lowercase_character = true
+      }
+    }
+    force_upgrade_on_signin = true
+  }
+}
+`, context)
+}
+
+func testAccIdentityPlatformTenant_identityPlatformTenantStrictPasswordPolicyExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_identity_platform_tenant" "tenant" {
+  display_name                              = "%{display_name}"
+  allow_password_signup                     = true
+
+  password_policy_config {
+    password_policy_enforcement_state = "ENFORCE"
+    password_policy_versions {
+      custom_strength_options {
+        min_password_length                 = 12
+        max_password_length                 = 128
+        contains_lowercase_character        = true
+        contains_uppercase_character        = true
+        contains_non_alphanumeric_character = true
+      }
+    }
+    force_upgrade_on_signin = true
+  }
+}
+`, context)
+}
+
+func testAccIdentityPlatformTenant_identityPlatformTenantWeakPasswordPolicyExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_identity_platform_tenant" "tenant" {
+  display_name          = "%{display_name}"
+  allow_password_signup = true
+
+password_policy_config {
+    password_policy_enforcement_state = "OFF"
+    force_upgrade_on_signin = false
+  }
 }
 `, context)
 }
