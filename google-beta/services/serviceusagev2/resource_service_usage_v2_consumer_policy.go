@@ -461,7 +461,6 @@ func resourceServiceUsageV2ConsumerPolicyCreate(d *schema.ResourceData, meta int
 			}
 		}
 	}
-
 	if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
 		return err
 	}
@@ -722,7 +721,6 @@ func resourceServiceUsageV2ConsumerPolicyUpdate(d *schema.ResourceData, meta int
 			}
 		}
 	}
-
 	if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
 		return err
 	}
@@ -852,7 +850,6 @@ func resourceServiceUsageV2ConsumerPolicyDelete(d *schema.ResourceData, meta int
 			}
 		}
 	}
-
 	if url, err = transport_tpg.AddQueryParams(url, map[string]string{"force": "true"}); err != nil {
 		return err
 	}

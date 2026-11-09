@@ -23,12 +23,10 @@ description: |-
 
 Consumer Policy is a set of rules that define what services or service groups can be used for a cloud resource hierarchy.
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 To get more information about ConsumerPolicy, see:
 
-* [API documentation](https://docs.cloud.google.com/service-usage/docs/reference/rest/v2beta/consumerPolicies)
+* [API documentation](https://docs.cloud.google.com/service-usage/docs/reference/rest/v2/consumerPolicies)
 * How-to Guides
     * [Enabling and Disabling Services](https://cloud.google.com/service-usage/docs/enable-disable)
 
