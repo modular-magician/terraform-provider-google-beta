@@ -1250,7 +1250,7 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingExample(t *test
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeBackendServiceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -1275,7 +1275,6 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingExample(t *test
 func testAccComputeBackendService_backendServiceDynamicForwardingExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_service" "default" {
-  provider              = google-beta
   name                  = "%{backend_service_name}"
   load_balancing_scheme = "INTERNAL_MANAGED"
   dynamic_forwarding {
@@ -1301,7 +1300,7 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingForwardProxyClo
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeBackendServiceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -1326,7 +1325,6 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingForwardProxyClo
 func testAccComputeBackendService_backendServiceDynamicForwardingForwardProxyCloudRunExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_service" "default" {
-  provider              = google-beta
   name                  = "%{backend_service_name}"
   load_balancing_scheme = "INTERNAL_MANAGED"
   protocol              = "HTTP2"
@@ -1355,7 +1353,7 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingForwardProxyDir
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeBackendServiceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -1380,7 +1378,6 @@ func TestAccComputeBackendService_backendServiceDynamicForwardingForwardProxyDir
 func testAccComputeBackendService_backendServiceDynamicForwardingForwardProxyDirectForwardingExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_service" "default" {
-  provider              = google-beta
   name                  = "%{backend_service_name}"
   load_balancing_scheme = "INTERNAL_MANAGED"
   protocol              = "HTTP2"
@@ -1396,7 +1393,6 @@ resource "google_compute_backend_service" "default" {
 }
 
 resource "google_network_security_backend_authentication_config" "default" {
-  provider         = google-beta
   name             = "%{authentication_name}"
   well_known_roots = "PUBLIC_ROOTS"
 }
