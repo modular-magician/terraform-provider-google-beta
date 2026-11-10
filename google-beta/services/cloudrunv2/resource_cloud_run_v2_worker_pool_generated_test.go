@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -947,6 +948,124 @@ resource "google_cloud_run_v2_worker_pool" "default" {
         network    = google_compute_network.custom_test.id
         subnetwork = google_compute_subnetwork.custom_test.id
         tags       = []
+      }
+    }
+  }
+}
+`, context)
+}
+
+func TestAccCloudRunV2WorkerPool_cloudrunv2WorkerPoolSandboxTemplatesExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"args":                       "[\"-c\", \"echo hello\"]",
+		"cloud_run_worker_pool_name": "tf-test-cloudrun-worker-pool" + randomSuffix,
+		"command":                    "[\"/bin/sh\"]",
+		"env_value":                  9000,
+		"sandbox_name":               "hello",
+		"sub_path":                   "/home/user",
+		"working_dir":                "/mnt/app",
+		"random_suffix":              randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"args":                       "[\"echo goodbye\"]",
+		"cloud_run_worker_pool_name": "tf-test-cloudrun-worker-pool" + randomSuffix,
+		"command":                    "[\"/bin/sh\", \"-c\"]",
+		"env_value":                  9001,
+		"sandbox_name":               "hello-updated",
+		"sub_path":                   "/home/admin",
+		"working_dir":                "/mnt/work",
+		"random_suffix":              randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCloudRunV2WorkerPoolDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCloudRunV2WorkerPool_cloudrunv2WorkerPoolSandboxTemplatesExample(context),
+			},
+			{
+				ResourceName:            "google_cloud_run_v2_worker_pool.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "deletion_protection", "labels", "location", "name", "scaling.0.scaling_mode", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_cloud_run_v2_worker_pool.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccCloudRunV2WorkerPool_cloudrunv2WorkerPoolSandboxTemplatesExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_cloud_run_v2_worker_pool.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_cloud_run_v2_worker_pool.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "deletion_protection", "labels", "location", "name", "scaling.0.scaling_mode", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_cloud_run_v2_worker_pool.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccCloudRunV2WorkerPool_cloudrunv2WorkerPoolSandboxTemplatesExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_cloud_run_v2_worker_pool" "default" {
+  name                = "%{cloud_run_worker_pool_name}"
+  location            = "us-central1"
+  deletion_protection = false
+  launch_stage        = "BETA"
+
+  template {
+    containers {
+      image            = "us-docker.pkg.dev/cloudrun/container/worker-pool"
+      sandbox_launcher = true
+      volume_mounts {
+        name       = "empty-dir-volume"
+        mount_path = "/mnt"
+      }
+    }
+    sandboxes {
+      templates {
+        name    = "%{sandbox_name}"
+        image   = "us-docker.pkg.dev/cloudrun/container/hello"
+        command = %{command}
+        args    = %{args}
+        env {
+          name  = "PORT"
+          value = "%{env_value}"
+        }
+        volume_mounts {
+          name       = "empty-dir-volume"
+          mount_path = "/mnt"
+          sub_path   = "%{sub_path}"
+        }
+        working_dir = "%{working_dir}"
+      }
+    }
+    volumes {
+      name = "empty-dir-volume"
+      empty_dir {
+        medium     = "MEMORY"
+        size_limit = "256Mi"
       }
     }
   }
