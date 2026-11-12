@@ -96,7 +96,7 @@ func TestAccOracleDatabaseExadbVmCluster_oracledatabaseExadbVmClusterBasicExampl
 				ResourceName:            "google_oracle_database_exadb_vm_cluster.my_exadb_vm_cluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "exadb_vm_cluster_id", "labels", "location", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"deletion_protection", "exadb_vm_cluster_id", "identity_connector_disabled", "labels", "location", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_exadb_vm_cluster.my_exadb_vm_cluster",
@@ -116,7 +116,7 @@ func TestAccOracleDatabaseExadbVmCluster_oracledatabaseExadbVmClusterBasicExampl
 				ResourceName:            "google_oracle_database_exadb_vm_cluster.my_exadb_vm_cluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "exadb_vm_cluster_id", "labels", "location", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"deletion_protection", "exadb_vm_cluster_id", "identity_connector_disabled", "labels", "location", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_exadb_vm_cluster.my_exadb_vm_cluster",
@@ -205,7 +205,7 @@ func TestAccOracleDatabaseExadbVmCluster_oracledatabaseExadbVmClusterFullExample
 				ResourceName:            "google_oracle_database_exadb_vm_cluster.my_exadb_vm_cluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "exadb_vm_cluster_id", "labels", "location", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"deletion_protection", "exadb_vm_cluster_id", "identity_connector_disabled", "labels", "location", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_exadb_vm_cluster.my_exadb_vm_cluster",

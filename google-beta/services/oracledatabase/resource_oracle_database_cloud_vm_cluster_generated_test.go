@@ -91,7 +91,7 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterBasicExampl
 				ResourceName:            "google_oracle_database_cloud_vm_cluster.my_vmcluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "identity_connector_disabled", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
@@ -111,7 +111,7 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterBasicExampl
 				ResourceName:            "google_oracle_database_cloud_vm_cluster.my_vmcluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "identity_connector_disabled", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
@@ -198,7 +198,7 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterOdbnetworkE
 				ResourceName:            "google_oracle_database_cloud_vm_cluster.my_vmcluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "identity_connector_disabled", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
@@ -277,7 +277,7 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterOdbdnszoneE
 				ResourceName:            "google_oracle_database_cloud_vm_cluster.my_vmcluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "identity_connector_disabled", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
@@ -353,7 +353,7 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterFullExample
 				ResourceName:            "google_oracle_database_cloud_vm_cluster.my_vmcluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "identity_connector_disabled", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
@@ -463,7 +463,7 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterExascaleExa
 				ResourceName:            "google_oracle_database_cloud_vm_cluster.my_vmcluster",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "identity_connector_disabled", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
