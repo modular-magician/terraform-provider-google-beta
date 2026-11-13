@@ -20,6 +20,7 @@
 package gkebackup_test
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -35,6 +36,7 @@ import (
 )
 
 var (
+	_ = fmt.Sprintf
 	_ = strings.Trim
 	_ = envvar.TestEnvVar
 	_ = time.Now
