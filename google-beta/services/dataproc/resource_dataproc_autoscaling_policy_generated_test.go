@@ -60,6 +60,7 @@ func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyBasicExample(t *t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      envvar.GetTestRegionFromEnv(),
 		"name":          "tf-test-dataproc-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -92,7 +93,7 @@ func testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyBasicExample(cont
 	return acctest.Nprintf(`
 resource "google_dataproc_autoscaling_policy" "basic" {
   policy_id = "%{name}"
-  location  = "us-east1"
+  location  = "%{location}"
 
   worker_config {
     max_instances = 3

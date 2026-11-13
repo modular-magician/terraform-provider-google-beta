@@ -31,6 +31,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataproc"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataprocmetastore"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
@@ -64,10 +65,15 @@ func TestAccDataprocBatch_dataprocBatchSparkExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":        envvar.GetTestRegionFromEnv(),
 		"project_name":    envvar.GetTestProjectFromEnv(),
 		"prevent_destroy": false,
-		"subnetwork_name": BootstrapSubnetWithFirewallForDataprocBatches(t, "dataproc-spark-test-network", "dataproc-spark-test-subnetwork"),
-		"random_suffix":   randomSuffix,
+		"subnetwork_name": compute.BootstrapSubnetWithOverrides(t, "dataproc-spark-test-region-subnetwork", func() string {
+			n := compute.BootstrapSharedTestNetwork(t, "dataproc-spark-test-network")
+			BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-spark-test-subnetwork", n)
+			return n
+		}(), map[string]interface{}{"privateIpGoogleAccess": true, "ipCidrRange": "10.80.0.0/20"}),
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -99,7 +105,7 @@ func testAccDataprocBatch_dataprocBatchSparkExample(context map[string]interface
 resource "google_dataproc_batch" "example_batch_spark" {
 
     batch_id      = "tf-test-batch%{random_suffix}"
-    location      = "us-east1"
+    location      = "%{location}"
     labels        = {"batch_test": "terraform"}
 
     runtime_config {

@@ -40,7 +40,7 @@ To get more information about Batch, see:
 resource "google_dataproc_batch" "example_batch_spark" {
 
     batch_id      = "tf-test-batch%{random_suffix}"
-    location      = "us-east1"
+    location      = "us-west1"
     labels        = {"batch_test": "terraform"}
 
     runtime_config {

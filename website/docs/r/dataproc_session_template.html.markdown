@@ -33,13 +33,28 @@ To get more information about SessionTemplate, see:
     * [Dataproc Serverless Session Templates](https://cloud.google.com/dataproc-serverless/docs/guides/create-serverless-sessions-templates#create-dataproc-serverless-session-template)
 
 
+## Example Usage - Dataproc Session Templates Basic
+
+
+```hcl
+resource "google_dataproc_session_template" "example_session_templates_basic" {
+    name     = "projects/my-project-name/locations/us-west1/sessionTemplates/tf-test-session-template"
+    location = "us-west1"
+
+    jupyter_session {
+      kernel       = "PYTHON"
+      display_name = "tf python kernel"
+    }
+}
+```
+
 ## Example Usage - Dataproc Session Templates Jupyter
 
 
 ```hcl
 resource "google_dataproc_session_template" "example_session_templates_jupyter" {
-    name     = "projects/my-project-name/locations/us-east1/sessionTemplates/jupyter-session-template"
-    location = "us-east1"
+    name     = "projects/my-project-name/locations/us-west1/sessionTemplates/jupyter-session-template"
+    location = "us-west1"
     labels   = {"session_template_test": "terraform"}
 
     runtime_config {

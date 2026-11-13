@@ -31,6 +31,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataproc"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataprocmetastore"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
@@ -58,17 +59,72 @@ var (
 	_ = dataproc.Product
 )
 
+func TestAccDataprocSessionTemplate_dataprocSessionTemplatesBasicExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"location":      envvar.GetTestRegionFromEnv(),
+		"project_name":  envvar.GetTestProjectFromEnv(),
+		"name":          "tf-test-tf-test-session-template" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDataprocSessionTemplateDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataprocSessionTemplate_dataprocSessionTemplatesBasicExample(context),
+			},
+			{
+				ResourceName:            "google_dataproc_session_template.example_session_templates_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_dataproc_session_template.example_session_templates_basic",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDataprocSessionTemplate_dataprocSessionTemplatesBasicExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_dataproc_session_template" "example_session_templates_basic" {
+    name     = "projects/%{project_name}/locations/%{location}/sessionTemplates/%{name}"
+    location = "%{location}"
+
+    jupyter_session {
+      kernel       = "PYTHON"
+      display_name = "tf python kernel"
+    }
+}
+`, context)
+}
+
 func TestAccDataprocSessionTemplate_dataprocSessionTemplatesJupyterExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":        envvar.GetTestRegionFromEnv(),
 		"project_name":    envvar.GetTestProjectFromEnv(),
 		"name":            "tf-test-jupyter-session-template" + randomSuffix,
 		"prevent_destroy": false,
-		"subnetwork_name": BootstrapSubnetWithFirewallForDataprocBatches(t, "jupyer-session-test-network", "jupyter-session-test-subnetwork"),
-		"random_suffix":   randomSuffix,
+		"subnetwork_name": compute.BootstrapSubnetWithOverrides(t, "jupyter-session-test-region-subnetwork", func() string {
+			n := compute.BootstrapSharedTestNetwork(t, "jupyer-session-test-network")
+			BootstrapFirewallForDataprocSharedNetwork(t, "jupyter-session-test-subnetwork", n)
+			return n
+		}(), map[string]interface{}{"privateIpGoogleAccess": true, "ipCidrRange": "10.80.0.0/20"}),
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -98,8 +154,8 @@ func TestAccDataprocSessionTemplate_dataprocSessionTemplatesJupyterExample(t *te
 func testAccDataprocSessionTemplate_dataprocSessionTemplatesJupyterExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_session_template" "example_session_templates_jupyter" {
-    name     = "projects/%{project_name}/locations/us-east1/sessionTemplates/%{name}"
-    location = "us-east1"
+    name     = "projects/%{project_name}/locations/%{location}/sessionTemplates/%{name}"
+    location = "%{location}"
     labels   = {"session_template_test": "terraform"}
 
     runtime_config {
