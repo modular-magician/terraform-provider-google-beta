@@ -78,7 +78,7 @@ func TestAccHealthcareDataset_healthcareDatasetBasicExample(t *testing.T) {
 				ResourceName:            "google_healthcare_dataset.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "self_link"},
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 			{
 				ResourceName:       "google_healthcare_dataset.default",

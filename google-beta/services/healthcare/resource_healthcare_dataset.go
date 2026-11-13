@@ -354,18 +354,6 @@ func resourceHealthcareDatasetRead(d *schema.ResourceData, meta interface{}) err
 
 	log.Printf("[DEBUG] Finished reading HealthcareDataset %q: %#v", d.Id(), res)
 
-	res, err = resourceHealthcareDatasetDecoder(d, meta, res)
-	if err != nil {
-		return err
-	}
-
-	if res == nil {
-		// Decoding the object has resulted in it being gone. It may be marked deleted
-		log.Printf("[DEBUG] Removing HealthcareDataset because it no longer exists.")
-		d.SetId("")
-		return nil
-	}
-
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
@@ -596,10 +584,17 @@ func resourceHealthcareDatasetImport(d *schema.ResourceData, meta interface{}) (
 }
 
 func flattenHealthcareDatasetName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func flattenHealthcareDatasetTimeZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenHealthcareDatasetSelfLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -654,19 +649,6 @@ func expandHealthcareDatasetEncryptionSpecKmsKeyName(v interface{}, d tpgresourc
 	return v, nil
 }
 
-func resourceHealthcareDatasetDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Take the returned long form of the name and use it as `self_link`.
-	// Then modify the name to be the user specified form.
-	// We can't just ignore_read on `name` as the linter will
-	// complain that the returned `res` is never used afterwards.
-	// Some field needs to be actually set, and we chose `name`.
-	if err := d.Set("self_link", res["name"].(string)); err != nil {
-		return nil, fmt.Errorf("Error setting self_link: %s", err)
-	}
-	res["name"] = d.Get("name").(string)
-	return res, nil
-}
-
 func ResourceHealthcareDatasetFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -674,6 +656,9 @@ func ResourceHealthcareDatasetFlatten(d *schema.ResourceData, meta interface{}, 
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
 	if err = d.Set("time_zone", flattenHealthcareDatasetTimeZone(res["timeZone"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Dataset: %s", err)
+	}
+	if err = d.Set("self_link", flattenHealthcareDatasetSelfLink(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
 	if err = d.Set("encryption_spec", flattenHealthcareDatasetEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
