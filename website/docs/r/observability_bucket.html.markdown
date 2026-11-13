@@ -25,21 +25,21 @@ Bucket configuration for storing observability data.
 
 
 
+<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=observability_bucket_basic&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
+  </a>
+</div>
 
 ## Example Usage - Observability Bucket Basic
 
 
 ```hcl
-resource "google_project" "project" {
-  project_id      = "tf-test%{random_suffix}"
-  name            = "tf-test%{random_suffix}"
-  org_id          = "%{org_id}"
-  billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
+data "google_project" "project" {
 }
 
 resource "google_project_service" "observability_api" {
-  project            = google_project.project.project_id
+  project            = data.google_project.project.project_id
   service            = "observability.googleapis.com"
   disable_on_destroy = false
 }
@@ -52,7 +52,7 @@ resource "time_sleep" "wait_for_project_propagation" {
 
 resource "google_observability_project_settings" "global" {
   location                 = "global"
-  project                  = google_project.project.project_id
+  project                  = data.google_project.project.project_id
   default_storage_location = "us"
   depends_on = [time_sleep.wait_for_project_propagation]
 }
@@ -68,7 +68,7 @@ resource "time_sleep" "wait_for_sa_propagation" {
 resource "google_kms_crypto_key_iam_member" "crypto_key" {
   crypto_key_id = "%{kms_key}"
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:service-${google_project.project.number}@gcp-sa-observability.iam.gserviceaccount.com"
+  member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-observability.iam.gserviceaccount.com"
 
   depends_on = [
     time_sleep.wait_for_sa_propagation
@@ -77,8 +77,8 @@ resource "google_kms_crypto_key_iam_member" "crypto_key" {
 
 resource "google_observability_bucket" "primary" {
   bucket_id    = "_Trace"
-  location     = "us-east1"
-  project      = google_project.project.project_id
+  location     = "us"
+  project      = data.google_project.project.project_id
   display_name = "%{display_name}"
   description  = "%{description}"
 

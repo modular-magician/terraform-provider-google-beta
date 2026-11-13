@@ -57,27 +57,72 @@ var (
 	_ = observability.Product
 )
 
+func TestAccObservabilityBucket_observabilityBucketListExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"description":   "Trace bucket for list query",
+		"display_name":  "Trace bucket",
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccObservabilityBucket_observabilityBucketListExample(context),
+			},
+			{
+				ResourceName:            "google_observability_bucket.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"bucket_id", "location"},
+			},
+			{
+				ResourceName:       "google_observability_bucket.primary",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccObservabilityBucket_observabilityBucketListExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {
+}
+
+resource "google_observability_bucket" "primary" {
+  bucket_id    = "_Trace"
+  location     = "us"
+  project      = data.google_project.project.project_id
+  display_name = "%{display_name}"
+  description  = "%{description}"
+}
+`, context)
+}
+
 func TestAccObservabilityBucket_observabilityBucketBasicExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"description":     "Initial description",
-		"display_name":    "Initial Display Name",
-		"kms_key":         kms.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us-east1", "tf-bootstrap-observability-key1").CryptoKey.Name,
-		"random_suffix":   randomSuffix,
+		"description":   "Initial description",
+		"display_name":  "Initial Display Name",
+		"kms_key":       kms.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us", "tf-bootstrap-observability-key1").CryptoKey.Name,
+		"random_suffix": randomSuffix,
 	}
 
 	context_1 := map[string]interface{}{
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"description":     "Updated description",
-		"display_name":    "Updated Display Name",
-		"kms_key":         kms.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us-east1", "tf-bootstrap-observability-key2").CryptoKey.Name,
-		"random_suffix":   randomSuffix,
+		"description":   "Updated description",
+		"display_name":  "Updated Display Name",
+		"kms_key":       kms.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us", "tf-bootstrap-observability-key2").CryptoKey.Name,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -128,16 +173,11 @@ func TestAccObservabilityBucket_observabilityBucketBasicExample(t *testing.T) {
 
 func testAccObservabilityBucket_observabilityBucketBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_project" "project" {
-  project_id      = "tf-test%{random_suffix}"
-  name            = "tf-test%{random_suffix}"
-  org_id          = "%{org_id}"
-  billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
+data "google_project" "project" {
 }
 
 resource "google_project_service" "observability_api" {
-  project            = google_project.project.project_id
+  project            = data.google_project.project.project_id
   service            = "observability.googleapis.com"
   disable_on_destroy = false
 }
@@ -150,7 +190,7 @@ resource "time_sleep" "wait_for_project_propagation" {
 
 resource "google_observability_project_settings" "global" {
   location                 = "global"
-  project                  = google_project.project.project_id
+  project                  = data.google_project.project.project_id
   default_storage_location = "us"
   depends_on = [time_sleep.wait_for_project_propagation]
 }
@@ -166,7 +206,7 @@ resource "time_sleep" "wait_for_sa_propagation" {
 resource "google_kms_crypto_key_iam_member" "crypto_key" {
   crypto_key_id = "%{kms_key}"
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:service-${google_project.project.number}@gcp-sa-observability.iam.gserviceaccount.com"
+  member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-observability.iam.gserviceaccount.com"
 
   depends_on = [
     time_sleep.wait_for_sa_propagation
@@ -175,8 +215,8 @@ resource "google_kms_crypto_key_iam_member" "crypto_key" {
 
 resource "google_observability_bucket" "primary" {
   bucket_id    = "_Trace"
-  location     = "us-east1"
-  project      = google_project.project.project_id
+  location     = "us"
+  project      = data.google_project.project.project_id
   display_name = "%{display_name}"
   description  = "%{description}"
 
