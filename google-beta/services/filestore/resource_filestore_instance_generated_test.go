@@ -54,6 +54,62 @@ var (
 	_ = filestore.Product
 )
 
+func TestAccFilestoreInstance_filestoreInstanceProtocolExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"instance_name": "tf-test-test-instance" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckFilestoreInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFilestoreInstance_filestoreInstanceProtocolExample(context),
+			},
+			{
+				ResourceName:            "google_filestore_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"initial_replication", "labels", "location", "name", "tags", "terraform_labels", "zone"},
+			},
+			{
+				ResourceName:       "google_filestore_instance.instance",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccFilestoreInstance_filestoreInstanceProtocolExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_filestore_instance" "instance" {
+  name     = "%{instance_name}"
+  location = "us-central1"
+  tier     = "ENTERPRISE"
+  protocol = "NFS_V4_1"
+
+  file_shares {
+    capacity_gb = 1024
+    name        = "share1"
+  }
+
+  networks {
+    network = "default"
+    modes   = ["MODE_IPV4"]
+  }
+
+}
+`, context)
+}
+
 func TestAccFilestoreInstance_filestoreInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
@@ -173,62 +229,6 @@ resource "google_filestore_instance" "instance" {
     modes        = ["MODE_IPV4"]
     connect_mode = "DIRECT_PEERING"
   }
-}
-`, context)
-}
-
-func TestAccFilestoreInstance_filestoreInstanceProtocolExample(t *testing.T) {
-	t.Parallel()
-
-	randomSuffix := acctest.RandString(t, 10)
-
-	context := map[string]interface{}{
-		"instance_name": "tf-test-test-instance" + randomSuffix,
-		"random_suffix": randomSuffix,
-	}
-
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckFilestoreInstanceDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccFilestoreInstance_filestoreInstanceProtocolExample(context),
-			},
-			{
-				ResourceName:            "google_filestore_instance.instance",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"initial_replication", "labels", "location", "name", "tags", "terraform_labels", "zone"},
-			},
-			{
-				ResourceName:       "google_filestore_instance.instance",
-				ImportState:        true,
-				ExpectNonEmptyPlan: true,
-				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
-			},
-		},
-	})
-}
-
-func testAccFilestoreInstance_filestoreInstanceProtocolExample(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_filestore_instance" "instance" {
-  name     = "%{instance_name}"
-  location = "us-central1"
-  tier     = "ENTERPRISE"
-  protocol = "NFS_V4_1"
-
-  file_shares {
-    capacity_gb = 1024
-    name        = "share1"
-  }
-
-  networks {
-    network = "default"
-    modes   = ["MODE_IPV4"]
-  }
-
 }
 `, context)
 }
