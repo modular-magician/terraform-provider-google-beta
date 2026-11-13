@@ -917,6 +917,7 @@ If OAuth client is not set, Google-managed OAuth client is used.`,
 			},
 			"ip_address_selection_policy": {
 				Type:         schema.TypeString,
+				Computed:     true,
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"IPV4_ONLY", "PREFER_IPV6", "IPV6_ONLY", ""}),
 				Description:  `Specifies preference of traffic to the backend (from the proxy and from the client for proxyless gRPC). Possible values: ["IPV4_ONLY", "PREFER_IPV6", "IPV6_ONLY"]`,
@@ -934,6 +935,7 @@ balancing cannot be used with the other(s). For more information, refer to
 			},
 			"locality_lb_policy": {
 				Type:         schema.TypeString,
+				Computed:     true,
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"ROUND_ROBIN", "LEAST_REQUEST", "RING_HASH", "RANDOM", "ORIGINAL_DESTINATION", "MAGLEV", "WEIGHTED_MAGLEV", "WEIGHTED_ROUND_ROBIN", ""}),
 				Description: `The load balancing algorithm used within the scope of the locality.
