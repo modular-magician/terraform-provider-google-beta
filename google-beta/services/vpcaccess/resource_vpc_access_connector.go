@@ -481,18 +481,6 @@ func resourceVPCAccessConnectorRead(d *schema.ResourceData, meta interface{}) er
 
 	log.Printf("[DEBUG] Finished reading VPCAccessConnector %q: %#v", d.Id(), res)
 
-	res, err = resourceVPCAccessConnectorDecoder(d, meta, res)
-	if err != nil {
-		return err
-	}
-
-	if res == nil {
-		// Decoding the object has resulted in it being gone. It may be marked deleted
-		log.Printf("[DEBUG] Removing VPCAccessConnector because it no longer exists.")
-		d.SetId("")
-		return nil
-	}
-
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
@@ -879,6 +867,10 @@ func flattenVPCAccessConnectorMaxThroughput(v interface{}, d *schema.ResourceDat
 	return v // let terraform core handle it otherwise
 }
 
+func flattenVPCAccessConnectorSelfLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenVPCAccessConnectorConnectedProjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -980,19 +972,6 @@ func resourceVPCAccessConnectorEncoder(d *schema.ResourceData, meta interface{},
 	return obj, nil
 }
 
-func resourceVPCAccessConnectorDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// Take the returned long form of the name and use it as `self_link`.
-	// Then modify the name to be the user specified form.
-	// We can't just ignore_read on `name` as the linter will
-	// complain that the returned `res` is never used afterwards.
-	// Some field needs to be actually set, and we chose `name`.
-	if err := d.Set("self_link", res["name"].(string)); err != nil {
-		return nil, fmt.Errorf("Error setting self_link: %s", err)
-	}
-	res["name"] = d.Get("name").(string)
-	return res, nil
-}
-
 func ResourceVPCAccessConnectorFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -1021,6 +1000,9 @@ func ResourceVPCAccessConnectorFlatten(d *schema.ResourceData, meta interface{},
 		return fmt.Errorf("Error reading Connector: %s", err)
 	}
 	if err = d.Set("max_throughput", flattenVPCAccessConnectorMaxThroughput(res["maxThroughput"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Connector: %s", err)
+	}
+	if err = d.Set("self_link", flattenVPCAccessConnectorSelfLink(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Connector: %s", err)
 	}
 	if err = d.Set("connected_projects", flattenVPCAccessConnectorConnectedProjects(res["connectedProjects"], d, config)); err != nil {
