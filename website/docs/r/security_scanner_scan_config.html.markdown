@@ -51,11 +51,21 @@ resource "google_compute_address" "scanner_static_ip" {
   name     = "scan-basic-static-ip"
 }
 
+# Allow the reserved address to propagate before the scan config validates it.
+resource "terraform_data" "wait_for_address" {
+  depends_on = [google_compute_address.scanner_static_ip]
+
+  provisioner "local-exec" {
+    command = "sleep 15"
+  }
+}
+
 resource "google_security_scanner_scan_config" "scan-config" {
   provider         = google-beta
   display_name     = "terraform-scan-config"
   starting_urls    = ["http://${google_compute_address.scanner_static_ip.address}"]
   target_platforms = ["COMPUTE"]
+  depends_on       = [terraform_data.wait_for_address]
 }
 ```
 <div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
