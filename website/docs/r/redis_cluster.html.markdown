@@ -106,11 +106,6 @@ To [detach](https://cloud.google.com/memorystore/docs/cluster/working-with-cross
           * Manually update `cross_cluster_replication_config` field in the configuration file(s) for those clusters with the latest value from the state.
           * Execute `terraform plan` once again. This should not generate any diff, confirming the configuration is in sync with the infrastructure.
 
-<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=redis_cluster_ha_with_labels&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
-  </a>
-</div>
 
 ## Example Usage - Redis Cluster Ha With Labels
 
@@ -126,7 +121,7 @@ resource "google_redis_cluster" "cluster-ha-with-labels" {
   psc_configs {
     network = google_compute_network.consumer_net.id
   }
-  region = "northamerica-south1"
+  region = "us-west1"
   replica_count = 1
   node_type = "REDIS_SHARED_CORE_NANO"
   transit_encryption_mode = "TRANSIT_ENCRYPTION_MODE_DISABLED"
@@ -157,7 +152,7 @@ resource "google_redis_cluster" "cluster-ha-with-labels" {
 
 resource "google_network_connectivity_service_connection_policy" "default" {
   name = "my-policy"
-  location = "northamerica-south1"
+  location = "us-west1"
   service_class = "gcp-memorystore-redis"
   description   = "my basic service connection policy"
   network = google_compute_network.consumer_net.id
@@ -169,7 +164,7 @@ resource "google_network_connectivity_service_connection_policy" "default" {
 resource "google_compute_subnetwork" "consumer_subnet" {
   name          = "my-subnet"
   ip_cidr_range = "10.0.0.248/29"
-  region        = "northamerica-south1"
+  region        = "us-west1"
   network       = google_compute_network.consumer_net.id
 }
 

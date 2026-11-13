@@ -62,6 +62,7 @@ func TestAccRedisInstance_redisInstanceBasicExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"region":          envvar.GetTestRegionFromEnv(),
 		"instance_name":   "tf-test-memory-cache" + randomSuffix,
 		"prevent_destroy": false,
 		"random_suffix":   randomSuffix,
@@ -96,7 +97,7 @@ func testAccRedisInstance_redisInstanceBasicExample(context map[string]interface
 resource "google_redis_instance" "cache" {
   name           = "%{instance_name}"
   memory_size_gb = 1
-  region         = "northamerica-south1"
+  region         = "%{region}"
   deletion_protection = false
 
   lifecycle {
