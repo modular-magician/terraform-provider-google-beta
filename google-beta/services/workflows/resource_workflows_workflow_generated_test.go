@@ -64,6 +64,7 @@ func TestAccWorkflowsWorkflow_workflowBasicExample(t *testing.T) {
 	context := map[string]interface{}{
 		"account_id":    "tf-test-my-account" + randomSuffix,
 		"name":          "workflow" + randomSuffix,
+		"region":        "us-central1",
 		"random_suffix": randomSuffix,
 	}
 
@@ -88,7 +89,7 @@ resource "google_service_account" "test_account" {
 
 resource "google_workflows_workflow" "example" {
   name          = "%{name}"
-  region        = "us-central1"
+  region        = "%{region}"
   description   = "Magic"
   service_account = google_service_account.test_account.id
   call_log_level = "LOG_ERRORS_ONLY"
@@ -139,6 +140,7 @@ func TestAccWorkflowsWorkflow_workflowTagsExample(t *testing.T) {
 	context := map[string]interface{}{
 		"account_id":    "tf-test-my-account" + randomSuffix,
 		"name":          "workflow" + randomSuffix,
+		"region":        "us-central1",
 		"tag_key":       "tf_test_tag_key" + randomSuffix,
 		"tag_value":     "tf_test_tag_value" + randomSuffix,
 		"random_suffix": randomSuffix,
@@ -178,7 +180,7 @@ resource "google_service_account" "test_account" {
 
 resource "google_workflows_workflow" "example" {
   name          = "%{name}"
-  region        = "us-central1"
+  region        = "%{region}"
   description   = "Magic"
   service_account = google_service_account.test_account.id
   deletion_protection = false
