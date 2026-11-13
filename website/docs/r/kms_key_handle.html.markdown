@@ -130,7 +130,7 @@ resource "google_kms_key_handle" "example-keyhandle" {
   provider               = google-beta
   project                = google_project.resource_project.project_id
   name                   = "tf-test-key-handle"
-  location               = "global"
+  location               = "us-central1"
   resource_type_selector = "storage.googleapis.com/Bucket"
   depends_on             = [time_sleep.wait_autokey_config]
 }

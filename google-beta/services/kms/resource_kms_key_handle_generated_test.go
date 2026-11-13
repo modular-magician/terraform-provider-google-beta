@@ -65,6 +65,7 @@ func TestAccKMSKeyHandle_kmsKeyHandleBasicExample(t *testing.T) {
 		"org_id":                envvar.GetTestOrgFromEnv(t),
 		"folder_name":           "tf-test-folder-kh" + randomSuffix,
 		"key_project_name":      "tf-test-key-proj" + randomSuffix,
+		"location":              "us-central1",
 		"resource_project_name": "tf-test-res-proj" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
@@ -189,7 +190,7 @@ resource "google_kms_key_handle" "example-keyhandle" {
   provider               = google-beta
   project                = google_project.resource_project.project_id
   name                   = "tf-test-key-handle"
-  location               = "global"
+  location               = "%{location}"
   resource_type_selector = "storage.googleapis.com/Bucket"
   depends_on             = [time_sleep.wait_autokey_config]
 }
