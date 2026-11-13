@@ -144,9 +144,9 @@ func listAndActionFirebaseAILogicPromptTemplate(action sweeper.ResourceAction) e
 			}
 
 			// First try the expected resource key
-			resourceList, ok := res["promptTemplates"]
+			resourceList, ok := res["templates"]
 			if ok {
-				log.Printf("[INFO][SWEEPER_LOG] Found resources under expected key 'promptTemplates'")
+				log.Printf("[INFO][SWEEPER_LOG] Found resources under expected key 'templates'")
 			} else {
 				// Next, try the common "items" pattern
 				resourceList, ok = res["items"]
