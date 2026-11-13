@@ -64,6 +64,7 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterBasicExample(t *tes
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":                 envvar.GetTestRegionFromEnv(),
 		"annotation_value":         "value-one",
 		"label_value":              "key",
 		"workstation_cluster_name": "tf-test-workstation-cluster" + randomSuffix,
@@ -71,6 +72,7 @@ func TestAccWorkstationsWorkstationCluster_workstationClusterBasicExample(t *tes
 	}
 
 	context_1 := map[string]interface{}{
+		"location":                 envvar.GetTestRegionFromEnv(),
 		"annotation_value":         "value-updated",
 		"label_value":              "updated-key",
 		"workstation_cluster_name": "tf-test-workstation-cluster" + randomSuffix,
@@ -127,7 +129,7 @@ resource "google_workstations_workstation_cluster" "default" {
   workstation_cluster_id = "%{workstation_cluster_name}"
   network                = google_compute_network.default.id
   subnetwork             = google_compute_subnetwork.default.id
-  location               = "us-west4"
+  location               = "%{location}"
 
   labels = {
     "label" = "%{label_value}"
@@ -149,7 +151,7 @@ resource "google_compute_network" "default" {
 resource "google_compute_subnetwork" "default" {
   name          = "%{workstation_cluster_name}"
   ip_cidr_range = "10.0.0.0/24"
-  region        = "us-west4"
+  region        = "%{location}"
   network       = google_compute_network.default.name
 }
 `, context)
