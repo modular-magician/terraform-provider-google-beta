@@ -647,7 +647,10 @@ func resourceEventarcChannelImport(d *schema.ResourceData, meta interface{}) ([]
 }
 
 func flattenEventarcChannelName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("name")
+	if v == nil {
+		return v
+	}
+	return tpgresource.GetResourceNameFromSelfLink(v.(string))
 }
 
 func flattenEventarcChannelLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
