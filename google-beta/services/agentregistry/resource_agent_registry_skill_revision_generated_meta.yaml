@@ -1,0 +1,35 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_agent_registry_skill_revision
+generation_type: mmv1
+source_file: products/agentregistry/SkillRevision.yaml
+api_service_name: agentregistry.googleapis.com
+api_version: v1
+api_resource_type_kind: SkillRevision
+fields:
+    - api_field: archiveUploadSource.archiveContent
+    - api_field: createTime
+    - api_field: frontmatter.compatibility
+    - api_field: frontmatter.description
+    - api_field: frontmatter.license
+    - api_field: frontmatter.metadata
+    - api_field: frontmatter.name
+    - api_field: gcsSource.generation
+    - api_field: gcsSource.uri
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: scanResult.errorMessage
+    - api_field: scanResult.findings
+    - api_field: scanResult.scanState
+    - api_field: scanResult.scanTime
+    - api_field: sha256Hash
+    - api_field: sizeBytes
+    - field: skill
+      provider_only: true
+    - field: skill_revision_id
+      provider_only: true
+    - api_field: state
+    - api_field: uid
+    - field: deletion_policy
+      provider_only: true
