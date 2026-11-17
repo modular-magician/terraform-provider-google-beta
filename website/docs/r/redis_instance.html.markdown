@@ -377,11 +377,14 @@ The following arguments are supported:
 
 * `reserved_ip_range` -
   (Optional)
-  The CIDR range of internal addresses that are reserved for this
-  instance. If not provided, the service will choose an unused /29
-  block, for example, 10.0.0.0/29 or 192.168.0.0/29. Ranges must be
-  unique and non-overlapping with existing subnets in an authorized
-  network.
+  For DIRECT_PEERING mode, the CIDR range of internal addresses that
+  are reserved for this instance. The range must be unique and
+  non-overlapping with existing subnets in an authorized network. For
+  PRIVATE_SERVICE_ACCESS mode, the name of an allocated IP address
+  range associated with this private service access connection. If
+  not provided, the service will choose an unused /29 block, for
+  example, 10.0.0.0/29 or 192.168.0.0/29. For READ_REPLICAS_ENABLED,
+  the default block size is /28.
 
 * `tier` -
   (Optional)
