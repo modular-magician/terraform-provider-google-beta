@@ -172,6 +172,14 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				ForceNew:    true,
 				Description: `The location where entry group will be created in.`,
 			},
+			"type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The type of this EntryGroup. The default value is an empty string.
+Recognised values include:
+* 'context-set': EntryGroup containing context set data assets.`,
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -253,6 +261,12 @@ func resourceDataplexEntryGroupCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	typeProp, err := expandDataplexEntryGroupType(d.Get("type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(typeProp)) && (ok || !reflect.DeepEqual(v, typeProp)) {
+		obj["type"] = typeProp
 	}
 	effectiveLabelsProp, err := expandDataplexEntryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -683,6 +697,10 @@ func flattenDataplexEntryGroupTransferStatus(v interface{}, d *schema.ResourceDa
 	return v
 }
 
+func flattenDataplexEntryGroupType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDataplexEntryGroupTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -707,6 +725,10 @@ func expandDataplexEntryGroupDescription(v interface{}, d tpgresource.TerraformR
 }
 
 func expandDataplexEntryGroupDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataplexEntryGroupType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -746,6 +768,9 @@ func ResourceDataplexEntryGroupFlatten(d *schema.ResourceData, meta interface{},
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
 	if err = d.Set("transfer_status", flattenDataplexEntryGroupTransferStatus(res["transferStatus"], d, config)); err != nil {
+		return fmt.Errorf("Error reading EntryGroup: %s", err)
+	}
+	if err = d.Set("type", flattenDataplexEntryGroupType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenDataplexEntryGroupTerraformLabels(res["labels"], d, config)); err != nil {

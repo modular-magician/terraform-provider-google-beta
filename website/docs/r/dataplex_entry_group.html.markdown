@@ -52,6 +52,23 @@ resource "google_dataplex_entry_group" "test_entry_group_full" {
 }
 ```
 
+## Example Usage - Dataplex Entry Group Context Set
+
+
+```hcl
+resource "google_dataplex_entry_group" "test_entry_group_context_set" {
+  provider = google-beta
+  entry_group_id = "entry-group-context-set"
+  project = "my-project-name"
+  location = "us-central1"
+
+  labels = { "tag": "test-tf" }
+  display_name = "terraform context set entry group"
+  description = "context set entry group created by Terraform"
+  type = "context-set"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -72,6 +89,12 @@ The following arguments are supported:
 
   **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
   Please refer to the field `effective_labels` for all of the labels present on the resource.
+
+* `type` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  The type of this EntryGroup. The default value is an empty string.
+  Recognised values include:
+  * `context-set`: EntryGroup containing context set data assets.
 
 * `location` -
   (Optional)

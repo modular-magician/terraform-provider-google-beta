@@ -148,6 +148,57 @@ resource "google_dataplex_entry_group" "test_entry_group_full" {
 `, context)
 }
 
+func TestAccDataplexEntryGroup_dataplexEntryGroupContextSetExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project_name":     envvar.GetTestProjectFromEnv(),
+		"entry_group_name": "tf-test-entry-group-context-set" + randomSuffix,
+		"random_suffix":    randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckDataplexEntryGroupDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataplexEntryGroup_dataplexEntryGroupContextSetExample(context),
+			},
+			{
+				ResourceName:            "google_dataplex_entry_group.test_entry_group_context_set",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"entry_group_id", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_dataplex_entry_group.test_entry_group_context_set",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDataplexEntryGroup_dataplexEntryGroupContextSetExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_dataplex_entry_group" "test_entry_group_context_set" {
+  provider = google-beta
+  entry_group_id = "%{entry_group_name}"
+  project = "%{project_name}"
+  location = "us-central1"
+
+  labels = { "tag": "test-tf" }
+  display_name = "terraform context set entry group"
+  description = "context set entry group created by Terraform"
+  type = "context-set"
+}
+`, context)
+}
+
 func testAccCheckDataplexEntryGroupDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
