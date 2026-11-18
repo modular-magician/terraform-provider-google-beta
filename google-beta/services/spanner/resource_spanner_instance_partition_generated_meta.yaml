@@ -16,6 +16,8 @@ fields:
     - api_field: autoscalingConfig.autoscalingTargets.totalCpuUtilizationPercent
     - api_field: config
     - api_field: displayName
+    - field: force_destroy
+      provider_only: true
     - field: instance
       provider_only: true
     - api_field: name

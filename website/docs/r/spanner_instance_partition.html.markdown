@@ -150,6 +150,11 @@ The following arguments are supported:
 	When set to "ABANDON", the command will remove the resource from Terraform
 	management without updating or deleting the resource in the API.
 	When set to "DELETE", deleting the resource is allowed.
+* `force_destroy` - (Optional) When deleting an instance partition, this boolean option will delete all backups
+that reference this instance partition, including backups created by a backup schedule.
+The backups are deleted permanently. Databases that use the instance partition are
+not deleted. Defaults to false.
+
 
 
 <a name="nested_autoscaling_config"></a>The `autoscaling_config` block supports:

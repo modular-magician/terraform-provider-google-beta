@@ -53,6 +53,71 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+// spannerBackupReferencesInstancePartition reports whether a backup stores data in
+// the instance partition with the given ID. The backup must belong to the
+// partition's instance, because only the ID is compared.
+func spannerBackupReferencesInstancePartition(backup map[string]interface{}, partitionId string) bool {
+	refs, _ := backup["instancePartitions"].([]interface{})
+	for _, raw := range refs {
+		ref, _ := raw.(map[string]interface{})
+		name, _ := ref["instancePartition"].(string)
+		if tpgresource.GetResourceNameFromSelfLink(name) == partitionId {
+			return true
+		}
+	}
+	return false
+}
+
+func deleteBackupsReferencingSpannerInstancePartition(d *schema.ResourceData, config *transport_tpg.Config, userAgent, billingProject string) error {
+	listUrl, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/instances/{{instance}}/backups")
+	if err != nil {
+		return err
+	}
+	partitionId := d.Get("name").(string)
+
+	// List every page before deleting, so that deletions cannot shift later pages.
+	var backups []interface{}
+	pageToken := ""
+	for {
+		url := listUrl
+		if pageToken != "" {
+			url, err = transport_tpg.AddQueryParams(listUrl, map[string]string{"pageToken": pageToken})
+			if err != nil {
+				return err
+			}
+		}
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Timeout:   d.Timeout(schema.TimeoutDelete),
+		})
+		if err != nil {
+			// The instance is gone, and its backups with it.
+			if transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
+				return nil
+			}
+			return fmt.Errorf("Error listing backups that reference InstancePartition %q: %s", d.Id(), err)
+		}
+
+		items, _ := res["backups"].([]interface{})
+		for _, raw := range items {
+			if backup, ok := raw.(map[string]interface{}); ok && spannerBackupReferencesInstancePartition(backup, partitionId) {
+				backups = append(backups, backup)
+			}
+		}
+
+		pageToken, _ = res["nextPageToken"].(string)
+		if pageToken == "" {
+			break
+		}
+	}
+
+	return deleteSpannerBackups(d, config, map[string]interface{}{"backups": backups}, userAgent, billingProject)
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -290,6 +355,15 @@ CREATING: The instance partition is being created. Resources are being
 allocated for the instance partition.
 READY: The instance partition has been allocated resources and is ready for use.`,
 			},
+			"force_destroy": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `When deleting an instance partition, this boolean option will delete all backups
+that reference this instance partition, including backups created by a backup schedule.
+The backups are deleted permanently. Databases that use the instance partition are
+not deleted. Defaults to false.`,
+				Default: false,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -481,6 +555,11 @@ func resourceSpannerInstancePartitionRead(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Finished reading SpannerInstancePartition %q: %#v", d.Id(), res)
 
 	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("force_destroy"); !ok {
+		if err := d.Set("force_destroy", false); err != nil {
+			return fmt.Errorf("Error setting force_destroy: %s", err)
+		}
+	}
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		//prioritize config's value if present
 		if config.DeletionPolicy != "" {
@@ -669,6 +748,11 @@ func resourceSpannerInstancePartitionUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
+	// Only client-side fields changed. The API rejects an empty field mask.
+	if len(fieldMask) == 0 {
+		return resourceSpannerInstancePartitionRead(d, meta)
+	}
+
 	// Add field_mask as a URL parameter
 	url, err = transport_tpg.AddQueryParams(url, map[string]string{"field_mask": strings.Join(fieldMask, ",")})
 	if err != nil {
@@ -742,6 +826,11 @@ func resourceSpannerInstancePartitionDelete(d *schema.ResourceData, meta interfa
 	}
 
 	headers := make(http.Header)
+	if d.Get("force_destroy").(bool) {
+		if err := deleteBackupsReferencingSpannerInstancePartition(d, config, userAgent, billingProject); err != nil {
+			return err
+		}
+	}
 
 	log.Printf("[DEBUG] Deleting InstancePartition %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -778,6 +867,11 @@ func resourceSpannerInstancePartitionImport(d *schema.ResourceData, meta interfa
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
+	if err := d.Set("force_destroy", false); err != nil {
+		return nil, fmt.Errorf("Error setting force_destroy: %s", err)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
