@@ -6,6 +6,7 @@ source_file: products/backupdr/ServiceConfig.yaml
 api_service_name: backupdr.googleapis.com
 api_version: v1beta
 api_resource_type_kind: ServiceConfig
+supports_update: false
 fields:
     - field: location
       provider_only: true

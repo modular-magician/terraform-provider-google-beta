@@ -6,6 +6,7 @@ source_file: products/dialogflowcx/Webhook.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v3beta1
 api_resource_type_kind: Webhook
+supports_update: true
 fields:
     - api_field: disabled
     - api_field: displayName

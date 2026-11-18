@@ -6,6 +6,7 @@ source_file: products/dialogflow/Tool.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: Tool
+supports_update: true
 fields:
     - api_field: actionConfirmationRequirement
     - api_field: connectorSpec.actions.connectionActionId

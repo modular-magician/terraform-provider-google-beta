@@ -6,6 +6,7 @@ source_file: products/workflows/Workflow.yaml
 api_service_name: workflows.googleapis.com
 api_version: v1
 api_resource_type_kind: Workflow
+supports_update: true
 fields:
     - api_field: callLogLevel
     - api_field: createTime

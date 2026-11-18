@@ -6,6 +6,7 @@ source_file: products/artifactregistry/VPCSCConfig.yaml
 api_service_name: artifactregistry.googleapis.com
 api_version: v1
 api_resource_type_kind: VpcscConfig
+supports_update: true
 fields:
     - field: location
       provider_only: true

@@ -6,6 +6,7 @@ source_file: products/dialogflow/Generator.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: Generator
+supports_update: true
 fields:
     - api_field: agentCoachingContext.instructions.agentAction
     - api_field: agentCoachingContext.instructions.condition

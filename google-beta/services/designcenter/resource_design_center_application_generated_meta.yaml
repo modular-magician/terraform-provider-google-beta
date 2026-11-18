@@ -6,6 +6,7 @@ source_file: products/designcenter/Application.yaml
 api_service_name: designcenter.googleapis.com
 api_version: v1
 api_resource_type_kind: Application
+supports_update: true
 fields:
     - api_field: appParameters.key
     - api_field: appParameters.value

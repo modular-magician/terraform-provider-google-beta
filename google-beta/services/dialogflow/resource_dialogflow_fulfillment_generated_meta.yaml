@@ -6,6 +6,7 @@ source_file: products/dialogflow/Fulfillment.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: Fulfillment
+supports_update: true
 fields:
     - api_field: displayName
     - api_field: enabled

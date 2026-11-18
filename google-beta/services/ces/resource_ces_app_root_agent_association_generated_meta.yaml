@@ -6,6 +6,7 @@ source_file: products/ces/AppRootAgentAssociation.yaml
 api_service_name: ces.googleapis.com
 api_version: v1beta
 api_resource_type_kind: App
+supports_update: true
 fields:
     - api_field: agentId
     - field: app_id

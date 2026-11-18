@@ -6,6 +6,7 @@ source_file: products/discoveryengine/UserStore.yaml
 api_service_name: discoveryengine.googleapis.com
 api_version: v1
 api_resource_type_kind: UserStore
+supports_update: true
 fields:
     - api_field: defaultLicenseConfig
     - api_field: enableExpiredLicenseAutoUpdate

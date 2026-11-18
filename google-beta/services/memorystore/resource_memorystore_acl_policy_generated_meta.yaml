@@ -6,6 +6,7 @@ source_file: products/memorystore/AclPolicy.yaml
 api_service_name: memorystore.googleapis.com
 api_version: v1beta
 api_resource_type_kind: AclPolicy
+supports_update: true
 fields:
     - field: acl_policy_id
       provider_only: true

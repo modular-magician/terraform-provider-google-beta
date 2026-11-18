@@ -6,6 +6,7 @@ source_file: products/dialogflowcx/Tool.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v3beta1
 api_resource_type_kind: Tool
+supports_update: true
 fields:
     - api_field: connectorSpec.actions.connectionActionId
     - api_field: connectorSpec.actions.entityOperation.entityId

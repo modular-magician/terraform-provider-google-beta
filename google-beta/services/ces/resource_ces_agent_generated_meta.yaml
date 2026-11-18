@@ -6,6 +6,7 @@ source_file: products/ces/Agent.yaml
 api_service_name: ces.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Agent
+supports_update: true
 fields:
     - api_field: afterAgentCallbacks.description
     - api_field: afterAgentCallbacks.disabled

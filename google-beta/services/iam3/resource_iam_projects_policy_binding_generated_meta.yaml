@@ -6,6 +6,7 @@ source_file: products/iam3/ProjectsPolicyBinding.yaml
 api_service_name: iam.googleapis.com
 api_version: v3beta
 api_resource_type_kind: PolicyBinding
+supports_update: true
 api_variant_patterns:
     - projects/{project}/locations/{location}/policyBindings/{policyBinding}
 fields:

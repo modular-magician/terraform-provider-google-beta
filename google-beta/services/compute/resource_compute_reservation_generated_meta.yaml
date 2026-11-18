@@ -6,6 +6,7 @@ source_file: products/compute/Reservation.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: Allocation
+supports_update: true
 fields:
     - field: block_names
       provider_only: true

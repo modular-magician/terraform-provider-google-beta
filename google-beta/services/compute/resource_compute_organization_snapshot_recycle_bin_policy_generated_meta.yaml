@@ -6,6 +6,7 @@ source_file: products/compute/OrganizationSnapshotRecycleBinPolicy.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: OrganizationSnapshotRecycleBinPolicy
+supports_update: true
 fields:
     - field: organization
       provider_only: true

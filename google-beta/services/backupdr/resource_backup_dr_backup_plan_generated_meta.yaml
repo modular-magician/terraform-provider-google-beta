@@ -6,6 +6,7 @@ source_file: products/backupdr/BackupPlan.yaml
 api_service_name: backupdr.googleapis.com
 api_version: v1beta
 api_resource_type_kind: BackupPlan
+supports_update: true
 fields:
     - field: backup_plan_id
       provider_only: true

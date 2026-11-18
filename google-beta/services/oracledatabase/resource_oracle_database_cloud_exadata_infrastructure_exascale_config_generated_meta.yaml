@@ -6,6 +6,7 @@ source_file: products/oracledatabase/CloudExadataInfrastructureExascaleConfig.ya
 api_service_name: oracledatabase.googleapis.com
 api_version: v1
 api_resource_type_kind: CloudExadataInfrastructureExascaleConfig
+supports_update: false
 fields:
     - field: cloud_exadata_infrastructure
       provider_only: true

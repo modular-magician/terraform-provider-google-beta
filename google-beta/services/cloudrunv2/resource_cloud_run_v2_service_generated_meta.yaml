@@ -6,6 +6,7 @@ source_file: products/cloudrunv2/Service.yaml
 api_service_name: run.googleapis.com
 api_version: v2
 api_resource_type_kind: Service
+supports_update: true
 fields:
     - api_field: annotations
     - api_field: binaryAuthorization.breakglassJustification

@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: MPL-2.0
 resource: 'google_container_registry'
 generation_type: 'handwritten'
+supports_update: false

@@ -6,6 +6,7 @@ source_file: products/compute/NetworkFirewallPolicyPacketMirroringRule.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: FirewallPolicy
+supports_update: true
 fields:
     - api_field: packetMirroringRules.action
       field: action

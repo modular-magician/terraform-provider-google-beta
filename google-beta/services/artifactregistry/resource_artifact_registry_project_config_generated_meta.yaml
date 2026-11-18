@@ -6,6 +6,7 @@ source_file: products/artifactregistry/ProjectConfig.yaml
 api_service_name: artifactregistry.googleapis.com
 api_version: v1
 api_resource_type_kind: ProjectConfig
+supports_update: true
 fields:
     - field: location
       provider_only: true

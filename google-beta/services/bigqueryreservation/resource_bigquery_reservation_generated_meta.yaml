@@ -6,6 +6,7 @@ source_file: products/bigqueryreservation/Reservation.yaml
 api_service_name: bigqueryreservation.googleapis.com
 api_version: v1
 api_resource_type_kind: Reservation
+supports_update: true
 fields:
     - api_field: autoscale.currentSlots
     - api_field: autoscale.maxSlots

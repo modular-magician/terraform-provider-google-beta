@@ -6,6 +6,7 @@ source_file: products/backupdr/AutoProtectionPolicy.yaml
 api_service_name: backupdr.googleapis.com
 api_version: v1beta
 api_resource_type_kind: AutoProtectionPolicy
+supports_update: true
 fields:
     - field: auto_protection_policy_id
       provider_only: true

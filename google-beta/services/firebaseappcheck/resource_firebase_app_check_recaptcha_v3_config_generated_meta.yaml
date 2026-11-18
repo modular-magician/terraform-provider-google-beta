@@ -6,6 +6,7 @@ source_file: products/firebaseappcheck/RecaptchaV3Config.yaml
 api_service_name: firebaseappcheck.googleapis.com
 api_version: v1beta
 api_resource_type_kind: RecaptchaConfig
+supports_update: true
 api_variant_patterns:
     - projects/{project}/apps/{app}/recaptchaV3Config
 fields:

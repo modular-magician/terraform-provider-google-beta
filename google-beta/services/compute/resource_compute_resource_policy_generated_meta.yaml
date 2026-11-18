@@ -6,6 +6,7 @@ source_file: products/compute/ResourcePolicy.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: ResourcePolicy
+supports_update: true
 fields:
     - api_field: description
     - api_field: diskConsistencyGroupPolicy.enabled

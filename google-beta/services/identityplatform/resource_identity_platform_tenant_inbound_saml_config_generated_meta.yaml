@@ -6,6 +6,7 @@ source_file: products/identityplatform/TenantInboundSamlConfig.yaml
 api_service_name: identitytoolkit.googleapis.com
 api_version: v2
 api_resource_type_kind: InboundSamlConfig
+supports_update: true
 fields:
     - api_field: displayName
     - api_field: enabled

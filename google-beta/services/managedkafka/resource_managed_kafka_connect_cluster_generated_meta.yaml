@@ -6,6 +6,7 @@ source_file: products/managedkafka/ConnectCluster.yaml
 api_service_name: managedkafka.googleapis.com
 api_version: v1
 api_resource_type_kind: ConnectCluster
+supports_update: true
 fields:
     - api_field: capacityConfig.memoryBytes
     - api_field: capacityConfig.vcpuCount

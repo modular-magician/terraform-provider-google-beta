@@ -6,6 +6,7 @@ source_file: products/agentidentity/AuthProvider.yaml
 api_service_name: agentidentity.googleapis.com
 api_version: v1
 api_resource_type_kind: AuthProvider
+supports_update: true
 fields:
     - api_field: allowedScopes
     - field: auth_provider_id

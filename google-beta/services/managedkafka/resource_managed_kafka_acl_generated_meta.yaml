@@ -6,6 +6,7 @@ source_file: products/managedkafka/Acl.yaml
 api_service_name: managedkafka.googleapis.com
 api_version: v1
 api_resource_type_kind: Acl
+supports_update: true
 fields:
     - api_field: aclEntries.host
     - api_field: aclEntries.operation

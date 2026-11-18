@@ -5,6 +5,7 @@ generation_type: 'handwritten'
 api_service_name: 'compute.googleapis.com'
 api_version: 'beta'
 api_resource_type_kind: 'InstanceTemplate'
+supports_update: false
 fields:
   - field: 'advanced_machine_features.enable_nested_virtualization'
     api_field: 'properties.advancedMachineFeatures.enableNestedVirtualization'

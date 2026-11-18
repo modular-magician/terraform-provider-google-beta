@@ -6,6 +6,7 @@ source_file: products/dataproc/Batch.yaml
 api_service_name: dataproc.googleapis.com
 api_version: v1
 api_resource_type_kind: Batch
+supports_update: false
 api_variant_patterns:
     - projects/{project}/locations/{location}/batches/{batch}
 fields:

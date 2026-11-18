@@ -6,6 +6,7 @@ source_file: products/monitoring/UptimeCheckConfig.yaml
 api_service_name: monitoring.googleapis.com
 api_version: v3
 api_resource_type_kind: UptimeCheckConfig
+supports_update: true
 fields:
     - api_field: checkerType
     - api_field: contentMatchers.content

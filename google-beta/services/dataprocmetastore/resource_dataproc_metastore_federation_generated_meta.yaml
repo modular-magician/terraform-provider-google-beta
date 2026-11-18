@@ -6,6 +6,7 @@ source_file: products/metastore/Federation.yaml
 api_service_name: metastore.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Federation
+supports_update: true
 fields:
     - api_field: backendMetastores.key
       field: backend_metastores.rank

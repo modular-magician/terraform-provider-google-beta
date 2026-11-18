@@ -6,6 +6,7 @@ source_file: products/apigee/SecurityAction.yaml
 api_service_name: apigee.googleapis.com
 api_version: v1
 api_resource_type_kind: SecurityAction
+supports_update: true
 fields:
     - api_field: allow
     - api_field: apiProxies

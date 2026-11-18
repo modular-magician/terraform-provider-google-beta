@@ -6,6 +6,7 @@ source_file: products/resourcemanagerv3/BoundaryConfig.yaml
 api_service_name: cloudresourcemanager.googleapis.com
 api_version: v3
 api_resource_type_kind: BoundaryConfig
+supports_update: true
 api_variant_patterns:
     - folders/{folder}/boundaryConfig
     - organizations/{organization}/boundaryConfig

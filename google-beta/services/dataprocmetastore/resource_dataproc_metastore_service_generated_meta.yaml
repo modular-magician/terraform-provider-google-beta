@@ -6,6 +6,7 @@ source_file: products/metastore/Service.yaml
 api_service_name: metastore.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Service
+supports_update: true
 fields:
     - api_field: artifactGcsUri
     - api_field: createTime

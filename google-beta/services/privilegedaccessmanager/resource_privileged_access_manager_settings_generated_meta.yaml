@@ -6,6 +6,7 @@ source_file: products/privilegedaccessmanager/Settings.yaml
 api_service_name: privilegedaccessmanager.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Settings
+supports_update: true
 api_variant_patterns:
     - folders/{folder}/locations/{location}/settings
     - organizations/{organization}/locations/{location}/settings

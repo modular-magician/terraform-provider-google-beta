@@ -6,6 +6,7 @@ source_file: products/dialogflow/version.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: Version
+supports_update: true
 fields:
     - api_field: description
     - api_field: name

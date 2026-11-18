@@ -6,6 +6,7 @@ source_file: products/kms/CryptoKey.yaml
 api_service_name: cloudkms.googleapis.com
 api_version: v1
 api_resource_type_kind: CryptoKey
+supports_update: true
 fields:
     - api_field: cryptoKeyBackend
     - api_field: destroyScheduledDuration

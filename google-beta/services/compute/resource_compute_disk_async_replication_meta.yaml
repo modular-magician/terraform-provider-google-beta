@@ -5,6 +5,7 @@ generation_type: 'handwritten'
 api_service_name: 'compute.googleapis.com'
 api_version: 'beta'
 api_resource_type_kind: 'Disk'
+supports_update: false
 fields:
   - field: 'primary_disk'
   - api_field: 'resourceStatus.asyncSecondaryDisks'

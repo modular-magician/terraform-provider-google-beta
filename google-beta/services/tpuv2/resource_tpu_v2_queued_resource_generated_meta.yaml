@@ -6,6 +6,7 @@ source_file: products/tpuv2/QueuedResource.yaml
 api_service_name: tpu.googleapis.com
 api_version: v2alpha1
 api_resource_type_kind: QueuedResource
+supports_update: false
 fields:
     - api_field: name
     - api_field: tpu.nodeSpec.node.acceleratorType

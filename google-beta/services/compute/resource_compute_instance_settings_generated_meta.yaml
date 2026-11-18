@@ -6,6 +6,7 @@ source_file: products/compute/InstanceSettings.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: InstanceSettings
+supports_update: true
 cai_asset_name_formats:
     - //compute.googleapis.com/projects/{{project}}/zones/{{zone}}/instanceSettings/InstanceSettings
 fields:

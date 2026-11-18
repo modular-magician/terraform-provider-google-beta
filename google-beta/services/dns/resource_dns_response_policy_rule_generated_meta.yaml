@@ -6,6 +6,7 @@ source_file: products/dns/ResponsePolicyRule.yaml
 api_service_name: dns.googleapis.com
 api_version: v1beta2
 api_resource_type_kind: ResponsePolicyRule
+supports_update: true
 fields:
     - api_field: behavior
     - api_field: dnsName

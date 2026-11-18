@@ -6,6 +6,7 @@ source_file: products/securitycentermanagement/FolderSecurityHealthAnalyticsCust
 api_service_name: securitycentermanagement.googleapis.com
 api_version: v1
 api_resource_type_kind: SecurityHealthAnalyticsCustomModule
+supports_update: true
 api_variant_patterns:
     - folders/{folder}/locations/{location}/securityHealthAnalyticsCustomModules/{securityHealthAnalyticsCustomModule}
 fields:

@@ -6,6 +6,7 @@ source_file: products/firebasedatabase/Instance.yaml
 api_service_name: firebasedatabase.googleapis.com
 api_version: v1beta
 api_resource_type_kind: DatabaseInstance
+supports_update: true
 fields:
     - api_field: databaseUrl
     - field: desired_state

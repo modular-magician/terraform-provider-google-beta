@@ -6,6 +6,7 @@ source_file: products/compute/Route.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: Route
+supports_update: false
 fields:
     - api_field: asPaths.asLists
     - api_field: asPaths.pathSegmentType

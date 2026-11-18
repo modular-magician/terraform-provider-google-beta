@@ -6,6 +6,7 @@ source_file: products/networkconnectivity/MulticloudDataTransferConfig.yaml
 api_service_name: networkconnectivity.googleapis.com
 api_version: v1beta
 api_resource_type_kind: MulticloudDataTransferConfig
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: description

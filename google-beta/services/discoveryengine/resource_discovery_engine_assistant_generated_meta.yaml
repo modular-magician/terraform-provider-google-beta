@@ -6,6 +6,7 @@ source_file: products/discoveryengine/Assistant.yaml
 api_service_name: discoveryengine.googleapis.com
 api_version: v1
 api_resource_type_kind: Assistant
+supports_update: true
 fields:
     - field: assistant_id
       provider_only: true

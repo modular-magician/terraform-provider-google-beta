@@ -6,6 +6,7 @@ source_file: products/firebaseapphosting/Traffic.yaml
 api_service_name: firebaseapphosting.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Traffic
+supports_update: true
 fields:
     - field: backend
       provider_only: true

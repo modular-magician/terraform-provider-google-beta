@@ -6,6 +6,7 @@ source_file: products/dialogflowcx/Agent.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v3beta1
 api_resource_type_kind: Agent
+supports_update: true
 fields:
     - api_field: advancedSettings.audioExportGcsDestination.uri
     - api_field: advancedSettings.dtmfSettings.enabled

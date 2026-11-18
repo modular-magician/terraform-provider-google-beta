@@ -6,6 +6,7 @@ source_file: products/compute/NetworkPeeringRoutesConfig.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: Network
+supports_update: true
 fields:
     - api_field: peerings.exportCustomRoutes
       field: export_custom_routes

@@ -6,6 +6,7 @@ source_file: products/observability/OrganizationSettings.yaml
 api_service_name: observability.googleapis.com
 api_version: v1
 api_resource_type_kind: OrganizationSettings
+supports_update: true
 fields:
     - api_field: defaultStorageLocation
     - api_field: kmsKeyName

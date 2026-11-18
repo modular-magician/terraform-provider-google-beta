@@ -6,6 +6,7 @@ source_file: products/privateca/Certificate.yaml
 api_service_name: privateca.googleapis.com
 api_version: v1
 api_resource_type_kind: Certificate
+supports_update: true
 fields:
     - field: certificate_authority
       provider_only: true

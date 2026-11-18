@@ -6,6 +6,7 @@ source_file: products/bigqueryreservation/BiReservation.yaml
 api_service_name: bigqueryreservation.googleapis.com
 api_version: v1
 api_resource_type_kind: BiReservation
+supports_update: true
 fields:
     - field: location
       provider_only: true

@@ -6,6 +6,7 @@ source_file: products/networkconnectivity/Transport.yaml
 api_service_name: networkconnectivity.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Transport
+supports_update: true
 fields:
     - api_field: adminEnabled
     - api_field: advertisedRoutes

@@ -6,6 +6,7 @@ source_file: products/discoveryengine/CmekConfig.yaml
 api_service_name: discoveryengine.googleapis.com
 api_version: v1
 api_resource_type_kind: CmekConfig
+supports_update: true
 fields:
     - field: cmek_config_id
       provider_only: true

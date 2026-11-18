@@ -6,6 +6,7 @@ source_file: products/dialogflowcx/Version.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v3beta1
 api_resource_type_kind: Version
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: description

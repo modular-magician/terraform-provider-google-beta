@@ -6,6 +6,7 @@ source_file: products/firebaseailogic/PromptTemplateLock.yaml
 api_service_name: firebasevertexai.googleapis.com
 api_version: v1beta
 api_resource_type_kind: PromptTemplateLock
+supports_update: false
 fields:
     - field: location
       provider_only: true

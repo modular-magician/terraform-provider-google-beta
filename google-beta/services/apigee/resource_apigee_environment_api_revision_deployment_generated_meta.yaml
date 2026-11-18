@@ -6,6 +6,7 @@ source_file: products/apigee/EnvironmentApiRevisionDeployment.yaml
 api_service_name: apigee.googleapis.com
 api_version: v1
 api_resource_type_kind: EnvironmentApiRevisionDeployment
+supports_update: false
 fields:
     - field: api
       provider_only: true

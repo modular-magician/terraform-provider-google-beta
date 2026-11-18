@@ -6,6 +6,7 @@ source_file: products/eventarc/Enrollment.yaml
 api_service_name: eventarc.googleapis.com
 api_version: v1
 api_resource_type_kind: Enrollment
+supports_update: true
 fields:
     - api_field: annotations
     - api_field: celMatch

@@ -6,6 +6,7 @@ source_file: products/gkebackup/BackupPlan.yaml
 api_service_name: gkebackup.googleapis.com
 api_version: v1
 api_resource_type_kind: BackupPlan
+supports_update: true
 fields:
     - api_field: backupConfig.allNamespaces
     - api_field: backupConfig.encryptionKey.gcpKmsEncryptionKey

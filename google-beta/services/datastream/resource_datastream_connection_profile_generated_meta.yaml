@@ -6,6 +6,7 @@ source_file: products/datastream/ConnectionProfile.yaml
 api_service_name: datastream.googleapis.com
 api_version: v1
 api_resource_type_kind: ConnectionProfile
+supports_update: true
 fields:
     - api_field: bigqueryProfile
     - field: connection_profile_id

@@ -6,6 +6,7 @@ source_file: products/bigquerydatapolicy/DataPolicy.yaml
 api_service_name: bigquerydatapolicy.googleapis.com
 api_version: v1
 api_resource_type_kind: DataPolicy
+supports_update: true
 fields:
     - api_field: dataMaskingPolicy.predefinedExpression
     - api_field: dataMaskingPolicy.routine

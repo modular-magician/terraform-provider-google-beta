@@ -6,6 +6,7 @@ source_file: products/datastream/PrivateConnection.yaml
 api_service_name: datastream.googleapis.com
 api_version: v1
 api_resource_type_kind: PrivateConnection
+supports_update: false
 fields:
     - field: create_without_validation
       provider_only: true

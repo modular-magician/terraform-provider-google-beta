@@ -6,6 +6,7 @@ source_file: products/networkservices/ServiceLbPolicies.yaml
 api_service_name: networkservices.googleapis.com
 api_version: v1
 api_resource_type_kind: ServiceLbPolicy
+supports_update: true
 fields:
     - api_field: autoCapacityDrain.enable
     - api_field: createTime

@@ -6,6 +6,7 @@ source_file: products/bigqueryconnection/Connection.yaml
 api_service_name: bigqueryconnection.googleapis.com
 api_version: v1
 api_resource_type_kind: Connection
+supports_update: true
 fields:
     - api_field: aws.accessRole.iamRoleId
     - api_field: aws.accessRole.identity

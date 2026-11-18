@@ -6,6 +6,7 @@ source_file: products/securityscanner/ScanConfig.yaml
 api_service_name: websecurityscanner.googleapis.com
 api_version: v1beta
 api_resource_type_kind: ScanConfig
+supports_update: true
 fields:
     - api_field: authentication.customAccount.loginUrl
     - api_field: authentication.customAccount.password

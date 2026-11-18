@@ -6,6 +6,7 @@ source_file: products/dialogflowcx/Page.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v3beta1
 api_resource_type_kind: Page
+supports_update: true
 fields:
     - api_field: advancedSettings.dtmfSettings.enabled
     - api_field: advancedSettings.dtmfSettings.finishDigit

@@ -6,6 +6,7 @@ source_file: products/networkservices/EdgeCacheService.yaml
 api_service_name: networkservices.googleapis.com
 api_version: v1
 api_resource_type_kind: EdgeCacheService
+supports_update: true
 fields:
     - api_field: description
     - api_field: disableHttp2

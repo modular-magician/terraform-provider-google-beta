@@ -6,6 +6,7 @@ source_file: products/databasemigrationservice/ConnectionProfile.yaml
 api_service_name: datamigration.googleapis.com
 api_version: v1
 api_resource_type_kind: ConnectionProfile
+supports_update: true
 fields:
     - api_field: alloydb.clusterId
     - api_field: alloydb.settings.initialUser.password

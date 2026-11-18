@@ -6,6 +6,7 @@ source_file: products/gemini/RepositoryGroup.yaml
 api_service_name: cloudaicompanion.googleapis.com
 api_version: v1
 api_resource_type_kind: RepositoryGroup
+supports_update: true
 fields:
     - field: code_repository_index
       provider_only: true

@@ -6,6 +6,7 @@ source_file: products/chronicle/CaseStageDefinition.yaml
 api_service_name: chronicle.googleapis.com
 api_version: v1beta
 api_resource_type_kind: CaseStageDefinition
+supports_update: true
 fields:
     - api_field: caseStageDefinitionId
     - api_field: displayName

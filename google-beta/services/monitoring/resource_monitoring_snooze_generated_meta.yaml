@@ -6,6 +6,7 @@ source_file: products/monitoring/Snooze.yaml
 api_service_name: monitoring.googleapis.com
 api_version: v3
 api_resource_type_kind: Snooze
+supports_update: true
 fields:
     - api_field: criteria.filter
     - api_field: criteria.policies

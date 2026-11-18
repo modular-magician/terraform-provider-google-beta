@@ -6,6 +6,7 @@ source_file: products/privateca/CertificateAuthority.yaml
 api_service_name: privateca.googleapis.com
 api_version: v1
 api_resource_type_kind: CertificateAuthority
+supports_update: true
 fields:
     - api_field: accessUrls.caCertificateAccessUrl
     - api_field: accessUrls.crlAccessUrls

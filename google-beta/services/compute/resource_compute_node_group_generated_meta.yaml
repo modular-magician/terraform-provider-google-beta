@@ -6,6 +6,7 @@ source_file: products/compute/NodeGroup.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: NodeGroup
+supports_update: true
 fields:
     - api_field: autoscalingPolicy.maxNodes
     - api_field: autoscalingPolicy.minNodes

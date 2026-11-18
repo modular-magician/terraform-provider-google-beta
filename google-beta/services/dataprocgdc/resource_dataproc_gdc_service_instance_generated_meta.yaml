@@ -6,6 +6,7 @@ source_file: products/dataprocgdc/ServiceInstance.yaml
 api_service_name: dataprocgdc.googleapis.com
 api_version: v1
 api_resource_type_kind: ServiceInstance
+supports_update: false
 autogen_status: true
 autogen_version: 1
 fields:

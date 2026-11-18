@@ -6,6 +6,7 @@ source_file: products/vertexai/OnlineEvaluator.yaml
 api_service_name: aiplatform.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: OnlineEvaluator
+supports_update: true
 fields:
     - api_field: agentResource
     - api_field: cloudObservability.logView

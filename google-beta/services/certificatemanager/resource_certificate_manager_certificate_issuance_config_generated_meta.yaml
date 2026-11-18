@@ -6,6 +6,7 @@ source_file: products/certificatemanager/CertificateIssuanceConfig.yaml
 api_service_name: certificatemanager.googleapis.com
 api_version: v1
 api_resource_type_kind: CertificateIssuanceConfig
+supports_update: false
 fields:
     - api_field: certificateAuthorityConfig.certificateAuthorityServiceConfig.caPool
     - api_field: createTime

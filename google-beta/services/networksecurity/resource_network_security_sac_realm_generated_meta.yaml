@@ -6,6 +6,7 @@ source_file: products/networksecurity/SacRealm.yaml
 api_service_name: networksecurity.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: SacRealm
+supports_update: false
 fields:
     - api_field: createTime
     - field: effective_labels

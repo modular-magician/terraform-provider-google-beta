@@ -6,6 +6,7 @@ source_file: products/monitoring/MetricDescriptor.yaml
 api_service_name: monitoring.googleapis.com
 api_version: v3
 api_resource_type_kind: MetricDescriptor
+supports_update: true
 fields:
     - api_field: description
     - api_field: displayName

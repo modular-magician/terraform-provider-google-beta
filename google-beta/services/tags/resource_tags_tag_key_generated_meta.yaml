@@ -6,6 +6,7 @@ source_file: products/tags/TagKey.yaml
 api_service_name: cloudresourcemanager.googleapis.com
 api_version: v3
 api_resource_type_kind: TagKey
+supports_update: true
 fields:
     - api_field: allowedValuesRegex
     - api_field: createTime

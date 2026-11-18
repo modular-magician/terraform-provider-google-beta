@@ -6,6 +6,7 @@ source_file: products/memorystore/InstanceDesiredUserCreatedEndpoints.yaml
 api_service_name: memorystore.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Instance
+supports_update: true
 fields:
     - api_field: endpoints.connections.pscConnection.connectionType
       field: desired_user_created_endpoints.connections.psc_connection.connection_type

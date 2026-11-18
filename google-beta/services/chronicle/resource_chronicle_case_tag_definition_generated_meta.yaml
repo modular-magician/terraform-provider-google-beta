@@ -6,6 +6,7 @@ source_file: products/chronicle/CaseTagDefinition.yaml
 api_service_name: chronicle.googleapis.com
 api_version: v1beta
 api_resource_type_kind: CaseTagDefinition
+supports_update: true
 fields:
     - api_field: canBeCaseTitle
     - api_field: caseTagDefinitionId

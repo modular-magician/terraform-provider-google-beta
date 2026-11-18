@@ -6,6 +6,7 @@ source_file: products/apigee/EnvgroupAttachment.yaml
 api_service_name: apigee.googleapis.com
 api_version: v1
 api_resource_type_kind: EnvironmentGroupAttachment
+supports_update: false
 fields:
     - field: envgroup_id
       provider_only: true

@@ -6,6 +6,7 @@ source_file: products/bigqueryanalyticshub/Listing.yaml
 api_service_name: analyticshub.googleapis.com
 api_version: v1
 api_resource_type_kind: Listing
+supports_update: true
 fields:
     - api_field: allowOnlyMetadataSharing
     - api_field: bigqueryDataset.dataset

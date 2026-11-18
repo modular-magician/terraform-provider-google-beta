@@ -5,6 +5,7 @@ generation_type: 'handwritten'
 api_service_name: 'dns.googleapis.com'
 api_version: 'v1beta2'
 api_resource_type_kind: 'ResourceRecordSet'
+supports_update: true
 fields:
   - field: 'managed_zone'
   - api_field: 'name'

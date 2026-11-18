@@ -6,6 +6,7 @@ source_file: products/compute/RegionNetworkPolicyTrafficClassificationRule.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: NetworkPolicy
+supports_update: true
 fields:
     - api_field: action.dscpMode
     - api_field: action.dscpValue

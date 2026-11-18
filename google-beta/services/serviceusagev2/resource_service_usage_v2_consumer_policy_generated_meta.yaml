@@ -6,6 +6,7 @@ source_file: products/serviceusagev2/ConsumerPolicy.yaml
 api_service_name: serviceusage.googleapis.com
 api_version: v2beta
 api_resource_type_kind: ConsumerPolicy
+supports_update: true
 fields:
     - field: check_usage_on_remove
       provider_only: true

@@ -6,6 +6,7 @@ source_file: products/networkservices/Gateway.yaml
 api_service_name: networkservices.googleapis.com
 api_version: v1
 api_resource_type_kind: Gateway
+supports_update: true
 fields:
     - api_field: addresses
     - api_field: allPorts

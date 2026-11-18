@@ -6,6 +6,7 @@ source_file: products/certificatemanager/CertificateMap.yaml
 api_service_name: certificatemanager.googleapis.com
 api_version: v1
 api_resource_type_kind: CertificateMap
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: description

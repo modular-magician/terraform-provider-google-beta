@@ -6,6 +6,7 @@ source_file: products/dns/ManagedZone.yaml
 api_service_name: dns.googleapis.com
 api_version: v1beta2
 api_resource_type_kind: ManagedZone
+supports_update: true
 fields:
     - api_field: cloudLoggingConfig.enableLogging
     - api_field: creationTime

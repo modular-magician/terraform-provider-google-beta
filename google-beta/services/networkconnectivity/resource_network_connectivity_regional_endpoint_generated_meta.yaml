@@ -6,6 +6,7 @@ source_file: products/networkconnectivity/RegionalEndpoint.yaml
 api_service_name: networkconnectivity.googleapis.com
 api_version: v1beta
 api_resource_type_kind: RegionalEndpoint
+supports_update: false
 fields:
     - api_field: accessType
     - api_field: address

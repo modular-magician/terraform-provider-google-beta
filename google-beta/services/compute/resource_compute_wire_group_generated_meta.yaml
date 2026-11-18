@@ -6,6 +6,7 @@ source_file: products/compute/WireGroup.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: WireGroup
+supports_update: true
 fields:
     - api_field: adminEnabled
     - api_field: creationTimestamp

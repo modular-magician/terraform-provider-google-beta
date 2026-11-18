@@ -6,6 +6,7 @@ source_file: products/bigquery/Routine.yaml
 api_service_name: bigquery.googleapis.com
 api_version: v2
 api_resource_type_kind: Routine
+supports_update: true
 fields:
     - api_field: arguments.argumentKind
     - api_field: arguments.dataType

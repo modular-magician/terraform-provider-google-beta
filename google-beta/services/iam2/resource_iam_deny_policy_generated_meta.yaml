@@ -6,6 +6,7 @@ source_file: products/iam2/DenyPolicy.yaml
 api_service_name: iam.googleapis.com
 api_version: v2beta
 api_resource_type_kind: Policy
+supports_update: true
 cai_asset_name_formats:
     - //iam.googleapis.com/{{parent}}/denypolicies/{{name}}
 fields:

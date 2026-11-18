@@ -6,6 +6,7 @@ source_file: products/dataproc/AutoscalingPolicy.yaml
 api_service_name: dataproc.googleapis.com
 api_version: v1
 api_resource_type_kind: AutoscalingPolicy
+supports_update: true
 cai_asset_name_formats:
     - //dataproc.googleapis.com/projects/{{project}}/regions/{{location}}/autoscalingPolicies/{{policy_id}}
 api_variant_patterns:

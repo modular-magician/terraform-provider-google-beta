@@ -6,6 +6,7 @@ source_file: products/dlp/DiscoveryConfig.yaml
 api_service_name: dlp.googleapis.com
 api_version: v2
 api_resource_type_kind: DiscoveryConfig
+supports_update: true
 fields:
     - api_field: actions.exportData.profileTable.datasetId
     - api_field: actions.exportData.profileTable.projectId

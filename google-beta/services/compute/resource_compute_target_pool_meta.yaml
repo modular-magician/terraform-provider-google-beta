@@ -5,6 +5,7 @@ generation_type: 'handwritten'
 api_service_name: 'compute.googleapis.com'
 api_version: 'beta'
 api_resource_type_kind: 'TargetPool'
+supports_update: true
 fields:
   - api_field: 'backupPool'
   - api_field: 'description'

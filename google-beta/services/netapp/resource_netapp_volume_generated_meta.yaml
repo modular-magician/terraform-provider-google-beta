@@ -6,6 +6,7 @@ source_file: products/netapp/Volume.yaml
 api_service_name: netapp.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: Volume
+supports_update: true
 fields:
     - api_field: activeDirectory
     - api_field: backupConfig.backupPolicies

@@ -6,6 +6,7 @@ source_file: products/monitoring/NotificationChannel.yaml
 api_service_name: monitoring.googleapis.com
 api_version: v3
 api_resource_type_kind: NotificationChannel
+supports_update: true
 fields:
     - api_field: description
     - api_field: displayName

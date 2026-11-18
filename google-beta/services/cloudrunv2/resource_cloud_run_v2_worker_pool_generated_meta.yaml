@@ -6,6 +6,7 @@ source_file: products/cloudrunv2/WorkerPool.yaml
 api_service_name: run.googleapis.com
 api_version: v2
 api_resource_type_kind: WorkerPool
+supports_update: true
 fields:
     - api_field: annotations
     - api_field: binaryAuthorization.breakglassJustification

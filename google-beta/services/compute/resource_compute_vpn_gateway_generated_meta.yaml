@@ -6,6 +6,7 @@ source_file: products/compute/VpnGateway.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: VpnGateway
+supports_update: false
 fields:
     - api_field: creationTimestamp
     - api_field: description

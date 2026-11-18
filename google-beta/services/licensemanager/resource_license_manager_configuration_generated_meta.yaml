@@ -6,6 +6,7 @@ source_file: products/licensemanager/Configuration.yaml
 api_service_name: licensemanager.googleapis.com
 api_version: v1alpha
 api_resource_type_kind: Configuration
+supports_update: true
 autogen_status: true
 autogen_version: 1
 fields:

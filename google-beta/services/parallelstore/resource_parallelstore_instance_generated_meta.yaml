@@ -6,6 +6,7 @@ source_file: products/parallelstore/Instance.yaml
 api_service_name: parallelstore.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Instance
+supports_update: true
 autogen_status: true
 autogen_version: 1
 fields:

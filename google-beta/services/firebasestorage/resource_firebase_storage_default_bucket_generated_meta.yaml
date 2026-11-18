@@ -6,6 +6,7 @@ source_file: products/firebasestorage/DefaultBucket.yaml
 api_service_name: firebasestorage.googleapis.com
 api_version: v1beta
 api_resource_type_kind: DefaultBucket
+supports_update: false
 fields:
     - api_field: bucket.bucketId
     - api_field: bucket.name

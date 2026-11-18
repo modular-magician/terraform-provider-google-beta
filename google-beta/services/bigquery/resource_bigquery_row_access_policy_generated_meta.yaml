@@ -6,6 +6,7 @@ source_file: products/bigquery/RowAccessPolicy.yaml
 api_service_name: bigquery.googleapis.com
 api_version: v2
 api_resource_type_kind: RowAccessPolicy
+supports_update: true
 fields:
     - api_field: creationTime
     - api_field: rowAccessPolicyReference.datasetId

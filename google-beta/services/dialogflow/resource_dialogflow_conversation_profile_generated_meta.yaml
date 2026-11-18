@@ -6,6 +6,7 @@ source_file: products/dialogflow/ConversationProfile.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: ConversationProfile
+supports_update: true
 fields:
     - api_field: automatedAgentConfig.agent
     - api_field: automatedAgentConfig.sessionTtl

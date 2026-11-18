@@ -6,6 +6,7 @@ source_file: products/osconfig/GuestPolicies.yaml
 api_service_name: osconfig.googleapis.com
 api_version: v1beta
 api_resource_type_kind: GuestPolicy
+supports_update: true
 api_variant_patterns:
     - folders/{folder}/guestPolicies/{guestPolicy}
     - organizations/{organization}/guestPolicies/{guestPolicy}

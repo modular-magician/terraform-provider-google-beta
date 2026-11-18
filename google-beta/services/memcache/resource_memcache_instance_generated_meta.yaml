@@ -6,6 +6,7 @@ source_file: products/memcache/Instance.yaml
 api_service_name: memcache.googleapis.com
 api_version: v1beta2
 api_resource_type_kind: Instance
+supports_update: true
 fields:
     - api_field: authorizedNetwork
     - api_field: createTime

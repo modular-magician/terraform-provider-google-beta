@@ -6,6 +6,7 @@ source_file: products/discoveryengine/DataStore.yaml
 api_service_name: discoveryengine.googleapis.com
 api_version: v1
 api_resource_type_kind: DataStore
+supports_update: true
 api_variant_patterns:
     - projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}
 fields:

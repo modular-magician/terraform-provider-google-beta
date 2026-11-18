@@ -6,6 +6,7 @@ source_file: products/containeranalysis/Note.yaml
 api_service_name: containeranalysis.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: Note
+supports_update: true
 fields:
     - api_field: attestationAuthority.hint.humanReadableName
     - api_field: createTime

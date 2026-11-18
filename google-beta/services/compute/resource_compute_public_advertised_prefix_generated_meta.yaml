@@ -6,6 +6,7 @@ source_file: products/compute/PublicAdvertisedPrefix.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: PublicAdvertisedPrefix
+supports_update: false
 fields:
     - api_field: description
     - api_field: dnsVerificationIp

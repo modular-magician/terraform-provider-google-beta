@@ -6,6 +6,7 @@ source_file: products/bigquery/Dataset.yaml
 api_service_name: bigquery.googleapis.com
 api_version: v2
 api_resource_type_kind: Dataset
+supports_update: true
 fields:
     - api_field: access.condition.description
     - api_field: access.condition.expression

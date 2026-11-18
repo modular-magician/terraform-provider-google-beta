@@ -6,6 +6,7 @@ source_file: products/firestore/ChangeStream.yaml
 api_service_name: firestore.googleapis.com
 api_version: v1
 api_resource_type_kind: ChangeStream
+supports_update: true
 fields:
     - api_field: collectionGroupScope.collectionGroupId
     - api_field: createTime

@@ -6,6 +6,7 @@ source_file: products/compute/RolloutPlan.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: RolloutPlan
+supports_update: false
 fields:
     - api_field: description
     - api_field: locationScope

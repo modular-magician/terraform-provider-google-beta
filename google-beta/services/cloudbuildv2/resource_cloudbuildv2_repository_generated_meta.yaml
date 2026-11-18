@@ -6,6 +6,7 @@ source_file: products/cloudbuildv2/Repository.yaml
 api_service_name: cloudbuild.googleapis.com
 api_version: v2
 api_resource_type_kind: Repository
+supports_update: false
 fields:
     - api_field: annotations
     - api_field: createTime

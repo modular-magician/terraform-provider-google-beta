@@ -6,6 +6,7 @@ source_file: products/blockchainnodeengine/BlockchainNodes.yaml
 api_service_name: blockchainnodeengine.googleapis.com
 api_version: v1
 api_resource_type_kind: BlockchainNode
+supports_update: true
 fields:
     - field: blockchain_node_id
       provider_only: true

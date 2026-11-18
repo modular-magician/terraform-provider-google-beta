@@ -6,6 +6,7 @@ source_file: products/ces/Evaluation.yaml
 api_service_name: ces.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Evaluation
+supports_update: true
 fields:
     - field: app
       provider_only: true

@@ -6,6 +6,7 @@ source_file: products/bigquerydatapolicyv2/DataPolicy.yaml
 api_service_name: bigquerydatapolicy.googleapis.com
 api_version: v2
 api_resource_type_kind: DataPolicy
+supports_update: true
 fields:
     - api_field: dataGovernanceTag.key
     - api_field: dataGovernanceTag.value

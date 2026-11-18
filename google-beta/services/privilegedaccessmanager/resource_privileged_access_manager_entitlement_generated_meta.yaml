@@ -6,6 +6,7 @@ source_file: products/privilegedaccessmanager/Entitlement.yaml
 api_service_name: privilegedaccessmanager.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Entitlement
+supports_update: true
 api_variant_patterns:
     - folders/{folder}/locations/{location}/entitlements/{entitlement}
     - organizations/{organization}/locations/{location}/entitlements/{entitlement}

@@ -6,6 +6,7 @@ source_file: products/tpuv2/Vm.yaml
 api_service_name: tpu.googleapis.com
 api_version: v2alpha1
 api_resource_type_kind: Node
+supports_update: true
 fields:
     - api_field: acceleratorConfig.topology
     - api_field: acceleratorConfig.type

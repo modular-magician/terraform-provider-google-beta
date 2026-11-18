@@ -6,6 +6,7 @@ source_file: products/iamworkforcepool/WorkforcePoolProviderScimTenant.yaml
 api_service_name: iam.googleapis.com
 api_version: v1
 api_resource_type_kind: WorkforcePoolProviderScimTenant
+supports_update: true
 fields:
     - api_field: baseUri
     - api_field: claimMapping

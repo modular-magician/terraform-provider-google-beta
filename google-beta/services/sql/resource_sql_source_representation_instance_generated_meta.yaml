@@ -6,6 +6,7 @@ source_file: products/sql/SourceRepresentationInstance.yaml
 api_service_name: sqladmin.googleapis.com
 api_version: v1beta4
 api_resource_type_kind: DatabaseInstance
+supports_update: false
 fields:
     - api_field: onPremisesConfiguration.caCertificate
       field: ca_certificate

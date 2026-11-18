@@ -5,6 +5,7 @@ generation_type: 'handwritten'
 api_service_name: 'compute.googleapis.com'
 api_version: 'beta'
 api_resource_type_kind: 'InstanceGroupManager'
+supports_update: true
 api_variant_patterns:
   - 'projects/{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}'
 fields:

@@ -6,6 +6,7 @@ source_file: products/compute/SslCertificate.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: SslCertificate
+supports_update: false
 fields:
     - api_field: certificate
     - api_field: id

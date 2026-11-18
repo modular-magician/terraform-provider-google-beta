@@ -6,6 +6,7 @@ source_file: products/datacatalog/PolicyTag.yaml
 api_service_name: datacatalog.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: PolicyTag
+supports_update: true
 fields:
     - api_field: childPolicyTags
     - api_field: description

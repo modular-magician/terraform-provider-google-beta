@@ -6,6 +6,7 @@ source_file: products/databasemigrationservice/MigrationJob.yaml
 api_service_name: datamigration.googleapis.com
 api_version: v1
 api_resource_type_kind: MigrationJob
+supports_update: true
 fields:
     - api_field: createTime
     - field: desired_state

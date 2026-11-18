@@ -6,6 +6,7 @@ source_file: products/tags/TagValue.yaml
 api_service_name: cloudresourcemanager.googleapis.com
 api_version: v3
 api_resource_type_kind: TagValue
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: description

@@ -6,6 +6,7 @@ source_file: products/compute/SslPolicy.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: SslPolicy
+supports_update: true
 fields:
     - api_field: creationTimestamp
     - api_field: customFeatures

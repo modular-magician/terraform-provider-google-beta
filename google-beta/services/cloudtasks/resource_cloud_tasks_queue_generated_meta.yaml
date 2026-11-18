@@ -6,6 +6,7 @@ source_file: products/cloudtasks/Queue.yaml
 api_service_name: cloudtasks.googleapis.com
 api_version: v2
 api_resource_type_kind: Queue
+supports_update: true
 fields:
     - api_field: appEngineRoutingOverride.host
     - api_field: appEngineRoutingOverride.instance

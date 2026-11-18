@@ -6,6 +6,7 @@ source_file: products/integrations/Client.yaml
 api_service_name: integrations.googleapis.com
 api_version: v1
 api_resource_type_kind: Client
+supports_update: false
 fields:
     - api_field: cloudKmsConfig.key
     - api_field: cloudKmsConfig.keyVersion

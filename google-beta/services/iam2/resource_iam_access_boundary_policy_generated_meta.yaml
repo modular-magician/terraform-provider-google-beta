@@ -6,6 +6,7 @@ source_file: products/iam2/AccessBoundaryPolicy.yaml
 api_service_name: iam.googleapis.com
 api_version: v2beta
 api_resource_type_kind: Policy
+supports_update: true
 fields:
     - api_field: displayName
     - api_field: etag

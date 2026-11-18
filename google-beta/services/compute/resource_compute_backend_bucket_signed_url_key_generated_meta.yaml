@@ -6,6 +6,7 @@ source_file: products/compute/BackendBucketSignedUrlKey.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: BackendBucket
+supports_update: false
 fields:
     - api_field: cdnPolicy.signedUrlKeyNames.backendBucket
       field: backend_bucket

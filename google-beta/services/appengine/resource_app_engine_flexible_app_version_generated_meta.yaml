@@ -6,6 +6,7 @@ source_file: products/appengine/FlexibleAppVersion.yaml
 api_service_name: appengine.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Version
+supports_update: true
 fields:
     - api_field: apiConfig.authFailAction
     - api_field: apiConfig.login

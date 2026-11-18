@@ -6,6 +6,7 @@ source_file: products/backupdr/AutoProtectionPolicyBinding.yaml
 api_service_name: backupdr.googleapis.com
 api_version: v1beta
 api_resource_type_kind: AutoProtectionPolicyBinding
+supports_update: false
 fields:
     - field: auto_protection_policy_binding_id
       provider_only: true

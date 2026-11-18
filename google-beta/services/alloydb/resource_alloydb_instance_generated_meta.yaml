@@ -6,6 +6,7 @@ source_file: products/alloydb/Instance.yaml
 api_service_name: alloydb.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Instance
+supports_update: true
 fields:
     - api_field: activationPolicy
     - api_field: annotations

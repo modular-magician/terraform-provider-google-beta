@@ -6,6 +6,7 @@ source_file: products/iam3/FolderAccessPolicy.yaml
 api_service_name: iam.googleapis.com
 api_version: v3beta
 api_resource_type_kind: AccessPolicy
+supports_update: true
 autogen_status: true
 autogen_version: 1
 fields:

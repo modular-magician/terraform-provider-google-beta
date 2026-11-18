@@ -6,6 +6,7 @@ source_file: products/kms/KeyRing.yaml
 api_service_name: cloudkms.googleapis.com
 api_version: v1
 api_resource_type_kind: KeyRing
+supports_update: false
 fields:
     - api_field: location
     - api_field: name

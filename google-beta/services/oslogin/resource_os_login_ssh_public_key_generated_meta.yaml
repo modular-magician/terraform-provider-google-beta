@@ -6,6 +6,7 @@ source_file: products/oslogin/SSHPublicKey.yaml
 api_service_name: oslogin.googleapis.com
 api_version: v1
 api_resource_type_kind: SshPublicKey
+supports_update: true
 fields:
     - api_field: expirationTimeUsec
     - api_field: fingerprint

@@ -6,6 +6,7 @@ source_file: products/networkservices/WasmPlugin.yaml
 api_service_name: networkservices.googleapis.com
 api_version: v1
 api_resource_type_kind: WasmPlugin
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: description

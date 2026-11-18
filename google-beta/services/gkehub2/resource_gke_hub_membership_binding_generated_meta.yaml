@@ -6,6 +6,7 @@ source_file: products/gkehub2/MembershipBinding.yaml
 api_service_name: gkehub.googleapis.com
 api_version: v1beta
 api_resource_type_kind: MembershipBinding
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: deleteTime

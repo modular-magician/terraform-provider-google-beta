@@ -6,6 +6,7 @@ source_file: products/compute/FutureReservation.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: FutureReservation
+supports_update: true
 fields:
     - api_field: aggregateReservation.reservedResources.accelerator.acceleratorCount
     - api_field: aggregateReservation.reservedResources.accelerator.acceleratorType

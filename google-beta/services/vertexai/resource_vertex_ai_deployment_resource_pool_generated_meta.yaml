@@ -6,6 +6,7 @@ source_file: products/vertexai/DeploymentResourcePool.yaml
 api_service_name: aiplatform.googleapis.com
 api_version: v1beta1
 api_resource_type_kind: DeploymentResourcePool
+supports_update: false
 fields:
     - api_field: createTime
     - api_field: dedicatedResources.autoscalingMetricSpecs.metricName

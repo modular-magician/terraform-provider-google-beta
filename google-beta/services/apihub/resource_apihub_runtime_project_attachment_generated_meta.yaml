@@ -6,6 +6,7 @@ source_file: products/apihub/RuntimeProjectAttachment.yaml
 api_service_name: apihub.googleapis.com
 api_version: v1
 api_resource_type_kind: RuntimeProjectAttachment
+supports_update: false
 api_variant_patterns:
     - projects/{project}/locations/{location}/runtimeProjectAttachments/{runtimeProjectAttachment}
 autogen_status: true

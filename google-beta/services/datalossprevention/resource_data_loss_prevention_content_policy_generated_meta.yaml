@@ -6,6 +6,7 @@ source_file: products/dlp/ContentPolicy.yaml
 api_service_name: dlp.googleapis.com
 api_version: v2
 api_resource_type_kind: ContentPolicy
+supports_update: true
 fields:
     - api_field: createTime
     - api_field: defaultAction.returnVerdict

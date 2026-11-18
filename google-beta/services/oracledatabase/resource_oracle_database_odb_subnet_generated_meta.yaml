@@ -6,6 +6,7 @@ source_file: products/oracledatabase/OdbSubnet.yaml
 api_service_name: oracledatabase.googleapis.com
 api_version: v1
 api_resource_type_kind: OdbSubnet
+supports_update: true
 autogen_status: true
 autogen_version: 1
 fields:

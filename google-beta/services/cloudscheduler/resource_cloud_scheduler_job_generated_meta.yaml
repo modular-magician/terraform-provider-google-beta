@@ -6,6 +6,7 @@ source_file: products/cloudscheduler/Job.yaml
 api_service_name: cloudscheduler.googleapis.com
 api_version: v1
 api_resource_type_kind: Job
+supports_update: true
 fields:
     - api_field: appEngineHttpTarget.appEngineRouting.instance
     - api_field: appEngineHttpTarget.appEngineRouting.service

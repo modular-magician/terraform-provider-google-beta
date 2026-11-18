@@ -6,6 +6,7 @@ source_file: products/compute/TargetHttpsProxy.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: TargetHttpsProxy
+supports_update: true
 fields:
     - api_field: certificateManagerCertificates
     - api_field: certificateMap

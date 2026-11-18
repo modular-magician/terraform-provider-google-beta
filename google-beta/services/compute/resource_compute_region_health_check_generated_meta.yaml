@@ -6,6 +6,7 @@ source_file: products/compute/RegionHealthCheck.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: HealthCheck
+supports_update: true
 api_variant_patterns:
     - projects/{project}/regions/{region}/healthChecks/{healthCheck}
 fields:

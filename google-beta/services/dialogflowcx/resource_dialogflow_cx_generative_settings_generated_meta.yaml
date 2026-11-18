@@ -6,6 +6,7 @@ source_file: products/dialogflowcx/GenerativeSettings.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v3beta1
 api_resource_type_kind: GenerativeSettings
+supports_update: true
 fields:
     - api_field: fallbackSettings.promptTemplates.displayName
     - api_field: fallbackSettings.promptTemplates.frozen

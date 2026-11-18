@@ -6,6 +6,7 @@ source_file: products/iamworkforcepool/WorkforcePoolProviderKey.yaml
 api_service_name: iam.googleapis.com
 api_version: v1
 api_resource_type_kind: WorkforcePoolProviderKey
+supports_update: false
 fields:
     - api_field: expireTime
     - api_field: keyData.format

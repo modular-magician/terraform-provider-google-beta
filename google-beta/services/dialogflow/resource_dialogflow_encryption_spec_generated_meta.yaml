@@ -6,6 +6,7 @@ source_file: products/dialogflow/EncryptionSpec.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: EncryptionSpec
+supports_update: false
 fields:
     - api_field: encryptionSpec.kmsKey
     - api_field: location

@@ -6,6 +6,7 @@ source_file: products/appengine/FirewallRule.yaml
 api_service_name: appengine.googleapis.com
 api_version: v1beta
 api_resource_type_kind: FirewallRule
+supports_update: true
 fields:
     - api_field: action
     - api_field: description

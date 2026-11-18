@@ -6,6 +6,7 @@ source_file: products/dataflow/ConfigStoreSetting.yaml
 api_service_name: dataflow.googleapis.com
 api_version: v1b3
 api_resource_type_kind: ConfigStoreSetting
+supports_update: true
 api_variant_patterns:
     - projects/{project}/locations/{location}/configStoreSettings/{config_store_setting}
     - folders/{folder}/locations/{location}/configStoreSettings/{config_store_setting}

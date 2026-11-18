@@ -6,6 +6,7 @@ source_file: products/resourcemanagerv3/Capability.yaml
 api_service_name: cloudresourcemanager.googleapis.com
 api_version: v3
 api_resource_type_kind: Capability
+supports_update: true
 fields:
     - field: capability_name
       provider_only: true

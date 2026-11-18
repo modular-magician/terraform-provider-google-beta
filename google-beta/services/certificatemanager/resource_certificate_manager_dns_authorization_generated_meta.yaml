@@ -6,6 +6,7 @@ source_file: products/certificatemanager/DnsAuthorization.yaml
 api_service_name: certificatemanager.googleapis.com
 api_version: v1
 api_resource_type_kind: DnsAuthorization
+supports_update: true
 fields:
     - api_field: description
     - api_field: dnsResourceRecord.data

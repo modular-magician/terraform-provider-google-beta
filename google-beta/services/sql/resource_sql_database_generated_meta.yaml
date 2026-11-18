@@ -6,6 +6,7 @@ source_file: products/sql/Database.yaml
 api_service_name: sqladmin.googleapis.com
 api_version: v1beta4
 api_resource_type_kind: Database
+supports_update: true
 fields:
     - api_field: charset
     - api_field: collation

@@ -6,6 +6,7 @@ source_file: products/compute/ExternalVpnGateway.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: ExternalVpnGateway
+supports_update: true
 fields:
     - api_field: description
     - field: effective_labels

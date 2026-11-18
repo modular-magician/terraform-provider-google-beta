@@ -6,6 +6,7 @@ source_file: products/dialogflow/SipTrunk.yaml
 api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: SipTrunk
+supports_update: true
 fields:
     - api_field: connections.connectionId
     - api_field: connections.errorDetails.code

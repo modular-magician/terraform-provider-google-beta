@@ -6,6 +6,7 @@ source_file: products/iamworkforcepool/OauthClient.yaml
 api_service_name: iam.googleapis.com
 api_version: v1
 api_resource_type_kind: OauthClient
+supports_update: true
 fields:
     - api_field: allowedGrantTypes
     - api_field: allowedRedirectUris

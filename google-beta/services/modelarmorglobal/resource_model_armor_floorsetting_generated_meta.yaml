@@ -6,6 +6,7 @@ source_file: products/modelarmorglobal/Floorsetting.yaml
 api_service_name: modelarmor.googleapis.com
 api_version: v1beta
 api_resource_type_kind: Floorsetting
+supports_update: true
 fields:
     - api_field: aiPlatformFloorSetting.enableCloudLogging
     - api_field: aiPlatformFloorSetting.inspectAndBlock

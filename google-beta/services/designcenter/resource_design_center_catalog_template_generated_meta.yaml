@@ -6,6 +6,7 @@ source_file: products/designcenter/CatalogTemplate.yaml
 api_service_name: designcenter.googleapis.com
 api_version: v1
 api_resource_type_kind: CatalogTemplate
+supports_update: true
 fields:
     - field: catalog
       provider_only: true

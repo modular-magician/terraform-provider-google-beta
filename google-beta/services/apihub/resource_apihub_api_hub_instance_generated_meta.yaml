@@ -6,6 +6,7 @@ source_file: products/apihub/ApiHubInstance.yaml
 api_service_name: apihub.googleapis.com
 api_version: v1
 api_resource_type_kind: ApiHubInstance
+supports_update: false
 autogen_status: true
 autogen_version: 1
 fields:

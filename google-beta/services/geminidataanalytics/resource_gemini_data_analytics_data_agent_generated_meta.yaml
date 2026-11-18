@@ -6,6 +6,7 @@ source_file: products/geminidataanalytics/DataAgent.yaml
 api_service_name: geminidataanalytics.googleapis.com
 api_version: v1beta
 api_resource_type_kind: DataAgent
+supports_update: true
 fields:
     - api_field: createTime
     - field: data_agent_id

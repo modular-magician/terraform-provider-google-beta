@@ -6,6 +6,7 @@ source_file: products/compute/RouterNatAddress.yaml
 api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: Router
+supports_update: true
 fields:
     - api_field: nats.drainNatIps
       field: drain_nat_ips
