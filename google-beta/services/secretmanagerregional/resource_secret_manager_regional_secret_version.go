@@ -691,15 +691,14 @@ func expandSecretManagerRegionalRegionalSecretVersionPayloadSecretData(v interfa
 	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
 }
 func expandSecretManagerRegionalRegionalSecretVersionPayloadSecretDataWo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (interface{}, error) {
-	path := cty.GetAttrPath("secret_data_wo")
-	woVal, _ := d.GetRawConfigAt(path)
-	if !woVal.Type().Equals(cty.String) || woVal.IsNull() {
+	woVal := tpgresource.GetRawConfigAttributeAsString(d, "secret_data_wo")
+	if woVal == "" {
 		return nil, nil
 	}
 	if d.Get("is_secret_data_base64").(bool) {
-		return woVal.AsString(), nil
+		return woVal, nil
 	}
-	return base64.StdEncoding.EncodeToString([]byte(woVal.AsString())), nil
+	return base64.StdEncoding.EncodeToString([]byte(woVal)), nil
 }
 
 func resourceSecretManagerRegionalRegionalSecretVersionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
