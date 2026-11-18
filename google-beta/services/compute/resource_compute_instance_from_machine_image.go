@@ -54,6 +54,8 @@ func computeInstanceFromMachineImageSchema() map[string]*schema.Schema {
 		s[field].Required = false
 		s[field].Optional = true
 	}
+	s["network_interface"].ForceNew = true
+	s["network_interface"].Elem.(*schema.Resource).Schema["vlan"].ForceNew = true
 
 	recurseOnSchema(s, func(field *schema.Schema) {
 		// We don't want to accidentally use default values to override the instance

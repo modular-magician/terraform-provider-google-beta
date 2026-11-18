@@ -18,6 +18,7 @@ package compute
 
 import (
 	"fmt"
+	"maps"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
@@ -184,6 +185,69 @@ func computeInstanceCreateUpdateWhileStoppedCall(d *schema.ResourceData, config 
 		}
 		return nil
 	}
+}
+
+func resolveDynamicNicParentName(instNics []interface{}) (string, error) {
+	for i := len(instNics) - 1; i >= 0; i-- {
+		nic, _ := instNics[i].(map[string]interface{})
+		if parentName, _ := nic["parentNicName"].(string); parentName != "" {
+			return parentName, nil
+		}
+		if flattenNetworkInterfaceInt64(nic["vlan"]) == 0 {
+			if name, _ := nic["name"].(string); name != "" {
+				return name, nil
+			}
+		}
+	}
+	return "", fmt.Errorf("cannot determine parent_nic_name for dynamic network_interface")
+}
+
+func computeInstanceAddNetworkInterface(d *schema.ResourceData, config *transport_tpg.Config, networkInterface map[string]interface{}, parentNicName, project, userAgent string) error {
+	body := maps.Clone(networkInterface)
+	body["parentNicName"] = parentNicName
+
+	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instances/{{name}}/addNetworkInterface")
+	if err != nil {
+		return err
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "POST",
+		Project:   project,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      body,
+	})
+	if err != nil {
+		return fmt.Errorf("error adding dynamic network_interface: %w", err)
+	}
+
+	return ComputeOperationWaitTime(config, res, project, "dynamic network_interface to add", userAgent, d.Timeout(schema.TimeoutUpdate))
+}
+
+func computeInstanceDeleteNetworkInterface(d *schema.ResourceData, config *transport_tpg.Config, nicName, project, userAgent string) error {
+	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instances/{{name}}/deleteNetworkInterface")
+	if err != nil {
+		return err
+	}
+	url, err = transport_tpg.AddQueryParams(url, map[string]string{"networkInterfaceName": nicName})
+	if err != nil {
+		return err
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "POST",
+		Project:   project,
+		RawURL:    url,
+		UserAgent: userAgent,
+	})
+	if err != nil {
+		return fmt.Errorf("error deleting dynamic network_interface %q: %w", nicName, err)
+	}
+
+	return ComputeOperationWaitTime(config, res, project, "dynamic network_interface to delete", userAgent, d.Timeout(schema.TimeoutUpdate))
 }
 
 func computeInstanceAddSecurityPolicy(d *schema.ResourceData, config *transport_tpg.Config, securityPolicyWithNics map[string][]string, project, zone, userAgent, instanceName string) error {

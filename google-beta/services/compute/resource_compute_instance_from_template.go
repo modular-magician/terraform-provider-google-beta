@@ -60,6 +60,8 @@ func computeInstanceFromTemplateSchema() map[string]*schema.Schema {
 		s[field].Required = false
 		s[field].Optional = true
 	}
+	s["network_interface"].ForceNew = true
+	s["network_interface"].Elem.(*schema.Resource).Schema["vlan"].ForceNew = true
 
 	// Remove deprecated/removed fields that are never d.Set. We can't
 	// programmatically remove all of them, because some of them still have d.Set

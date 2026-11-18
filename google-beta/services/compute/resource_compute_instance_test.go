@@ -5818,10 +5818,32 @@ func TestAccComputeInstance_guestOsFeatures(t *testing.T) {
 func TestAccComputeInstance_dynamicNic(t *testing.T) {
 	t.Parallel()
 
+	var instance map[string]interface{}
+	var initialInstanceId string
+
 	context := map[string]interface{}{
 		"instance_name": fmt.Sprintf("tf-test-%s", acctest.RandString(t, 10)),
 		"region":        "us-central1",
 		"zone":          "us-central1-a",
+	}
+
+	checkSameInstanceId := func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources["google_compute_instance.foobar"]
+		if !ok {
+			return fmt.Errorf("resource google_compute_instance.foobar not found")
+		}
+		got := rs.Primary.Attributes["instance_id"]
+		if got == "" {
+			return fmt.Errorf("instance_id is empty")
+		}
+		if initialInstanceId == "" {
+			initialInstanceId = got
+			return nil
+		}
+		if got != initialInstanceId {
+			return fmt.Errorf("expected instance_id %q (in-place update), got %q (instance was replaced)", initialInstanceId, got)
+		}
+		return nil
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -5831,8 +5853,88 @@ func TestAccComputeInstance_dynamicNic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeInstance_dynamicNic1(context),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeInstanceExists(t, "google_compute_instance.foobar", &instance),
+					checkSameInstanceId,
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.#", "2"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.1.name", "nic0.2"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.1.parent_nic_name", "nic0"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.1.vlan", "2"),
+				),
 			},
-			computeInstanceImportStep(context["zone"].(string), context["instance_name"].(string), []string{"allow_stopping_for_update"}),
+			computeInstanceImportStep(context["zone"].(string), context["instance_name"].(string), []string{}),
+			{
+				// Append a second trailing dynamic VLAN NIC in place via addNetworkInterface.
+				Config: testAccComputeInstance_dynamicNicConfig(context, `
+	network_interface {
+		subnetwork = google_compute_subnetwork.subnetwork2.id
+		vlan       = 2
+	}
+
+	network_interface {
+		subnetwork = google_compute_subnetwork.subnetwork3.id
+		vlan       = 3
+	}`),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_instance.foobar", plancheck.ResourceActionUpdate),
+					},
+				},
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeInstanceExists(t, "google_compute_instance.foobar", &instance),
+					checkSameInstanceId,
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.#", "3"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.2.name", "nic0.3"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.2.parent_nic_name", "nic0"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.2.vlan", "3"),
+				),
+			},
+			computeInstanceImportStep(context["zone"].(string), context["instance_name"].(string), []string{}),
+			{
+				// Removing a non-trailing dynamic NIC (changing vlan at index 1) must force replacement.
+				Config: testAccComputeInstance_dynamicNicConfig(context, `
+	network_interface {
+		subnetwork = google_compute_subnetwork.subnetwork3.id
+		vlan       = 3
+	}`),
+				PlanOnly:           true,
+				ExpectNonEmptyPlan: true,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PostApplyPreRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_instance.foobar", plancheck.ResourceActionReplace),
+					},
+				},
+			},
+			{
+				// Remove trailing dynamic VLAN NICs in place via deleteNetworkInterface.
+				Config: testAccComputeInstance_dynamicNicConfig(context, ""),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_instance.foobar", plancheck.ResourceActionUpdate),
+					},
+				},
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeInstanceExists(t, "google_compute_instance.foobar", &instance),
+					checkSameInstanceId,
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.#", "1"),
+					resource.TestCheckResourceAttr("google_compute_instance.foobar", "network_interface.0.name", "nic0"),
+				),
+			},
+			computeInstanceImportStep(context["zone"].(string), context["instance_name"].(string), []string{}),
+			{
+				// Adding a non-dynamic NIC (vlan unset) must force replacement.
+				Config: testAccComputeInstance_dynamicNicConfig(context, `
+	network_interface {
+		subnetwork = google_compute_subnetwork.subnetwork2.id
+	}`),
+				PlanOnly:           true,
+				ExpectNonEmptyPlan: true,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PostApplyPreRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_instance.foobar", plancheck.ResourceActionReplace),
+					},
+				},
+			},
 		},
 	})
 }
@@ -5915,7 +6017,7 @@ func TestAccComputeInstance_VSSWindows(t *testing.T) {
 	})
 }
 
-func testAccComputeInstance_dynamicNic1(context map[string]interface{}) string {
+func testAccComputeInstance_dynamicNicNetworks(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "network1" {
   name                    = "%{instance_name}-network1"
@@ -5923,10 +6025,9 @@ resource "google_compute_network" "network1" {
 }
 
 resource "google_compute_subnetwork" "subnetwork1" {
-  name    = "%{instance_name}-subnetwork1"
-  network = google_compute_network.network1.id
-  region  = "%{region}"
-
+  name          = "%{instance_name}-subnetwork1"
+  network       = google_compute_network.network1.id
+  region        = "%{region}"
   ip_cidr_range = "10.1.0.0/16"
 }
 
@@ -5936,16 +6037,31 @@ resource "google_compute_network" "network2" {
 }
 
 resource "google_compute_subnetwork" "subnetwork2" {
-  name    = "%{instance_name}-subnetwork2"
-  network = google_compute_network.network2.id
-  region  = "%{region}"
-
+  name          = "%{instance_name}-subnetwork2"
+  network       = google_compute_network.network2.id
+  region        = "%{region}"
   ip_cidr_range = "10.2.0.0/16"
 }
 
+resource "google_compute_network" "network3" {
+  name                    = "%{instance_name}-network3"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnetwork3" {
+  name          = "%{instance_name}-subnetwork3"
+  network       = google_compute_network.network3.id
+  region        = "%{region}"
+  ip_cidr_range = "10.3.0.0/16"
+}
+`, context)
+}
+
+func testAccComputeInstance_dynamicNic1(context map[string]interface{}) string {
+	return testAccComputeInstance_dynamicNicNetworks(context) + acctest.Nprintf(`
 resource "google_compute_instance" "foobar" {
 	name         = "%{instance_name}"
-	machine_type = "e2-medium"
+	machine_type = "e2-standard-4"
 	zone         = "%{zone}"
 
 	boot_disk {
@@ -5954,16 +6070,43 @@ resource "google_compute_instance" "foobar" {
 		}
 	}
 
-	network_interface { # nic0
+	network_interface {
 		subnetwork = google_compute_subnetwork.subnetwork1.id
 	}
 
-	network_interface { # nic0.2
-		subnetwork      = google_compute_subnetwork.subnetwork2.id
-        vlan            = 2
+	network_interface {
+		subnetwork = google_compute_subnetwork.subnetwork2.id
+		vlan       = 2
 	}
 }
 `, context)
+}
+
+func testAccComputeInstance_dynamicNicConfig(context map[string]interface{}, extraNics string) string {
+	cfgContext := map[string]interface{}{
+		"instance_name": context["instance_name"],
+		"region":        context["region"],
+		"zone":          context["zone"],
+		"extra_nics":    extraNics,
+	}
+	return testAccComputeInstance_dynamicNicNetworks(cfgContext) + acctest.Nprintf(`
+resource "google_compute_instance" "foobar" {
+	name         = "%{instance_name}"
+	machine_type = "e2-standard-4"
+	zone         = "%{zone}"
+
+	boot_disk {
+		initialize_params {
+			image = "debian-cloud/debian-13"
+		}
+	}
+
+	network_interface {
+		subnetwork = google_compute_subnetwork.subnetwork1.id
+	}
+%{extra_nics}
+}
+`, cfgContext)
 }
 
 func testAccCheckComputeInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {

@@ -179,6 +179,50 @@ func ValidateSubnetworkProjectFunc(d tpgresource.TerraformResourceDiff) error {
 	return nil
 }
 
+// forceNewIfNetworkInterfaceNotUpdatable allows in-place addition and removal of trailing
+// dynamic VLAN network interfaces (vlan in 2..255), while forcing replacement when non-dynamic
+// interfaces are added or removed or when vlan changes on an existing interface.
+func forceNewIfNetworkInterfaceNotUpdatable(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	if d.Id() == "" || !d.HasChange("network_interface") {
+		return nil
+	}
+	if !d.NewValueKnown("network_interface.#") {
+		return d.ForceNew("network_interface")
+	}
+	oldCountRaw, newCountRaw := d.GetChange("network_interface.#")
+	oldCount, newCount := oldCountRaw.(int), newCountRaw.(int)
+	if oldCount == 0 || newCount == 0 {
+		return d.ForceNew("network_interface")
+	}
+
+	for i := 0; i < min(oldCount, newCount); i++ {
+		vlanKey := fmt.Sprintf("network_interface.%d.vlan", i)
+		if d.HasChange(vlanKey) {
+			return d.ForceNew(vlanKey)
+		}
+		if !d.NewValueKnown(vlanKey) && oldCount != newCount {
+			return d.ForceNew("network_interface")
+		}
+	}
+
+	for i := oldCount; i < newCount; i++ {
+		vlanKey := fmt.Sprintf("network_interface.%d.vlan", i)
+		if !d.NewValueKnown(vlanKey) {
+			return d.ForceNew("network_interface")
+		}
+		if _, newVlan := d.GetChange(vlanKey); newVlan.(int) == 0 {
+			return d.ForceNew("network_interface")
+		}
+	}
+	for i := newCount; i < oldCount; i++ {
+		vlanKey := fmt.Sprintf("network_interface.%d.vlan", i)
+		if oldVlan, _ := d.GetChange(vlanKey); oldVlan.(int) == 0 {
+			return d.ForceNew("network_interface")
+		}
+	}
+	return nil
+}
+
 // network_interface.[d].network_ip can only change when subnet/network
 // is also changing. Validate that if network_ip is changing this scenario
 // holds up to par.
@@ -189,11 +233,7 @@ func forceNewIfNetworkIPNotUpdatable(ctx context.Context, d *schema.ResourceDiff
 
 func forceNewIfNetworkIPNotUpdatableFunc(d tpgresource.TerraformResourceDiff) error {
 	oldCount, newCount := d.GetChange("network_interface.#")
-	if oldCount.(int) != newCount.(int) {
-		return nil
-	}
-
-	for i := 0; i < newCount.(int); i++ {
+	for i := 0; i < min(oldCount.(int), newCount.(int)); i++ {
 		prefix := fmt.Sprintf("network_interface.%d", i)
 		networkKey := prefix + ".network"
 		oldN, newN := d.GetChange(networkKey)
@@ -649,7 +689,6 @@ func ResourceComputeInstance() *schema.Resource {
 			"network_interface": {
 				Type:        schema.TypeList,
 				Required:    true,
-				ForceNew:    true,
 				Description: `The networks attached to the instance.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -701,7 +740,6 @@ func ResourceComputeInstance() *schema.Resource {
 						"vlan": {
 							Type:         schema.TypeInt,
 							Optional:     true,
-							ForceNew:     true,
 							ValidateFunc: validation.IntBetween(2, 255),
 							Description:  `VLAN tag of a dynamic network interface, must be an integer in the range from 2 to 255 inclusively.`,
 						},
@@ -1786,6 +1824,7 @@ be from 0 to 999,999,999 inclusive.`,
 				return d.HasChange("boot_disk.0.initialize_params.0.provisioned_iops") && !strings.Contains(d.Get("boot_disk.0.initialize_params.0.type").(string), "hyperdisk")
 			}),
 			validateSubnetworkProject,
+			forceNewIfNetworkInterfaceNotUpdatable,
 			forceNewIfNetworkIPNotUpdatable,
 			tpgresource.SetLabelsDiff,
 		),
@@ -2985,8 +3024,33 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 	instNics, _ := instance["networkInterfaces"].([]interface{})
 
-	// Sanity check
-	if len(networkInterfaces) != len(instNics) {
+	// Remove trailing dynamic VLAN network interfaces in place.
+	if len(networkInterfaces) < len(instNics) {
+		for i := len(instNics) - 1; i >= len(networkInterfaces); i-- {
+			instNi, ok := instNics[i].(map[string]interface{})
+			if !ok || flattenNetworkInterfaceInt64(instNi["vlan"]) == 0 {
+				return fmt.Errorf("Cannot delete non-dynamic network interface at index %d in place", i)
+			}
+			nicName, _ := instNi["name"].(string)
+			if err := computeInstanceDeleteNetworkInterface(d, config, nicName, project, userAgent); err != nil {
+				return err
+			}
+		}
+		instance, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   project,
+			RawURL:    instanceUrl,
+			UserAgent: userAgent,
+		})
+		if err != nil {
+			return err
+		}
+		instNics, _ = instance["networkInterfaces"].([]interface{})
+	}
+
+	existingNicCount := len(instNics)
+	if existingNicCount == 0 || existingNicCount > len(networkInterfaces) {
 		return fmt.Errorf("Instance had unexpected number of network interfaces: %d", len(instNics))
 	}
 
@@ -3013,7 +3077,7 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	var updatesToNIWhileStopped []func(inst map[string]interface{}) error
-	for i := 0; i < len(networkInterfaces); i++ {
+	for i := 0; i < existingNicCount; i++ {
 		prefix := fmt.Sprintf("network_interface.%d", i)
 		networkInterface, _ := networkInterfaces[i].(map[string]interface{})
 		instNetworkInterface, _ := instNics[i].(map[string]interface{})
@@ -4148,6 +4212,24 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 				"starting instance", userAgent, d.Timeout(schema.TimeoutUpdate))
 			if opErr != nil {
 				return opErr
+			}
+		}
+	}
+
+	// Add trailing dynamic VLAN network interfaces in place.
+	if len(networkInterfaces) > existingNicCount {
+		instNics, _ = instance["networkInterfaces"].([]interface{})
+		parentNicName, err := resolveDynamicNicParentName(instNics)
+		if err != nil {
+			return err
+		}
+		for i := existingNicCount; i < len(networkInterfaces); i++ {
+			niMap, ok := networkInterfaces[i].(map[string]interface{})
+			if !ok || flattenNetworkInterfaceInt64(niMap["vlan"]) == 0 {
+				return fmt.Errorf("Cannot add non-dynamic network interface at index %d in place", i)
+			}
+			if err := computeInstanceAddNetworkInterface(d, config, niMap, parentNicName, project, userAgent); err != nil {
+				return err
 			}
 		}
 	}
