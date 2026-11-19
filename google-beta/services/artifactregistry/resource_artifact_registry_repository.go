@@ -2292,17 +2292,24 @@ func expandArtifactRegistryRepositoryVirtualRepositoryConfig(v interface{}, d tp
 		return nil, nil
 	}
 	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
+	if len(l) == 0 {
 		return nil, nil
 	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
 
+	transformed := make(map[string]interface{})
+	// The API rejects a virtual repository without virtualRepositoryConfig, but
+	// accepts an explicit empty upstreamPolicies list. An empty block reaches
+	// us as a nil element, so always send the list to keep the object non-empty.
+	transformed["upstreamPolicies"] = []interface{}{}
+	if l[0] == nil {
+		return transformed, nil
+	}
+
+	original := l[0].(map[string]interface{})
 	transformedUpstreamPolicies, err := expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPolicies(original["upstream_policies"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUpstreamPolicies); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if transformedUpstreamPolicies != nil {
 		transformed["upstreamPolicies"] = transformedUpstreamPolicies
 	}
 
@@ -2322,42 +2329,19 @@ func expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPolicies(v i
 		original := raw.(map[string]interface{})
 		transformed := make(map[string]interface{})
 
-		transformedId, err := expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPoliciesId(original["id"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["id"] = transformedId
+		if val := reflect.ValueOf(original["id"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["id"] = original["id"]
 		}
-
-		transformedRepository, err := expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPoliciesRepository(original["repository"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["repository"] = transformedRepository
+		if val := reflect.ValueOf(original["repository"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["repository"] = original["repository"]
 		}
-
-		transformedPriority, err := expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPoliciesPriority(original["priority"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPriority); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["priority"] = transformedPriority
+		if val := reflect.ValueOf(original["priority"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["priority"] = original["priority"]
 		}
 
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPoliciesId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPoliciesRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandArtifactRegistryRepositoryVirtualRepositoryConfigUpstreamPoliciesPriority(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandArtifactRegistryRepositoryCleanupPolicies(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
