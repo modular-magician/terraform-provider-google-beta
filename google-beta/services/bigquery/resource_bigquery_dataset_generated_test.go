@@ -673,11 +673,12 @@ func testAccCheckBigQueryDatasetDestroyProducer(t *testing.T) func(s *terraform.
 			}
 
 			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: config.UserAgent,
+				Config:               config,
+				Method:               "GET",
+				Project:              billingProject,
+				RawURL:               url,
+				UserAgent:            config.UserAgent,
+				ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{bigquery.IsBigQueryDatasetBackfillError},
 			})
 			if err == nil {
 				return fmt.Errorf("BigQueryDataset still exists at %s", url)
