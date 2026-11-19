@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_snapshot_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeSnapshotIamSchema, ComputeSnapshotIamUpdaterProducer, ComputeSnapshotIdParseFunc),
+		Schema:      NewComputeSnapshotIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_snapshot_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeSnapshotIamSchema, ComputeSnapshotIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeSnapshotIamBindingResource returns the google_compute_snapshot_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeSnapshotIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeSnapshotIamSchema,
+		ComputeSnapshotIamUpdaterProducer,
+		ComputeSnapshotIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeSnapshotIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeSnapshotIamMemberResource returns the google_compute_snapshot_iam_member

@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_workbench_instance_iam_binding",
 		ProductName: "Workbench",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(WorkbenchInstanceIamSchema, WorkbenchInstanceIamUpdaterProducer, WorkbenchInstanceIdParseFunc),
+		Schema:      NewWorkbenchInstanceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_workbench_instance_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(WorkbenchInstanceIamSchema, WorkbenchInstanceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewWorkbenchInstanceIamBindingResource returns the google_workbench_instance_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewWorkbenchInstanceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		WorkbenchInstanceIamSchema,
+		WorkbenchInstanceIamUpdaterProducer,
+		WorkbenchInstanceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(WorkbenchInstanceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewWorkbenchInstanceIamMemberResource returns the google_workbench_instance_iam_member

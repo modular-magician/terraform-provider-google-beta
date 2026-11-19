@@ -58,6 +58,9 @@ func TestAccIAMBetaWorkloadIdentityPoolIamBindingGenerated(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.RequireAbove(tfversion.Version1_12_0), // resource identity min version
+		},
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
@@ -79,6 +82,11 @@ func TestAccIAMBetaWorkloadIdentityPoolIamBindingGenerated(t *testing.T) {
 				ImportStateIdFunc: generateIAMBetaWorkloadIdentityPoolIAMBindingStateID("google_iam_workload_identity_pool_iam_binding.foo"),
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				ResourceName:    "google_iam_workload_identity_pool_iam_binding.foo",
+				ImportState:     true,
+				ImportStateKind: resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

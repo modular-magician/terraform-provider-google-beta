@@ -55,6 +55,9 @@ func TestAccVertexAIFeatureOnlineStoreFeatureviewIamBindingGenerated(t *testing.
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.RequireAbove(tfversion.Version1_12_0), // resource identity min version
+		},
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
@@ -76,6 +79,11 @@ func TestAccVertexAIFeatureOnlineStoreFeatureviewIamBindingGenerated(t *testing.
 				ImportStateIdFunc: generateVertexAIFeatureOnlineStoreFeatureviewIAMBindingStateID("google_vertex_ai_feature_online_store_featureview_iam_binding.foo"),
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				ResourceName:    "google_vertex_ai_feature_online_store_featureview_iam_binding.foo",
+				ImportState:     true,
+				ImportStateKind: resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

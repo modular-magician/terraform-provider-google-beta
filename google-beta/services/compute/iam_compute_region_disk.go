@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_region_disk_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeRegionDiskIamSchema, ComputeRegionDiskIamUpdaterProducer, ComputeRegionDiskIdParseFunc),
+		Schema:      NewComputeRegionDiskIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_region_disk_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeRegionDiskIamSchema, ComputeRegionDiskIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeRegionDiskIamBindingResource returns the google_compute_region_disk_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeRegionDiskIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeRegionDiskIamSchema,
+		ComputeRegionDiskIamUpdaterProducer,
+		ComputeRegionDiskIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeRegionDiskIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeRegionDiskIamMemberResource returns the google_compute_region_disk_iam_member

@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_privateca_certificate_template_iam_binding",
 		ProductName: "Privateca",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(PrivatecaCertificateTemplateIamSchema, PrivatecaCertificateTemplateIamUpdaterProducer, PrivatecaCertificateTemplateIdParseFunc),
+		Schema:      NewPrivatecaCertificateTemplateIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_privateca_certificate_template_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(PrivatecaCertificateTemplateIamSchema, PrivatecaCertificateTemplateIamUpdaterProducer),
 	}.Register()
+}
+
+// NewPrivatecaCertificateTemplateIamBindingResource returns the google_privateca_certificate_template_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewPrivatecaCertificateTemplateIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		PrivatecaCertificateTemplateIamSchema,
+		PrivatecaCertificateTemplateIamUpdaterProducer,
+		PrivatecaCertificateTemplateIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(PrivatecaCertificateTemplateIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewPrivatecaCertificateTemplateIamMemberResource returns the google_privateca_certificate_template_iam_member

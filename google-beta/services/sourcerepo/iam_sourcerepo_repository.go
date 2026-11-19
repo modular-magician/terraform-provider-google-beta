@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_sourcerepo_repository_iam_binding",
 		ProductName: "SourceRepo",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(SourceRepoRepositoryIamSchema, SourceRepoRepositoryIamUpdaterProducer, SourceRepoRepositoryIdParseFunc),
+		Schema:      NewSourceRepoRepositoryIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_sourcerepo_repository_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(SourceRepoRepositoryIamSchema, SourceRepoRepositoryIamUpdaterProducer),
 	}.Register()
+}
+
+// NewSourceRepoRepositoryIamBindingResource returns the google_sourcerepo_repository_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewSourceRepoRepositoryIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		SourceRepoRepositoryIamSchema,
+		SourceRepoRepositoryIamUpdaterProducer,
+		SourceRepoRepositoryIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(SourceRepoRepositoryIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewSourceRepoRepositoryIamMemberResource returns the google_sourcerepo_repository_iam_member

@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_data_catalog_policy_tag_iam_binding",
 		ProductName: "DataCatalog",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataCatalogPolicyTagIamSchema, DataCatalogPolicyTagIamUpdaterProducer, DataCatalogPolicyTagIdParseFunc),
+		Schema:      NewDataCatalogPolicyTagIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_data_catalog_policy_tag_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataCatalogPolicyTagIamSchema, DataCatalogPolicyTagIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataCatalogPolicyTagIamBindingResource returns the google_data_catalog_policy_tag_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataCatalogPolicyTagIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataCatalogPolicyTagIamSchema,
+		DataCatalogPolicyTagIamUpdaterProducer,
+		DataCatalogPolicyTagIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataCatalogPolicyTagIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewDataCatalogPolicyTagIamMemberResource returns the google_data_catalog_policy_tag_iam_member

@@ -54,6 +54,9 @@ func TestAccBiglakeIcebergIcebergCatalogIamBindingGenerated(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.RequireAbove(tfversion.Version1_12_0), // resource identity min version
+		},
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
@@ -75,6 +78,11 @@ func TestAccBiglakeIcebergIcebergCatalogIamBindingGenerated(t *testing.T) {
 				ImportStateIdFunc: generateBiglakeIcebergIcebergCatalogIAMBindingStateID("google_biglake_iceberg_catalog_iam_binding.foo"),
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				ResourceName:    "google_biglake_iceberg_catalog_iam_binding.foo",
+				ImportState:     true,
+				ImportStateKind: resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_dataplex_aspect_type_iam_binding",
 		ProductName: "Dataplex",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataplexAspectTypeIamSchema, DataplexAspectTypeIamUpdaterProducer, DataplexAspectTypeIdParseFunc, tpgiamresource.IamWithMaxBackoffSeconds(1200)),
+		Schema:      NewDataplexAspectTypeIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_dataplex_aspect_type_iam_member",
@@ -64,6 +64,19 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataplexAspectTypeIamSchema, DataplexAspectTypeIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataplexAspectTypeIamBindingResource returns the google_dataplex_aspect_type_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataplexAspectTypeIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataplexAspectTypeIamSchema,
+		DataplexAspectTypeIamUpdaterProducer,
+		DataplexAspectTypeIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataplexAspectTypeIamParentParentResourceIdentityParser),
+		tpgiamresource.IamWithMaxBackoffSeconds(1200),
+	)
 }
 
 // NewDataplexAspectTypeIamMemberResource returns the google_dataplex_aspect_type_iam_member

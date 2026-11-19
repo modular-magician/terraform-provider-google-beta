@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_iap_web_cloud_run_service_iam_binding",
 		ProductName: "Iap",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(IapWebCloudRunServiceIamSchema, IapWebCloudRunServiceIamUpdaterProducer, IapWebCloudRunServiceIdParseFunc),
+		Schema:      NewIapWebCloudRunServiceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_iap_web_cloud_run_service_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(IapWebCloudRunServiceIamSchema, IapWebCloudRunServiceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewIapWebCloudRunServiceIamBindingResource returns the google_iap_web_cloud_run_service_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewIapWebCloudRunServiceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		IapWebCloudRunServiceIamSchema,
+		IapWebCloudRunServiceIamUpdaterProducer,
+		IapWebCloudRunServiceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(IapWebCloudRunServiceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewIapWebCloudRunServiceIamMemberResource returns the google_iap_web_cloud_run_service_iam_member

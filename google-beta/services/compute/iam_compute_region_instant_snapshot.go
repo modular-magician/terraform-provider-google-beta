@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_region_instant_snapshot_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeRegionInstantSnapshotIamSchema, ComputeRegionInstantSnapshotIamUpdaterProducer, ComputeRegionInstantSnapshotIdParseFunc),
+		Schema:      NewComputeRegionInstantSnapshotIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_region_instant_snapshot_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeRegionInstantSnapshotIamSchema, ComputeRegionInstantSnapshotIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeRegionInstantSnapshotIamBindingResource returns the google_compute_region_instant_snapshot_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeRegionInstantSnapshotIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeRegionInstantSnapshotIamSchema,
+		ComputeRegionInstantSnapshotIamUpdaterProducer,
+		ComputeRegionInstantSnapshotIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeRegionInstantSnapshotIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeRegionInstantSnapshotIamMemberResource returns the google_compute_region_instant_snapshot_iam_member

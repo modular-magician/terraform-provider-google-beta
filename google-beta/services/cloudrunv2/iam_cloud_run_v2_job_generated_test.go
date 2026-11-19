@@ -53,6 +53,9 @@ func TestAccCloudRunV2JobIamBindingGenerated(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.RequireAbove(tfversion.Version1_12_0), // resource identity min version
+		},
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
@@ -74,6 +77,11 @@ func TestAccCloudRunV2JobIamBindingGenerated(t *testing.T) {
 				ImportStateIdFunc: generateCloudRunV2JobIAMBindingStateID("google_cloud_run_v2_job_iam_binding.foo"),
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				ResourceName:    "google_cloud_run_v2_job_iam_binding.foo",
+				ImportState:     true,
+				ImportStateKind: resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

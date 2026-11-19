@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_bigquery_routine_iam_binding",
 		ProductName: "BigQuery",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(BigQueryRoutineIamSchema, BigQueryRoutineIamUpdaterProducer, BigQueryRoutineIdParseFunc),
+		Schema:      NewBigQueryRoutineIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_bigquery_routine_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(BigQueryRoutineIamSchema, BigQueryRoutineIamUpdaterProducer),
 	}.Register()
+}
+
+// NewBigQueryRoutineIamBindingResource returns the google_bigquery_routine_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewBigQueryRoutineIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		BigQueryRoutineIamSchema,
+		BigQueryRoutineIamUpdaterProducer,
+		BigQueryRoutineIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(BigQueryRoutineIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewBigQueryRoutineIamMemberResource returns the google_bigquery_routine_iam_member

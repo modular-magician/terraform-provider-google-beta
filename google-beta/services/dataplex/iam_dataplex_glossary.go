@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_dataplex_glossary_iam_binding",
 		ProductName: "Dataplex",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataplexGlossaryIamSchema, DataplexGlossaryIamUpdaterProducer, DataplexGlossaryIdParseFunc, tpgiamresource.IamWithMaxBackoffSeconds(1200)),
+		Schema:      NewDataplexGlossaryIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_dataplex_glossary_iam_member",
@@ -64,6 +64,19 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataplexGlossaryIamSchema, DataplexGlossaryIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataplexGlossaryIamBindingResource returns the google_dataplex_glossary_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataplexGlossaryIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataplexGlossaryIamSchema,
+		DataplexGlossaryIamUpdaterProducer,
+		DataplexGlossaryIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataplexGlossaryIamParentParentResourceIdentityParser),
+		tpgiamresource.IamWithMaxBackoffSeconds(1200),
+	)
 }
 
 // NewDataplexGlossaryIamMemberResource returns the google_dataplex_glossary_iam_member

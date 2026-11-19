@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_iap_app_engine_version_iam_binding",
 		ProductName: "Iap",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(IapAppEngineVersionIamSchema, IapAppEngineVersionIamUpdaterProducer, IapAppEngineVersionIdParseFunc),
+		Schema:      NewIapAppEngineVersionIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_iap_app_engine_version_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(IapAppEngineVersionIamSchema, IapAppEngineVersionIamUpdaterProducer),
 	}.Register()
+}
+
+// NewIapAppEngineVersionIamBindingResource returns the google_iap_app_engine_version_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewIapAppEngineVersionIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		IapAppEngineVersionIamSchema,
+		IapAppEngineVersionIamUpdaterProducer,
+		IapAppEngineVersionIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(IapAppEngineVersionIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewIapAppEngineVersionIamMemberResource returns the google_iap_app_engine_version_iam_member

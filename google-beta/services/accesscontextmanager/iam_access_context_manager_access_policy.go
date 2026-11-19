@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_access_context_manager_access_policy_iam_binding",
 		ProductName: "AccessContextManager",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(AccessContextManagerAccessPolicyIamSchema, AccessContextManagerAccessPolicyIamUpdaterProducer, AccessContextManagerAccessPolicyIdParseFunc),
+		Schema:      NewAccessContextManagerAccessPolicyIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_access_context_manager_access_policy_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(AccessContextManagerAccessPolicyIamSchema, AccessContextManagerAccessPolicyIamUpdaterProducer),
 	}.Register()
+}
+
+// NewAccessContextManagerAccessPolicyIamBindingResource returns the google_access_context_manager_access_policy_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewAccessContextManagerAccessPolicyIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		AccessContextManagerAccessPolicyIamSchema,
+		AccessContextManagerAccessPolicyIamUpdaterProducer,
+		AccessContextManagerAccessPolicyIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(AccessContextManagerAccessPolicyIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewAccessContextManagerAccessPolicyIamMemberResource returns the google_access_context_manager_access_policy_iam_member

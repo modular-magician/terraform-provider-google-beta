@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_bigquery_analytics_hub_listing_iam_binding",
 		ProductName: "BigqueryAnalyticsHub",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(BigqueryAnalyticsHubListingIamSchema, BigqueryAnalyticsHubListingIamUpdaterProducer, BigqueryAnalyticsHubListingIdParseFunc),
+		Schema:      NewBigqueryAnalyticsHubListingIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_bigquery_analytics_hub_listing_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(BigqueryAnalyticsHubListingIamSchema, BigqueryAnalyticsHubListingIamUpdaterProducer),
 	}.Register()
+}
+
+// NewBigqueryAnalyticsHubListingIamBindingResource returns the google_bigquery_analytics_hub_listing_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewBigqueryAnalyticsHubListingIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		BigqueryAnalyticsHubListingIamSchema,
+		BigqueryAnalyticsHubListingIamUpdaterProducer,
+		BigqueryAnalyticsHubListingIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(BigqueryAnalyticsHubListingIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewBigqueryAnalyticsHubListingIamMemberResource returns the google_bigquery_analytics_hub_listing_iam_member

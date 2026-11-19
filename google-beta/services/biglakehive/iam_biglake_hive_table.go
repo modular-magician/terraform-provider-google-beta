@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_biglake_hive_table_iam_binding",
 		ProductName: "BiglakeHive",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(BiglakeHiveHiveTableIamSchema, BiglakeHiveHiveTableIamUpdaterProducer, BiglakeHiveHiveTableIdParseFunc),
+		Schema:      NewBiglakeHiveHiveTableIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_biglake_hive_table_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(BiglakeHiveHiveTableIamSchema, BiglakeHiveHiveTableIamUpdaterProducer),
 	}.Register()
+}
+
+// NewBiglakeHiveHiveTableIamBindingResource returns the google_biglake_hive_table_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewBiglakeHiveHiveTableIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		BiglakeHiveHiveTableIamSchema,
+		BiglakeHiveHiveTableIamUpdaterProducer,
+		BiglakeHiveHiveTableIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(BiglakeHiveHiveTableIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewBiglakeHiveHiveTableIamMemberResource returns the google_biglake_hive_table_iam_member

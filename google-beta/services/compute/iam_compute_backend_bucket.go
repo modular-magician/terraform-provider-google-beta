@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_backend_bucket_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeBackendBucketIamSchema, ComputeBackendBucketIamUpdaterProducer, ComputeBackendBucketIdParseFunc),
+		Schema:      NewComputeBackendBucketIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_backend_bucket_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeBackendBucketIamSchema, ComputeBackendBucketIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeBackendBucketIamBindingResource returns the google_compute_backend_bucket_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeBackendBucketIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeBackendBucketIamSchema,
+		ComputeBackendBucketIamUpdaterProducer,
+		ComputeBackendBucketIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeBackendBucketIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeBackendBucketIamMemberResource returns the google_compute_backend_bucket_iam_member

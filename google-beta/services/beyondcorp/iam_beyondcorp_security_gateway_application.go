@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_beyondcorp_security_gateway_application_iam_binding",
 		ProductName: "Beyondcorp",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(BeyondcorpSecurityGatewayApplicationIamSchema, BeyondcorpSecurityGatewayApplicationIamUpdaterProducer, BeyondcorpSecurityGatewayApplicationIdParseFunc),
+		Schema:      NewBeyondcorpSecurityGatewayApplicationIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_beyondcorp_security_gateway_application_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(BeyondcorpSecurityGatewayApplicationIamSchema, BeyondcorpSecurityGatewayApplicationIamUpdaterProducer),
 	}.Register()
+}
+
+// NewBeyondcorpSecurityGatewayApplicationIamBindingResource returns the google_beyondcorp_security_gateway_application_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewBeyondcorpSecurityGatewayApplicationIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		BeyondcorpSecurityGatewayApplicationIamSchema,
+		BeyondcorpSecurityGatewayApplicationIamUpdaterProducer,
+		BeyondcorpSecurityGatewayApplicationIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(BeyondcorpSecurityGatewayApplicationIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewBeyondcorpSecurityGatewayApplicationIamMemberResource returns the google_beyondcorp_security_gateway_application_iam_member

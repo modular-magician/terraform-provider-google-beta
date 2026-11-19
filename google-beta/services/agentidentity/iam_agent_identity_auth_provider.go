@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_agent_identity_auth_provider_iam_binding",
 		ProductName: "AgentIdentity",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(AgentIdentityAuthProviderIamSchema, AgentIdentityAuthProviderIamUpdaterProducer, AgentIdentityAuthProviderIdParseFunc),
+		Schema:      NewAgentIdentityAuthProviderIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_agent_identity_auth_provider_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(AgentIdentityAuthProviderIamSchema, AgentIdentityAuthProviderIamUpdaterProducer),
 	}.Register()
+}
+
+// NewAgentIdentityAuthProviderIamBindingResource returns the google_agent_identity_auth_provider_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewAgentIdentityAuthProviderIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		AgentIdentityAuthProviderIamSchema,
+		AgentIdentityAuthProviderIamUpdaterProducer,
+		AgentIdentityAuthProviderIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(AgentIdentityAuthProviderIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewAgentIdentityAuthProviderIamMemberResource returns the google_agent_identity_auth_provider_iam_member

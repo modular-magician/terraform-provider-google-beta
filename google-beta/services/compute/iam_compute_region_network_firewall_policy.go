@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_region_network_firewall_policy_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeRegionNetworkFirewallPolicyIamSchema, ComputeRegionNetworkFirewallPolicyIamUpdaterProducer, ComputeRegionNetworkFirewallPolicyIdParseFunc),
+		Schema:      NewComputeRegionNetworkFirewallPolicyIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_region_network_firewall_policy_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeRegionNetworkFirewallPolicyIamSchema, ComputeRegionNetworkFirewallPolicyIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeRegionNetworkFirewallPolicyIamBindingResource returns the google_compute_region_network_firewall_policy_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeRegionNetworkFirewallPolicyIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeRegionNetworkFirewallPolicyIamSchema,
+		ComputeRegionNetworkFirewallPolicyIamUpdaterProducer,
+		ComputeRegionNetworkFirewallPolicyIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeRegionNetworkFirewallPolicyIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeRegionNetworkFirewallPolicyIamMemberResource returns the google_compute_region_network_firewall_policy_iam_member

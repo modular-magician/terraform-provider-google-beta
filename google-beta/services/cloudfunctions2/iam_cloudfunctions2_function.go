@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_cloudfunctions2_function_iam_binding",
 		ProductName: "Cloudfunctions2",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(Cloudfunctions2functionIamSchema, Cloudfunctions2functionIamUpdaterProducer, Cloudfunctions2functionIdParseFunc),
+		Schema:      NewCloudfunctions2functionIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_cloudfunctions2_function_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(Cloudfunctions2functionIamSchema, Cloudfunctions2functionIamUpdaterProducer),
 	}.Register()
+}
+
+// NewCloudfunctions2functionIamBindingResource returns the google_cloudfunctions2_function_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewCloudfunctions2functionIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		Cloudfunctions2functionIamSchema,
+		Cloudfunctions2functionIamUpdaterProducer,
+		Cloudfunctions2functionIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(Cloudfunctions2functionIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewCloudfunctions2functionIamMemberResource returns the google_cloudfunctions2_function_iam_member

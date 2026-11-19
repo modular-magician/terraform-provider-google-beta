@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_data_fusion_instance_iam_binding",
 		ProductName: "DataFusion",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataFusionInstanceIamSchema, DataFusionInstanceIamUpdaterProducer, DataFusionInstanceIdParseFunc),
+		Schema:      NewDataFusionInstanceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_data_fusion_instance_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataFusionInstanceIamSchema, DataFusionInstanceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataFusionInstanceIamBindingResource returns the google_data_fusion_instance_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataFusionInstanceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataFusionInstanceIamSchema,
+		DataFusionInstanceIamUpdaterProducer,
+		DataFusionInstanceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataFusionInstanceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewDataFusionInstanceIamMemberResource returns the google_data_fusion_instance_iam_member

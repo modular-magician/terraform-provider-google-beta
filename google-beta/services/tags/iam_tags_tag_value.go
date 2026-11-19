@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_tags_tag_value_iam_binding",
 		ProductName: "Tags",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(TagsTagValueIamSchema, TagsTagValueIamUpdaterProducer, TagsTagValueIdParseFunc),
+		Schema:      NewTagsTagValueIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_tags_tag_value_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(TagsTagValueIamSchema, TagsTagValueIamUpdaterProducer),
 	}.Register()
+}
+
+// NewTagsTagValueIamBindingResource returns the google_tags_tag_value_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewTagsTagValueIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		TagsTagValueIamSchema,
+		TagsTagValueIamUpdaterProducer,
+		TagsTagValueIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(TagsTagValueIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewTagsTagValueIamMemberResource returns the google_tags_tag_value_iam_member

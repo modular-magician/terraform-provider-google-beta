@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_gke_backup_restore_plan_iam_binding",
 		ProductName: "GKEBackup",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(GKEBackupRestorePlanIamSchema, GKEBackupRestorePlanIamUpdaterProducer, GKEBackupRestorePlanIdParseFunc),
+		Schema:      NewGKEBackupRestorePlanIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_gke_backup_restore_plan_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(GKEBackupRestorePlanIamSchema, GKEBackupRestorePlanIamUpdaterProducer),
 	}.Register()
+}
+
+// NewGKEBackupRestorePlanIamBindingResource returns the google_gke_backup_restore_plan_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewGKEBackupRestorePlanIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		GKEBackupRestorePlanIamSchema,
+		GKEBackupRestorePlanIamUpdaterProducer,
+		GKEBackupRestorePlanIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(GKEBackupRestorePlanIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewGKEBackupRestorePlanIamMemberResource returns the google_gke_backup_restore_plan_iam_member

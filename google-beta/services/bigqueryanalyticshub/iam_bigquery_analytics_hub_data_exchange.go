@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_bigquery_analytics_hub_data_exchange_iam_binding",
 		ProductName: "BigqueryAnalyticsHub",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(BigqueryAnalyticsHubDataExchangeIamSchema, BigqueryAnalyticsHubDataExchangeIamUpdaterProducer, BigqueryAnalyticsHubDataExchangeIdParseFunc),
+		Schema:      NewBigqueryAnalyticsHubDataExchangeIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_bigquery_analytics_hub_data_exchange_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(BigqueryAnalyticsHubDataExchangeIamSchema, BigqueryAnalyticsHubDataExchangeIamUpdaterProducer),
 	}.Register()
+}
+
+// NewBigqueryAnalyticsHubDataExchangeIamBindingResource returns the google_bigquery_analytics_hub_data_exchange_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewBigqueryAnalyticsHubDataExchangeIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		BigqueryAnalyticsHubDataExchangeIamSchema,
+		BigqueryAnalyticsHubDataExchangeIamUpdaterProducer,
+		BigqueryAnalyticsHubDataExchangeIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(BigqueryAnalyticsHubDataExchangeIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewBigqueryAnalyticsHubDataExchangeIamMemberResource returns the google_bigquery_analytics_hub_data_exchange_iam_member

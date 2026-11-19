@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_dataplex_lake_iam_binding",
 		ProductName: "Dataplex",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataplexLakeIamSchema, DataplexLakeIamUpdaterProducer, DataplexLakeIdParseFunc, tpgiamresource.IamWithMaxBackoffSeconds(1200)),
+		Schema:      NewDataplexLakeIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_dataplex_lake_iam_member",
@@ -64,6 +64,19 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataplexLakeIamSchema, DataplexLakeIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataplexLakeIamBindingResource returns the google_dataplex_lake_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataplexLakeIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataplexLakeIamSchema,
+		DataplexLakeIamUpdaterProducer,
+		DataplexLakeIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataplexLakeIamParentParentResourceIdentityParser),
+		tpgiamresource.IamWithMaxBackoffSeconds(1200),
+	)
 }
 
 // NewDataplexLakeIamMemberResource returns the google_dataplex_lake_iam_member

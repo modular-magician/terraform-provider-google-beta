@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_logging_log_view_iam_binding",
 		ProductName: "Logging",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(LoggingLogViewIamSchema, LoggingLogViewIamUpdaterProducer, LoggingLogViewIdParseFunc),
+		Schema:      NewLoggingLogViewIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_logging_log_view_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(LoggingLogViewIamSchema, LoggingLogViewIamUpdaterProducer),
 	}.Register()
+}
+
+// NewLoggingLogViewIamBindingResource returns the google_logging_log_view_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewLoggingLogViewIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		LoggingLogViewIamSchema,
+		LoggingLogViewIamUpdaterProducer,
+		LoggingLogViewIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(LoggingLogViewIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewLoggingLogViewIamMemberResource returns the google_logging_log_view_iam_member

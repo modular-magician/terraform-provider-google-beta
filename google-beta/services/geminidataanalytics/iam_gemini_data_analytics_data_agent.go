@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_gemini_data_analytics_data_agent_iam_binding",
 		ProductName: "GeminiDataAnalytics",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(GeminiDataAnalyticsDataAgentIamSchema, GeminiDataAnalyticsDataAgentIamUpdaterProducer, GeminiDataAnalyticsDataAgentIdParseFunc),
+		Schema:      NewGeminiDataAnalyticsDataAgentIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_gemini_data_analytics_data_agent_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(GeminiDataAnalyticsDataAgentIamSchema, GeminiDataAnalyticsDataAgentIamUpdaterProducer),
 	}.Register()
+}
+
+// NewGeminiDataAnalyticsDataAgentIamBindingResource returns the google_gemini_data_analytics_data_agent_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewGeminiDataAnalyticsDataAgentIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		GeminiDataAnalyticsDataAgentIamSchema,
+		GeminiDataAnalyticsDataAgentIamUpdaterProducer,
+		GeminiDataAnalyticsDataAgentIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(GeminiDataAnalyticsDataAgentIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewGeminiDataAnalyticsDataAgentIamMemberResource returns the google_gemini_data_analytics_data_agent_iam_member

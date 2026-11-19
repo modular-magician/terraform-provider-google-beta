@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_design_center_space_iam_binding",
 		ProductName: "DesignCenter",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DesignCenterSpaceIamSchema, DesignCenterSpaceIamUpdaterProducer, DesignCenterSpaceIdParseFunc),
+		Schema:      NewDesignCenterSpaceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_design_center_space_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DesignCenterSpaceIamSchema, DesignCenterSpaceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDesignCenterSpaceIamBindingResource returns the google_design_center_space_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDesignCenterSpaceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DesignCenterSpaceIamSchema,
+		DesignCenterSpaceIamUpdaterProducer,
+		DesignCenterSpaceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DesignCenterSpaceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewDesignCenterSpaceIamMemberResource returns the google_design_center_space_iam_member

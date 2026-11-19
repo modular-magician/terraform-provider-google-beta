@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_subnetwork_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeSubnetworkIamSchema, ComputeSubnetworkIamUpdaterProducer, ComputeSubnetworkIdParseFunc),
+		Schema:      NewComputeSubnetworkIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_subnetwork_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeSubnetworkIamSchema, ComputeSubnetworkIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeSubnetworkIamBindingResource returns the google_compute_subnetwork_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeSubnetworkIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeSubnetworkIamSchema,
+		ComputeSubnetworkIamUpdaterProducer,
+		ComputeSubnetworkIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeSubnetworkIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeSubnetworkIamMemberResource returns the google_compute_subnetwork_iam_member

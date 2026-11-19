@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_apigee_environment_iam_binding",
 		ProductName: "Apigee",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ApigeeEnvironmentIamSchema, ApigeeEnvironmentIamUpdaterProducer, ApigeeEnvironmentIdParseFunc),
+		Schema:      NewApigeeEnvironmentIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_apigee_environment_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ApigeeEnvironmentIamSchema, ApigeeEnvironmentIamUpdaterProducer),
 	}.Register()
+}
+
+// NewApigeeEnvironmentIamBindingResource returns the google_apigee_environment_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewApigeeEnvironmentIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ApigeeEnvironmentIamSchema,
+		ApigeeEnvironmentIamUpdaterProducer,
+		ApigeeEnvironmentIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ApigeeEnvironmentIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewApigeeEnvironmentIamMemberResource returns the google_apigee_environment_iam_member

@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_iap_agent_registry_mcp_server_iam_binding",
 		ProductName: "Iap",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(IapAgentRegistryMcpServerIamSchema, IapAgentRegistryMcpServerIamUpdaterProducer, IapAgentRegistryMcpServerIdParseFunc),
+		Schema:      NewIapAgentRegistryMcpServerIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_iap_agent_registry_mcp_server_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(IapAgentRegistryMcpServerIamSchema, IapAgentRegistryMcpServerIamUpdaterProducer),
 	}.Register()
+}
+
+// NewIapAgentRegistryMcpServerIamBindingResource returns the google_iap_agent_registry_mcp_server_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewIapAgentRegistryMcpServerIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		IapAgentRegistryMcpServerIamSchema,
+		IapAgentRegistryMcpServerIamUpdaterProducer,
+		IapAgentRegistryMcpServerIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(IapAgentRegistryMcpServerIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewIapAgentRegistryMcpServerIamMemberResource returns the google_iap_agent_registry_mcp_server_iam_member

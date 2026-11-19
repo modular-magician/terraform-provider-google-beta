@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_iap_web_region_forwarding_rule_service_iam_binding",
 		ProductName: "Iap",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(IapWebRegionForwardingRuleServiceIamSchema, IapWebRegionForwardingRuleServiceIamUpdaterProducer, IapWebRegionForwardingRuleServiceIdParseFunc),
+		Schema:      NewIapWebRegionForwardingRuleServiceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_iap_web_region_forwarding_rule_service_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(IapWebRegionForwardingRuleServiceIamSchema, IapWebRegionForwardingRuleServiceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewIapWebRegionForwardingRuleServiceIamBindingResource returns the google_iap_web_region_forwarding_rule_service_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewIapWebRegionForwardingRuleServiceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		IapWebRegionForwardingRuleServiceIamSchema,
+		IapWebRegionForwardingRuleServiceIamUpdaterProducer,
+		IapWebRegionForwardingRuleServiceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(IapWebRegionForwardingRuleServiceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewIapWebRegionForwardingRuleServiceIamMemberResource returns the google_iap_web_region_forwarding_rule_service_iam_member

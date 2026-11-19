@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_endpoints_service_consumers_iam_binding",
 		ProductName: "ServiceManagement",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ServiceManagementServiceConsumersIamSchema, ServiceManagementServiceConsumersIamUpdaterProducer, ServiceManagementServiceConsumersIdParseFunc),
+		Schema:      NewServiceManagementServiceConsumersIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_endpoints_service_consumers_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ServiceManagementServiceConsumersIamSchema, ServiceManagementServiceConsumersIamUpdaterProducer),
 	}.Register()
+}
+
+// NewServiceManagementServiceConsumersIamBindingResource returns the google_endpoints_service_consumers_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewServiceManagementServiceConsumersIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ServiceManagementServiceConsumersIamSchema,
+		ServiceManagementServiceConsumersIamUpdaterProducer,
+		ServiceManagementServiceConsumersIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ServiceManagementServiceConsumersIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewServiceManagementServiceConsumersIamMemberResource returns the google_endpoints_service_consumers_iam_member

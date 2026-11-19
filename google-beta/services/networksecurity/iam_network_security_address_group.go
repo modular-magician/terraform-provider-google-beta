@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_network_security_address_group_iam_binding",
 		ProductName: "NetworkSecurity",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(NetworkSecurityProjectAddressGroupIamSchema, NetworkSecurityProjectAddressGroupIamUpdaterProducer, NetworkSecurityProjectAddressGroupIdParseFunc),
+		Schema:      NewNetworkSecurityProjectAddressGroupIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_network_security_address_group_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(NetworkSecurityProjectAddressGroupIamSchema, NetworkSecurityProjectAddressGroupIamUpdaterProducer),
 	}.Register()
+}
+
+// NewNetworkSecurityProjectAddressGroupIamBindingResource returns the google_network_security_address_group_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewNetworkSecurityProjectAddressGroupIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		NetworkSecurityProjectAddressGroupIamSchema,
+		NetworkSecurityProjectAddressGroupIamUpdaterProducer,
+		NetworkSecurityProjectAddressGroupIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(NetworkSecurityProjectAddressGroupIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewNetworkSecurityProjectAddressGroupIamMemberResource returns the google_network_security_address_group_iam_member

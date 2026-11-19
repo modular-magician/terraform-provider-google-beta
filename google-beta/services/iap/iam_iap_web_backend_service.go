@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_iap_web_backend_service_iam_binding",
 		ProductName: "Iap",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
+		Schema:      NewIapWebBackendServiceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_iap_web_backend_service_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewIapWebBackendServiceIamBindingResource returns the google_iap_web_backend_service_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewIapWebBackendServiceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		IapWebBackendServiceIamSchema,
+		IapWebBackendServiceIamUpdaterProducer,
+		IapWebBackendServiceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(IapWebBackendServiceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewIapWebBackendServiceIamMemberResource returns the google_iap_web_backend_service_iam_member

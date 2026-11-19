@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_scc_source_iam_binding",
 		ProductName: "SecurityCenter",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(SecurityCenterSourceIamSchema, SecurityCenterSourceIamUpdaterProducer, SecurityCenterSourceIdParseFunc),
+		Schema:      NewSecurityCenterSourceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_scc_source_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(SecurityCenterSourceIamSchema, SecurityCenterSourceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewSecurityCenterSourceIamBindingResource returns the google_scc_source_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewSecurityCenterSourceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		SecurityCenterSourceIamSchema,
+		SecurityCenterSourceIamUpdaterProducer,
+		SecurityCenterSourceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(SecurityCenterSourceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewSecurityCenterSourceIamMemberResource returns the google_scc_source_iam_member

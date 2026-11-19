@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_healthcare_consent_store_iam_binding",
 		ProductName: "Healthcare",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(HealthcareConsentStoreIamSchema, HealthcareConsentStoreIamUpdaterProducer, HealthcareConsentStoreIdParseFunc),
+		Schema:      NewHealthcareConsentStoreIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_healthcare_consent_store_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(HealthcareConsentStoreIamSchema, HealthcareConsentStoreIamUpdaterProducer),
 	}.Register()
+}
+
+// NewHealthcareConsentStoreIamBindingResource returns the google_healthcare_consent_store_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewHealthcareConsentStoreIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		HealthcareConsentStoreIamSchema,
+		HealthcareConsentStoreIamUpdaterProducer,
+		HealthcareConsentStoreIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(HealthcareConsentStoreIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewHealthcareConsentStoreIamMemberResource returns the google_healthcare_consent_store_iam_member

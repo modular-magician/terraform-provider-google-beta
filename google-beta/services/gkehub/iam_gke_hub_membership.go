@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_gke_hub_membership_iam_binding",
 		ProductName: "GKEHub",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(GKEHubMembershipIamSchema, GKEHubMembershipIamUpdaterProducer, GKEHubMembershipIdParseFunc),
+		Schema:      NewGKEHubMembershipIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_gke_hub_membership_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(GKEHubMembershipIamSchema, GKEHubMembershipIamUpdaterProducer),
 	}.Register()
+}
+
+// NewGKEHubMembershipIamBindingResource returns the google_gke_hub_membership_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewGKEHubMembershipIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		GKEHubMembershipIamSchema,
+		GKEHubMembershipIamUpdaterProducer,
+		GKEHubMembershipIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(GKEHubMembershipIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewGKEHubMembershipIamMemberResource returns the google_gke_hub_membership_iam_member

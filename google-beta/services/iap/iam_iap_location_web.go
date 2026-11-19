@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_iap_location_web_iam_binding",
 		ProductName: "Iap",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(IapLocationWebIamSchema, IapLocationWebIamUpdaterProducer, IapLocationWebIdParseFunc),
+		Schema:      NewIapLocationWebIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_iap_location_web_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(IapLocationWebIamSchema, IapLocationWebIamUpdaterProducer),
 	}.Register()
+}
+
+// NewIapLocationWebIamBindingResource returns the google_iap_location_web_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewIapLocationWebIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		IapLocationWebIamSchema,
+		IapLocationWebIamUpdaterProducer,
+		IapLocationWebIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(IapLocationWebIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewIapLocationWebIamMemberResource returns the google_iap_location_web_iam_member

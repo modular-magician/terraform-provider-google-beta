@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_image_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeImageIamSchema, ComputeImageIamUpdaterProducer, ComputeImageIdParseFunc),
+		Schema:      NewComputeImageIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_image_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeImageIamSchema, ComputeImageIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeImageIamBindingResource returns the google_compute_image_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeImageIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeImageIamSchema,
+		ComputeImageIamUpdaterProducer,
+		ComputeImageIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeImageIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeImageIamMemberResource returns the google_compute_image_iam_member

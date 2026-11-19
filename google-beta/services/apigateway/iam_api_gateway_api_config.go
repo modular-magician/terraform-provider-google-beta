@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_api_gateway_api_config_iam_binding",
 		ProductName: "ApiGateway",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ApiGatewayApiConfigIamSchema, ApiGatewayApiConfigIamUpdaterProducer, ApiGatewayApiConfigIdParseFunc),
+		Schema:      NewApiGatewayApiConfigIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_api_gateway_api_config_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ApiGatewayApiConfigIamSchema, ApiGatewayApiConfigIamUpdaterProducer),
 	}.Register()
+}
+
+// NewApiGatewayApiConfigIamBindingResource returns the google_api_gateway_api_config_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewApiGatewayApiConfigIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ApiGatewayApiConfigIamSchema,
+		ApiGatewayApiConfigIamUpdaterProducer,
+		ApiGatewayApiConfigIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ApiGatewayApiConfigIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewApiGatewayApiConfigIamMemberResource returns the google_api_gateway_api_config_iam_member

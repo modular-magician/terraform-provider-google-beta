@@ -56,6 +56,9 @@ func TestAccServiceManagementServiceConsumersIamBindingGenerated(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.RequireAbove(tfversion.Version1_12_0), // resource identity min version
+		},
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
@@ -77,6 +80,11 @@ func TestAccServiceManagementServiceConsumersIamBindingGenerated(t *testing.T) {
 				ImportStateIdFunc: generateServiceManagementServiceConsumersIAMBindingStateID("google_endpoints_service_consumers_iam_binding.foo"),
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				ResourceName:    "google_endpoints_service_consumers_iam_binding.foo",
+				ImportState:     true,
+				ImportStateKind: resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

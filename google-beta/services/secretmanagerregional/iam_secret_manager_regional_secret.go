@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_secret_manager_regional_secret_iam_binding",
 		ProductName: "SecretManagerRegional",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(SecretManagerRegionalRegionalSecretIamSchema, SecretManagerRegionalRegionalSecretIamUpdaterProducer, SecretManagerRegionalRegionalSecretIdParseFunc),
+		Schema:      NewSecretManagerRegionalRegionalSecretIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_secret_manager_regional_secret_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(SecretManagerRegionalRegionalSecretIamSchema, SecretManagerRegionalRegionalSecretIamUpdaterProducer),
 	}.Register()
+}
+
+// NewSecretManagerRegionalRegionalSecretIamBindingResource returns the google_secret_manager_regional_secret_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewSecretManagerRegionalRegionalSecretIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		SecretManagerRegionalRegionalSecretIamSchema,
+		SecretManagerRegionalRegionalSecretIamUpdaterProducer,
+		SecretManagerRegionalRegionalSecretIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(SecretManagerRegionalRegionalSecretIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewSecretManagerRegionalRegionalSecretIamMemberResource returns the google_secret_manager_regional_secret_iam_member

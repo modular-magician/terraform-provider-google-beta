@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_service_directory_namespace_iam_binding",
 		ProductName: "ServiceDirectory",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ServiceDirectoryNamespaceIamSchema, ServiceDirectoryNamespaceIamUpdaterProducer, ServiceDirectoryNamespaceIdParseFunc),
+		Schema:      NewServiceDirectoryNamespaceIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_service_directory_namespace_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ServiceDirectoryNamespaceIamSchema, ServiceDirectoryNamespaceIamUpdaterProducer),
 	}.Register()
+}
+
+// NewServiceDirectoryNamespaceIamBindingResource returns the google_service_directory_namespace_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewServiceDirectoryNamespaceIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ServiceDirectoryNamespaceIamSchema,
+		ServiceDirectoryNamespaceIamUpdaterProducer,
+		ServiceDirectoryNamespaceIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ServiceDirectoryNamespaceIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewServiceDirectoryNamespaceIamMemberResource returns the google_service_directory_namespace_iam_member

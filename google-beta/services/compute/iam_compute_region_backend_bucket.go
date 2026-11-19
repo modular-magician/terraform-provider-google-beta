@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_compute_region_backend_bucket_iam_binding",
 		ProductName: "Compute",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ComputeRegionBackendBucketIamSchema, ComputeRegionBackendBucketIamUpdaterProducer, ComputeRegionBackendBucketIdParseFunc),
+		Schema:      NewComputeRegionBackendBucketIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_compute_region_backend_bucket_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ComputeRegionBackendBucketIamSchema, ComputeRegionBackendBucketIamUpdaterProducer),
 	}.Register()
+}
+
+// NewComputeRegionBackendBucketIamBindingResource returns the google_compute_region_backend_bucket_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewComputeRegionBackendBucketIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ComputeRegionBackendBucketIamSchema,
+		ComputeRegionBackendBucketIamUpdaterProducer,
+		ComputeRegionBackendBucketIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ComputeRegionBackendBucketIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewComputeRegionBackendBucketIamMemberResource returns the google_compute_region_backend_bucket_iam_member

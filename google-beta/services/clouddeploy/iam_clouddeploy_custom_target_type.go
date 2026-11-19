@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_clouddeploy_custom_target_type_iam_binding",
 		ProductName: "Clouddeploy",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(ClouddeployCustomTargetTypeIamSchema, ClouddeployCustomTargetTypeIamUpdaterProducer, ClouddeployCustomTargetTypeIdParseFunc),
+		Schema:      NewClouddeployCustomTargetTypeIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_clouddeploy_custom_target_type_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(ClouddeployCustomTargetTypeIamSchema, ClouddeployCustomTargetTypeIamUpdaterProducer),
 	}.Register()
+}
+
+// NewClouddeployCustomTargetTypeIamBindingResource returns the google_clouddeploy_custom_target_type_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewClouddeployCustomTargetTypeIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		ClouddeployCustomTargetTypeIamSchema,
+		ClouddeployCustomTargetTypeIamUpdaterProducer,
+		ClouddeployCustomTargetTypeIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(ClouddeployCustomTargetTypeIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewClouddeployCustomTargetTypeIamMemberResource returns the google_clouddeploy_custom_target_type_iam_member

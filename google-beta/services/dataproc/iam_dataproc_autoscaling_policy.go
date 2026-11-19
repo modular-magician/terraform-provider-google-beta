@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_dataproc_autoscaling_policy_iam_binding",
 		ProductName: "Dataproc",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataprocAutoscalingPolicyIamSchema, DataprocAutoscalingPolicyIamUpdaterProducer, DataprocAutoscalingPolicyIdParseFunc),
+		Schema:      NewDataprocAutoscalingPolicyIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_dataproc_autoscaling_policy_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataprocAutoscalingPolicyIamSchema, DataprocAutoscalingPolicyIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataprocAutoscalingPolicyIamBindingResource returns the google_dataproc_autoscaling_policy_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataprocAutoscalingPolicyIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataprocAutoscalingPolicyIamSchema,
+		DataprocAutoscalingPolicyIamUpdaterProducer,
+		DataprocAutoscalingPolicyIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataprocAutoscalingPolicyIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewDataprocAutoscalingPolicyIamMemberResource returns the google_dataproc_autoscaling_policy_iam_member

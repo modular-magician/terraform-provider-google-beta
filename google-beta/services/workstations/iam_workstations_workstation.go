@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_workstations_workstation_iam_binding",
 		ProductName: "Workstations",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(WorkstationsWorkstationIamSchema, WorkstationsWorkstationIamUpdaterProducer, WorkstationsWorkstationIdParseFunc),
+		Schema:      NewWorkstationsWorkstationIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_workstations_workstation_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(WorkstationsWorkstationIamSchema, WorkstationsWorkstationIamUpdaterProducer),
 	}.Register()
+}
+
+// NewWorkstationsWorkstationIamBindingResource returns the google_workstations_workstation_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewWorkstationsWorkstationIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		WorkstationsWorkstationIamSchema,
+		WorkstationsWorkstationIamUpdaterProducer,
+		WorkstationsWorkstationIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(WorkstationsWorkstationIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewWorkstationsWorkstationIamMemberResource returns the google_workstations_workstation_iam_member

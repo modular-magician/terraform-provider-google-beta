@@ -44,7 +44,7 @@ func init() {
 		Name:        "google_dataproc_metastore_table_iam_binding",
 		ProductName: "DataprocMetastore",
 		Type:        registry.SchemaTypeIAMResource,
-		Schema:      tpgiamresource.ResourceIamBinding(DataprocMetastoreTableIamSchema, DataprocMetastoreTableIamUpdaterProducer, DataprocMetastoreTableIdParseFunc),
+		Schema:      NewDataprocMetastoreTableIamBindingResource(),
 	}.Register()
 	registry.Schema{
 		Name:        "google_dataproc_metastore_table_iam_member",
@@ -64,6 +64,18 @@ func init() {
 		Type:        registry.SchemaTypeIAMDataSource,
 		Schema:      tpgiamresource.DataSourceIamPolicy(DataprocMetastoreTableIamSchema, DataprocMetastoreTableIamUpdaterProducer),
 	}.Register()
+}
+
+// NewDataprocMetastoreTableIamBindingResource returns the google_dataproc_metastore_table_iam_binding
+// managed resource. It is shared by the managed resource registration and the
+// list resource, so both stay in sync.
+func NewDataprocMetastoreTableIamBindingResource() *schema.Resource {
+	return tpgiamresource.ResourceIamBinding(
+		DataprocMetastoreTableIamSchema,
+		DataprocMetastoreTableIamUpdaterProducer,
+		DataprocMetastoreTableIdParseFunc,
+		tpgiamresource.IamWithParentResourceIdentity(DataprocMetastoreTableIamParentParentResourceIdentityParser),
+	)
 }
 
 // NewDataprocMetastoreTableIamMemberResource returns the google_dataproc_metastore_table_iam_member
