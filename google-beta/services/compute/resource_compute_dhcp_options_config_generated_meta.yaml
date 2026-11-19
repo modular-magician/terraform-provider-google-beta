@@ -1,0 +1,37 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_compute_dhcp_options_config
+generation_type: mmv1
+source_file: products/compute/DhcpOptionsConfig.yaml
+api_service_name: compute.googleapis.com
+api_version: beta
+api_resource_type_kind: DhcpOptionsConfig
+fields:
+    - api_field: associations.key
+      field: associations.name
+    - api_field: associations.value.network
+      field: associations.network
+    - api_field: associations.value.networkId
+      field: associations.network_id
+    - api_field: associations.value.state
+      field: associations.state
+    - api_field: bootFileIpv4Name
+    - api_field: bootFileIpv6Parameters
+    - api_field: bootFileIpv6Url
+    - api_field: creationTimestamp
+    - api_field: description
+    - api_field: id
+      field: dhcp_options_config_id
+    - api_field: dnsSearchPaths
+    - api_field: domainName
+    - api_field: leaseTimeSec
+    - api_field: name
+    - api_field: ntpServerIpv4Addresses
+    - api_field: ntpServerIpv6Addresses
+    - field: region
+      provider_only: true
+    - api_field: tftpServerIpv4Addresses
+    - api_field: tftpServerIpv4Name
+    - api_field: selfLink
+    - field: deletion_policy
+      provider_only: true
