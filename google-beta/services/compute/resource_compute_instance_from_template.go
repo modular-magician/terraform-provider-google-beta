@@ -67,6 +67,7 @@ func computeInstanceFromTemplateSchema() map[string]*schema.Schema {
 	for _, field := range []string{"disk", "network"} {
 		delete(s, field)
 	}
+	delete(s["workload_identity_config"].Elem.(*schema.Resource).Schema, "identity_type")
 
 	recurseOnSchema(s, func(field *schema.Schema) {
 		// We don't want to accidentally use default values to override the instance
