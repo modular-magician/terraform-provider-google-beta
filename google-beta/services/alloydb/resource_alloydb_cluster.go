@@ -53,6 +53,20 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+// alloydbClusterExpressConfigCustomizeDiff forces a new cluster when express_config.0.enabled
+// changes from false to true. AlloyDB can upgrade an Express cluster to a standard cluster in
+// place, but it can't convert a standard cluster to an Express cluster.
+func alloydbClusterExpressConfigCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	if diff.Id() == "" || !diff.HasChange("express_config.0.enabled") {
+		return nil
+	}
+	oldEnabled, newEnabled := diff.GetChange("express_config.0.enabled")
+	if !oldEnabled.(bool) && newEnabled.(bool) {
+		return diff.ForceNew("express_config.0.enabled")
+	}
+	return nil
+}
+
 var (
 	_ = bytes.Clone
 	_ = context.WithCancel
@@ -111,6 +125,7 @@ func ResourceAlloydbCluster() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			alloydbClusterExpressConfigCustomizeDiff,
 			tpgresource.SetLabelsDiff,
 			tpgresource.SetAnnotationsDiff,
 			tpgresource.DefaultProviderProject,
@@ -398,6 +413,26 @@ Note: Changing this field to a higer version results in upgrading the AlloyDB cl
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `For Resource freshness validation (https://google.aip.dev/154)`,
+			},
+			"express_config": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Optional: true,
+				Description: `Configuration for AlloyDB Express. Setting 'enabled' to 'true' when the cluster is
+created provisions an AlloyDB Express cluster. Changing 'enabled' from 'true' to 'false'
+upgrades the Express cluster to a standard AlloyDB cluster in place. The upgrade can't be
+undone, and a standard cluster can't be converted to an Express cluster. Removing the
+'express_config' block doesn't upgrade the cluster; set 'enabled' to 'false' to upgrade.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: `Whether the cluster is an AlloyDB Express cluster.`,
+						},
+					},
+				},
 			},
 			"initial_user": {
 				Type:        schema.TypeList,
@@ -998,6 +1033,12 @@ func resourceAlloydbClusterCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("dataplex_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(dataplexConfigProp)) && (ok || !reflect.DeepEqual(v, dataplexConfigProp)) {
 		obj["dataplexConfig"] = dataplexConfigProp
 	}
+	expressConfigProp, err := expandAlloydbClusterExpressConfig(d.Get("express_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("express_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(expressConfigProp)) && (ok || !reflect.DeepEqual(v, expressConfigProp)) {
+		obj["expressConfig"] = expressConfigProp
+	}
 	effectiveLabelsProp, err := expandAlloydbClusterEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1407,6 +1448,12 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("dataplex_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dataplexConfigProp)) {
 		obj["dataplexConfig"] = dataplexConfigProp
 	}
+	expressConfigProp, err := expandAlloydbClusterExpressConfig(d.Get("express_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("express_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, expressConfigProp)) {
+		obj["expressConfig"] = expressConfigProp
+	}
 	effectiveLabelsProp, err := expandAlloydbClusterEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1492,6 +1539,10 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 		updateMask = append(updateMask, "dataplexConfig")
 	}
 
+	if d.HasChange("express_config") {
+		updateMask = append(updateMask, "expressConfig")
+	}
+
 	if d.HasChange("effective_labels") {
 		updateMask = append(updateMask, "labels")
 	}
@@ -1506,6 +1557,61 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
+	// AlloyDB requires express_config to be the only field in the update mask, so the Express
+	// upgrade is sent as its own request before any other update in this function.
+	if d.HasChange("express_config") {
+		expressConfig, ok := obj["expressConfig"]
+		if !ok || expressConfig == nil {
+			return fmt.Errorf("Error updating Cluster %q: express_config is missing from the update request", d.Id())
+		}
+		expressUrl, err := transport_tpg.AddQueryParams(strings.Split(url, "?updateMask=")[0], map[string]string{"updateMask": "expressConfig.enabled"})
+		if err != nil {
+			return err
+		}
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		// Keep the prior state if the upgrade fails.
+		d.Partial(true)
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:               config,
+			Method:               "PATCH",
+			Project:              billingProject,
+			RawURL:               expressUrl,
+			UserAgent:            userAgent,
+			Body:                 map[string]interface{}{"expressConfig": expressConfig},
+			Timeout:              d.Timeout(schema.TimeoutUpdate),
+			Headers:              headers,
+			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{IsAlloyDbInstanceUpdatingError},
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating express_config for Cluster %q: %w", d.Id(), err)
+		}
+		err = AlloydbOperationWaitTime(
+			config, res, project, "Updating Cluster express_config", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return fmt.Errorf("Error waiting to update express_config for Cluster %q: %w", d.Id(), err)
+		}
+		d.Partial(false)
+
+		// Remove expressConfig from the main update request.
+		delete(obj, "expressConfig")
+		index := 0
+		for _, label := range updateMask {
+			if label != "expressConfig" {
+				updateMask[index] = label
+				index++
+			}
+		}
+		updateMask = updateMask[:index]
+		url = strings.Split(url, "?updateMask=")[0]
+		url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+		if err != nil {
+			return err
+		}
+	}
 	// Implementation for cluster upgrade
 	if d.HasChange("database_version") && !tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("database_version"))) {
 		upgradeUrl := strings.Split(url, "?updateMask")[0] + ":upgrade"
@@ -2533,6 +2639,18 @@ func flattenAlloydbClusterDataplexConfig(v interface{}, d *schema.ResourceData, 
 	return []interface{}{transformed}
 }
 
+func flattenAlloydbClusterExpressConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	enabled := false
+	if original, ok := v.(map[string]interface{}); ok {
+		enabled, _ = original["enabled"].(bool)
+	}
+	return []interface{}{
+		map[string]interface{}{
+			"enabled": enabled,
+		},
+	}
+}
+
 func flattenAlloydbClusterTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -3360,6 +3478,32 @@ func expandAlloydbClusterDataplexConfigEnabled(v interface{}, d tpgresource.Terr
 	return v, nil
 }
 
+func expandAlloydbClusterExpressConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandAlloydbClusterExpressConfigEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterExpressConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandAlloydbClusterEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -3458,6 +3602,9 @@ func ResourceAlloydbClusterFlatten(d *schema.ResourceData, meta interface{}, res
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
 	if err = d.Set("dataplex_config", flattenAlloydbClusterDataplexConfig(res["dataplexConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
+	if err = d.Set("express_config", flattenAlloydbClusterExpressConfig(res["expressConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenAlloydbClusterTerraformLabels(res["labels"], d, config)); err != nil {
