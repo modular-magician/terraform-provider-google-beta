@@ -68,7 +68,9 @@ fields:
     - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.caCertificate
     - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.clientCertificate
     - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.clientKey
+    - api_field: postgresqlProfile.sslConfig.serverAndClientVerification.serverCertificateHostname
     - api_field: postgresqlProfile.sslConfig.serverVerification.caCertificate
+    - api_field: postgresqlProfile.sslConfig.serverVerification.serverCertificateHostname
     - api_field: postgresqlProfile.username
     - api_field: privateConnectivity.privateConnection
     - api_field: salesforceProfile.domain

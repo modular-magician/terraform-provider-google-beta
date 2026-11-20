@@ -786,6 +786,11 @@ The following arguments are supported:
   PEM-encoded server root CA certificate.
   **Note**: This property is sensitive and will not be displayed in the plan.
 
+* `server_certificate_hostname` -
+  (Optional)
+  The hostname mentioned in the Subject or SAN extension of the server certificate.
+  If this field is not provided, the hostname in the server certificate is not validated.
+
 <a name="nested_postgresql_profile_ssl_config_server_and_client_verification"></a>The `server_and_client_verification` block supports:
 
 * `client_certificate` -
@@ -809,6 +814,11 @@ The following arguments are supported:
   (Required)
   PEM-encoded server root CA certificate.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `server_certificate_hostname` -
+  (Optional)
+  The hostname mentioned in the Subject or SAN extension of the server certificate.
+  If this field is not provided, the hostname in the server certificate is not validated.
 
 <a name="nested_salesforce_profile"></a>The `salesforce_profile` block supports:
 
