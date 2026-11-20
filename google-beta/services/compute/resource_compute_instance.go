@@ -141,11 +141,6 @@ var (
 		"shielded_instance_config.0.enable_vtpm",
 		"shielded_instance_config.0.enable_integrity_monitoring",
 	}
-
-	workloadIdentityConfigKeys = []string{
-		"workload_identity_config.0.identity",
-		"workload_identity_config.0.identity_certificate_enabled",
-	}
 )
 
 // This checks if the project provided in subnetwork's self_link matches
@@ -185,6 +180,11 @@ func ValidateSubnetworkProjectFunc(d tpgresource.TerraformResourceDiff) error {
 func forceNewIfNetworkIPNotUpdatable(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
 	// separate func to allow unit testing
 	return forceNewIfNetworkIPNotUpdatableFunc(d)
+}
+func workloadIdentityConfigForceNewCustomDiff() schema.CustomizeDiffFunc {
+	return customdiff.ForceNewIf("workload_identity_config", func(_ context.Context, d *schema.ResourceDiff, meta interface{}) bool {
+		return d.Id() != "" && d.HasChange("workload_identity_config")
+	})
 }
 
 func forceNewIfNetworkIPNotUpdatableFunc(d tpgresource.TerraformResourceDiff) error {
@@ -1752,14 +1752,24 @@ be from 0 to 999,999,999 inclusive.`,
 						"identity": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							Description: `Identity SPIFFE id.`,
 						},
 						"identity_certificate_enabled": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							Description: `Specifies whether identity certificates are enabled.`,
+						},
+						"identity_type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Computed:     true,
+							ForceNew:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"IDENTITY_TYPE_UNSPECIFIED", "SERVICE_ACCOUNT", "AGENT_IDENTITY", ""}),
+							Description:  `The type of identity to use. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "SERVICE_ACCOUNT", "AGENT_IDENTITY"]`,
 						},
 					},
 				},
@@ -1785,6 +1795,7 @@ be from 0 to 999,999,999 inclusive.`,
 			customdiff.ForceNewIf("boot_disk.0.initialize_params.0.provisioned_iops", func(_ context.Context, d *schema.ResourceDiff, meta interface{}) bool {
 				return d.HasChange("boot_disk.0.initialize_params.0.provisioned_iops") && !strings.Contains(d.Get("boot_disk.0.initialize_params.0.type").(string), "hyperdisk")
 			}),
+			workloadIdentityConfigForceNewCustomDiff(),
 			validateSubnetworkProject,
 			forceNewIfNetworkIPNotUpdatable,
 			tpgresource.SetLabelsDiff,
@@ -2591,6 +2602,20 @@ func populateComputeInstanceResourceData(d *schema.ResourceData, instance map[st
 	if err := d.Set("instance_encryption_key", flattenComputeInstanceEncryptionKey(instanceEncryptionKeyMap)); err != nil {
 		return fmt.Errorf("Error setting instance_encryption_key: %s", err)
 	}
+	if wicMap, ok := instance["workloadIdentityConfig"].(map[string]interface{}); ok && len(wicMap) > 0 {
+		flattenedWic := flattenInstanceWorkloadIdentityConfig(wicMap)
+		if d.Get("source_instance_template") != nil || d.Get("source_machine_image") != nil {
+			flattenedWic = flattenWorkloadIdentityConfig(wicMap)
+		}
+		if err := d.Set("workload_identity_config", flattenedWic); err != nil {
+			return fmt.Errorf("Error setting workload_identity_config: %s", err)
+		}
+	} else {
+		if err := d.Set("workload_identity_config", nil); err != nil {
+			return fmt.Errorf("Error setting workload_identity_config: %s", err)
+		}
+	}
+
 	if partnerMetadataMap, ok := instance["partnerMetadata"].(map[string]interface{}); ok {
 		partnerMetadata, err := flattenPartnerMetadata(convertPartnerMetadataFromCompute(partnerMetadataMap))
 		if err != nil {
