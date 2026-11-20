@@ -359,10 +359,12 @@ Cannot be used with delete_after_duration.`,
 				Description: `An optional description of this resource.`,
 			},
 			"enable_emergent_maintenance": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Indicates if this group of VMs have emergent maintenance enabled.`,
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates if this group of VMs have emergent maintenance enabled.
+In-place updates are only supported by Compute Engine on Hypercompute
+Cluster reservations; standard zonal reservations ignore this field on
+creation and reject updates.`,
 			},
 			"params": {
 				Type:        schema.TypeList,
@@ -1011,16 +1013,13 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	if d.HasChange("share_settings") {
+	if urlUpdateMask, ok := obj["urlUpdateMask"]; ok && urlUpdateMask != nil {
 		url, err = tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/zones/{{zone}}/reservations/{{name}}")
 		if err != nil {
 			return err
 		}
-		urlUpdateMask := obj["urlUpdateMask"]
-		if urlUpdateMask != nil {
-			url = url + urlUpdateMask.(string)
-			delete(obj, "urlUpdateMask")
-		}
+		url = url + urlUpdateMask.(string)
+		delete(obj, "urlUpdateMask")
 	}
 
 	// err == nil indicates that the billing_project value was found
@@ -1078,16 +1077,13 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 
 		headers := make(http.Header)
-		if d.HasChange("share_settings") {
+		if urlUpdateMask, ok := obj["urlUpdateMask"]; ok && urlUpdateMask != nil {
 			url, err = tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/zones/{{zone}}/reservations/{{name}}")
 			if err != nil {
 				return err
 			}
-			urlUpdateMask := obj["urlUpdateMask"]
-			if urlUpdateMask != nil {
-				url = url + urlUpdateMask.(string)
-				delete(obj, "urlUpdateMask")
-			}
+			url = url + urlUpdateMask.(string)
+			delete(obj, "urlUpdateMask")
 		}
 
 		// err == nil indicates that the billing_project value was found
@@ -1098,6 +1094,64 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating Reservation %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating Reservation %q: %#v", d.Id(), res)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, project, "Updating Reservation", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
+	if d.HasChange("enable_emergent_maintenance") {
+		obj := make(map[string]interface{})
+
+		enableEmergentMaintenanceProp, err := expandComputeReservationEnableEmergentMaintenance(d.Get("enable_emergent_maintenance"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("enable_emergent_maintenance"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableEmergentMaintenanceProp)) {
+			obj["enableEmergentMaintenance"] = enableEmergentMaintenanceProp
+		}
+
+		obj, err = resourceComputeReservationUpdateEncoder(d, meta, obj)
+		if err != nil {
+			return err
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/zones/{{zone}}/reservations/{{name}}?paths=enableEmergentMaintenance")
+		if err != nil {
+			return err
+		}
+
+		headers := make(http.Header)
+		if urlUpdateMask, ok := obj["urlUpdateMask"]; ok && urlUpdateMask != nil {
+			url, err = tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/zones/{{zone}}/reservations/{{name}}")
+			if err != nil {
+				return err
+			}
+			url = url + urlUpdateMask.(string)
+			delete(obj, "urlUpdateMask")
+		}
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
 			Project:   billingProject,
 			RawURL:    url,
 			UserAgent: userAgent,
@@ -2247,6 +2301,21 @@ func resourceComputeReservationUpdateEncoder(d *schema.ResourceData, meta interf
 	firstProject := true
 	urlUpdateMask := ""
 
+	// Resize.
+	if obj["specificReservation"] != nil {
+		count := obj["specificReservation"].(map[string]interface{})["count"]
+		if count != nil {
+			newObj["specificSkuCount"] = obj["specificReservation"].(map[string]interface{})["count"]
+		}
+		return newObj, nil
+	}
+
+	// Emergent maintenance (field-specific PATCH).
+	if _, hasEM := obj["enableEmergentMaintenance"]; hasEM || (d.HasChange("enable_emergent_maintenance") && obj["shareSettings"] == nil) {
+		newObj["enableEmergentMaintenance"] = d.Get("enable_emergent_maintenance")
+		return newObj, nil
+	}
+
 	if d.HasChange("share_settings.0.projects") {
 		// Get name.
 		nameProp, err := expandComputeReservationName(d.Get("name"), d, config)
@@ -2367,14 +2436,6 @@ func resourceComputeReservationUpdateEncoder(d *schema.ResourceData, meta interf
 			urlUpdateMask = urlUpdateMask + decodedPath
 		}
 		newObj["urlUpdateMask"] = urlUpdateMask
-	}
-
-	// Resize.
-	if obj["specificReservation"] != nil {
-		count := obj["specificReservation"].(map[string]interface{})["count"]
-		if count != nil {
-			newObj["specificSkuCount"] = obj["specificReservation"].(map[string]interface{})["count"]
-		}
 	}
 
 	return newObj, nil

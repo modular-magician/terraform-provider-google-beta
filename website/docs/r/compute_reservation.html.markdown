@@ -264,8 +264,11 @@ The following arguments are supported:
   Structure is [documented below](#nested_reservation_sharing_policy).
 
 * `enable_emergent_maintenance` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Indicates if this group of VMs have emergent maintenance enabled.
+  In-place updates are only supported by Compute Engine on Hypercompute
+  Cluster reservations; standard zonal reservations ignore this field on
+  creation and reject updates.
 
 * `params` -
   (Optional)
