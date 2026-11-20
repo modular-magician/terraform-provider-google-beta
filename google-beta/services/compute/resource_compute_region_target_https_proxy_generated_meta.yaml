@@ -18,6 +18,7 @@ fields:
     - api_field: serverTlsPolicy
     - api_field: sslCertificates
     - api_field: sslPolicy
+    - api_field: tlsEarlyData
     - api_field: urlMap
     - api_field: selfLink
     - field: deletion_policy

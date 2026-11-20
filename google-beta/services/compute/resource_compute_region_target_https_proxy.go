@@ -234,6 +234,25 @@ sslCertificates do not apply when the load balancing scheme is set to INTERNAL_S
 the TargetHttpsProxy resource. If not set, the TargetHttpsProxy
 resource will not have any SSL policy configured.`,
 			},
+			"tls_early_data": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"STRICT", "PERMISSIVE", "UNRESTRICTED", "DISABLED", ""}),
+				Description: `Specifies whether TLS 1.3 0-RTT Data ("Early Data") should be accepted for this service.
+Early Data allows a TLS resumption handshake to include the initial application payload
+(a HTTP request) alongside the handshake, reducing the effective round trips to "zero".
+This applies to TLS 1.3 connections over TCP (HTTP/2) as well as over UDP (QUIC/h3).
+This can improve application performance, especially on networks where interruptions may be common,
+such as on mobile. Requests with Early Data will have the "Early-Data" HTTP header set on the request,
+with a value of "1", to allow the backend to determine whether Early Data was included.
+Note: TLS Early Data may allow requests to be replayed, as the data is sent to the backend before the handshake
+has fully completed. Applications that allow idempotent HTTP methods to make non-idempotent changes,
+such as a GET request updating a database, should not accept Early Data on those requests,
+and reject requests with the "Early-Data: 1" HTTP header by returning a HTTP 425 (Too Early) status code,
+in order to remain RFC compliant. The default value is DISABLED. Possible values: ["STRICT", "PERMISSIVE", "UNRESTRICTED", "DISABLED"]`,
+			},
 			"creation_timestamp": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -290,6 +309,12 @@ func resourceComputeRegionTargetHttpsProxyCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
+	}
+	tlsEarlyDataProp, err := expandComputeRegionTargetHttpsProxyTlsEarlyData(d.Get("tls_early_data"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tls_early_data"); !tpgresource.IsEmptyValue(reflect.ValueOf(tlsEarlyDataProp)) && (ok || !reflect.DeepEqual(v, tlsEarlyDataProp)) {
+		obj["tlsEarlyData"] = tlsEarlyDataProp
 	}
 	certificateManagerCertificatesProp, err := expandComputeRegionTargetHttpsProxyCertificateManagerCertificates(d.Get("certificate_manager_certificates"), d, config)
 	if err != nil {
@@ -937,6 +962,10 @@ func flattenComputeRegionTargetHttpsProxyName(v interface{}, d *schema.ResourceD
 	return v
 }
 
+func flattenComputeRegionTargetHttpsProxyTlsEarlyData(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeRegionTargetHttpsProxyCertificateManagerCertificates(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -998,6 +1027,10 @@ func expandComputeRegionTargetHttpsProxyDescription(v interface{}, d tpgresource
 }
 
 func expandComputeRegionTargetHttpsProxyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRegionTargetHttpsProxyTlsEarlyData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1147,6 +1180,9 @@ func ResourceComputeRegionTargetHttpsProxyFlatten(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error reading RegionTargetHttpsProxy: %s", err)
 	}
 	if err = d.Set("name", flattenComputeRegionTargetHttpsProxyName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionTargetHttpsProxy: %s", err)
+	}
+	if err = d.Set("tls_early_data", flattenComputeRegionTargetHttpsProxyTlsEarlyData(res["tlsEarlyData"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionTargetHttpsProxy: %s", err)
 	}
 	if err = d.Set("certificate_manager_certificates", flattenComputeRegionTargetHttpsProxyCertificateManagerCertificates(res["certificateManagerCertificates"], d, config)); err != nil {

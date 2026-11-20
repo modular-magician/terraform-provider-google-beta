@@ -316,6 +316,74 @@ resource "google_compute_region_backend_service" "default" {
   load_balancing_scheme = "INTERNAL_MANAGED"
 }
 ```
+<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=region_target_https_proxy_tls_early_data&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
+  </a>
+</div>
+
+## Example Usage - Region Target Https Proxy Tls Early Data
+
+
+```hcl
+resource "google_compute_region_target_https_proxy" "default" {
+  region           = "us-central1"
+  name             = "test-tls-early-data-proxy"
+  tls_early_data   = "STRICT"
+  url_map          = google_compute_region_url_map.default.id
+  ssl_certificates = [google_compute_region_ssl_certificate.default.id]
+}
+
+resource "google_compute_region_ssl_certificate" "default" {
+  region      = "us-central1"
+  name        = "my-certificate"
+  private_key = file("path/to/private.key")
+  certificate = file("path/to/certificate.crt")
+}
+
+resource "google_compute_region_url_map" "default" {
+  region      = "us-central1"
+  name        = "url-map"
+  description = "a description"
+
+  default_service = google_compute_region_backend_service.default.id
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = google_compute_region_backend_service.default.id
+
+    path_rule {
+      paths   = ["/*"]
+      service = google_compute_region_backend_service.default.id
+    }
+  }
+}
+
+resource "google_compute_region_backend_service" "default" {
+  region                = "us-central1"
+  name                  = "backend-service"
+  port_name             = "http"
+  protocol              = "HTTP"
+  timeout_sec           = 10
+  load_balancing_scheme = "INTERNAL_MANAGED"
+
+  health_checks = [google_compute_region_health_check.default.id]
+}
+
+resource "google_compute_region_health_check" "default" {
+  region = "us-central1"
+  name   = "http-health-check"
+
+  http_health_check {
+    port = 80
+  }
+}
+```
 
 ## Argument Reference
 
@@ -341,6 +409,22 @@ The following arguments are supported:
 * `description` -
   (Optional)
   An optional description of this resource.
+
+* `tls_early_data` -
+  (Optional)
+  Specifies whether TLS 1.3 0-RTT Data ("Early Data") should be accepted for this service.
+  Early Data allows a TLS resumption handshake to include the initial application payload
+  (a HTTP request) alongside the handshake, reducing the effective round trips to "zero".
+  This applies to TLS 1.3 connections over TCP (HTTP/2) as well as over UDP (QUIC/h3).
+  This can improve application performance, especially on networks where interruptions may be common,
+  such as on mobile. Requests with Early Data will have the "Early-Data" HTTP header set on the request,
+  with a value of "1", to allow the backend to determine whether Early Data was included.
+  Note: TLS Early Data may allow requests to be replayed, as the data is sent to the backend before the handshake
+  has fully completed. Applications that allow idempotent HTTP methods to make non-idempotent changes,
+  such as a GET request updating a database, should not accept Early Data on those requests,
+  and reject requests with the "Early-Data: 1" HTTP header by returning a HTTP 425 (Too Early) status code,
+  in order to remain RFC compliant. The default value is DISABLED.
+  Possible values are: `STRICT`, `PERMISSIVE`, `UNRESTRICTED`, `DISABLED`.
 
 * `certificate_manager_certificates` -
   (Optional)

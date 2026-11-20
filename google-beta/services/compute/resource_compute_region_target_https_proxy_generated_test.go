@@ -470,6 +470,106 @@ resource "google_compute_region_backend_service" "default" {
 `, context)
 }
 
+func TestAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyTlsEarlyDataExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"region_backend_service_name":    "tf-test-backend-service" + randomSuffix,
+		"region_health_check_name":       "tf-test-http-health-check" + randomSuffix,
+		"region_ssl_certificate_name":    "tf-test-my-certificate" + randomSuffix,
+		"region_target_https_proxy_name": "tf-test-test-tls-early-data-proxy" + randomSuffix,
+		"region_url_map_name":            "tf-test-url-map" + randomSuffix,
+		"random_suffix":                  randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionTargetHttpsProxyDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyTlsEarlyDataExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_target_https_proxy.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region", "server_tls_policy", "ssl_policy", "url_map"},
+			},
+			{
+				ResourceName:       "google_compute_region_target_https_proxy.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeRegionTargetHttpsProxy_regionTargetHttpsProxyTlsEarlyDataExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_target_https_proxy" "default" {
+  region           = "us-central1"
+  name             = "%{region_target_https_proxy_name}"
+  tls_early_data   = "STRICT"
+  url_map          = google_compute_region_url_map.default.id
+  ssl_certificates = [google_compute_region_ssl_certificate.default.id]
+}
+
+resource "google_compute_region_ssl_certificate" "default" {
+  region      = "us-central1"
+  name        = "%{region_ssl_certificate_name}"
+  private_key = file("test-fixtures/test.key")
+  certificate = file("test-fixtures/test.crt")
+}
+
+resource "google_compute_region_url_map" "default" {
+  region      = "us-central1"
+  name        = "%{region_url_map_name}"
+  description = "a description"
+
+  default_service = google_compute_region_backend_service.default.id
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = google_compute_region_backend_service.default.id
+
+    path_rule {
+      paths   = ["/*"]
+      service = google_compute_region_backend_service.default.id
+    }
+  }
+}
+
+resource "google_compute_region_backend_service" "default" {
+  region                = "us-central1"
+  name                  = "%{region_backend_service_name}"
+  port_name             = "http"
+  protocol              = "HTTP"
+  timeout_sec           = 10
+  load_balancing_scheme = "INTERNAL_MANAGED"
+
+  health_checks = [google_compute_region_health_check.default.id]
+}
+
+resource "google_compute_region_health_check" "default" {
+  region = "us-central1"
+  name   = "%{region_health_check_name}"
+
+  http_health_check {
+    port = 80
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeRegionTargetHttpsProxyDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
