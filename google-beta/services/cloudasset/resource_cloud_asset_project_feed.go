@@ -238,8 +238,19 @@ This can be used e.g. in UIs which allow to enter the expression.`,
 			"content_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"CONTENT_TYPE_UNSPECIFIED", "RESOURCE", "IAM_POLICY", "ORG_POLICY", "OS_INVENTORY", "ACCESS_POLICY", ""}),
-				Description:  `Asset content type. If not specified, no content but the asset name and type will be returned. Possible values: ["CONTENT_TYPE_UNSPECIFIED", "RESOURCE", "IAM_POLICY", "ORG_POLICY", "OS_INVENTORY", "ACCESS_POLICY"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"CONTENT_TYPE_UNSPECIFIED", "RESOURCE", "IAM_POLICY", "ORG_POLICY", "OS_INVENTORY", "ACCESS_POLICY", "RELATIONSHIP", ""}),
+				Description:  `Asset content type. If not specified, no content but the asset name and type will be returned. Possible values: ["CONTENT_TYPE_UNSPECIFIED", "RESOURCE", "IAM_POLICY", "ORG_POLICY", "OS_INVENTORY", "ACCESS_POLICY", "RELATIONSHIP"]`,
+			},
+			"relationship_types": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `A list of relationship types to output, for example: 'INSTANCE_TO_INSTANCEGROUP'. This field should only be specified if content_type=RELATIONSHIP.
+* If specified: it outputs specified relationship updates on the [asset_names] or the [asset_types]. It returns an error if any of the [relationship_types] doesn't belong to the supported relationship types of the [asset_names] or [asset_types], or any of the [asset_names] or the [asset_types] doesn't belong to the source types of the [relationship_types].
+* Otherwise: it outputs the supported relationships of the types of [asset_names] and [asset_types] or returns an error if any of the [asset_names] or the [asset_types] has no relationship support.
+See [Introduction to Cloud Asset Inventory](https://cloud.google.com/asset-inventory/docs/overview) for all supported asset types and relationship types.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -294,6 +305,12 @@ func resourceCloudAssetProjectFeedCreate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("content_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(contentTypeProp)) && (ok || !reflect.DeepEqual(v, contentTypeProp)) {
 		obj["contentType"] = contentTypeProp
+	}
+	relationshipTypesProp, err := expandCloudAssetProjectFeedRelationshipTypes(d.Get("relationship_types"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("relationship_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(relationshipTypesProp)) && (ok || !reflect.DeepEqual(v, relationshipTypesProp)) {
+		obj["relationshipTypes"] = relationshipTypesProp
 	}
 	feedOutputConfigProp, err := expandCloudAssetProjectFeedFeedOutputConfig(d.Get("feed_output_config"), d, config)
 	if err != nil {
@@ -533,6 +550,12 @@ func resourceCloudAssetProjectFeedUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("content_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, contentTypeProp)) {
 		obj["contentType"] = contentTypeProp
 	}
+	relationshipTypesProp, err := expandCloudAssetProjectFeedRelationshipTypes(d.Get("relationship_types"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("relationship_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, relationshipTypesProp)) {
+		obj["relationshipTypes"] = relationshipTypesProp
+	}
 	feedOutputConfigProp, err := expandCloudAssetProjectFeedFeedOutputConfig(d.Get("feed_output_config"), d, config)
 	if err != nil {
 		return err
@@ -570,6 +593,10 @@ func resourceCloudAssetProjectFeedUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("content_type") {
 		updateMask = append(updateMask, "contentType")
+	}
+
+	if d.HasChange("relationship_types") {
+		updateMask = append(updateMask, "relationshipTypes")
 	}
 
 	if d.HasChange("feed_output_config") {
@@ -695,6 +722,10 @@ func flattenCloudAssetProjectFeedContentType(v interface{}, d *schema.ResourceDa
 	return v
 }
 
+func flattenCloudAssetProjectFeedRelationshipTypes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenCloudAssetProjectFeedFeedOutputConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -769,6 +800,10 @@ func expandCloudAssetProjectFeedAssetTypes(v interface{}, d tpgresource.Terrafor
 }
 
 func expandCloudAssetProjectFeedContentType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudAssetProjectFeedRelationshipTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -913,6 +948,9 @@ func ResourceCloudAssetProjectFeedFlatten(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
 	if err = d.Set("content_type", flattenCloudAssetProjectFeedContentType(res["contentType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ProjectFeed: %s", err)
+	}
+	if err = d.Set("relationship_types", flattenCloudAssetProjectFeedRelationshipTypes(res["relationshipTypes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ProjectFeed: %s", err)
 	}
 	if err = d.Set("feed_output_config", flattenCloudAssetProjectFeedFeedOutputConfig(res["feedOutputConfig"], d, config)); err != nil {

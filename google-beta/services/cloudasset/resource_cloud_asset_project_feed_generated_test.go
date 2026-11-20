@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -130,6 +131,122 @@ resource "google_pubsub_topic" "feed_output" {
 # the asset change notifications.
 data "google_project" "project" {
   project_id = "%{project}"
+}
+`, context)
+}
+
+func TestAccCloudAssetProjectFeed_cloudAssetProjectFeedRelationshipExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
+		"feed_id":       "tf-test-relationship-updates" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
+		"feed_id":       "tf-test-relationship-updates" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCloudAssetProjectFeedDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCloudAssetProjectFeed_cloudAssetProjectFeedRelationshipExample(context),
+			},
+			{
+				ResourceName:            "google_cloud_asset_project_feed.project_feed",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_project", "feed_id"},
+			},
+			{
+				ResourceName:       "google_cloud_asset_project_feed.project_feed",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccCloudAssetProjectFeed_cloudAssetProjectFeedRelationshipUpdateExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_cloud_asset_project_feed.project_feed", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_cloud_asset_project_feed.project_feed",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_project", "feed_id"},
+			},
+			{
+				ResourceName:       "google_cloud_asset_project_feed.project_feed",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccCloudAssetProjectFeed_cloudAssetProjectFeedRelationshipExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_cloud_asset_project_feed" "project_feed" {
+  project      = "%{project}"
+  feed_id      = "%{feed_id}"
+  content_type = "RELATIONSHIP"
+
+  asset_types = [
+    "compute.googleapis.com/Instance",
+  ]
+
+  relationship_types = [
+    "INSTANCE_TO_INSTANCEGROUP",
+  ]
+
+  feed_output_config {
+    pubsub_destination {
+      topic = google_pubsub_topic.feed_output.id
+    }
+  }
+}
+
+resource "google_pubsub_topic" "feed_output" {
+  project = "%{project}"
+  name    = "%{feed_id}"
+}
+`, context)
+}
+
+func testAccCloudAssetProjectFeed_cloudAssetProjectFeedRelationshipUpdateExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_cloud_asset_project_feed" "project_feed" {
+  project      = "%{project}"
+  feed_id      = "%{feed_id}"
+  content_type = "RESOURCE"
+
+  asset_types = [
+    "compute.googleapis.com/Subnetwork",
+    "compute.googleapis.com/Network",
+  ]
+
+  feed_output_config {
+    pubsub_destination {
+      topic = google_pubsub_topic.feed_output.id
+    }
+  }
+}
+
+resource "google_pubsub_topic" "feed_output" {
+  project = "%{project}"
+  name    = "%{feed_id}"
 }
 `, context)
 }
