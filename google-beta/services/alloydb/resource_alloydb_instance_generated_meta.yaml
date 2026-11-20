@@ -37,6 +37,8 @@ fields:
     - api_field: networkConfig.authorizedExternalNetworks.cidrRange
     - api_field: networkConfig.enableOutboundPublicIp
     - api_field: networkConfig.enablePublicIp
+    - api_field: networkConfig.publicDnsEnabled
+    - api_field: networkInfo.publicDnsName
     - api_field: observabilityConfig.assistiveExperiencesEnabled
     - api_field: observabilityConfig.enabled
     - api_field: observabilityConfig.maxQueryStringLength

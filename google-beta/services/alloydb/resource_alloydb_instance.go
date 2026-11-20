@@ -54,13 +54,16 @@ import (
 )
 
 // Retry when the AlloyDB API returns a 400 that the instance is currently undergoing another update operation
-// or a 409 that it is unable to queue the operation.
+// or background instant-provisioning setup is still in progress, or a 409 that it is unable to queue the operation.
 func IsAlloyDbInstanceUpdatingError(err error) (bool, string) {
 	if gerr, ok := err.(*googleapi.Error); ok {
 		bodyLower := strings.ToLower(gerr.Body)
 		msgLower := strings.ToLower(gerr.Message)
 		if gerr.Code == 400 && (strings.Contains(bodyLower, "the instance is currently undergoing another update operation") || strings.Contains(msgLower, "the instance is currently undergoing another update operation")) {
 			return true, "Instance is undergoing another update operation"
+		}
+		if gerr.Code == 400 && (strings.Contains(bodyLower, "background setup in progress") || strings.Contains(msgLower, "background setup in progress")) {
+			return true, "Waiting for background setup to finish"
 		}
 		if gerr.Code == 409 && (strings.Contains(bodyLower, "unable to queue the operation") || strings.Contains(msgLower, "unable to queue the operation")) {
 			return true, "Waiting for other enqueued operations to finish"
@@ -71,6 +74,9 @@ func IsAlloyDbInstanceUpdatingError(err error) (bool, string) {
 		errLower := strings.ToLower(err.Error())
 		if strings.Contains(errLower, "the instance is currently undergoing another update operation") {
 			return true, "Instance is undergoing another update operation"
+		}
+		if strings.Contains(errLower, "background setup in progress") {
+			return true, "Waiting for background setup to finish"
 		}
 		if strings.Contains(errLower, "unable to queue the operation") {
 			return true, "Waiting for other enqueued operations to finish"
@@ -347,7 +353,7 @@ The range name must comply with RFC 1035. Specifically, the name must be 1-63 ch
 							Optional: true,
 							Description: `A list of external networks authorized to access this instance. This
 field is only allowed to be set when 'enable_public_ip' is set to
-true.`,
+true (or when 'public_dns_enabled' is set to true in 'google-beta').`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"cidr_range": {
@@ -357,7 +363,6 @@ true.`,
 									},
 								},
 							},
-							RequiredWith: []string{"network_config.0.enable_public_ip"},
 						},
 						"enable_outbound_public_ip": {
 							Type:        schema.TypeBool,
@@ -370,6 +375,15 @@ true.`,
 							Description: `Enabling public ip for the instance. If a user wishes to disable this,
 please also clear the list of the authorized external networks set on
 the same instance.`,
+						},
+						"public_dns_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Whether Public DNS is enabled for the instance. Public DNS can only be
+enabled on AlloyDB Express instances. When it's enabled, the instance's
+DNS name is exported as 'network_info.public_dns_name'. Turning Public
+DNS on or off can't be combined with changes that restart the instance
+in the same apply.`,
 						},
 					},
 				},
@@ -661,6 +675,21 @@ The name of the resource will be in the format of
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The name of the instance resource.`,
+			},
+			"network_info": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Public network metadata for the instance, such as its Public DNS domain name.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"public_dns_name": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The Public DNS domain name (FQDN) of the instance, populated when
+'network_config.public_dns_enabled' is 'true'.`,
+						},
+					},
+				},
 			},
 			"outbound_public_ip_addresses": {
 				Type:     schema.TypeList,
@@ -1835,6 +1864,8 @@ func flattenAlloydbInstanceNetworkConfig(v interface{}, d *schema.ResourceData, 
 		flattenAlloydbInstanceNetworkConfigEnablePublicIp(original["enablePublicIp"], d, config)
 	transformed["enable_outbound_public_ip"] =
 		flattenAlloydbInstanceNetworkConfigEnableOutboundPublicIp(original["enableOutboundPublicIp"], d, config)
+	transformed["public_dns_enabled"] =
+		flattenAlloydbInstanceNetworkConfigPublicDnsEnabled(original["publicDnsEnabled"], d, config)
 	transformed["allocated_ip_range_override"] =
 		flattenAlloydbInstanceNetworkConfigAllocatedIpRangeOverride(original["allocatedIpRangeOverride"], d, config)
 	return []interface{}{transformed}
@@ -1867,6 +1898,10 @@ func flattenAlloydbInstanceNetworkConfigEnablePublicIp(v interface{}, d *schema.
 }
 
 func flattenAlloydbInstanceNetworkConfigEnableOutboundPublicIp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceNetworkConfigPublicDnsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1932,6 +1967,23 @@ func flattenAlloydbInstanceConnectionPoolConfigPoolerCount(v interface{}, d *sch
 }
 
 func flattenAlloydbInstanceConnectionPoolConfigFlags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceNetworkInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["public_dns_name"] =
+		flattenAlloydbInstanceNetworkInfoPublicDnsName(original["publicDnsName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceNetworkInfoPublicDnsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2576,6 +2628,13 @@ func expandAlloydbInstanceNetworkConfig(v interface{}, d tpgresource.TerraformRe
 		transformed["enableOutboundPublicIp"] = transformedEnableOutboundPublicIp
 	}
 
+	transformedPublicDnsEnabled, err := expandAlloydbInstanceNetworkConfigPublicDnsEnabled(original["public_dns_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPublicDnsEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["publicDnsEnabled"] = transformedPublicDnsEnabled
+	}
+
 	transformedAllocatedIpRangeOverride, err := expandAlloydbInstanceNetworkConfigAllocatedIpRangeOverride(original["allocated_ip_range_override"], d, config)
 	if err != nil {
 		return nil, err
@@ -2620,6 +2679,10 @@ func expandAlloydbInstanceNetworkConfigEnablePublicIp(v interface{}, d tpgresour
 }
 
 func expandAlloydbInstanceNetworkConfigEnableOutboundPublicIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceNetworkConfigPublicDnsEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2801,6 +2864,9 @@ func ResourceAlloydbInstanceFlatten(d *schema.ResourceData, meta interface{}, re
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err = d.Set("connection_pool_config", flattenAlloydbInstanceConnectionPoolConfig(res["connectionPoolConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err = d.Set("network_info", flattenAlloydbInstanceNetworkInfo(res["networkInfo"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenAlloydbInstanceTerraformLabels(res["labels"], d, config)); err != nil {

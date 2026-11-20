@@ -511,7 +511,7 @@ The following arguments are supported:
   (Optional)
   A list of external networks authorized to access this instance. This
   field is only allowed to be set when `enable_public_ip` is set to
-  true.
+  true (or when `public_dns_enabled` is set to true in `google-beta`).
   Structure is [documented below](#nested_network_config_authorized_external_networks).
 
 * `enable_public_ip` -
@@ -523,6 +523,14 @@ The following arguments are supported:
 * `enable_outbound_public_ip` -
   (Optional)
   Enabling outbound public ip for the instance.
+
+* `public_dns_enabled` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Whether Public DNS is enabled for the instance. Public DNS can only be
+  enabled on AlloyDB Express instances. When it's enabled, the instance's
+  DNS name is exported as `network_info.public_dns_name`. Turning Public
+  DNS on or off can't be combined with changes that restart the instance
+  in the same apply.
 
 * `allocated_ip_range_override` -
   (Optional)
@@ -600,6 +608,11 @@ In addition to the arguments listed above, the following computed attributes are
   networkConfig.enableOutboundPublicIp is set to true. These IP addresses are used
   for outbound connections.
 
+* `network_info` -
+  ([Beta](../guides/provider_versions.html.markdown))
+  Public network metadata for the instance, such as its Public DNS domain name.
+  Structure is [documented below](#nested_network_info).
+
 * `terraform_labels` -
   The combination of labels configured directly on the resource
    and default labels configured on the provider.
@@ -625,6 +638,13 @@ In addition to the arguments listed above, the following computed attributes are
   (Output)
   Indicates if the PSC auto connection policy is enabled for the instance.
   For older instances, this will be off by default, but for newer instances, this will be auto-enabled.
+
+<a name="nested_network_info"></a>The `network_info` block contains:
+
+* `public_dns_name` -
+  (Output)
+  The Public DNS domain name (FQDN) of the instance, populated when
+  `network_config.public_dns_enabled` is `true`.
 
 ## Timeouts
 
