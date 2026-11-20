@@ -144,6 +144,7 @@ service ID.`,
 			},
 			"basic_service": {
 				Type:     schema.TypeList,
+				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Description: `A well-known service type, defined by its service type and service labels.
@@ -168,6 +169,35 @@ APP_ENGINE service type`,
 						},
 					},
 				},
+				ConflictsWith: []string{"cloud_run"},
+			},
+			"cloud_run": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Type used for Cloud Run services.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"location": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `The location the service is run. Corresponds to the 'location'
+resource label in the ['cloud_run_revision' monitored
+resource](https://cloud.google.com/monitoring/api/resources#tag_cloud_run_revision).`,
+						},
+						"service_name": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `The name of the Cloud Run service. Corresponds to the 'service_name'
+resource label in the ['cloud_run_revision' monitored
+resource](https://cloud.google.com/monitoring/api/resources#tag_cloud_run_revision).`,
+						},
+					},
+				},
+				ConflictsWith: []string{"basic_service"},
 			},
 			"display_name": {
 				Type:        schema.TypeString,
@@ -255,6 +285,12 @@ func resourceMonitoringGenericServiceCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("basic_service"); !tpgresource.IsEmptyValue(reflect.ValueOf(basicServiceProp)) && (ok || !reflect.DeepEqual(v, basicServiceProp)) {
 		obj["basicService"] = basicServiceProp
+	}
+	cloudRunProp, err := expandMonitoringGenericServiceCloudRun(d.Get("cloud_run"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("cloud_run"); !tpgresource.IsEmptyValue(reflect.ValueOf(cloudRunProp)) && (ok || !reflect.DeepEqual(v, cloudRunProp)) {
+		obj["cloudRun"] = cloudRunProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"v3/projects/{{project}}/services?serviceId={{service_id}}")
@@ -641,6 +677,29 @@ func flattenMonitoringGenericServiceBasicServiceServiceLabels(v interface{}, d *
 	return v
 }
 
+func flattenMonitoringGenericServiceCloudRun(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["service_name"] =
+		flattenMonitoringGenericServiceCloudRunServiceName(original["serviceName"], d, config)
+	transformed["location"] =
+		flattenMonitoringGenericServiceCloudRunLocation(original["location"], d, config)
+	return []interface{}{transformed}
+}
+func flattenMonitoringGenericServiceCloudRunServiceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMonitoringGenericServiceCloudRunLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandMonitoringGenericServiceDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -700,6 +759,43 @@ func expandMonitoringGenericServiceBasicServiceServiceLabels(v interface{}, d tp
 	return m, nil
 }
 
+func expandMonitoringGenericServiceCloudRun(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedServiceName, err := expandMonitoringGenericServiceCloudRunServiceName(original["service_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServiceName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serviceName"] = transformedServiceName
+	}
+
+	transformedLocation, err := expandMonitoringGenericServiceCloudRunLocation(original["location"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["location"] = transformedLocation
+	}
+
+	return transformed, nil
+}
+
+func expandMonitoringGenericServiceCloudRunServiceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandMonitoringGenericServiceCloudRunLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceMonitoringGenericServiceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -716,6 +812,9 @@ func ResourceMonitoringGenericServiceFlatten(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}
 	if err = d.Set("basic_service", flattenMonitoringGenericServiceBasicService(res["basicService"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GenericService: %s", err)
+	}
+	if err = d.Set("cloud_run", flattenMonitoringGenericServiceCloudRun(res["cloudRun"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GenericService: %s", err)
 	}
 

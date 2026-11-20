@@ -9,6 +9,8 @@ api_resource_type_kind: Service
 fields:
     - api_field: basicService.serviceLabels
     - api_field: basicService.serviceType
+    - api_field: cloudRun.location
+    - api_field: cloudRun.serviceName
     - api_field: displayName
     - api_field: name
     - field: service_id

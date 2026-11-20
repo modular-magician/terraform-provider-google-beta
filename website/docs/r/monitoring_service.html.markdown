@@ -95,6 +95,11 @@ The following arguments are supported:
   https://cloud.google.com/stackdriver/docs/solutions/slo-monitoring/api/api-structures#basic-svc-w-basic-sli
   Structure is [documented below](#nested_basic_service).
 
+* `cloud_run` -
+  (Optional)
+  Type used for Cloud Run services.
+  Structure is [documented below](#nested_cloud_run).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -117,6 +122,20 @@ The following arguments are supported:
   (Optional)
   Labels that specify the resource that emits the monitoring data
   which is used for SLO reporting of this `Service`.
+
+<a name="nested_cloud_run"></a>The `cloud_run` block supports:
+
+* `service_name` -
+  (Required)
+  The name of the Cloud Run service. Corresponds to the `service_name`
+  resource label in the [`cloud_run_revision` monitored
+  resource](https://cloud.google.com/monitoring/api/resources#tag_cloud_run_revision).
+
+* `location` -
+  (Required)
+  The location the service is run. Corresponds to the `location`
+  resource label in the [`cloud_run_revision` monitored
+  resource](https://cloud.google.com/monitoring/api/resources#tag_cloud_run_revision).
 
 ## Attributes Reference
 
