@@ -298,6 +298,52 @@ resource "google_compute_region_security_policy" "policy_rule" {
   }
 }
 ```
+<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=region_security_policy_with_expr_options&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
+  </a>
+</div>
+
+## Example Usage - Region Security Policy With Expr Options
+
+
+```hcl
+resource "google_compute_region_security_policy" "region-sec-policy-expr-options" {
+  name        = "my-sec-policy-expr-options"
+  region      = "us-central1"
+  description = "basic region security policy with expr_options"
+  type        = "CLOUD_ARMOR"
+
+  rules {
+    action      = "deny(403)"
+    priority    = "2000"
+    description = "reCAPTCHA rule"
+    match {
+      expr {
+        expression = "request.path.endsWith('RegisterWithEmail') && token.recaptcha_action.score >= 0.8 && (token.recaptcha_action.valid)"
+      }
+      expr_options {
+        recaptcha_options {
+          action_token_site_keys  = ["placeholder-recaptcha-action-site-key-01", "placeholder-recaptcha-action-site-key-02"]
+          session_token_site_keys = ["placeholder-recaptcha-session-site-key-1", "placeholder-recaptcha-session-site-key-2"]
+        }
+      }
+    }
+  }
+
+  rules {
+    action      = "allow"
+    priority    = "2147483647"
+    description = "default rule"
+    match {
+      versioned_expr = "SRC_IPS_V1"
+      config {
+        src_ip_ranges = ["*"]
+      }
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -508,6 +554,11 @@ The following arguments are supported:
   This field must be specified if versionedExpr is specified and cannot be specified if versionedExpr is not specified.
   Structure is [documented below](#nested_rules_match_config).
 
+* `expr_options` -
+  (Optional)
+  The configuration options available when specifying a user defined CEVAL expression (i.e., 'expr').
+  Structure is [documented below](#nested_rules_match_expr_options).
+
 
 <a name="nested_rules_match_expr"></a>The `expr` block supports:
 
@@ -520,6 +571,24 @@ The following arguments are supported:
 * `src_ip_ranges` -
   (Optional)
   CIDR IP address range. Maximum number of srcIpRanges allowed is 10.
+
+<a name="nested_rules_match_expr_options"></a>The `expr_options` block supports:
+
+* `recaptcha_options` -
+  (Optional)
+  reCAPTCHA configuration options to be applied for the rule. If the rule does not evaluate reCAPTCHA tokens, this field has no effect.
+  Structure is [documented below](#nested_rules_match_expr_options_recaptcha_options).
+
+
+<a name="nested_rules_match_expr_options_recaptcha_options"></a>The `recaptcha_options` block supports:
+
+* `action_token_site_keys` -
+  (Optional)
+  A list of site keys to be used during the validation of reCAPTCHA action-tokens. The provided site keys need to be created from reCAPTCHA API under the same project where the security policy is created.
+
+* `session_token_site_keys` -
+  (Optional)
+  A list of site keys to be used during the validation of reCAPTCHA session-tokens. The provided site keys need to be created from reCAPTCHA API under the same project where the security policy is created.
 
 <a name="nested_rules_preconfigured_waf_config"></a>The `preconfigured_waf_config` block supports:
 

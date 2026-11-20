@@ -320,6 +320,42 @@ This field must be specified if versionedExpr is specified and cannot be specifi
 											},
 										},
 									},
+									"expr_options": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `The configuration options available when specifying a user defined CEVAL expression (i.e., 'expr').`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"recaptcha_options": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `reCAPTCHA configuration options to be applied for the rule. If the rule does not evaluate reCAPTCHA tokens, this field has no effect.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"action_token_site_keys": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `A list of site keys to be used during the validation of reCAPTCHA action-tokens. The provided site keys need to be created from reCAPTCHA API under the same project where the security policy is created.`,
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+															"session_token_site_keys": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `A list of site keys to be used during the validation of reCAPTCHA session-tokens. The provided site keys need to be created from reCAPTCHA API under the same project where the security policy is created.`,
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
 									"versioned_expr": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -1476,6 +1512,8 @@ func flattenComputeRegionSecurityPolicyRulesMatch(v interface{}, d *schema.Resou
 		flattenComputeRegionSecurityPolicyRulesMatchExpr(original["expr"], d, config)
 	transformed["config"] =
 		flattenComputeRegionSecurityPolicyRulesMatchConfig(original["config"], d, config)
+	transformed["expr_options"] =
+		flattenComputeRegionSecurityPolicyRulesMatchExprOptions(original["exprOptions"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeRegionSecurityPolicyRulesMatchVersionedExpr(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1513,6 +1551,42 @@ func flattenComputeRegionSecurityPolicyRulesMatchConfig(v interface{}, d *schema
 	return []interface{}{transformed}
 }
 func flattenComputeRegionSecurityPolicyRulesMatchConfigSrcIpRanges(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeRegionSecurityPolicyRulesMatchExprOptions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["recaptcha_options"] =
+		flattenComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptions(original["recaptchaOptions"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["action_token_site_keys"] =
+		flattenComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsActionTokenSiteKeys(original["actionTokenSiteKeys"], d, config)
+	transformed["session_token_site_keys"] =
+		flattenComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsSessionTokenSiteKeys(original["sessionTokenSiteKeys"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsActionTokenSiteKeys(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsSessionTokenSiteKeys(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2310,6 +2384,13 @@ func expandComputeRegionSecurityPolicyRulesMatch(v interface{}, d tpgresource.Te
 		transformed["config"] = transformedConfig
 	}
 
+	transformedExprOptions, err := expandComputeRegionSecurityPolicyRulesMatchExprOptions(original["expr_options"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExprOptions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["exprOptions"] = transformedExprOptions
+	}
+
 	return transformed, nil
 }
 
@@ -2366,6 +2447,65 @@ func expandComputeRegionSecurityPolicyRulesMatchConfig(v interface{}, d tpgresou
 }
 
 func expandComputeRegionSecurityPolicyRulesMatchConfigSrcIpRanges(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRegionSecurityPolicyRulesMatchExprOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRecaptchaOptions, err := expandComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptions(original["recaptcha_options"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRecaptchaOptions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["recaptchaOptions"] = transformedRecaptchaOptions
+	}
+
+	return transformed, nil
+}
+
+func expandComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedActionTokenSiteKeys, err := expandComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsActionTokenSiteKeys(original["action_token_site_keys"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedActionTokenSiteKeys); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["actionTokenSiteKeys"] = transformedActionTokenSiteKeys
+	}
+
+	transformedSessionTokenSiteKeys, err := expandComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsSessionTokenSiteKeys(original["session_token_site_keys"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSessionTokenSiteKeys); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sessionTokenSiteKeys"] = transformedSessionTokenSiteKeys
+	}
+
+	return transformed, nil
+}
+
+func expandComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsActionTokenSiteKeys(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRegionSecurityPolicyRulesMatchExprOptionsRecaptchaOptionsSessionTokenSiteKeys(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

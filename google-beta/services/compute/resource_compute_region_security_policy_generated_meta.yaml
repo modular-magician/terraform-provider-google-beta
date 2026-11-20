@@ -23,6 +23,8 @@ fields:
     - api_field: rules.description
     - api_field: rules.match.config.srcIpRanges
     - api_field: rules.match.expr.expression
+    - api_field: rules.match.exprOptions.recaptchaOptions.actionTokenSiteKeys
+    - api_field: rules.match.exprOptions.recaptchaOptions.sessionTokenSiteKeys
     - api_field: rules.match.versionedExpr
     - api_field: rules.networkMatch.destIpRanges
     - api_field: rules.networkMatch.destPorts

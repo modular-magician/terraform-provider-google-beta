@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -452,6 +453,192 @@ resource "google_compute_region_security_policy" "policy_rule" {
       }
     }
     description = "default rule"
+  }
+}
+`, context)
+}
+
+func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithExprOptionsExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"action_token_site_keys":  "[\"placeholder-recaptcha-action-site-key-01\", \"placeholder-recaptcha-action-site-key-02\"]",
+		"sec_policy_name":         "tf-test-my-sec-policy-expr-options" + randomSuffix,
+		"session_token_site_keys": "[\"placeholder-recaptcha-session-site-key-1\", \"placeholder-recaptcha-session-site-key-2\"]",
+		"random_suffix":           randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"action_token_site_keys":  "[\"placeholder-recaptcha-action-site-key-09\", \"placeholder-recaptcha-action-site-key-08\", \"placeholder-recaptcha-action-site-key-07\"]",
+		"sec_policy_name":         "tf-test-my-sec-policy-expr-options" + randomSuffix,
+		"session_token_site_keys": "[\"placeholder-recaptcha-session-site-key-1\"]",
+		"random_suffix":           randomSuffix,
+	}
+
+	context_2 := map[string]interface{}{
+		"action_token_site_keys":  "[\"placeholder-recaptcha-action-site-key-09\", \"placeholder-recaptcha-action-site-key-08\", \"placeholder-recaptcha-action-site-key-07\"]",
+		"sec_policy_name":         "tf-test-my-sec-policy-expr-options" + randomSuffix,
+		"session_token_site_keys": nil,
+		"random_suffix":           randomSuffix,
+	}
+
+	context_3 := map[string]interface{}{
+		"action_token_site_keys":  nil,
+		"sec_policy_name":         "tf-test-my-sec-policy-expr-options" + randomSuffix,
+		"session_token_site_keys": "[\"placeholder-recaptcha-session-site-key-1\"]",
+		"random_suffix":           randomSuffix,
+	}
+
+	context_4 := map[string]interface{}{
+		"sec_policy_name": "tf-test-my-sec-policy-expr-options" + randomSuffix,
+		"random_suffix":   randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionSecurityPolicyDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithExprOptionsExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_security_policy.region-sec-policy-expr-options",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+			{
+				Config: testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithExprOptionsExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_region_security_policy.region-sec-policy-expr-options", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_compute_region_security_policy.region-sec-policy-expr-options",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+			{
+				Config: testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithExprOptionsExample(context_2),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_region_security_policy.region-sec-policy-expr-options", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_compute_region_security_policy.region-sec-policy-expr-options",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+			{
+				Config: testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithExprOptionsExample(context_3),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_region_security_policy.region-sec-policy-expr-options", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_compute_region_security_policy.region-sec-policy-expr-options",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+			{
+				Config: testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithoutExprOptionsExample(context_4),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_compute_region_security_policy.region-sec-policy-expr-options", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_compute_region_security_policy.region-sec-policy-expr-options",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+		},
+	})
+}
+
+func testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithExprOptionsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_security_policy" "region-sec-policy-expr-options" {
+  name        = "%{sec_policy_name}"
+  region      = "us-central1"
+  description = "basic region security policy with expr_options"
+  type        = "CLOUD_ARMOR"
+
+  rules {
+    action      = "deny(403)"
+    priority    = "2000"
+    description = "reCAPTCHA rule"
+    match {
+      expr {
+        expression = "request.path.endsWith('RegisterWithEmail') && token.recaptcha_action.score >= 0.8 && (token.recaptcha_action.valid)"
+      }
+      expr_options {
+        recaptcha_options {
+          action_token_site_keys  = %{action_token_site_keys}
+          session_token_site_keys = %{session_token_site_keys}
+        }
+      }
+    }
+  }
+
+  rules {
+    action      = "allow"
+    priority    = "2147483647"
+    description = "default rule"
+    match {
+      versioned_expr = "SRC_IPS_V1"
+      config {
+        src_ip_ranges = ["*"]
+      }
+    }
+  }
+}
+`, context)
+}
+
+func testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithoutExprOptionsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_security_policy" "region-sec-policy-expr-options" {
+  name        = "%{sec_policy_name}"
+  region      = "us-central1"
+  description = "basic region security policy with expr_options"
+  type        = "CLOUD_ARMOR"
+
+  rules {
+    action      = "deny(403)"
+    priority    = "2000"
+    description = "reCAPTCHA rule"
+    match {
+      expr {
+        expression = "request.path.endsWith('RegisterWithEmail') && token.recaptcha_action.score >= 0.8 && (token.recaptcha_action.valid)"
+      }
+    }
+  }
+
+  rules {
+    action      = "allow"
+    priority    = "2147483647"
+    description = "default rule"
+    match {
+      versioned_expr = "SRC_IPS_V1"
+      config {
+        src_ip_ranges = ["*"]
+      }
+    }
   }
 }
 `, context)
