@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -452,6 +453,97 @@ resource "google_database_migration_service_connection_profile" "postgresprofile
     cloud_sql_id = "%{sqldb}"
   }
   depends_on = [google_sql_user.sqldb_user]
+}
+`, context)
+}
+
+func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfilePostgresSslFlagsExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"profile":       "tf-test-my-profileid" + randomSuffix,
+		"sqldb_pass":    "tf-test-my-password" + randomSuffix,
+		"sqldb_user":    "tf-test-my-username" + randomSuffix,
+		"ssl_hostname":  "example.com",
+		"random_suffix": randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"profile":       "tf-test-my-profileid" + randomSuffix,
+		"sqldb_pass":    "tf-test-my-password" + randomSuffix,
+		"sqldb_user":    "tf-test-my-username" + randomSuffix,
+		"ssl_hostname":  "updated.example.com",
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDatabaseMigrationServiceConnectionProfileDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfilePostgresSslFlagsExample(context),
+			},
+			{
+				ResourceName:            "google_database_migration_service_connection_profile.postgresprofile",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "labels", "location", "postgresql.0.password", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_database_migration_service_connection_profile.postgresprofile",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfilePostgresSslFlagsExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_database_migration_service_connection_profile.postgresprofile", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_database_migration_service_connection_profile.postgresprofile",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "labels", "location", "postgresql.0.password", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_database_migration_service_connection_profile.postgresprofile",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfilePostgresSslFlagsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_database_migration_service_connection_profile" "postgresprofile" {
+  location              = "us-central1"
+  connection_profile_id = "%{profile}"
+  display_name          = "%{profile}-display"
+  labels = {
+    foo = "bar"
+  }
+  postgresql {
+    host     = "10.20.30.40"
+    port     = 5432
+    username = "%{sqldb_user}"
+    password = "%{sqldb_pass}"
+    database = "postgres"
+    ssl {
+      type = "REQUIRED"
+      ssl_flags = {
+        server_certificate_hostname = "%{ssl_hostname}"
+      }
+    }
+  }
 }
 `, context)
 }

@@ -302,6 +302,38 @@ resource "google_database_migration_service_connection_profile" "postgresprofile
   depends_on = [google_sql_user.sqldb_user]
 }
 ```
+<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=database_migration_service_connection_profile_postgres_ssl_flags&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
+  </a>
+</div>
+
+## Example Usage - Database Migration Service Connection Profile Postgres Ssl Flags
+
+
+```hcl
+resource "google_database_migration_service_connection_profile" "postgresprofile" {
+  location              = "us-central1"
+  connection_profile_id = "my-profileid"
+  display_name          = "my-profileid-display"
+  labels = {
+    foo = "bar"
+  }
+  postgresql {
+    host     = "10.20.30.40"
+    port     = 5432
+    username = "my-username"
+    password = "my-password"
+    database = "postgres"
+    ssl {
+      type = "REQUIRED"
+      ssl_flags = {
+        server_certificate_hostname = "example.com"
+      }
+    }
+  }
+}
+```
 
 ## Example Usage - Database Migration Service Connection Profile Oracle
 
@@ -636,6 +668,12 @@ The following arguments are supported:
   The replica will use this certificate to verify it's connecting to the right host.
   **Note**: This property is sensitive and will not be displayed in the plan.
 
+* `ssl_flags` -
+  (Optional)
+  SSL flags used for establishing SSL connection to the source database. Only source specific flags are supported.
+  An object containing a list of "key": "value" pairs.
+  Examples: { "server_certificate_dn": "CN=server.com,OU=RDS,O=Amazon.com,C=US"} or { "server_certificate_hostname": "server.com"}.
+
 <a name="nested_postgresql"></a>The `postgresql` block supports:
 
 * `host` -
@@ -711,6 +749,12 @@ The following arguments are supported:
   Input only. The x509 PEM-encoded certificate of the CA that signed the source database server's certificate.
   The replica will use this certificate to verify it's connecting to the right host.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `ssl_flags` -
+  (Optional)
+  SSL flags used for establishing SSL connection to the source database. Only source specific flags are supported.
+  An object containing a list of "key": "value" pairs.
+  Examples: { "server_certificate_dn": "CN=server.com,OU=RDS,O=Amazon.com,C=US"} or { "server_certificate_hostname": "server.com"}.
 
 <a name="nested_postgresql_private_connectivity"></a>The `private_connectivity` block supports:
 
@@ -790,6 +834,12 @@ The following arguments are supported:
   Input only. The x509 PEM-encoded certificate of the CA that signed the source database server's certificate.
   The replica will use this certificate to verify it's connecting to the right host.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `ssl_flags` -
+  (Optional)
+  SSL flags used for establishing SSL connection to the source database. Only source specific flags are supported.
+  An object containing a list of "key": "value" pairs.
+  Examples: { "server_certificate_dn": "CN=server.com,OU=RDS,O=Amazon.com,C=US"} or { "server_certificate_hostname": "server.com"}.
 
 <a name="nested_oracle_forward_ssh_connectivity"></a>The `forward_ssh_connectivity` block supports:
 

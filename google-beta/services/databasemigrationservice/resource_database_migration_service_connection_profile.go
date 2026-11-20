@@ -527,6 +527,14 @@ If this field is used then the 'clientKey' field is mandatory`,
 If this field is used then the 'clientCertificate' field is mandatory.`,
 										Sensitive: true,
 									},
+									"ssl_flags": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Description: `SSL flags used for establishing SSL connection to the source database. Only source specific flags are supported.
+An object containing a list of "key": "value" pairs.
+Examples: { "server_certificate_dn": "CN=server.com,OU=RDS,O=Amazon.com,C=US"} or { "server_certificate_hostname": "server.com"}.`,
+										Elem: &schema.Schema{Type: schema.TypeString},
+									},
 									"type": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -673,6 +681,14 @@ If this field is used then the 'clientKey' field is mandatory`,
 If this field is used then the 'clientCertificate' field is mandatory.`,
 										Sensitive: true,
 									},
+									"ssl_flags": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Description: `SSL flags used for establishing SSL connection to the source database. Only source specific flags are supported.
+An object containing a list of "key": "value" pairs.
+Examples: { "server_certificate_dn": "CN=server.com,OU=RDS,O=Amazon.com,C=US"} or { "server_certificate_hostname": "server.com"}.`,
+										Elem: &schema.Schema{Type: schema.TypeString},
+									},
 									"type": {
 										Type:        schema.TypeString,
 										Computed:    true,
@@ -790,6 +806,14 @@ If this field is used then the 'clientKey' field is mandatory`,
 										Description: `Input only. The unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with the Client Certificate.
 If this field is used then the 'clientCertificate' field is mandatory.`,
 										Sensitive: true,
+									},
+									"ssl_flags": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Description: `SSL flags used for establishing SSL connection to the source database. Only source specific flags are supported.
+An object containing a list of "key": "value" pairs.
+Examples: { "server_certificate_dn": "CN=server.com,OU=RDS,O=Amazon.com,C=US"} or { "server_certificate_hostname": "server.com"}.`,
+										Elem: &schema.Schema{Type: schema.TypeString},
 									},
 									"type": {
 										Type:         schema.TypeString,
@@ -1552,6 +1576,8 @@ func flattenDatabaseMigrationServiceConnectionProfileMysqlSsl(v interface{}, d *
 		flattenDatabaseMigrationServiceConnectionProfileMysqlSslClientCertificate(original["clientCertificate"], d, config)
 	transformed["ca_certificate"] =
 		flattenDatabaseMigrationServiceConnectionProfileMysqlSslCaCertificate(original["caCertificate"], d, config)
+	transformed["ssl_flags"] =
+		flattenDatabaseMigrationServiceConnectionProfileMysqlSslSslFlags(original["sslFlags"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatabaseMigrationServiceConnectionProfileMysqlSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1568,6 +1594,10 @@ func flattenDatabaseMigrationServiceConnectionProfileMysqlSslClientCertificate(v
 
 func flattenDatabaseMigrationServiceConnectionProfileMysqlSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("mysql.0.ssl.0.ca_certificate")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileMysqlSslSslFlags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileMysqlCloudSqlId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1661,6 +1691,8 @@ func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSsl(v interface{}
 		flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslClientCertificate(original["clientCertificate"], d, config)
 	transformed["ca_certificate"] =
 		flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslCaCertificate(original["caCertificate"], d, config)
+	transformed["ssl_flags"] =
+		flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslSslFlags(original["sslFlags"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1677,6 +1709,10 @@ func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslClientCertific
 
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("postgresql.0.ssl.0.ca_certificate")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfilePostgresqlSslSslFlags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1793,6 +1829,8 @@ func flattenDatabaseMigrationServiceConnectionProfileOracleSsl(v interface{}, d 
 		flattenDatabaseMigrationServiceConnectionProfileOracleSslClientCertificate(original["clientCertificate"], d, config)
 	transformed["ca_certificate"] =
 		flattenDatabaseMigrationServiceConnectionProfileOracleSslCaCertificate(original["caCertificate"], d, config)
+	transformed["ssl_flags"] =
+		flattenDatabaseMigrationServiceConnectionProfileOracleSslSslFlags(original["sslFlags"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatabaseMigrationServiceConnectionProfileOracleSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1809,6 +1847,10 @@ func flattenDatabaseMigrationServiceConnectionProfileOracleSslClientCertificate(
 
 func flattenDatabaseMigrationServiceConnectionProfileOracleSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("oracle.0.ssl.0.ca_certificate")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileOracleSslSslFlags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileOracleStaticServiceIpConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2392,6 +2434,13 @@ func expandDatabaseMigrationServiceConnectionProfileMysqlSsl(v interface{}, d tp
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
+	transformedSslFlags, err := expandDatabaseMigrationServiceConnectionProfileMysqlSslSslFlags(original["ssl_flags"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSslFlags); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sslFlags"] = transformedSslFlags
+	}
+
 	return transformed, nil
 }
 
@@ -2409,6 +2458,17 @@ func expandDatabaseMigrationServiceConnectionProfileMysqlSslClientCertificate(v 
 
 func expandDatabaseMigrationServiceConnectionProfileMysqlSslCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileMysqlSslSslFlags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfileMysqlCloudSqlId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2571,6 +2631,13 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlSsl(v interface{},
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
+	transformedSslFlags, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlSslSslFlags(original["ssl_flags"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSslFlags); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sslFlags"] = transformedSslFlags
+	}
+
 	return transformed, nil
 }
 
@@ -2588,6 +2655,17 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlSslClientCertifica
 
 func expandDatabaseMigrationServiceConnectionProfilePostgresqlSslCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfilePostgresqlSslSslFlags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2777,6 +2855,13 @@ func expandDatabaseMigrationServiceConnectionProfileOracleSsl(v interface{}, d t
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
+	transformedSslFlags, err := expandDatabaseMigrationServiceConnectionProfileOracleSslSslFlags(original["ssl_flags"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSslFlags); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sslFlags"] = transformedSslFlags
+	}
+
 	return transformed, nil
 }
 
@@ -2794,6 +2879,17 @@ func expandDatabaseMigrationServiceConnectionProfileOracleSslClientCertificate(v
 
 func expandDatabaseMigrationServiceConnectionProfileOracleSslCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileOracleSslSslFlags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfileOracleStaticServiceIpConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

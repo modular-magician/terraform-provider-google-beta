@@ -66,6 +66,7 @@ fields:
     - api_field: mysql.ssl.caCertificate
     - api_field: mysql.ssl.clientCertificate
     - api_field: mysql.ssl.clientKey
+    - api_field: mysql.ssl.sslFlags
     - api_field: mysql.ssl.type
     - api_field: mysql.username
     - api_field: name
@@ -83,6 +84,7 @@ fields:
     - api_field: oracle.ssl.caCertificate
     - api_field: oracle.ssl.clientCertificate
     - api_field: oracle.ssl.clientKey
+    - api_field: oracle.ssl.sslFlags
     - api_field: oracle.ssl.type
     - api_field: oracle.staticServiceIpConnectivity
     - api_field: oracle.username
@@ -98,6 +100,7 @@ fields:
     - api_field: postgresql.ssl.caCertificate
     - api_field: postgresql.ssl.clientCertificate
     - api_field: postgresql.ssl.clientKey
+    - api_field: postgresql.ssl.sslFlags
     - api_field: postgresql.ssl.type
     - api_field: postgresql.username
     - api_field: role
