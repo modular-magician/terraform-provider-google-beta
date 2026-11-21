@@ -283,7 +283,7 @@ underscores instead of dashes in the name. For example,
 			"display_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: `User-settable and human-readable display name for the Instance.`,
+				Description: `User-settable and human-readable display name for the Instance.UPDATE`,
 			},
 			"gce_zone": {
 				Type:        schema.TypeString,

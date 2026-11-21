@@ -214,7 +214,7 @@ The following arguments are supported:
 
 * `display_name` -
   (Optional)
-  User-settable and human-readable display name for the Instance.
+  User-settable and human-readable display name for the Instance.UPDATE
 
 * `gce_zone` -
   (Optional)
