@@ -293,6 +293,7 @@ func TestAccNetworkServicesTlsRoute_networkServicesTlsRouteGatewayBasicExample(t
 		"backend_service_name": "tf-test-my-backend-service" + randomSuffix,
 		"health_check_name":    "tf-test-backend-service-health-check" + randomSuffix,
 		"resource_name":        "tf-test-my-tls-route" + randomSuffix,
+		"scope_name":           "tf-test-my-scope" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
 
@@ -342,7 +343,7 @@ resource "google_network_services_gateway" "default" {
     foo = "bar"
   }
   description = "my description"
-  scope = "my-scope"
+  scope = "%{scope_name}"
   type = "OPEN_MESH"
   ports = [443]
 }
