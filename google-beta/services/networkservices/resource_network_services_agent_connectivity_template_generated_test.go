@@ -36,7 +36,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dns"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/networkservices"
-	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -160,6 +160,16 @@ resource "google_network_services_agent_connectivity_template" "default" {
 
 func TestAccNetworkServicesAgentConnectivityTemplate_networkServicesAgentConnectivityTemplateAdvancedExample(t *testing.T) {
 	t.Parallel()
+	resourcemanager.BootstrapIamMembers(t, []resourcemanager.IamMember{
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-agentgateway.iam.gserviceaccount.com",
+			Role:   "roles/compute.networkViewer",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-agentgateway.iam.gserviceaccount.com",
+			Role:   "roles/dns.reader",
+		},
+	})
 
 	randomSuffix := acctest.RandString(t, 10)
 
