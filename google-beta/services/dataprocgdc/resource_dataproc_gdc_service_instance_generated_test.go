@@ -108,6 +108,59 @@ resource "google_dataproc_gdc_service_instance" "service-instance" {
 `, context)
 }
 
+func TestAccDataprocGdcServiceInstance_dataprocgdcServiceInstanceListTestExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project":             "gdce-cluster-monitoring",
+		"service_instance_id": "tf-test-tf-e2e-service-instance" + randomSuffix,
+		"random_suffix":       randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDataprocGdcServiceInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataprocGdcServiceInstance_dataprocgdcServiceInstanceListTestExample(context),
+			},
+			{
+				ResourceName:            "google_dataproc_gdc_service_instance.service-instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "service_instance_id", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_dataproc_gdc_service_instance.service-instance",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccDataprocGdcServiceInstance_dataprocgdcServiceInstanceListTestExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_dataproc_gdc_service_instance" "service-instance" {
+  service_instance_id = "%{service_instance_id}"
+  project         = "%{project}"
+  location        = "us-west2"
+  gdce_cluster {
+      gdce_cluster = "projects/gdce-cluster-monitoring/locations/us-west2/clusters/gdce-prism-prober-ord106"
+  }
+  display_name = "A service instance"
+  labels = {
+    "test-label": "label-value"
+  }
+  service_account = "dataprocgdc-cep-workflows@gdce-cluster-monitoring.iam.gserviceaccount.com"
+}
+`, context)
+}
+
 func testAccCheckDataprocGdcServiceInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
