@@ -24,12 +24,14 @@ description: |-
 Get information about a Network Services Gateway.
 
 
+To get more information about Gateway, see:
+
+* [API documentation](https://cloud.google.com/traffic-director/docs/reference/network-services/rest/v1/projects.locations.gateways)
 
 ## Example Usage
 
 ```hcl
 data "google_network_services_gateway" "default" {
-  location = google_network_services_gateway.default.location
   name = google_network_services_gateway.default.name
 }
 ```
@@ -44,11 +46,11 @@ The following arguments are supported:
   (Required)
   Name of the Gateway resource.
 
+
 * `location` -
-  (Required)
+  (Optional)
   The location of the gateway.
   The default value is `global`.
-
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

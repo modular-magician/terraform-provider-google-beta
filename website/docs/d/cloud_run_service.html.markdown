@@ -31,7 +31,6 @@ the [API](https://cloud.google.com/run/docs/reference/rest/v1/namespaces.service
 
 ```hcl
 data "google_cloud_run_service" "default" {
-  location = google_cloud_run_service.default.location
   name = google_cloud_run_service.default.name
 }
 ```
@@ -49,10 +48,10 @@ The following arguments are supported:
   for creation idempotence and configuration definition. Cannot be updated.
   More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
 
-* `location` -
-  (Required)
-  The location of the cloud run instance. eg us-central1
 
+* `location` -
+  (Optional)
+  The location of the cloud run instance. eg us-central1
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

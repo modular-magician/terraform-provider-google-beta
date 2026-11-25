@@ -81,10 +81,8 @@ func DataSourceVmwareengineDatastore() *schema.Resource {
 	rs := ResourceVmwareengineDatastore().Schema
 
 	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(rs)
-
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "location", "name")
-
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
+	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project", "location")
 
 	return &schema.Resource{
 		Read:   dataSourceVmwareengineDatastoreRead,
@@ -94,10 +92,17 @@ func DataSourceVmwareengineDatastore() *schema.Resource {
 
 func dataSourceVmwareengineDatastoreRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
+	location, err := tpgresource.GetLocation(d, config)
+	if err != nil {
+		return err
+	}
+	if err := d.Set("location", location); err != nil {
+		return fmt.Errorf("Error setting location: %s", err)
+	}
 
 	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/datastores/{{name}}")
 	if err != nil {
-		return err
+		return fmt.Errorf("Error constructing id: %s", err)
 	}
 
 	d.SetId(id)
@@ -109,6 +114,9 @@ func dataSourceVmwareengineDatastoreRead(d *schema.ResourceData, meta interface{
 
 	if d.Id() == "" {
 		return fmt.Errorf("%s not found", id)
+	}
+	if err := d.Set("deletion_policy", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field deletion_policy: %s", err)
 	}
 
 	return nil

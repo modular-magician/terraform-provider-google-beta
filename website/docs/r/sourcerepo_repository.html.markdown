@@ -80,8 +80,7 @@ The following arguments are supported:
 
 * `name` -
   (Required)
-  Resource name of the repository, of the form `{{repo}}`.
-  The repo name may contain slashes. eg, `name/with/slash`
+  Resource name of the repository. The repo name may contain slashes. eg, `name/with/slash`
 
 
 * `pubsub_configs` -

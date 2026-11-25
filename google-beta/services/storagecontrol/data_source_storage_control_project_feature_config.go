@@ -81,9 +81,7 @@ func DataSourceStorageControlProjectFeatureConfig() *schema.Resource {
 	rs := ResourceStorageControlProjectFeatureConfig().Schema
 
 	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(rs)
-
 	tpgresource.AddRequiredFieldsToSchema(dsSchema, "feature_config_id")
-
 	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
@@ -97,7 +95,7 @@ func dataSourceStorageControlProjectFeatureConfigRead(d *schema.ResourceData, me
 
 	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/featureConfigs/{{feature_config_id}}")
 	if err != nil {
-		return err
+		return fmt.Errorf("Error constructing id: %s", err)
 	}
 
 	d.SetId(id)
@@ -109,6 +107,9 @@ func dataSourceStorageControlProjectFeatureConfigRead(d *schema.ResourceData, me
 
 	if d.Id() == "" {
 		return fmt.Errorf("%s not found", id)
+	}
+	if err := d.Set("deletion_policy", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field deletion_policy: %s", err)
 	}
 
 	return nil

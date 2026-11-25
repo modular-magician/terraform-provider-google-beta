@@ -29,7 +29,6 @@ Get information about a Cloud VMware Engine Datastore.
 
 ```hcl
 data "google_vmwareengine_datastore" "default" {
-  location = google_vmwareengine_datastore.example_thirdparty.location
   name = google_vmwareengine_datastore.example_thirdparty.name
 }
 ```
@@ -39,10 +38,6 @@ data "google_vmwareengine_datastore" "default" {
 The following arguments are supported:
 
 
-
-* `location` -
-  (Required)
-  Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
 * `name` -
   (Required)
@@ -57,6 +52,10 @@ The following arguments are supported:
   * Complies with [RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034)
   (section 3.5)
 
+
+* `location` -
+  (Optional)
+  Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

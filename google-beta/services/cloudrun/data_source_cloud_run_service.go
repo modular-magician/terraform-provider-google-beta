@@ -81,10 +81,8 @@ func DataSourceCloudRunService() *schema.Resource {
 	rs := ResourceCloudRunService().Schema
 
 	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(rs)
-
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "location", "name")
-
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
+	tpgresource.AddOptionalFieldsToSchema(dsSchema, "location", "project")
 
 	return &schema.Resource{
 		Read:   dataSourceCloudRunServiceRead,
@@ -94,10 +92,17 @@ func DataSourceCloudRunService() *schema.Resource {
 
 func dataSourceCloudRunServiceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
+	location, err := tpgresource.GetLocation(d, config)
+	if err != nil {
+		return err
+	}
+	if err := d.Set("location", location); err != nil {
+		return fmt.Errorf("Error setting location: %s", err)
+	}
 
 	id, err := tpgresource.ReplaceVars(d, config, "locations/{{location}}/namespaces/{{project}}/services/{{name}}")
 	if err != nil {
-		return err
+		return fmt.Errorf("Error constructing id: %s", err)
 	}
 
 	d.SetId(id)
@@ -109,6 +114,12 @@ func dataSourceCloudRunServiceRead(d *schema.ResourceData, meta interface{}) err
 
 	if d.Id() == "" {
 		return fmt.Errorf("%s not found", id)
+	}
+	if err := d.Set("autogenerate_revision_name", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field autogenerate_revision_name: %s", err)
+	}
+	if err := d.Set("deletion_policy", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field deletion_policy: %s", err)
 	}
 
 	return nil
