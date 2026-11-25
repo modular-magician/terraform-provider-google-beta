@@ -81,7 +81,6 @@ func DataSourceStorageControlFolderIntelligenceConfig() *schema.Resource {
 	rs := ResourceStorageControlFolderIntelligenceConfig().Schema
 
 	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(rs)
-
 	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
 
 	return &schema.Resource{
@@ -95,7 +94,7 @@ func dataSourceStorageControlFolderIntelligenceConfigRead(d *schema.ResourceData
 
 	id, err := tpgresource.ReplaceVars(d, config, "folders/{{name}}/locations/global/intelligenceConfig")
 	if err != nil {
-		return err
+		return fmt.Errorf("Error constructing id: %s", err)
 	}
 
 	d.SetId(id)

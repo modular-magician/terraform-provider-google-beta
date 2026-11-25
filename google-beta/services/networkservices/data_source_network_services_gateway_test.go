@@ -52,10 +52,12 @@ func TestAccDataSourceNetworkServicesGateway_basic(t *testing.T) {
 			{
 				Config: testAccNetworkServicesGateway_networkServicesGatewayBasicExampleDataSource(context),
 				Check: resource.ComposeTestCheckFunc(
+					// Ignore client-side virtual fields because they are not returned by the API.
 					acctest.CheckDataSourceStateMatchesResourceStateWithIgnores(
 						"data.google_network_services_gateway.default",
 						"google_network_services_gateway.default",
 						[]string{
+							"delete_swg_autogen_router_on_destroy",
 							"labels",
 							"location",
 							"name",
