@@ -52,6 +52,11 @@ func init() {
 		Type:        registry.SchemaTypeIAMResource,
 		Schema:      NewBigQueryTableIamMemberResource(),
 	}.Register()
+	registry.FrameworkListResource{
+		Name:        "google_bigquery_table_iam_member",
+		ProductName: "BigQuery",
+		Func:        NewBigQueryTableIamMemberListResource,
+	}.Register()
 	registry.Schema{
 		Name:        "google_bigquery_table_iam_policy",
 		ProductName: "BigQuery",
