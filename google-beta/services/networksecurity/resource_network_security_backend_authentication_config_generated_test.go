@@ -62,6 +62,7 @@ func TestAccNetworkSecurityBackendAuthenticationConfig_networkSecurityBackendAut
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "us-central1",
 		"resource_name": "tf-test-my-backend-authentication-config" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -93,7 +94,8 @@ func TestAccNetworkSecurityBackendAuthenticationConfig_networkSecurityBackendAut
 func testAccNetworkSecurityBackendAuthenticationConfig_networkSecurityBackendAuthenticationConfigBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_network_security_backend_authentication_config" "default" {
-  name             = "%{resource_name}"
+  name     = "%{resource_name}"
+  location = "%{location}"
   labels           = {
     foo = "bar"
   }

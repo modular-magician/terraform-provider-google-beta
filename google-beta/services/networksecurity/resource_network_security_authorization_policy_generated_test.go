@@ -60,6 +60,7 @@ func TestAccNetworkSecurityAuthorizationPolicy_networkSecurityAuthorizationPolic
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "us-central1",
 		"resource_name": "tf-test-my-authorization-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -93,6 +94,7 @@ func testAccNetworkSecurityAuthorizationPolicy_networkSecurityAuthorizationPolic
 resource "google_network_security_authorization_policy" "default" {
   provider               = google-beta
   name                   = "%{resource_name}"
+  location               = "%{location}"
   labels                 = {
     foo = "bar"
   }

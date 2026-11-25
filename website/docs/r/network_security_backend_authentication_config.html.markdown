@@ -39,7 +39,8 @@ To get more information about BackendAuthenticationConfig, see:
 
 ```hcl
 resource "google_network_security_backend_authentication_config" "default" {
-  name             = "my-backend-authentication-config"
+  name     = "my-backend-authentication-config"
+  location = "us-central1"
   labels           = {
     foo = "bar"
   }

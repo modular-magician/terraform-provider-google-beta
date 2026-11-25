@@ -61,6 +61,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyBasicEx
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":      "us-central1",
 		"resource_name": "tf-test-my-server-tls-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -93,6 +94,7 @@ func testAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyBasicEx
 	return acctest.Nprintf(`
 resource "google_network_security_server_tls_policy" "default" {
   name                   = "%{resource_name}"
+  location               = "%{location}"
   labels                 = {
     foo = "bar"
   }

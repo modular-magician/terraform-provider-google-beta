@@ -43,6 +43,7 @@ To get more information about AuthorizationPolicy, see:
 resource "google_network_security_authorization_policy" "default" {
   provider               = google-beta
   name                   = "my-authorization-policy"
+  location               = "us-central1"
   labels                 = {
     foo = "bar"
   }

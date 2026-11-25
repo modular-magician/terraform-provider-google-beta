@@ -42,6 +42,7 @@ To get more information about ServerTlsPolicy, see:
 ```hcl
 resource "google_network_security_server_tls_policy" "default" {
   name                   = "my-server-tls-policy"
+  location               = "us-central1"
   labels                 = {
     foo = "bar"
   }

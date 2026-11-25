@@ -63,6 +63,7 @@ func TestAccNetworkSecurityTlsInspectionPolicy_networkSecurityTlsInspectionPolic
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"location":                           "us-central1",
 		"privateca_ca_pool_name":             "tf-test-my-basic-ca-pool" + randomSuffix,
 		"privateca_certificate_authority_id": "tf-test-my-basic-certificate-authority" + randomSuffix,
 		"resource_name":                      "tf-test-my-tls-inspection-policy" + randomSuffix,
@@ -97,7 +98,7 @@ func testAccNetworkSecurityTlsInspectionPolicy_networkSecurityTlsInspectionPolic
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
   name      = "%{privateca_ca_pool_name}"
-  location  = "us-central1"
+  location  = "%{location}"
   tier     = "DEVOPS"
   publishing_options {
     publish_ca_cert = false
@@ -122,7 +123,7 @@ resource "google_privateca_ca_pool" "default" {
 resource "google_privateca_certificate_authority" "default" {
   pool                                   = google_privateca_ca_pool.default.name
   certificate_authority_id               = "%{privateca_certificate_authority_id}"
-  location                               = "us-central1"
+  location                               = "%{location}"
   lifetime                               = "86400s"
   type                                   = "SELF_SIGNED"
   deletion_protection                    = false
@@ -166,7 +167,7 @@ resource "google_privateca_ca_pool_iam_member" "tls_inspection_permission" {
 
 resource "google_network_security_tls_inspection_policy" "default" {
   name                  = "%{resource_name}"
-  location              = "us-central1"
+  location              = "%{location}"
   ca_pool               = google_privateca_ca_pool.default.id
   exclude_public_ca_set = false
   depends_on            = [google_privateca_ca_pool.default, google_privateca_certificate_authority.default, google_privateca_ca_pool_iam_member.tls_inspection_permission]
