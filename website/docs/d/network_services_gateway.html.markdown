@@ -24,6 +24,9 @@ description: |-
 Get information about a Network Services Gateway.
 
 
+To get more information about Gateway, see:
+
+* [API documentation](https://cloud.google.com/traffic-director/docs/reference/network-services/rest/v1/projects.locations.gateways)
 
 ## Example Usage
 

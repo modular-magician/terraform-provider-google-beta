@@ -197,11 +197,10 @@ func ResourceSourceRepoRepository() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				Description: `Resource name of the repository, of the form '{{repo}}'.
-The repo name may contain slashes. eg, 'name/with/slash'`,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `Resource name of the repository. The repo name may contain slashes. eg, 'name/with/slash'`,
 			},
 			"pubsub_configs": {
 				Type:     schema.TypeSet,

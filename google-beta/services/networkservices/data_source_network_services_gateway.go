@@ -81,9 +81,7 @@ func DataSourceNetworkServicesGateway() *schema.Resource {
 	rs := ResourceNetworkServicesGateway().Schema
 
 	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(rs)
-
 	tpgresource.AddRequiredFieldsToSchema(dsSchema, "location", "name")
-
 	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
@@ -97,7 +95,7 @@ func dataSourceNetworkServicesGatewayRead(d *schema.ResourceData, meta interface
 
 	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gateways/{{name}}")
 	if err != nil {
-		return err
+		return fmt.Errorf("Error constructing id: %s", err)
 	}
 
 	d.SetId(id)
@@ -107,12 +105,17 @@ func dataSourceNetworkServicesGatewayRead(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	if err := tpgresource.SetDataSourceLabels(d); err != nil {
-		return err
-	}
-
 	if d.Id() == "" {
 		return fmt.Errorf("%s not found", id)
+	}
+	if err := d.Set("delete_swg_autogen_router_on_destroy", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field delete_swg_autogen_router_on_destroy: %s", err)
+	}
+	if err := d.Set("deletion_policy", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field deletion_policy: %s", err)
+	}
+	if err := tpgresource.SetDataSourceLabels(d); err != nil {
+		return err
 	}
 
 	return nil

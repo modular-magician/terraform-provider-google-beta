@@ -55,4 +55,4 @@ The following arguments are supported:
 
 ## Attributes Reference
 
-See [google_storage_control_project_feature_config](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_control_project_feature_config#argument-reference) resource for details of the available attributes.
+See [google_storage_control_project_feature_config](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/storage_control_project_feature_config#argument-reference) resource for details of the available attributes.
