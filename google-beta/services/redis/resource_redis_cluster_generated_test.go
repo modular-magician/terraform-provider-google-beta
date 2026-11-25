@@ -65,6 +65,7 @@ func TestAccRedisCluster_redisClusterHaWithLabelsExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"region":                      envvar.GetTestRegionFromEnv(),
 		"cluster_name":                "tf-test-ha-cluster" + randomSuffix,
 		"deletion_protection_enabled": false,
 		"network_name":                "tf-test-my-network" + randomSuffix,
@@ -109,7 +110,7 @@ resource "google_redis_cluster" "cluster-ha-with-labels" {
   psc_configs {
     network = google_compute_network.consumer_net.id
   }
-  region = "northamerica-south1"
+  region = "%{region}"
   replica_count = 1
   node_type = "REDIS_SHARED_CORE_NANO"
   transit_encryption_mode = "TRANSIT_ENCRYPTION_MODE_DISABLED"
@@ -140,7 +141,7 @@ resource "google_redis_cluster" "cluster-ha-with-labels" {
 
 resource "google_network_connectivity_service_connection_policy" "default" {
   name = "%{policy_name}"
-  location = "northamerica-south1"
+  location = "%{region}"
   service_class = "gcp-memorystore-redis"
   description   = "my basic service connection policy"
   network = google_compute_network.consumer_net.id
@@ -152,7 +153,7 @@ resource "google_network_connectivity_service_connection_policy" "default" {
 resource "google_compute_subnetwork" "consumer_subnet" {
   name          = "%{subnet_name}"
   ip_cidr_range = "10.0.0.248/29"
-  region        = "northamerica-south1"
+  region        = "%{region}"
   network       = google_compute_network.consumer_net.id
 }
 
