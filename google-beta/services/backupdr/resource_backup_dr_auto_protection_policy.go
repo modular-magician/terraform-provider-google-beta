@@ -164,6 +164,7 @@ must be in the same location as the auto protection policy.`,
 						"resource_type": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 							Description: `The type of resource that this policy automatically protects, for example
 'compute.googleapis.com/Instance' or 'compute.googleapis.com/Disk'.`,
 						},

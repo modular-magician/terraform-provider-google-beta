@@ -156,11 +156,11 @@ func TestAccBackupDRAutoProtectionPolicy_backupDrAutoProtectionPolicyUpdateExamp
 	}
 
 	context_1 := map[string]interface{}{
-		"auto_protection_policy_id": "tf-test-app-update" + randomSuffix,
-		"backup_vault_id":           "tf-test-bv-app-update" + randomSuffix,
-		"disk_backup_plan_id":       "tf-test-bp-app-update-disk" + randomSuffix,
-		"instance_backup_plan_id":   "tf-test-bp-app-update-vm" + randomSuffix,
-		"random_suffix":             randomSuffix,
+		"auto_protection_policy_id":       "tf-test-app-update" + randomSuffix,
+		"backup_vault_id":                 "tf-test-bv-app-update" + randomSuffix,
+		"instance_backup_plan_id":         "tf-test-bp-app-update-vm" + randomSuffix,
+		"updated_instance_backup_plan_id": "tf-test-bp-app-update-vm-2" + randomSuffix,
+		"random_suffix":                   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -291,10 +291,10 @@ resource "google_backup_dr_backup_plan" "instance_backup_plan" {
   }
 }
 
-resource "google_backup_dr_backup_plan" "disk_backup_plan" {
+resource "google_backup_dr_backup_plan" "updated_instance_backup_plan" {
   location       = "us-central1"
-  backup_plan_id = "%{disk_backup_plan_id}"
-  resource_type  = "compute.googleapis.com/Disk"
+  backup_plan_id = "%{updated_instance_backup_plan_id}"
+  resource_type  = "compute.googleapis.com/Instance"
   backup_vault   = google_backup_dr_backup_vault.my_backup_vault.id
 
   backup_rules {
@@ -317,7 +317,7 @@ resource "google_backup_dr_backup_plan" "disk_backup_plan" {
 resource "google_backup_dr_auto_protection_policy" "my-auto-protection-policy" {
   location                  = "us-central1"
   auto_protection_policy_id = "%{auto_protection_policy_id}"
-  description               = "Protects staging disks."
+  description               = "Protects staging VMs."
 
   criteria {
     matching_conditions {
@@ -329,8 +329,8 @@ resource "google_backup_dr_auto_protection_policy" "my-auto-protection-policy" {
   }
 
   backup_plan_details {
-    resource_type = "compute.googleapis.com/Disk"
-    backup_plan   = google_backup_dr_backup_plan.disk_backup_plan.name
+    resource_type = "compute.googleapis.com/Instance"
+    backup_plan   = google_backup_dr_backup_plan.updated_instance_backup_plan.name
   }
 }
 `, context)
