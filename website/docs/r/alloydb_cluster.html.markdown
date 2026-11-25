@@ -490,6 +490,15 @@ The following arguments are supported:
   Configuration for Dataplex integration. This is an optional field. If not set, Dataplex integration will be enabled by default.
   Structure is [documented below](#nested_dataplex_config).
 
+* `express_config` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Configuration for AlloyDB Express. Setting `enabled` to `true` when the cluster is
+  created provisions an AlloyDB Express cluster. Changing `enabled` from `true` to `false`
+  upgrades the Express cluster to a standard AlloyDB cluster in place. The upgrade can't be
+  undone, and a standard cluster can't be converted to an Express cluster. Removing the
+  `express_config` block doesn't upgrade the cluster; set `enabled` to `false` to upgrade.
+  Structure is [documented below](#nested_express_config).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -764,6 +773,12 @@ Default value: "true"
 * `enabled` -
   (Required)
   Indicates whether Dataplex integration is enabled for the cluster.
+
+<a name="nested_express_config"></a>The `express_config` block supports:
+
+* `enabled` -
+  (Required)
+  Whether the cluster is an AlloyDB Express cluster.
 
 ## Attributes Reference
 
