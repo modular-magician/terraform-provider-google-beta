@@ -60,6 +60,7 @@ func TestAccIntegrationConnectorsEndpointAttachment_integrationConnectorsEndpoin
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
+		"region":                   envvar.GetTestRegionFromEnv(),
 		"endpoint_attachment_name": "tf-test-test-endpoint-attachment" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
@@ -92,7 +93,7 @@ func testAccIntegrationConnectorsEndpointAttachment_integrationConnectorsEndpoin
 	return acctest.Nprintf(`
 resource "google_integration_connectors_endpoint_attachment" "sampleendpointattachment" {
   name     = "%{endpoint_attachment_name}"
-  location = "us-central1"
+  location = "%{region}"
   description = "tf created description"
   service_attachment = "projects/connectors-example/regions/us-central1/serviceAttachments/test"
   labels = {
