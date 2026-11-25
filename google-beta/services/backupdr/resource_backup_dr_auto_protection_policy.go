@@ -844,14 +844,23 @@ func flattenBackupDRAutoProtectionPolicyPolicyEvaluationSummary(v interface{}, d
 	return []interface{}{transformed}
 }
 func flattenBackupDRAutoProtectionPolicyPolicyEvaluationSummaryMatchingResourceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 
 func flattenBackupDRAutoProtectionPolicyPolicyEvaluationSummaryProtectedResourceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 
 func flattenBackupDRAutoProtectionPolicyPolicyEvaluationSummaryFailedResourceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 
@@ -869,6 +878,9 @@ func flattenBackupDRAutoProtectionPolicyBindingSummary(v interface{}, d *schema.
 	return []interface{}{transformed}
 }
 func flattenBackupDRAutoProtectionPolicyBindingSummaryProjectCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 

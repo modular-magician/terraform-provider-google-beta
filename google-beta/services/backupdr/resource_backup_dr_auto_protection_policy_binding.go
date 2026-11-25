@@ -618,14 +618,23 @@ func flattenBackupDRAutoProtectionPolicyBindingBindingEvaluationSummary(v interf
 	return []interface{}{transformed}
 }
 func flattenBackupDRAutoProtectionPolicyBindingBindingEvaluationSummaryMatchingResourceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 
 func flattenBackupDRAutoProtectionPolicyBindingBindingEvaluationSummaryProtectedResourceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 
 func flattenBackupDRAutoProtectionPolicyBindingBindingEvaluationSummaryFailedResourceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || v == "" {
+		return "0"
+	}
 	return v
 }
 
