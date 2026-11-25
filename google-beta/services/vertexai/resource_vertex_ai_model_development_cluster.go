@@ -219,6 +219,47 @@ func validateVertexAIModelDevelopmentClusterNodePoolVersions(d vertexAiModelDeve
 }
 
 func resourceVertexAIModelDevelopmentClusterCustomDiff(_ context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	if v, ok := diff.GetOk("xmanager_config"); ok && len(v.([]interface{})) > 0 {
+		if v2, ok2 := diff.GetOk("orchestrator_spec.0.kubernetes_spec"); !ok2 || len(v2.([]interface{})) == 0 {
+			return fmt.Errorf("xmanager_config is only supported on clusters using the GKE orchestrator (orchestrator_spec.kubernetes_spec)")
+		}
+		if diff.NewValueKnown("xmanager_config.0.network") && diff.NewValueKnown("network.0.network") {
+			xNet, okX := diff.GetOk("xmanager_config.0.network")
+			cNet, okC := diff.GetOk("network.0.network")
+			if okX && okC && xNet.(string) != "" && cNet.(string) != "" {
+				normX := strings.TrimSpace(xNet.(string))
+				if rel, err := tpgresource.GetRelativePath(normX); err == nil {
+					normX = rel
+				}
+				normC := strings.TrimSpace(cNet.(string))
+				if rel, err := tpgresource.GetRelativePath(normC); err == nil {
+					normC = rel
+				}
+				if normX != normC {
+					return fmt.Errorf("xmanager_config.network must match the cluster network.network")
+				}
+			}
+		}
+		if diff.NewValueKnown("xmanager_config.0.subnetwork") && diff.NewValueKnown("region") {
+			xSub, okS := diff.GetOk("xmanager_config.0.subnetwork")
+			cReg, okR := diff.GetOk("region")
+			if okS && okR && xSub.(string) != "" && cReg.(string) != "" {
+				if subRegion := tpgresource.GetRegionFromRegionalSelfLink(xSub.(string)); subRegion != xSub.(string) && subRegion != cReg.(string) {
+					return fmt.Errorf("xmanager_config.subnetwork region %q must match the cluster region %q", subRegion, cReg.(string))
+				}
+			}
+		}
+		if authRaw, okAuth := diff.GetOk("xmanager_config.0.auth_config"); okAuth && len(authRaw.([]interface{})) > 0 {
+			if diff.NewValueKnown("xmanager_config.0.auth_config.0.allowed_domains") &&
+				diff.NewValueKnown("xmanager_config.0.auth_config.0.allowed_emails") {
+				domains, _ := diff.Get("xmanager_config.0.auth_config.0.allowed_domains").([]interface{})
+				emails, _ := diff.Get("xmanager_config.0.auth_config.0.allowed_emails").([]interface{})
+				if len(domains) == 0 && len(emails) == 0 {
+					return fmt.Errorf("at least one of xmanager_config.0.auth_config.0.allowed_domains or xmanager_config.0.auth_config.0.allowed_emails must be specified")
+				}
+			}
+		}
+	}
 	if !vertexAiModelDevelopmentClusterNodePoolVersionsConfigured(diff) {
 		return nil
 	}
@@ -236,6 +277,183 @@ func resourceVertexAIModelDevelopmentClusterCustomDiff(_ context.Context, diff *
 		}
 	}
 	return validateVertexAIModelDevelopmentClusterNodePoolVersions(diff)
+}
+
+func vertexAiModelDevelopmentClusterGetXmanagerStatus(d *schema.ResourceData, config *transport_tpg.Config, billingProject, userAgent, timeoutKey string) (clusterState string, xmState string, hasXm bool, err error) {
+	clusterURL, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{region}}/modelDevelopmentClusters/{{model_development_cluster_id}}")
+	if err != nil {
+		return "", "", false, err
+	}
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "GET",
+		Project:   billingProject,
+		RawURL:    clusterURL,
+		UserAgent: userAgent,
+		Timeout:   d.Timeout(timeoutKey),
+	})
+	if err != nil {
+		return "", "", false, err
+	}
+	if cs, ok := res["clusterStatus"].(map[string]interface{}); ok {
+		clusterState, _ = cs["state"].(string)
+	}
+	if runtime, ok := res["runtime"].(map[string]interface{}); ok {
+		if xm, ok := runtime["xmanager"].(map[string]interface{}); ok && xm != nil {
+			xmState, _ = xm["state"].(string)
+			if xmState != "DELETED" {
+				hasXm = true
+			}
+		}
+	}
+	return clusterState, xmState, hasXm, nil
+}
+
+func vertexAiModelDevelopmentClusterPrepareXmanagerTransition(d *schema.ResourceData, config *transport_tpg.Config, billingProject, userAgent, timeoutKey string, waitProvisioning bool) (clusterState string, xmState string, hasXm bool, err error) {
+	clusterState, xmState, hasXm, err = vertexAiModelDevelopmentClusterGetXmanagerStatus(d, config, billingProject, userAgent, timeoutKey)
+	if err != nil {
+		if transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
+			return "", "", false, nil
+		}
+		return "", "", false, err
+	}
+	needsWait := func(cs, xs string, present bool) bool {
+		if cs == "PROVISIONING" || cs == "UPDATING" {
+			return true
+		}
+		if !present {
+			return false
+		}
+		if xs == "DELETING" || (waitProvisioning && xs == "PROVISIONING") {
+			return true
+		}
+		return false
+	}
+	if !needsWait(clusterState, xmState, hasXm) {
+		return clusterState, xmState, hasXm, nil
+	}
+	retryErr := tpgresource.Retry(d.Timeout(timeoutKey), config.SleepUnit, func() *retry.RetryError {
+		cs, xs, present, pollErr := vertexAiModelDevelopmentClusterGetXmanagerStatus(d, config, billingProject, userAgent, timeoutKey)
+		if pollErr != nil {
+			if transport_tpg.IsGoogleApiErrorWithCode(pollErr, 404) {
+				clusterState, xmState, hasXm = "", "", false
+				return nil
+			}
+			return retry.NonRetryableError(pollErr)
+		}
+		clusterState, xmState, hasXm = cs, xs, present
+		if needsWait(cs, xs, present) {
+			return retry.RetryableError(fmt.Errorf("ModelDevelopmentCluster %q is in clusterState=%q, xmanagerState=%q", d.Id(), cs, xs))
+		}
+		return nil
+	})
+	if retryErr != nil {
+		return clusterState, xmState, hasXm, retryErr
+	}
+	return clusterState, xmState, hasXm, nil
+}
+
+func vertexAiModelDevelopmentClusterUpdateXmanager(d *schema.ResourceData, config *transport_tpg.Config, billingProject, userAgent string, enable bool, timeoutKey string) error {
+	project, err := tpgresource.GetProject(d, config)
+	if err != nil {
+		return err
+	}
+	timeout := d.Timeout(timeoutKey)
+
+	verb := ":disableXmanager"
+	action := "Disabling Xmanager"
+	errVerb := "disable"
+	var body map[string]interface{}
+
+	if enable {
+		v, ok := d.GetOk("xmanager_config")
+		if !ok {
+			return nil
+		}
+		configList, ok := v.([]interface{})
+		if !ok || len(configList) == 0 {
+			return nil
+		}
+		configMap, ok := configList[0].(map[string]interface{})
+		if !ok {
+			return nil
+		}
+		instance := make(map[string]interface{})
+
+		if network, ok := configMap["network"].(string); ok && network != "" {
+			if rel, err := tpgresource.GetRelativePath(strings.TrimSpace(network)); err == nil {
+				network = rel
+			}
+			instance["network"] = network
+		}
+		if subnetwork, ok := configMap["subnetwork"].(string); ok && subnetwork != "" {
+			if rel, err := tpgresource.GetRelativePath(strings.TrimSpace(subnetwork)); err == nil {
+				subnetwork = rel
+			}
+			instance["subnetwork"] = subnetwork
+		}
+		if xprof, ok := configMap["xprof_config"].([]interface{}); ok && len(xprof) > 0 {
+			if xprofMap, ok := xprof[0].(map[string]interface{}); ok {
+				xprofObj := make(map[string]interface{})
+				if uri, ok := xprofMap["gcs_bucket_uri"].(string); ok && uri != "" {
+					xprofObj["gcsBucketUri"] = uri
+				}
+				instance["xprofConfig"] = xprofObj
+			}
+		}
+		if auth, ok := configMap["auth_config"].([]interface{}); ok && len(auth) > 0 {
+			if authMap, ok := auth[0].(map[string]interface{}); ok {
+				authObj := make(map[string]interface{})
+				if domains, ok := authMap["allowed_domains"].([]interface{}); ok && len(domains) > 0 {
+					authObj["allowedDomains"] = tpgresource.ConvertStringArr(domains)
+				}
+				if emails, ok := authMap["allowed_emails"].([]interface{}); ok && len(emails) > 0 {
+					authObj["allowedEmails"] = tpgresource.ConvertStringArr(emails)
+				}
+				if oauth, ok := authMap["oauth_client"].([]interface{}); ok && len(oauth) > 0 {
+					if oauthMap, ok := oauth[0].(map[string]interface{}); ok {
+						oauthObj := make(map[string]interface{})
+						if id, ok := oauthMap["id"].(string); ok && id != "" {
+							oauthObj["id"] = id
+						}
+						if sv, ok := oauthMap["secret_version"].(string); ok && sv != "" {
+							oauthObj["secretVersion"] = sv
+						}
+						authObj["oauthClient"] = oauthObj
+					}
+				}
+				instance["authConfig"] = authObj
+			}
+		}
+		body = map[string]interface{}{"instance": instance}
+		verb = ":enableXmanager"
+		action = "Enabling Xmanager"
+		errVerb = "enable"
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, transport_tpg.BaseUrl(Product, config)+"projects/{{project}}/locations/{{region}}/modelDevelopmentClusters/{{model_development_cluster_id}}"+verb)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[DEBUG] %s on ModelDevelopmentCluster %q", action, d.Id())
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "POST",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      body,
+		Timeout:   timeout,
+	})
+	if err != nil {
+		return fmt.Errorf("Error %s: %s", strings.ToLower(action), err)
+	}
+
+	if err := VertexAIOperationWaitTime(config, res, project, tpgresource.LocationFromId(d.Id()), action, userAgent, timeout); err != nil {
+		return fmt.Errorf("Error waiting to %s Xmanager: %s", errVerb, err)
+	}
+	return nil
 }
 
 var (
@@ -1411,6 +1629,157 @@ Defaults to 'USER_AND_SERVICE'. Possible values are 'USER_ONLY' and
 'USER_AND_SERVICE'. Default value: "USER_AND_SERVICE" Possible values: ["USER_ONLY", "USER_AND_SERVICE"]`,
 				Default: "USER_AND_SERVICE",
 			},
+			"xmanager_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Configuration for enabling a managed Xmanager instance on the cluster.
+Supported for GKE clusters only ('orchestrator_spec.kubernetes_spec').
+Xmanager instances do not support in-place updates; changing any field in
+'xmanager_config' disables the current instance and enables a new one.
+Note: input subfields ('network', 'subnetwork', 'xprof_config', 'auth_config')
+are write-only on ':enableXmanager' and are not populated during 'terraform import'.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"network": {
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							Description: `The Google Cloud Compute network to which the Xmanager instance is connected.
+Must match the cluster's 'network.network'.
+Format: 'projects/{project}/global/networks/{network}'.`,
+						},
+						"subnetwork": {
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							Description: `The Google Cloud Compute subnetwork to which the Xmanager instance is connected.
+Must be a subnetwork of 'network' in the cluster's region.
+Format: 'projects/{project}/regions/{region}/subnetworks/{subnetwork}'.`,
+						},
+						"auth_config": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Configuration for Xmanager per-user authentication. At least one of
+'allowed_domains' or 'allowed_emails' must be specified when 'auth_config' is set.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"oauth_client": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `OAuth 2.0 Web application client in the cluster's project.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"id": {
+													Type:         schema.TypeString,
+													Required:     true,
+													ValidateFunc: verify.ValidateRegexp(`^[0-9A-Za-z-]+\.apps\.googleusercontent\.com$`),
+													Description:  `The OAuth 2.0 client ID, ending in '.apps.googleusercontent.com'.`,
+												},
+												"secret_version": {
+													Type:         schema.TypeString,
+													Required:     true,
+													ValidateFunc: verify.ValidateRegexp(`^projects/[^/]+/secrets/[^/]+/versions/[^/]+$`),
+													Description: `The Secret Manager secret version holding the OAuth client secret in the
+cluster's project.
+Format: 'projects/{project}/secrets/{secret}/versions/{version}'.`,
+												},
+											},
+										},
+									},
+									"allowed_domains": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `Email domains whose verified accounts may access the Xmanager instance
+(for example, 'example.com'). Maximum 100 domains.`,
+										MaxItems: 100,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"allowed_emails": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `Individual verified email addresses allowed to access the Xmanager instance.
+Maximum 1000 emails.`,
+										MaxItems: 1000,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+						"xprof_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for managed XProf.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"gcs_bucket_uri": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: verify.ValidateRegexp(`^gs://.+`),
+										Description: `The Google Cloud Storage bucket URI ('gs://<bucket>') in the user project
+for XProf trace data.`,
+									},
+								},
+							},
+						},
+						"api_endpoint": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The gRPC API endpoint (Experiment State Server) of the Xmanager instance.`,
+						},
+						"error": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: `Error status populated when 'state' is 'ERROR'.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"code": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: `The status code, which should be an enum value of google.rpc.Code.`,
+									},
+									"details": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: `A list of messages that carry the error details.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeMap,
+										},
+									},
+									"message": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `A developer-facing error message in English.`,
+									},
+								},
+							},
+						},
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `Identifier. The resource name of the Xmanager instance attached to the cluster
+('projects/{project}/locations/{location}/xmanagerInstances/{xmanager_instance}').`,
+						},
+						"state": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The current state of the Xmanager instance ('PROVISIONING', 'RUNNING', 'DELETING', 'ERROR').`,
+						},
+						"ui_endpoint": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The UI endpoint of the Xmanager instance.`,
+						},
+					},
+				},
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -1542,6 +1911,11 @@ func resourceVertexAIModelDevelopmentClusterCreate(d *schema.ResourceData, meta 
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create ModelDevelopmentCluster: %s", err)
+	}
+
+	if err := vertexAiModelDevelopmentClusterUpdateXmanager(d, config, billingProject, userAgent, true, schema.TimeoutCreate); err != nil {
+		_ = resourceVertexAIModelDevelopmentClusterRead(d, meta)
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating ModelDevelopmentCluster %q: %#v", d.Id(), res)
@@ -1889,6 +2263,27 @@ func resourceVertexAIModelDevelopmentClusterUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
+	if d.HasChange("xmanager_config") {
+		oldV, newV := d.GetChange("xmanager_config")
+		oldLen := len(oldV.([]interface{}))
+		newLen := len(newV.([]interface{}))
+		clusterState, _, hasXm, statusErr := vertexAiModelDevelopmentClusterPrepareXmanagerTransition(d, config, billingProject, userAgent, schema.TimeoutUpdate, true)
+		if statusErr != nil {
+			return fmt.Errorf("Error checking Xmanager status while updating ModelDevelopmentCluster %q: %s", d.Id(), statusErr)
+		}
+		if hasXm && (newLen == 0 || oldLen > 0 || clusterState == "RUNNING") {
+			if err := vertexAiModelDevelopmentClusterUpdateXmanager(d, config, billingProject, userAgent, false, schema.TimeoutUpdate); err != nil {
+				_ = resourceVertexAIModelDevelopmentClusterRead(d, meta)
+				return err
+			}
+		}
+		if newLen > 0 {
+			if err := vertexAiModelDevelopmentClusterUpdateXmanager(d, config, billingProject, userAgent, true, schema.TimeoutUpdate); err != nil {
+				_ = resourceVertexAIModelDevelopmentClusterRead(d, meta)
+				return err
+			}
+		}
+	}
 	return resourceVertexAIModelDevelopmentClusterRead(d, meta)
 }
 
@@ -1929,6 +2324,19 @@ func resourceVertexAIModelDevelopmentClusterDelete(d *schema.ResourceData, meta 
 	}
 
 	headers := make(http.Header)
+	clusterState, xmState, hasXm, statusErr := vertexAiModelDevelopmentClusterPrepareXmanagerTransition(d, config, billingProject, userAgent, schema.TimeoutDelete, true)
+	if statusErr != nil {
+		return fmt.Errorf("Error checking Xmanager status before deleting ModelDevelopmentCluster %q: %s", d.Id(), statusErr)
+	}
+	if hasXm {
+		if clusterState == "RUNNING" {
+			if err := vertexAiModelDevelopmentClusterUpdateXmanager(d, config, billingProject, userAgent, false, schema.TimeoutDelete); err != nil {
+				return err
+			}
+		} else {
+			log.Printf("[DEBUG] Skipping DisableXmanager before deleting ModelDevelopmentCluster %q (clusterState=%q, xmanagerState=%q)", d.Id(), clusterState, xmState)
+		}
+	}
 
 	log.Printf("[DEBUG] Deleting ModelDevelopmentCluster %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -3897,6 +4305,70 @@ func resourceVertexAIModelDevelopmentClusterDecoder(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[ERROR] Could not sort nodePools in API response: %s", err)
 		}
+	}
+
+	var xmanagerConfig []interface{}
+	if runtime, ok := res["runtime"].(map[string]interface{}); ok {
+		if xmanager, ok := runtime["xmanager"].(map[string]interface{}); ok && xmanager != nil {
+			if state, _ := xmanager["state"].(string); state != "DELETED" {
+				instanceId, _ := xmanager["instanceId"].(string)
+				xmanagerName := instanceId
+				if instanceId != "" && !strings.HasPrefix(instanceId, "projects/") {
+					if clusterResName, _ := res["name"].(string); clusterResName != "" {
+						if idx := strings.Index(clusterResName, "/modelDevelopmentClusters/"); idx > 0 {
+							xmanagerName = clusterResName[:idx] + "/xmanagerInstances/" + instanceId
+						}
+					}
+				}
+
+				var flattenedError []interface{}
+				if errMap, ok := xmanager["error"].(map[string]interface{}); ok && len(errMap) > 0 {
+					transformedErr := make(map[string]interface{})
+					switch codeVal := errMap["code"].(type) {
+					case string:
+						if intVal, parseErr := tpgresource.StringToFixed64(codeVal); parseErr == nil {
+							transformedErr["code"] = intVal
+						}
+					case float64:
+						transformedErr["code"] = int(codeVal)
+					case int, int64:
+						transformedErr["code"] = codeVal
+					}
+					if details, exists := errMap["details"]; exists {
+						transformedErr["details"] = details
+					}
+					if msg, exists := errMap["message"]; exists {
+						transformedErr["message"] = msg
+					}
+					flattenedError = []interface{}{transformedErr}
+				}
+
+				configData := make(map[string]interface{})
+				// Only preserve write-only input fields when the instance is healthy/provisioning;
+				// when state is ERROR, leaving inputs blank ensures the next plan diffs xmanager_config
+				// so post_update disables and re-enables the failed instance (or disables it on removal).
+				if state != "ERROR" {
+					if rawXmanagerConfig, ok := d.Get("xmanager_config").([]interface{}); ok && len(rawXmanagerConfig) > 0 {
+						if m, ok := rawXmanagerConfig[0].(map[string]interface{}); ok {
+							for k, v := range m {
+								configData[k] = v
+							}
+						}
+					}
+				}
+				apiEndpoint, _ := xmanager["apiEndpoint"].(string)
+				uiEndpoint, _ := xmanager["uiEndpoint"].(string)
+				configData["name"] = xmanagerName
+				configData["api_endpoint"] = apiEndpoint
+				configData["ui_endpoint"] = uiEndpoint
+				configData["state"] = state
+				configData["error"] = flattenedError
+				xmanagerConfig = []interface{}{configData}
+			}
+		}
+	}
+	if err := d.Set("xmanager_config", xmanagerConfig); err != nil {
+		return nil, fmt.Errorf("Error setting xmanager_config: %s", err)
 	}
 
 	return res, nil

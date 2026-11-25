@@ -111,5 +111,33 @@ fields:
     - field: update_mode
       provider_only: true
     - api_field: updateTime
+    - field: xmanager_config.api_endpoint
+      provider_only: true
+    - field: xmanager_config.auth_config.allowed_domains
+      provider_only: true
+    - field: xmanager_config.auth_config.allowed_emails
+      provider_only: true
+    - field: xmanager_config.auth_config.oauth_client.id
+      provider_only: true
+    - field: xmanager_config.auth_config.oauth_client.secret_version
+      provider_only: true
+    - field: xmanager_config.error.code
+      provider_only: true
+    - field: xmanager_config.error.details
+      provider_only: true
+    - field: xmanager_config.error.message
+      provider_only: true
+    - field: xmanager_config.name
+      provider_only: true
+    - field: xmanager_config.network
+      provider_only: true
+    - field: xmanager_config.state
+      provider_only: true
+    - field: xmanager_config.subnetwork
+      provider_only: true
+    - field: xmanager_config.ui_endpoint
+      provider_only: true
+    - field: xmanager_config.xprof_config.gcs_bucket_uri
+      provider_only: true
     - field: deletion_policy
       provider_only: true
