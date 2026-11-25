@@ -360,6 +360,102 @@ The following arguments are supported:
   (Optional)
   Read capacity, i.e. number of nodes in a read pool instance.
 
+* `auto_scaling_config` -
+  (Optional)
+  Autoscaling configuration for the read pool instance. If not set, the
+  read pool instance will not be autoscaled.
+  Structure is [documented below](#nested_read_pool_config_auto_scaling_config).
+
+
+<a name="nested_read_pool_config_auto_scaling_config"></a>The `auto_scaling_config` block supports:
+
+* `policy` -
+  (Optional)
+  Policy for the MIG autoscaler.
+  Structure is [documented below](#nested_read_pool_config_auto_scaling_config_policy).
+
+* `schedules` -
+  (Optional)
+  Optional list of schedules for the MIG autoscaler. If not set, no
+  schedules are created.
+  Structure is [documented below](#nested_read_pool_config_auto_scaling_config_schedules).
+
+
+<a name="nested_read_pool_config_auto_scaling_config_policy"></a>The `policy` block supports:
+
+* `enabled` -
+  (Optional)
+  If true, autoscaling is enabled for the instance. If not set, the
+  default value is false.
+
+* `max_node_count` -
+  (Optional)
+  Maximum number of nodes for the autoscaler.
+
+* `cool_down_period_sec` -
+  (Optional)
+  The period of time in seconds after a new node is created before the
+  autoscaler will incorporate its resource usage (e.g. CPU utilization)
+  into the autoscaling recommendation algorithm.
+
+* `cpu_utilization` -
+  (Optional)
+  CPU utilization policy for the autoscaler.
+  Structure is [documented below](#nested_read_pool_config_auto_scaling_config_policy_cpu_utilization).
+
+* `connections_count` -
+  (Optional)
+  Connections count policy for the autoscaler. If not set, the
+  autoscaler will not use connection count for scaling.
+  Structure is [documented below](#nested_read_pool_config_auto_scaling_config_policy_connections_count).
+
+
+<a name="nested_read_pool_config_auto_scaling_config_policy_cpu_utilization"></a>The `cpu_utilization` block supports:
+
+* `utilization_target` -
+  (Optional)
+  Target CPU utilization as a float between 0 and 1.
+
+<a name="nested_read_pool_config_auto_scaling_config_policy_connections_count"></a>The `connections_count` block supports:
+
+* `target_count` -
+  (Optional)
+  The target number of connections for the autoscaler to scale the
+  instance to.
+
+<a name="nested_read_pool_config_auto_scaling_config_schedules"></a>The `schedules` block supports:
+
+* `name` -
+  (Optional)
+  Name of the schedule.
+
+* `cron_expression` -
+  (Optional)
+  Cron expression for the triggering the schedule. See
+  https://cloud.google.com/compute/docs/autoscaler/scaling-schedules#cron_expressions
+  for the syntax.
+
+* `duration_sec` -
+  (Optional)
+  Duration of the schedule.
+
+* `min_node_count` -
+  (Optional)
+  Minimum number of nodes in while the schedule is active.
+
+* `time_zone` -
+  (Optional)
+  The location-based IANA time zone for interpreting the schedule's start
+  time. If no time zone is provided, UTC is used by default.
+
+* `disabled` -
+  (Optional)
+  If true, the schedule is disabled.
+
+* `description` -
+  (Optional)
+  Description of the schedule.
+
 <a name="nested_machine_config"></a>The `machine_config` block supports:
 
 * `cpu_count` -

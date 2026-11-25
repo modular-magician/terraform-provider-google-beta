@@ -71,6 +71,18 @@ fields:
     - api_field: queryInsightsConfig.queryStringLength
     - api_field: queryInsightsConfig.recordApplicationTags
     - api_field: queryInsightsConfig.recordClientAddress
+    - api_field: readPoolConfig.autoScalingConfig.policy.connectionsCount.targetCount
+    - api_field: readPoolConfig.autoScalingConfig.policy.coolDownPeriodSec
+    - api_field: readPoolConfig.autoScalingConfig.policy.cpuUtilization.utilizationTarget
+    - api_field: readPoolConfig.autoScalingConfig.policy.enabled
+    - api_field: readPoolConfig.autoScalingConfig.policy.maxNodeCount
+    - api_field: readPoolConfig.autoScalingConfig.schedules.cronExpression
+    - api_field: readPoolConfig.autoScalingConfig.schedules.description
+    - api_field: readPoolConfig.autoScalingConfig.schedules.disabled
+    - api_field: readPoolConfig.autoScalingConfig.schedules.durationSec
+    - api_field: readPoolConfig.autoScalingConfig.schedules.minNodeCount
+    - api_field: readPoolConfig.autoScalingConfig.schedules.name
+    - api_field: readPoolConfig.autoScalingConfig.schedules.timeZone
     - api_field: readPoolConfig.nodeCount
     - api_field: reconciling
     - api_field: state

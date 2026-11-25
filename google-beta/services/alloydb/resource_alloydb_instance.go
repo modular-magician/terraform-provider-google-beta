@@ -627,6 +627,127 @@ The name of the resource will be in the format of
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"auto_scaling_config": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Autoscaling configuration for the read pool instance. If not set, the
+read pool instance will not be autoscaled.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"policy": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Policy for the MIG autoscaler.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"connections_count": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Description: `Connections count policy for the autoscaler. If not set, the
+autoscaler will not use connection count for scaling.`,
+													MaxItems: 1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"target_count": {
+																Type:     schema.TypeInt,
+																Optional: true,
+																Description: `The target number of connections for the autoscaler to scale the
+instance to.`,
+															},
+														},
+													},
+												},
+												"cool_down_period_sec": {
+													Type:     schema.TypeInt,
+													Computed: true,
+													Optional: true,
+													Description: `The period of time in seconds after a new node is created before the
+autoscaler will incorporate its resource usage (e.g. CPU utilization)
+into the autoscaling recommendation algorithm.`,
+												},
+												"cpu_utilization": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `CPU utilization policy for the autoscaler.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"utilization_target": {
+																Type:        schema.TypeFloat,
+																Optional:    true,
+																Description: `Target CPU utilization as a float between 0 and 1.`,
+															},
+														},
+													},
+												},
+												"enabled": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Description: `If true, autoscaling is enabled for the instance. If not set, the
+default value is false.`,
+												},
+												"max_node_count": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `Maximum number of nodes for the autoscaler.`,
+												},
+											},
+										},
+									},
+									"schedules": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `Optional list of schedules for the MIG autoscaler. If not set, no
+schedules are created.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"cron_expression": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `Cron expression for the triggering the schedule. See
+https://cloud.google.com/compute/docs/autoscaler/scaling-schedules#cron_expressions
+for the syntax.`,
+												},
+												"description": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Description of the schedule.`,
+												},
+												"disabled": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: `If true, the schedule is disabled.`,
+												},
+												"duration_sec": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `Duration of the schedule.`,
+												},
+												"min_node_count": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `Minimum number of nodes in while the schedule is active.`,
+												},
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Name of the schedule.`,
+												},
+												"time_zone": {
+													Type:     schema.TypeString,
+													Computed: true,
+													Optional: true,
+													Description: `The location-based IANA time zone for interpreting the schedule's start
+time. If no time zone is provided, UTC is used by default.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"node_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
@@ -1553,6 +1674,8 @@ func flattenAlloydbInstanceReadPoolConfig(v interface{}, d *schema.ResourceData,
 	transformed := make(map[string]interface{})
 	transformed["node_count"] =
 		flattenAlloydbInstanceReadPoolConfigNodeCount(original["nodeCount"], d, config)
+	transformed["auto_scaling_config"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfig(original["autoScalingConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAlloydbInstanceReadPoolConfigNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1570,6 +1693,206 @@ func flattenAlloydbInstanceReadPoolConfigNodeCount(v interface{}, d *schema.Reso
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["policy"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicy(original["policy"], d, config)
+	transformed["schedules"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedules(original["schedules"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyEnabled(original["enabled"], d, config)
+	transformed["max_node_count"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyMaxNodeCount(original["maxNodeCount"], d, config)
+	transformed["cool_down_period_sec"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCoolDownPeriodSec(original["coolDownPeriodSec"], d, config)
+	transformed["cpu_utilization"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilization(original["cpuUtilization"], d, config)
+	transformed["connections_count"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCount(original["connectionsCount"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyMaxNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCoolDownPeriodSec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilization(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["utilization_target"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilizationUtilizationTarget(original["utilizationTarget"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilizationUtilizationTarget(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["target_count"] =
+		flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCountTargetCount(original["targetCount"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCountTargetCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for i, raw := range l {
+		_ = i
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"name":            flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesName(original["name"], d, config),
+			"cron_expression": flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesCronExpression(original["cronExpression"], d, config),
+			"duration_sec":    flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDurationSec(original["durationSec"], d, config),
+			"min_node_count":  flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesMinNodeCount(original["minNodeCount"], d, config),
+			"time_zone":       flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesTimeZone(original["timeZone"], d, config),
+			"disabled":        flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDisabled(original["disabled"], d, config),
+			"description":     flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDescription(original["description"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesCronExpression(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDurationSec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesMinNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesTimeZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenAlloydbInstanceMachineConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2185,10 +2508,255 @@ func expandAlloydbInstanceReadPoolConfig(v interface{}, d tpgresource.TerraformR
 		transformed["nodeCount"] = transformedNodeCount
 	}
 
+	transformedAutoScalingConfig, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfig(original["auto_scaling_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAutoScalingConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["autoScalingConfig"] = transformedAutoScalingConfig
+	}
+
 	return transformed, nil
 }
 
 func expandAlloydbInstanceReadPoolConfigNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPolicy, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicy(original["policy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["policy"] = transformedPolicy
+	}
+
+	transformedSchedules, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedules(original["schedules"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSchedules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["schedules"] = transformedSchedules
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedMaxNodeCount, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyMaxNodeCount(original["max_node_count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxNodeCount"] = transformedMaxNodeCount
+	}
+
+	transformedCoolDownPeriodSec, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCoolDownPeriodSec(original["cool_down_period_sec"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCoolDownPeriodSec); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["coolDownPeriodSec"] = transformedCoolDownPeriodSec
+	}
+
+	transformedCpuUtilization, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilization(original["cpu_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCpuUtilization); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["cpuUtilization"] = transformedCpuUtilization
+	}
+
+	transformedConnectionsCount, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCount(original["connections_count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnectionsCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["connectionsCount"] = transformedConnectionsCount
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyMaxNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCoolDownPeriodSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUtilizationTarget, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilizationUtilizationTarget(original["utilization_target"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUtilizationTarget); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["utilizationTarget"] = transformedUtilizationTarget
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyCpuUtilizationUtilizationTarget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTargetCount, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCountTargetCount(original["target_count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["targetCount"] = transformedTargetCount
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigPolicyConnectionsCountTargetCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedName, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesName(original["name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["name"] = transformedName
+		}
+
+		transformedCronExpression, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesCronExpression(original["cron_expression"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCronExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["cronExpression"] = transformedCronExpression
+		}
+
+		transformedDurationSec, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDurationSec(original["duration_sec"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDurationSec); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["durationSec"] = transformedDurationSec
+		}
+
+		transformedMinNodeCount, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesMinNodeCount(original["min_node_count"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMinNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["minNodeCount"] = transformedMinNodeCount
+		}
+
+		transformedTimeZone, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesTimeZone(original["time_zone"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTimeZone); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["timeZone"] = transformedTimeZone
+		}
+
+		transformedDisabled, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDisabled(original["disabled"], d, config)
+		if err != nil {
+			return nil, err
+		} else {
+			transformed["disabled"] = transformedDisabled
+		}
+
+		transformedDescription, err := expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDescription(original["description"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["description"] = transformedDescription
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesCronExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDurationSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesMinNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesTimeZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceReadPoolConfigAutoScalingConfigSchedulesDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
