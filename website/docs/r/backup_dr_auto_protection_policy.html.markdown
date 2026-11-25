@@ -250,7 +250,7 @@ In addition to the arguments listed above, the following computed attributes are
   Possible values are `CREATING`, `ACTIVE`, `UPDATING`, and `DELETING`.
 
 * `etag` -
-  The etag of the auto protection policy, used for optimistic concurrency control.
+  The etag of the auto protection policy.
 
 * `create_time` -
   The time when the auto protection policy was created.

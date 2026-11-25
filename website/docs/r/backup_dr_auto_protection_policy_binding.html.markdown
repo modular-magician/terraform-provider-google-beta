@@ -164,7 +164,7 @@ In addition to the arguments listed above, the following computed attributes are
   Possible values are `CREATING`, `ACTIVE`, and `DELETION_INITIATED`.
 
 * `etag` -
-  The etag of the binding, used for optimistic concurrency control.
+  The etag of the binding.
 
 * `create_time` -
   The time when the binding was created.

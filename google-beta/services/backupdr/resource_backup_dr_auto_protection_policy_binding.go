@@ -200,7 +200,7 @@ func ResourceBackupDRAutoProtectionPolicyBinding() *schema.Resource {
 			"etag": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `The etag of the binding, used for optimistic concurrency control.`,
+				Description: `The etag of the binding.`,
 			},
 			"name": {
 				Type:     schema.TypeString,

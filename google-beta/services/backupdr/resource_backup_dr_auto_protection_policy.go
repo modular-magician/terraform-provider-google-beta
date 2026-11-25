@@ -247,7 +247,7 @@ value is equal to any of the listed values. Currently, only one value is support
 			"etag": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `The etag of the auto protection policy, used for optimistic concurrency control.`,
+				Description: `The etag of the auto protection policy.`,
 			},
 			"name": {
 				Type:     schema.TypeString,
