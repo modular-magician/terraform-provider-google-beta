@@ -107,6 +107,15 @@ func computeReservationProjectMapDiffSuppress(k, old, new string, d *schema.Reso
 func computeReservationProjectsDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
 	return computeReservationShareSettingsSuppress(d, false)
 }
+func computeReservationEnableEmergentMaintenanceForceNew(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	if d.Id() == "" || !d.HasChange("enable_emergent_maintenance") {
+		return nil
+	}
+	if dt, _ := d.Get("deployment_type").(string); dt == "" || dt == "DEPLOYMENT_TYPE_UNSPECIFIED" {
+		return d.ForceNew("enable_emergent_maintenance")
+	}
+	return nil
+}
 
 var (
 	_ = bytes.Clone
@@ -166,6 +175,7 @@ func ResourceComputeReservation() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			computeReservationEnableEmergentMaintenanceForceNew,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
 		),
@@ -356,10 +366,11 @@ Cannot be used with delete_after_duration.`,
 				Description: `An optional description of this resource.`,
 			},
 			"enable_emergent_maintenance": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Indicates if this group of VMs have emergent maintenance enabled.`,
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates if this group of VMs have emergent maintenance enabled.
+
+~> **Note:** Compute Engine only allows updating 'enable_emergent_maintenance' in place on Hypercompute Cluster reservations ('deployment_type = "DENSE"'). On standard reservations ('deployment_type' unset), changing this field forces recreation of the reservation.`,
 			},
 			"params": {
 				Type:        schema.TypeList,
@@ -465,6 +476,11 @@ reservations that are tied to a commitment.`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Creation timestamp in RFC3339 text format.`,
+			},
+			"deployment_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Specifies the deployment strategy for this reservation. Possible values include 'DENSE' and 'FLEXIBLE'.`,
 			},
 			"id": {
 				Type:        schema.TypeString,
@@ -1184,6 +1200,25 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
+	if d.HasChange("enable_emergent_maintenance") {
+		patchObj := make(map[string]interface{})
+		enableEmergentMaintenanceProp, err := expandComputeReservationEnableEmergentMaintenance(d.Get("enable_emergent_maintenance"), d, config)
+		if err != nil {
+			return err
+		} else {
+			patchObj["enableEmergentMaintenance"] = enableEmergentMaintenanceProp
+		}
+		p := reservationPatch{
+			paths: []string{"enableEmergentMaintenance"},
+			body:  patchObj,
+		}
+		if len(patchObj) == 0 {
+			clearPatches = append(clearPatches, p)
+		} else {
+			setPatches = append(setPatches, p)
+		}
+	}
+
 	for _, p := range append(clearPatches, setPatches...) {
 		if err := sendPatch(p.body, p.paths); err != nil {
 			return err
@@ -1603,6 +1638,23 @@ func flattenComputeReservationReservationSharingPolicy(v interface{}, d *schema.
 	return []interface{}{transformed}
 }
 func flattenComputeReservationReservationSharingPolicyServiceShareType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeReservationDeploymentType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeReservationEnableEmergentMaintenance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		if d == nil {
+			return nil
+		}
+		// Standard (non-Extended) reservations silently drop enableEmergentMaintenance
+		// on consumer insert and omit the proto2 field on GET; preserve configured state
+		// while reading explicit true/false values returned on Extended Reservations.
+		return d.Get("enable_emergent_maintenance")
+	}
 	return v
 }
 
@@ -2507,6 +2559,12 @@ func ResourceComputeReservationFlatten(d *schema.ResourceData, meta interface{},
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
 	if err = d.Set("reservation_sharing_policy", flattenComputeReservationReservationSharingPolicy(res["reservationSharingPolicy"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Reservation: %s", err)
+	}
+	if err = d.Set("deployment_type", flattenComputeReservationDeploymentType(res["deploymentType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Reservation: %s", err)
+	}
+	if err = d.Set("enable_emergent_maintenance", flattenComputeReservationEnableEmergentMaintenance(res["enableEmergentMaintenance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
 	if err = d.Set("kind", flattenComputeReservationKind(res["kind"], d, config)); err != nil {

@@ -14,6 +14,7 @@ fields:
     - api_field: deleteAfterDuration.nanos
     - api_field: deleteAfterDuration.seconds
     - api_field: deleteAtTime
+    - api_field: deploymentType
     - api_field: description
     - api_field: enableEmergentMaintenance
     - api_field: id

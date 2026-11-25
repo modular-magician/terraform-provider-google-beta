@@ -264,8 +264,9 @@ The following arguments are supported:
   Structure is [documented below](#nested_reservation_sharing_policy).
 
 * `enable_emergent_maintenance` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Indicates if this group of VMs have emergent maintenance enabled.
+  ~> **Note:** Compute Engine only allows updating `enable_emergent_maintenance` in place on Hypercompute Cluster reservations (`deployment_type = "DENSE"`). On standard reservations (`deployment_type` unset), changing this field forces recreation of the reservation.
 
 * `params` -
   (Optional)
@@ -435,6 +436,9 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `status` -
   The status of the reservation.
+
+* `deployment_type` -
+  Specifies the deployment strategy for this reservation. Possible values include `DENSE` and `FLEXIBLE`.
 
 * `kind` -
   Type of the resource. Always compute#reservations for reservations.
