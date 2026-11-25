@@ -36,6 +36,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/container"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/filestore"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storage"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/vertexai"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -1214,6 +1215,551 @@ resource "google_vertex_ai_model_development_cluster" "default" {
           }
         }
       })
+    }
+  }
+
+  node_pools {
+    id                 = "cpu1"
+    zone               = "us-east1-b"
+    provisioning_model = "ON_DEMAND"
+
+    boot_disk {
+      boot_disk_size_gb = 100
+      boot_disk_type    = "pd-standard"
+    }
+
+    machine_spec {
+      machine_type = "n2-standard-4"
+    }
+
+    scaling_spec {
+      min_node_count = 1
+      max_node_count = 2
+    }
+  }
+}
+`, context)
+}
+
+func TestAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerExample(t *testing.T) {
+	t.Parallel()
+	resourcemanager.BootstrapIamMembers(t, []resourcemanager.IamMember{
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-vertex-vtc.iam.gserviceaccount.com",
+			Role:   "roles/resourcemanager.projectIamAdmin",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-vertex-vtc.iam.gserviceaccount.com",
+			Role:   "roles/container.admin",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-vertex-vtc.iam.gserviceaccount.com",
+			Role:   "roles/compute.admin",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-vertex-vtc.iam.gserviceaccount.com",
+			Role:   "roles/compute.networkAdmin",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-vertex-vtc.iam.gserviceaccount.com",
+			Role:   "roles/hypercomputecluster.editor",
+		},
+		{
+			Member: "serviceAccount:service-{project_number}@gcp-sa-vertex-vtc.iam.gserviceaccount.com",
+			Role:   "roles/storage.objectAdmin",
+		},
+	})
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"bucket_alt_name":              "tf-test-mdc-xm-bucket-alt" + randomSuffix,
+		"bucket_name":                  "tf-test-mdc-xm-bucket" + randomSuffix,
+		"bucket_res":                   "bucket",
+		"firewall_name":                "tf-test-mdc-xm-fw" + randomSuffix,
+		"model_development_cluster_id": "tfgen" + randomSuffix[:5],
+		"network_name":                 "tf-test-mdc-xm-net" + randomSuffix,
+		"network_ref":                  "google_compute_network.net.id",
+		"subnetwork_alt_name":          "tf-test-mdc-xm-subnet-alt" + randomSuffix,
+		"subnetwork_name":              "tf-test-mdc-xm-subnet" + randomSuffix,
+		"subnetwork_ref":               "google_compute_subnetwork.subnet.id",
+		"random_suffix":                randomSuffix,
+	}
+
+	context_1 := map[string]interface{}{
+		"bucket_alt_name":              "tf-test-mdc-xm-bucket-alt" + randomSuffix,
+		"bucket_name":                  "tf-test-mdc-xm-bucket" + randomSuffix,
+		"bucket_res":                   "bucket_alt",
+		"firewall_name":                "tf-test-mdc-xm-fw" + randomSuffix,
+		"model_development_cluster_id": "tfgen" + randomSuffix[:5],
+		"network_name":                 "tf-test-mdc-xm-net" + randomSuffix,
+		"network_ref":                  "google_compute_network.net.self_link",
+		"subnetwork_alt_name":          "tf-test-mdc-xm-subnet-alt" + randomSuffix,
+		"subnetwork_name":              "tf-test-mdc-xm-subnet" + randomSuffix,
+		"subnetwork_ref":               "google_compute_subnetwork.subnet_alt.id",
+		"random_suffix":                randomSuffix,
+	}
+
+	context_2 := map[string]interface{}{
+		"bucket_alt_name":              "tf-test-mdc-xm-bucket-alt" + randomSuffix,
+		"bucket_name":                  "tf-test-mdc-xm-bucket" + randomSuffix,
+		"firewall_name":                "tf-test-mdc-xm-fw" + randomSuffix,
+		"model_development_cluster_id": "tfgen" + randomSuffix[:5],
+		"network_name":                 "tf-test-mdc-xm-net" + randomSuffix,
+		"subnetwork_alt_name":          "tf-test-mdc-xm-subnet-alt" + randomSuffix,
+		"subnetwork_name":              "tf-test-mdc-xm-subnet" + randomSuffix,
+		"random_suffix":                randomSuffix,
+	}
+
+	context_3 := map[string]interface{}{
+		"bucket_alt_name":              "tf-test-mdc-xm-bucket-alt" + randomSuffix,
+		"bucket_name":                  "tf-test-mdc-xm-bucket" + randomSuffix,
+		"firewall_name":                "tf-test-mdc-xm-fw" + randomSuffix,
+		"model_development_cluster_id": "tfgen" + randomSuffix[:5],
+		"network_name":                 "tf-test-mdc-xm-net" + randomSuffix,
+		"subnetwork_alt_name":          "tf-test-mdc-xm-subnet-alt" + randomSuffix,
+		"subnetwork_name":              "tf-test-mdc-xm-subnet" + randomSuffix,
+		"random_suffix":                randomSuffix,
+	}
+
+	context_4 := map[string]interface{}{
+		"bucket_alt_name":              "tf-test-mdc-xm-bucket-alt" + randomSuffix,
+		"bucket_name":                  "tf-test-mdc-xm-bucket" + randomSuffix,
+		"firewall_name":                "tf-test-mdc-xm-fw" + randomSuffix,
+		"model_development_cluster_id": "tfgen" + randomSuffix[:5],
+		"network_name":                 "tf-test-mdc-xm-net" + randomSuffix,
+		"subnetwork_alt_name":          "tf-test-mdc-xm-subnet-alt" + randomSuffix,
+		"subnetwork_name":              "tf-test-mdc-xm-subnet" + randomSuffix,
+		"random_suffix":                randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckVertexAIModelDevelopmentClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerExample(context),
+			},
+			{
+				ResourceName:            "google_vertex_ai_model_development_cluster.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "model_development_cluster_id", "region", "terraform_labels", "xmanager_config.0.network", "xmanager_config.0.subnetwork", "xmanager_config.0.xprof_config"},
+			},
+			{
+				ResourceName:       "google_vertex_ai_model_development_cluster.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerExample(context_1),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_vertex_ai_model_development_cluster.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_vertex_ai_model_development_cluster.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "model_development_cluster_id", "region", "terraform_labels", "xmanager_config.0.network", "xmanager_config.0.subnetwork", "xmanager_config.0.xprof_config"},
+			},
+			{
+				ResourceName:       "google_vertex_ai_model_development_cluster.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerMinimalExample(context_2),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_vertex_ai_model_development_cluster.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_vertex_ai_model_development_cluster.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "model_development_cluster_id", "region", "terraform_labels", "xmanager_config.0.network", "xmanager_config.0.subnetwork", "xmanager_config.0.xprof_config"},
+			},
+			{
+				ResourceName:       "google_vertex_ai_model_development_cluster.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerDisabledExample(context_3),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_vertex_ai_model_development_cluster.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_vertex_ai_model_development_cluster.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "model_development_cluster_id", "region", "terraform_labels", "xmanager_config.0.network", "xmanager_config.0.subnetwork", "xmanager_config.0.xprof_config"},
+			},
+			{
+				ResourceName:       "google_vertex_ai_model_development_cluster.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+			{
+				Config: testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerMinimalExample(context_4),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_vertex_ai_model_development_cluster.default", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_vertex_ai_model_development_cluster.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "model_development_cluster_id", "region", "terraform_labels", "xmanager_config.0.network", "xmanager_config.0.subnetwork", "xmanager_config.0.xprof_config"},
+			},
+			{
+				ResourceName:       "google_vertex_ai_model_development_cluster.default",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "net" {
+  provider                = google-beta
+  name                    = "%{network_name}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet" {
+  provider                 = google-beta
+  name                     = "%{subnetwork_name}"
+  ip_cidr_range            = "10.0.0.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_subnetwork" "subnet_alt" {
+  provider                 = google-beta
+  name                     = "%{subnetwork_alt_name}"
+  ip_cidr_range            = "10.0.1.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_firewall" "internal" {
+  provider      = google-beta
+  name          = "%{firewall_name}"
+  network       = google_compute_network.net.name
+  direction     = "INGRESS"
+  source_ranges = ["10.0.0.0/24", "10.0.1.0/24"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "icmp"
+  }
+}
+
+resource "google_storage_bucket" "bucket" {
+  provider      = google-beta
+  name          = "%{bucket_name}"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_storage_bucket" "bucket_alt" {
+  provider      = google-beta
+  name          = "%{bucket_alt_name}"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_vertex_ai_model_development_cluster" "default" {
+  provider                     = google-beta
+  region                       = "us-east1"
+  model_development_cluster_id = "%{model_development_cluster_id}"
+  display_name                 = "tftest-gke-xm"
+  deletion_policy              = "DELETE"
+  depends_on                   = [google_compute_firewall.internal]
+
+  labels = {
+    env = "dev"
+  }
+
+  network {
+    network    = google_compute_network.net.id
+    subnetwork = google_compute_subnetwork.subnet.id
+  }
+
+  orchestrator_spec {
+    kubernetes_spec {
+      node_pool_ids                  = ["cpu1"]
+      enable_ip_alias                = true
+      public_access_endpoint_enabled = true
+      control_plane_version          = "-"
+      node_pool_versions = {
+        cpu1 = "-"
+      }
+    }
+  }
+
+  node_pools {
+    id                 = "cpu1"
+    zone               = "us-east1-b"
+    provisioning_model = "ON_DEMAND"
+
+    boot_disk {
+      boot_disk_size_gb = 100
+      boot_disk_type    = "pd-standard"
+    }
+
+    machine_spec {
+      machine_type = "n2-standard-4"
+    }
+
+    scaling_spec {
+      min_node_count = 1
+      max_node_count = 2
+    }
+  }
+
+  xmanager_config {
+    network    = %{network_ref}
+    subnetwork = %{subnetwork_ref}
+    xprof_config {
+      gcs_bucket_uri = "gs://${google_storage_bucket.%{bucket_res}.name}"
+    }
+  }
+}
+`, context)
+}
+
+func testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerMinimalExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "net" {
+  provider                = google-beta
+  name                    = "%{network_name}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet" {
+  provider                 = google-beta
+  name                     = "%{subnetwork_name}"
+  ip_cidr_range            = "10.0.0.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_subnetwork" "subnet_alt" {
+  provider                 = google-beta
+  name                     = "%{subnetwork_alt_name}"
+  ip_cidr_range            = "10.0.1.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_firewall" "internal" {
+  provider      = google-beta
+  name          = "%{firewall_name}"
+  network       = google_compute_network.net.name
+  direction     = "INGRESS"
+  source_ranges = ["10.0.0.0/24", "10.0.1.0/24"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "icmp"
+  }
+}
+
+resource "google_storage_bucket" "bucket" {
+  provider      = google-beta
+  name          = "%{bucket_name}"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_storage_bucket" "bucket_alt" {
+  provider      = google-beta
+  name          = "%{bucket_alt_name}"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_vertex_ai_model_development_cluster" "default" {
+  provider                     = google-beta
+  region                       = "us-east1"
+  model_development_cluster_id = "%{model_development_cluster_id}"
+  display_name                 = "tftest-gke-xm"
+  deletion_policy              = "DELETE"
+  depends_on                   = [google_compute_firewall.internal]
+
+  labels = {
+    env = "dev"
+  }
+
+  network {
+    network    = google_compute_network.net.id
+    subnetwork = google_compute_subnetwork.subnet.id
+  }
+
+  orchestrator_spec {
+    kubernetes_spec {
+      node_pool_ids                  = ["cpu1"]
+      enable_ip_alias                = true
+      public_access_endpoint_enabled = true
+      control_plane_version          = "-"
+      node_pool_versions = {
+        cpu1 = "-"
+      }
+    }
+  }
+
+  node_pools {
+    id                 = "cpu1"
+    zone               = "us-east1-b"
+    provisioning_model = "ON_DEMAND"
+
+    boot_disk {
+      boot_disk_size_gb = 100
+      boot_disk_type    = "pd-standard"
+    }
+
+    machine_spec {
+      machine_type = "n2-standard-4"
+    }
+
+    scaling_spec {
+      min_node_count = 1
+      max_node_count = 2
+    }
+  }
+
+  xmanager_config {
+    network    = google_compute_network.net.self_link
+    subnetwork = google_compute_subnetwork.subnet_alt.id
+  }
+}
+`, context)
+}
+
+func testAccVertexAIModelDevelopmentCluster_vertexAiModelDevelopmentClusterGkeXmanagerDisabledExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "net" {
+  provider                = google-beta
+  name                    = "%{network_name}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet" {
+  provider                 = google-beta
+  name                     = "%{subnetwork_name}"
+  ip_cidr_range            = "10.0.0.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_subnetwork" "subnet_alt" {
+  provider                 = google-beta
+  name                     = "%{subnetwork_alt_name}"
+  ip_cidr_range            = "10.0.1.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_firewall" "internal" {
+  provider      = google-beta
+  name          = "%{firewall_name}"
+  network       = google_compute_network.net.name
+  direction     = "INGRESS"
+  source_ranges = ["10.0.0.0/24", "10.0.1.0/24"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "icmp"
+  }
+}
+
+resource "google_storage_bucket" "bucket" {
+  provider      = google-beta
+  name          = "%{bucket_name}"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_storage_bucket" "bucket_alt" {
+  provider      = google-beta
+  name          = "%{bucket_alt_name}"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_vertex_ai_model_development_cluster" "default" {
+  provider                     = google-beta
+  region                       = "us-east1"
+  model_development_cluster_id = "%{model_development_cluster_id}"
+  display_name                 = "tftest-gke-xm"
+  deletion_policy              = "DELETE"
+  depends_on                   = [google_compute_firewall.internal]
+
+  labels = {
+    env = "dev"
+  }
+
+  network {
+    network    = google_compute_network.net.id
+    subnetwork = google_compute_subnetwork.subnet.id
+  }
+
+  orchestrator_spec {
+    kubernetes_spec {
+      node_pool_ids                  = ["cpu1"]
+      enable_ip_alias                = true
+      public_access_endpoint_enabled = true
+      control_plane_version          = "-"
+      node_pool_versions = {
+        cpu1 = "-"
+      }
     }
   }
 

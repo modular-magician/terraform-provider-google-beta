@@ -536,6 +536,132 @@ resource "google_vertex_ai_model_development_cluster" "default" {
   }
 }
 ```
+<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=vertex_ai_model_development_cluster_gke_xmanager&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
+  </a>
+</div>
+
+## Example Usage - Vertex Ai Model Development Cluster Gke Xmanager
+
+
+```hcl
+resource "google_compute_network" "net" {
+  provider                = google-beta
+  name                    = "mdc-xm-net"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet" {
+  provider                 = google-beta
+  name                     = "mdc-xm-subnet"
+  ip_cidr_range            = "10.0.0.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_subnetwork" "subnet_alt" {
+  provider                 = google-beta
+  name                     = "mdc-xm-subnet-alt"
+  ip_cidr_range            = "10.0.1.0/24"
+  region                   = "us-east1"
+  network                  = google_compute_network.net.id
+  private_ip_google_access = true
+}
+
+resource "google_compute_firewall" "internal" {
+  provider      = google-beta
+  name          = "mdc-xm-fw"
+  network       = google_compute_network.net.name
+  direction     = "INGRESS"
+  source_ranges = ["10.0.0.0/24", "10.0.1.0/24"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "icmp"
+  }
+}
+
+resource "google_storage_bucket" "bucket" {
+  provider      = google-beta
+  name          = "mdc-xm-bucket"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_storage_bucket" "bucket_alt" {
+  provider      = google-beta
+  name          = "mdc-xm-bucket-alt"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_vertex_ai_model_development_cluster" "default" {
+  provider                     = google-beta
+  region                       = "us-east1"
+  model_development_cluster_id = "tftest-xm"
+  display_name                 = "tftest-gke-xm"
+  deletion_policy              = "DELETE"
+  depends_on                   = [google_compute_firewall.internal]
+
+  labels = {
+    env = "dev"
+  }
+
+  network {
+    network    = google_compute_network.net.id
+    subnetwork = google_compute_subnetwork.subnet.id
+  }
+
+  orchestrator_spec {
+    kubernetes_spec {
+      node_pool_ids                  = ["cpu1"]
+      enable_ip_alias                = true
+      public_access_endpoint_enabled = true
+      control_plane_version          = "-"
+      node_pool_versions = {
+        cpu1 = "-"
+      }
+    }
+  }
+
+  node_pools {
+    id                 = "cpu1"
+    zone               = "us-east1-b"
+    provisioning_model = "ON_DEMAND"
+
+    boot_disk {
+      boot_disk_size_gb = 100
+      boot_disk_type    = "pd-standard"
+    }
+
+    machine_spec {
+      machine_type = "n2-standard-4"
+    }
+
+    scaling_spec {
+      min_node_count = 1
+      max_node_count = 2
+    }
+  }
+
+  xmanager_config {
+    network    = google_compute_network.net.id
+    subnetwork = google_compute_subnetwork.subnet.id
+    xprof_config {
+      gcs_bucket_uri = "gs://${google_storage_bucket.bucket.name}"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -620,6 +746,13 @@ Only applies to Slurm clusters (`orchestrator_spec.slurm_spec`); ignored
 for GKE clusters (`kubernetes_spec`).
 Defaults to `USER_AND_SERVICE`. Possible values are `USER_ONLY` and
 `USER_AND_SERVICE`.
+* `xmanager_config` - (Optional) Configuration for enabling a managed Xmanager instance on the cluster.
+Supported for GKE clusters only (`orchestrator_spec.kubernetes_spec`).
+Xmanager instances do not support in-place updates; changing any field in
+`xmanager_config` disables the current instance and enables a new one.
+Note: input subfields (`network`, `subnetwork`, `xprof_config`)
+are write-only on `:enableXmanager` and are not populated during `terraform import`.
+  Structure is [documented below](#nested_xmanager_config).
 
 
 <a name="nested_node_pools"></a>The `node_pools` block supports:
@@ -1073,6 +1206,69 @@ Defaults to `USER_AND_SERVICE`. Possible values are `USER_ONLY` and
   The default service account used by the cluster when running any workloads
   on it. If not specified, the default compute engine service account will be
   used.
+
+<a name="nested_xmanager_config"></a>The `xmanager_config` block supports:
+
+* `network` -
+  (Required)
+  The Google Cloud Compute network to which the Xmanager instance is connected.
+  Must match the cluster's `network.network`.
+  Format: `projects/{project}/global/networks/{network}`.
+
+* `subnetwork` -
+  (Required)
+  The Google Cloud Compute subnetwork to which the Xmanager instance is connected.
+  Must be a subnetwork of `network` in the cluster's region.
+  Format: `projects/{project}/regions/{region}/subnetworks/{subnetwork}`.
+
+* `xprof_config` -
+  (Optional)
+  Configuration for managed XProf.
+  Structure is [documented below](#nested_xmanager_config_xprof_config).
+
+* `name` -
+  (Output)
+  Identifier. The resource name of the Xmanager instance attached to the cluster
+  (`projects/{project}/locations/{location}/xmanagerInstances/{xmanager_instance}`).
+
+* `api_endpoint` -
+  (Output)
+  The gRPC API endpoint (Experiment State Server) of the Xmanager instance.
+
+* `ui_endpoint` -
+  (Output)
+  The UI endpoint of the Xmanager instance.
+
+* `state` -
+  (Output)
+  The current state of the Xmanager instance (`PROVISIONING`, `RUNNING`, `DELETING`, `ERROR`).
+
+* `error` -
+  (Output)
+  Error status populated when `state` is `ERROR`.
+  Structure is [documented below](#nested_xmanager_config_error).
+
+
+<a name="nested_xmanager_config_xprof_config"></a>The `xprof_config` block supports:
+
+* `gcs_bucket_uri` -
+  (Required)
+  The Google Cloud Storage bucket URI (`gs://<bucket>`) in the user project
+  for XProf trace data.
+
+<a name="nested_xmanager_config_error"></a>The `error` block contains:
+
+* `code` -
+  (Output)
+  The status code, which should be an enum value of google.rpc.Code.
+
+* `details` -
+  (Output)
+  A list of messages that carry the error details.
+
+* `message` -
+  (Output)
+  A developer-facing error message in English.
 
 ## Attributes Reference
 
