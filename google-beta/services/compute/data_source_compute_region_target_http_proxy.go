@@ -81,9 +81,7 @@ func DataSourceComputeRegionTargetHttpProxy() *schema.Resource {
 	rs := ResourceComputeRegionTargetHttpProxy().Schema
 
 	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(rs)
-
 	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
-
 	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project", "region")
 
 	return &schema.Resource{
@@ -97,7 +95,7 @@ func dataSourceComputeRegionTargetHttpProxyRead(d *schema.ResourceData, meta int
 
 	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/regions/{{region}}/targetHttpProxies/{{name}}")
 	if err != nil {
-		return err
+		return fmt.Errorf("Error constructing id: %s", err)
 	}
 
 	d.SetId(id)
@@ -109,6 +107,9 @@ func dataSourceComputeRegionTargetHttpProxyRead(d *schema.ResourceData, meta int
 
 	if d.Id() == "" {
 		return fmt.Errorf("%s not found", id)
+	}
+	if err := d.Set("deletion_policy", nil); err != nil {
+		return fmt.Errorf("Error clearing client-side field deletion_policy: %s", err)
 	}
 
 	return nil
