@@ -44,12 +44,22 @@ fields:
     - api_field: externalCatalogDatasetOptions.parameters
     - api_field: externalDatasetReference.connection
     - api_field: externalDatasetReference.externalSource
+    - api_field: failoverReservationId
     - api_field: friendlyName
     - api_field: isCaseInsensitive
     - api_field: labels
     - api_field: lastModifiedTime
     - api_field: location
     - api_field: maxTimeTravelHours
+    - api_field: replicas.backfillCompletionTime
+    - api_field: replicas.creationTime
+    - api_field: replicas.failoverReservationUri
+    - api_field: replicas.id
+    - api_field: replicas.location
+    - api_field: replicas.primaryAssignmentCompletionTime
+    - api_field: replicas.primaryAssignmentTime
+    - api_field: replicas.replicaOptions.defaultKmsKeyName
+    - api_field: replicas.replicaState
     - api_field: resourceTags
     - api_field: storageBillingModel
     - field: terraform_labels

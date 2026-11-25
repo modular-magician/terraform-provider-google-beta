@@ -391,6 +391,21 @@ The following arguments are supported:
   metadata of open source database, schema or namespace represented by the current dataset.
   Structure is [documented below](#nested_external_catalog_dataset_options).
 
+* `failover_reservation_id` -
+  (Optional)
+  The failover reservation associated with the dataset, in regionless format.
+  For example, `{admin_project}.{failover_reservation}`.
+  See [Managed disaster recovery overview](https://cloud.google.com/bigquery/docs/managed-disaster-recovery#overview)
+  for more information.
+
+* `replicas` -
+  (Optional)
+  The list of replicas in a cross-region replicated or disaster recovery dataset.
+  When adding replicas, the primary replica in the dataset's location must be included.
+  Once a dataset has replicas configured, the primary replica cannot be dropped; to drop
+  all secondary replicas, specify only the primary replica in `replicas`.
+  Structure is [documented below](#nested_replicas).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -403,6 +418,10 @@ The following arguments are supported:
 * `delete_contents_on_destroy` - (Optional) If set to `true`, delete all the tables in the
 dataset when destroying the resource; otherwise,
 destroying the resource will fail if tables are present.
+For replicated datasets, secondary replicas are dropped and any
+failover reservation is disassociated prior to deletion; when set
+to `false`, this cleanup is skipped and deletion fails if tables,
+routines, or models are present.
 
 
 
@@ -579,6 +598,72 @@ destroying the resource will fail if tables are present.
   (Optional)
   The storage location URI for all tables in the dataset. Equivalent to hive metastore's
   database locationUri. Maximum length of 1024 characters.
+
+<a name="nested_replicas"></a>The `replicas` block supports:
+
+* `id` -
+  (Required)
+  The user-visible string identifier for this dataset replica. For example, `us-east4-replica`.
+
+* `location` -
+  (Required)
+  The logical BigQuery region where this replica is located. This is uppercase if `US` or `EU`,
+  otherwise a lowercase cloud region like `asia-northeast1`.
+  See [Dataset locations](https://cloud.google.com/bigquery/docs/locations) for more information.
+
+* `replica_options` -
+  (Optional)
+  Contains modification options for the replica when creating or adding the replica,
+  such as setting a Cloud KMS encryption key. These options are write-only in the
+  BigQuery API (not populated on `terraform import` or `google_bigquery_dataset`
+  data source reads) and immutable after the replica is created.
+  Structure is [documented below](#nested_replicas_replica_options).
+
+* `replica_state` -
+  (Output)
+  The current replication state of the replica. Possible values include `PRIMARY`, `SECONDARY`,
+  `ASSIGNED_PRIMARY`, `PREVIOUSLY_ASSIGNED_PRIMARY`, and `BACKFILLING`.
+  See the [API documentation](https://cloud.google.com/bigquery/docs/reference/rest/v2/datasets#ReplicaState)
+  for more information.
+
+* `creation_time` -
+  (Output)
+  The timestamp when the replica was created, in RFC3339 format.
+
+* `backfill_completion_time` -
+  (Output)
+  The time when the backfill was completed and the replica is ready to use, in RFC3339 format.
+
+* `primary_assignment_time` -
+  (Output)
+  The time at which the replica was assigned primary, in RFC3339 format.
+  Only one replica has this field populated at any point.
+
+* `primary_assignment_completion_time` -
+  (Output)
+  After a new primary assignment is made, the time that the dataset's data has been
+  fully replicated to the replica, in RFC3339 format.
+
+* `failover_reservation_uri` -
+  (Output)
+  The failover reservation resource name for the replica's region if this replica is
+  used for disaster recovery (DR), in the format
+  `projects/{project}/locations/{location}/reservations/{reservation}`.
+
+
+<a name="nested_replicas_replica_options"></a>The `replica_options` block supports:
+
+* `default_kms_key_name` -
+  (Optional)
+  The default Cloud KMS encryption key resource name for the replica.
+  When `default_encryption_configuration` is set on the dataset, a KMS key
+  must be provided on all replicas (including the primary replica) when
+  creating the dataset with `replicas` in a single step, and on each newly
+  added secondary replica when adding replicas to an existing dataset via
+  update; otherwise this field must not be set. This value is immutable after
+  the replica is created (changing a non-empty value on an existing replica
+  forces dataset replacement) and write-only in the BigQuery API (not returned
+  on `terraform import` or `google_bigquery_dataset` data source reads).
 
 ## Attributes Reference
 
