@@ -154,9 +154,8 @@ Currently, only one entry is supported.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"backup_plan": {
-							Type:             schema.TypeString,
-							Required:         true,
-							DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
+							Type:     schema.TypeString,
+							Required: true,
 							Description: `The resource name of the backup plan to apply to the matching resources, in the format
 'projects/{project}/locations/{location}/backupPlans/{backup_plan_id}'. The backup plan
 must be in the same location as the auto protection policy.`,
@@ -456,6 +455,18 @@ func resourceBackupDRAutoProtectionPolicyRead(d *schema.ResourceData, meta inter
 	}
 
 	log.Printf("[DEBUG] Finished reading BackupDRAutoProtectionPolicy %q: %#v", d.Id(), res)
+
+	res, err = resourceBackupDRAutoProtectionPolicyDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing BackupDRAutoProtectionPolicy because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
 
 	// Explicitly set virtual fields to default values if unset
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
@@ -998,6 +1009,14 @@ func expandBackupDRAutoProtectionPolicyBackupPlanDetailsResourceType(v interface
 
 func expandBackupDRAutoProtectionPolicyBackupPlanDetailsBackupPlan(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceBackupDRAutoProtectionPolicyDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+
+	if err := normalizeBackupDRAutoProtectionPolicyProjectNumbers(d, meta, res); err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func ResourceBackupDRAutoProtectionPolicyFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {

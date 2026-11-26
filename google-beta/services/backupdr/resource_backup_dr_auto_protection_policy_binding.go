@@ -111,6 +111,7 @@ func ResourceBackupDRAutoProtectionPolicyBinding() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			backupDRAutoProtectionPolicyBindingScopeForceNewIfChanged,
 			tpgresource.DefaultProviderProject,
 			tpgresource.DefaultProviderDeletionPolicy("DELETE"),
 		),
@@ -162,11 +163,9 @@ func ResourceBackupDRAutoProtectionPolicyBinding() *schema.Resource {
 				Description: `The location of the auto protection policy.`,
 			},
 			"scope": {
-				Type:             schema.TypeString,
-				Required:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
-				Description:      `The container that the policy is applied to, in the format 'projects/{project}'.`,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `The container that the policy is applied to, in the format 'projects/{project}'.`,
 			},
 			"binding_evaluation_summary": {
 				Type:        schema.TypeList,
@@ -461,7 +460,26 @@ func resourceBackupDRAutoProtectionPolicyBindingRead(d *schema.ResourceData, met
 }
 
 func resourceBackupDRAutoProtectionPolicyBindingUpdate(d *schema.ResourceData, meta interface{}) error {
-	// Only the root field "deletion_policy", "labels", "terraform_labels", and virtual fields are mutable
+	clientSideFields := map[string]bool{"deletion_policy": true}
+	clientSideOnly := true
+	for field := range ResourceBackupDRAutoProtectionPolicyBinding().Schema {
+		if d.HasChange(field) && !clientSideFields[field] {
+			clientSideOnly = false
+			break
+		}
+	}
+	if clientSideOnly {
+		log.Print("[DEBUG] Only client-side changes detected. Cancelling update operation.")
+		return resourceBackupDRAutoProtectionPolicyBindingRead(d, meta)
+	}
+
+	config := meta.(*transport_tpg.Config)
+	// AutoProtectionPolicyBinding has no Update API. Only client-side fields
+	// (deletion_policy, wait_for_delete) and state-only scope format transitions
+	// (projects/{number} <-> projects/{project_id} for the same project, allowed
+	// through by backupDRAutoProtectionPolicyBindingScopeForceNewIfChanged) reach
+	// Update.
+	_ = config
 	return resourceBackupDRAutoProtectionPolicyBindingRead(d, meta)
 }
 
@@ -638,6 +656,9 @@ func resourceBackupDRAutoProtectionPolicyBindingDecoder(d *schema.ResourceData, 
 	// Treat DELETION_INITIATED as already deleted so refresh and plan see the binding as gone.
 	if v := res["state"]; v == "DELETION_INITIATED" {
 		return nil, nil
+	}
+	if err := normalizeBackupDRAutoProtectionPolicyBindingScope(d, meta, res); err != nil {
+		return nil, err
 	}
 
 	return res, nil
