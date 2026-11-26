@@ -1480,6 +1480,62 @@ resource "google_compute_region_health_check" "default" {
   }
 }
 ```
+<div class="oics-button" style="padding-top: 1px; margin-top: -1px;">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=region_url_map_backend_bucket&open_in_editor=main.tf" target="_blank" style="float: right; margin: 32px 0 12px 16px;">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; max-width: 100%;">
+  </a>
+</div>
+
+## Example Usage - Region Url Map Backend Bucket
+
+
+```hcl
+resource "google_compute_region_url_map" "regionurlmap" {
+  provider        = google-beta
+  name            = "regionurlmap"
+  region          = "us-central1"
+  description     = "a description"
+  default_service = google_compute_region_backend_bucket.static.id
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "mysite"
+  }
+
+  path_matcher {
+    name            = "mysite"
+    default_service = google_compute_region_backend_bucket.static.id
+
+    path_rule {
+      paths   = ["/static/*"]
+      service = google_compute_region_backend_bucket.static.id
+    }
+  }
+
+  test {
+    service = google_compute_region_backend_bucket.static.id
+    host    = "mysite.com"
+    path    = "/static/test"
+  }
+}
+
+resource "google_compute_region_backend_bucket" "static" {
+  provider              = google-beta
+  name                  = "static"
+  region                = "us-central1"
+  bucket_name           = google_storage_bucket.static.name
+  load_balancing_scheme = "INTERNAL_MANAGED"
+  description           = "Regional backend bucket for static content"
+}
+
+resource "google_storage_bucket" "static" {
+  provider                    = google-beta
+  name                        = "static"
+  location                    = "US-CENTRAL1"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+}
+```
 
 ## Argument Reference
 
@@ -1506,6 +1562,7 @@ The following arguments are supported:
   weightedBackendServices. Conversely, if routeAction specifies any
   weightedBackendServices, service must not be specified.  Only one of defaultService,
   defaultUrlRedirect or defaultRouteAction.weightedBackendService must be set.
+  Can refer to a RegionBackendService or RegionBackendBucket.
 
 * `description` -
   (Optional)
@@ -1598,7 +1655,7 @@ The following arguments are supported:
 
 * `default_service` -
   (Optional)
-  A reference to a RegionBackendService resource. This will be used if
+  A reference to a RegionBackendService or RegionBackendBucket resource. This will be used if
   none of the pathRules defined by this PathMatcher is matched by
   the URL's path portion.
 
@@ -1718,7 +1775,7 @@ The following arguments are supported:
 
 * `service` -
   (Optional)
-  The region backend service resource to which traffic is
+  The RegionBackendService or RegionBackendBucket resource to which traffic is
   directed if this rule is matched. If routeAction is additionally specified,
   advanced routing actions like URL Rewrites, etc. take effect prior to sending
   the request to the backend. However, if service is specified, routeAction cannot
@@ -2433,7 +2490,7 @@ The following arguments are supported:
 
 * `service` -
   (Optional)
-  The region backend service resource to which traffic is
+  The RegionBackendService or RegionBackendBucket resource to which traffic is
   directed if this rule is matched. If routeAction is additionally specified,
   advanced routing actions like URL Rewrites, etc. take effect prior to sending
   the request to the backend. However, if service is specified, routeAction cannot
@@ -2953,7 +3010,7 @@ The following arguments are supported:
 
 * `backend_service` -
   (Optional)
-  The full or partial URL to the default BackendService resource. Before forwarding the
+  The full or partial URL to the default RegionBackendService resource. Before forwarding the
   request to backendService, the loadbalancer applies any relevant headerActions
   specified as part of this backendServiceWeight.
 
@@ -3127,7 +3184,7 @@ The following arguments are supported:
 
 * `backend_service` -
   (Required)
-  The full or partial URL to the BackendService resource being mirrored to.
+  The full or partial URL to the RegionBackendService resource being mirrored to.
 
 * `mirror_percent` -
   (Optional)
@@ -3239,7 +3296,7 @@ The following arguments are supported:
 
 * `service` -
   (Required)
-  A reference to expected RegionBackendService resource the given URL should be mapped to.
+  A reference to expected RegionBackendService or RegionBackendBucket resource the given URL should be mapped to.
 
 <a name="nested_default_url_redirect"></a>The `default_url_redirect` block supports:
 
@@ -3343,7 +3400,7 @@ The following arguments are supported:
 
 * `backend_service` -
   (Optional)
-  The full or partial URL to the default BackendService resource. Before forwarding the request to backendService, the load balancer applies any relevant headerActions specified as part of this backendServiceWeight.
+  The full or partial URL to the default RegionBackendService resource. Before forwarding the request to backendService, the load balancer applies any relevant headerActions specified as part of this backendServiceWeight.
 
 * `weight` -
   (Optional)

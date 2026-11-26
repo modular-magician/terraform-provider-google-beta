@@ -32,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storage"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -1582,6 +1583,92 @@ resource "google_compute_region_health_check" "default" {
   http_health_check {
     port = 80
   }
+}
+`, context)
+}
+
+func TestAccComputeRegionUrlMap_regionUrlMapBackendBucketExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"backend_bucket_name": "tf-test-static" + randomSuffix,
+		"region_url_map_name": "tf-test-regionurlmap" + randomSuffix,
+		"storage_bucket_name": "tf-test-static" + randomSuffix,
+		"random_suffix":       randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionUrlMapDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionUrlMap_regionUrlMapBackendBucketExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_url_map.regionurlmap",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"default_service", "region"},
+			},
+			{
+				ResourceName:       "google_compute_region_url_map.regionurlmap",
+				ImportState:        true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeRegionUrlMap_regionUrlMapBackendBucketExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_url_map" "regionurlmap" {
+  provider        = google-beta
+  name            = "%{region_url_map_name}"
+  region          = "us-central1"
+  description     = "a description"
+  default_service = google_compute_region_backend_bucket.static.id
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "mysite"
+  }
+
+  path_matcher {
+    name            = "mysite"
+    default_service = google_compute_region_backend_bucket.static.id
+
+    path_rule {
+      paths   = ["/static/*"]
+      service = google_compute_region_backend_bucket.static.id
+    }
+  }
+
+  test {
+    service = google_compute_region_backend_bucket.static.id
+    host    = "mysite.com"
+    path    = "/static/test"
+  }
+}
+
+resource "google_compute_region_backend_bucket" "static" {
+  provider              = google-beta
+  name                  = "%{backend_bucket_name}"
+  region                = "us-central1"
+  bucket_name           = google_storage_bucket.static.name
+  load_balancing_scheme = "INTERNAL_MANAGED"
+  description           = "Regional backend bucket for static content"
+}
+
+resource "google_storage_bucket" "static" {
+  provider                    = google-beta
+  name                        = "%{storage_bucket_name}"
+  location                    = "US-CENTRAL1"
+  force_destroy               = true
+  uniform_bucket_level_access = true
 }
 `, context)
 }
